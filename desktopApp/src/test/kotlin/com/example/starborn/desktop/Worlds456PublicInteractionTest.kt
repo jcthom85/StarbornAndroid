@@ -105,15 +105,37 @@ class Worlds456PublicInteractionTest {
         assertTrue("w4_mq18" in s.sessionStore.state.value.activeQuests)
     }
 
-    @Test fun foundryDeparturePlaysLaunchThenRevealsTheDockBeforeValesBroadcast() = runWith { s ->
+    @Test fun watchingFoundryDepartureShowsTheCoupBeforeTheDock() = verifyFoundryDeparture(skip = false)
+
+    @Test fun skippingFoundryDepartureStillReachesTheDock() = verifyFoundryDeparture(skip = true)
+
+    private fun verifyFoundryDeparture(skip: Boolean) = runWith { s ->
         restore(s, s.sessionStore.state.value.copy(worldId = "world_4", hubId = "hub_8_assembly_line",
             roomId = "foundry_escape_catwalk", activeQuests = setOf("w4_mq20"),
+            completedMilestones = setOf("ms_w4_titan_defeated", "ms_w4_engine_stolen", "ms_w4_arrays_stolen"),
             questTasksCompleted = mapOf("w4_mq20" to setOf("steal_engine", "steal_arrays"))))
         val audio = s.audioDriver as RecordingAudioDriver
         audio.commands.clear()
         act(s, "w4_mq20_escape_launch")
-        compose.waitUntil(5000) { s.exploration.uiState.value.currentRoom?.id == "orbital_executive_dock" }
-        assertNull(s.exploration.uiState.value.activeDialogue)
+        val ui = s.exploration.uiState
+        compose.waitUntil(5000) { ui.value.cinematic?.sceneId == "scene_w4_outer_shield" }
+        val initialStep = requireNotNull(ui.value.cinematic)
+        if (skip) {
+            compose.runOnIdle { s.exploration.skipCinematic() }
+        } else {
+            val speakers = mutableListOf<String>()
+            repeat(initialStep.stepCount) { index ->
+                compose.waitUntil(5000) { ui.value.cinematic?.stepIndex == index }
+                assertEquals("foundry_escape_catwalk", s.sessionStore.state.value.roomId)
+                assertFalse("w4_mq20" in s.sessionStore.state.value.completedQuests)
+                requireNotNull(ui.value.cinematic).step.speaker?.let(speakers::add)
+                compose.runOnIdle { s.exploration.advanceCinematic() }
+            }
+            assertEquals(listOf("Zeke", "Vale", "Thorne", "Vale", "Gh0st"), speakers)
+        }
+        compose.waitUntil(5000) { ui.value.currentRoom?.id == "orbital_executive_dock" }
+        assertTrue("w4_mq20" in s.sessionStore.state.value.completedQuests)
+        assertTrue("w5_mq21" in s.sessionStore.state.value.activeQuests)
         assertFalse(audio.commands.filterIsInstance<AudioCommand.Play>().any { it.cueId == "music_w5_orbital_intrigue" })
 
         compose.setContent {
@@ -121,10 +143,8 @@ class Worlds456PublicInteractionTest {
                 DesktopExplorationScreen(s, {}, {}, {}, {}, {}, {})
             }
         }
-        compose.waitUntil(10000) {
-            s.exploration.uiState.value.activeDialogue?.line?.id == "vale_w4_mq20_coup"
-        }
-        assertNull(s.exploration.uiState.value.roomTransition)
+        compose.waitUntil(10000) { ui.value.roomTransition == null }
+        assertNull(ui.value.activeDialogue)
         val played = audio.commands.filterIsInstance<AudioCommand.Play>().map { it.cueId }
         assertTrue(played.contains("sfx_w2_astra_launch"))
         assertTrue(played.indexOf("music_w5_orbital_intrigue") > played.indexOf("sfx_w2_astra_launch"))

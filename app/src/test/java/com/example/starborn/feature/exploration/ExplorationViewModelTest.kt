@@ -570,7 +570,8 @@ class ExplorationViewModelTest {
     private fun createViewModel(
         dialogueService: DialogueService = mock<DialogueService>(),
         isBurgQuestSession: Boolean = false,
-        initialSettings: UserSettings = UserSettings()
+        initialSettings: UserSettings = UserSettings(),
+        eventDefinitions: List<com.example.starborn.domain.model.GameEvent> = emptyList()
     ): ExplorationViewModel {
         val worldAssets = mock<WorldAssetDataSource> {
             on { loadRooms() } doReturn emptyList()
@@ -648,7 +649,7 @@ class ExplorationViewModelTest {
             saveRepository = saveRepository,
             encounterCoordinator = encounterCoordinator,
             userSettingsStore = userSettingsStore,
-            eventDefinitions = emptyList(),
+            eventDefinitions = eventDefinitions,
             dispatchers = dispatcherProvider,
             isBurgQuestSession = isBurgQuestSession
         )
@@ -660,10 +661,15 @@ class ExplorationViewModelTest {
         isBurgQuestSession: Boolean = false,
         completedMilestones: Set<String> = setOf("ms_w2_mq05_complete")
     ): ExplorationViewModel {
-        val viewModel = createViewModel(isBurgQuestSession = isBurgQuestSession)
-        val authored = WorldAssetDataSource(com.example.starborn.data.assets.AssetJsonReader(
+        val reader = com.example.starborn.data.assets.AssetJsonReader(
             com.example.starborn.core.platform.DesktopAssetProvider(), com.example.starborn.core.MoshiProvider.instance
-        ))
+        )
+        val viewModel = createViewModel(
+            isBurgQuestSession = isBurgQuestSession,
+            eventDefinitions = com.example.starborn.data.assets.EventAssetDataSource(reader)
+                .loadEvents().filter { it.id == "source_board_astra" }
+        )
+        val authored = WorldAssetDataSource(reader)
         val assets = getPrivateField<WorldAssetDataSource>(viewModel, "worldAssets")
         val nodes = authored.loadHubNodes()
         val hubs = authored.loadHubs()
@@ -731,6 +737,10 @@ class ExplorationViewModelTest {
             assertEquals("astra_cargo_bay", store.state.value.roomId)
             assertEquals("astra_cargo_bay", viewModel.uiState.value.currentRoom?.id)
             assertEquals("spire_sewers_landing", store.state.value.astraReturnRoomId)
+            val transition = requireNotNull(viewModel.uiState.value.roomTransition)
+            assertEquals(com.example.starborn.feature.exploration.viewmodel.ScriptedTravelStyle.ASTRA_BOARDING,
+                transition.scriptedStyle)
+            viewModel.onScriptedTravelFinished(transition.id)
             viewModel.requestReturnToHub()
             dispatcher.scheduler.advanceUntilIdle()
             assertEquals("spire_sewers_landing", store.state.value.roomId)

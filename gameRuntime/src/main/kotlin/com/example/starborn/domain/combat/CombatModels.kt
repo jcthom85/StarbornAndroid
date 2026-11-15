@@ -175,7 +175,8 @@ sealed interface CombatLogEntry {
     data class StatusExpired(
         override val turn: Int,
         val targetId: String,
-        val statusId: String
+        val statusId: String,
+        val cleansed: Boolean = false
     ) : CombatLogEntry
 
     data class ActionQueued(

@@ -476,7 +476,7 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 215. From **Customs Lounge**, go **south** to **Grand Concourse** (`orbital_grand_concourse`) → **east** to **Security Hub** (`orbital_security_hub`) → **east** to **Service Shaft** (`orbital_service_shaft`) → **east** to **Zero-G Junction** (`orbital_zero_g_junction`) → **south** to **SysAdmin Nest** (`deep_sysadmin_nest`) → **east** to **Server Farm** (`orbital_server_farm`) → **east** to **Anchor Chamber** (`deep_anchor_chamber`) → **east** to **Throne Room** (`deep_throne_room`).
 
-216. At **Throne Room**, use **containment field**. Finish Vale’s full Soloist scene. Confirm **Witness the Soloist** credited in **Critical Mass**. Read the Thorne/Vale outcome before advancing; simply arriving or inspecting the director’s desk does not replace the scene.
+216. At **Throne Room**, use **containment field**. Finish Vale’s full Soloist scene. Confirm **Witness the Soloist** credited in **Critical Mass**. Advance through Nova’s final line after the breach opens. The quest credits the scene at that point.
 
 ## 11. The Tear, final exploration and departure
 

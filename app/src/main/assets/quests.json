@@ -349,7 +349,7 @@
       {
         "id": "defeat_warden",
         "title": "The Warden",
-        "description": "Break the Warden's guard and clear the pod hatch.",
+        "description": "Defeat the Iron Warden at Pod Bay to open the escape pod hatch.",
         "tasks": [
           {
             "id": "survive_warden_intro",
@@ -357,11 +357,11 @@
           },
           {
             "id": "break_warden_guard",
-            "text": "Break the Warden's guard."
+            "text": "Get past the Warden’s shield. Hydraulic Kick can strip it."
           },
           {
             "id": "defeat_the_warden",
-            "text": "Break the Warden's launch bay lockdown."
+            "text": "Defeat the Iron Warden at Pod Bay."
           }
         ]
       },
@@ -513,16 +513,6 @@
           {
             "id": "talk_to_bogs",
             "text": "Report to Foreman Boggs in the Concourse Lobby."
-          },
-          {
-            "id": "start_loader",
-            "optional": true,
-            "text": "Optional workshop practice: start the loader at the Loading Dock."
-          },
-          {
-            "id": "move_cargo",
-            "optional": true,
-            "text": "Optional workshop practice: clear the cargo rail at the Loading Dock."
           }
         ]
       },
@@ -537,11 +527,21 @@
           },
           {
             "id": "break_training_shield",
-            "text": "Enter the Security Post (East) and defeat the Shielded Trainer with Guard Break."
+            "text": "Go east from Customer Service to Security Post. Use Hydraulic Kick to break the Shield Trainer’s guard, then defeat it."
           },
           {
             "id": "rescue_trapped_workers",
             "text": "Complete the drill."
+          },
+          {
+            "id": "start_loader",
+            "optional": true,
+            "text": "Optional workshop practice: start the loader at the Loading Dock."
+          },
+          {
+            "id": "move_cargo",
+            "optional": true,
+            "text": "Optional workshop practice: clear the cargo rail at the Loading Dock."
           }
         ]
       }
@@ -756,7 +756,7 @@
         "tasks": [
           {
             "id": "align_stasis_rings",
-            "text": "Use the chamber clues to stabilize the Ring Array."
+            "text": "Read the stasis clues, then use the Stasis Ring Array to wake the occupant."
           },
           {
             "id": "talk_to_orion",
@@ -764,7 +764,7 @@
           },
           {
             "id": "recover_bridge_relic",
-            "text": "After speaking with the occupant, inspect the sealed cradle in the chamber."
+            "text": "Finish speaking with Orion, then open the sealed Bridge cradle in the Stasis Chamber."
           }
         ]
       }
@@ -844,11 +844,11 @@
           },
           {
             "id": "reboot_bridge_relic",
-            "text": "At the Hangar Bay, use the recovered conduits to install the Bridge and authenticate Orion with the Chime."
+            "text": "At Hangar Bay, use bridge relic after recovering the salvage conduits. Bring the Bridge and the Chime."
           },
           {
             "id": "launch_ship",
-            "text": "Board the Astra from the Hangar Bay, then depart using the bridge nav console."
+            "text": "Use launch cradle at Hangar Bay to board. Confirm departure at the nav console on the Astra Bridge."
           }
         ]
       }
@@ -876,7 +876,7 @@
         "tasks": [
           {
             "id": "scan_flora_1",
-            "text": "In Resonant Canopy, scan the giant crystalline ferns."
+            "text": "Scan crystalline ferns at Resonant Canopy."
           },
           {
             "id": "scan_flora_2",
@@ -888,11 +888,11 @@
           },
           {
             "id": "scan_flora_4",
-            "text": "In Resonant Canopy, scan the razor-vine spores."
+            "text": "Scan drifting spores at Resonant Canopy."
           },
           {
             "id": "scan_flora_5",
-            "text": "In Stasis Chamber, scan the ancient root lattice."
+            "text": "Scan root lattice in Stasis Chamber."
           },
           {
             "id": "report_to_zeke",
@@ -924,7 +924,7 @@
         "tasks": [
           {
             "id": "trace_alpha",
-            "text": "In Spore Thickets, trace distress signature alpha."
+            "text": "Use distress signature alpha at Spore Thickets, or Scavenge remains at Resonant Canopy after defeating the plants."
           },
           {
             "id": "trace_beta",

@@ -1536,11 +1536,16 @@
       "type": "player_action",
       "action": "w1_sq03_start_loader"
     },
-    "repeatable": true,
+    "repeatable": false,
     "conditions": [
       {
         "type": "quest_active",
         "quest_id": "w1_sq03"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_sq03",
+        "task_id": "start_loader"
       }
     ],
     "actions": [
@@ -1550,9 +1555,8 @@
         "task_id": "start_loader"
       },
       {
-        "type": "advance_quest_stage",
-        "quest_id": "w1_sq03",
-        "to_stage_id": "guard_break_training"
+        "type": "show_message",
+        "message": "The loader coughs awake. The cargo rail is ready."
       }
     ]
   },
@@ -1563,11 +1567,21 @@
       "type": "player_action",
       "action": "w1_sq03_move_cargo"
     },
-    "repeatable": true,
+    "repeatable": false,
     "conditions": [
       {
         "type": "quest_active",
         "quest_id": "w1_sq03"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w1_sq03",
+        "task_id": "move_cargo"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w1_sq03",
+        "task_id": "start_loader"
       }
     ],
     "actions": [
@@ -1591,7 +1605,7 @@
       },
       {
         "type": "show_message",
-        "message": "Hydraulic Kick online. The shield trainer is ready."
+        "message": "The loader moves the cargo clear of the rail. The Security Post drill is still required."
       }
     ]
   },
@@ -2823,6 +2837,10 @@
         "type": "advance_quest_stage",
         "quest_id": "w1_mq05",
         "to_stage_id": "reach_pod_bay"
+      },
+      {
+        "type": "play_cinematic",
+        "scene_id": "scene_w1_lift_separation"
       }
     ]
   },
@@ -4407,7 +4425,7 @@
     "actions": [
       {
         "type": "board_astra",
-        "travel_transition": "airlock"
+        "travel_transition": "astra_boarding"
       },
       {
         "type": "show_message",
@@ -6288,42 +6306,44 @@
     ],
     "actions": [
       {
-        "type": "set_quest_task_done",
-        "quest_id": "w3_mq15",
-        "task_id": "launch_astra"
-      },
-      {
-        "type": "give_xp",
-        "xp": 700
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w3_mq15"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w3_mq15_complete"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w4_access_unlocked"
-      },
-      {
-        "type": "start_quest",
-        "quest_id": "w4_mq16"
-      },
-      {
-        "type": "track_quest",
-        "quest_id": "w4_mq16"
-      },
-      {
-        "type": "warp",
-        "room_id": "foundry_slag_landing",
-        "travel_transition": "launch"
-      },
-      {
-        "type": "show_message",
-        "message": "The Astra clears the Spire’s internal security curtain on Orion’s count. The planetary Shield still hangs above them. Zeke sets a low-altitude course for the Foundry: its Deep-Core Engine can carry them higher, and its Phase-Cutter Arrays can open the way."
+        "type": "play_cinematic",
+        "scene_id": "scene_w3_foundry_flight",
+        "on_complete": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w3_mq15",
+            "task_id": "launch_astra"
+          },
+          {
+            "type": "give_xp",
+            "xp": 700
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w3_mq15"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w3_mq15_complete"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w4_access_unlocked"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w4_mq16"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w4_mq16"
+          },
+          {
+            "type": "warp",
+            "room_id": "foundry_slag_landing",
+            "travel_transition": "launch"
+          }
+        ]
       }
     ]
   },
@@ -6495,7 +6515,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Astra clears the internal curtain at low altitude and settles onto volcanic glass. The outer Shield remains above them; reaching it still requires the Engine and Arrays."
+        "message": "Heat rises through the landing struts. Find a path across the volcanic shelf."
       }
     ]
   },
@@ -7524,7 +7544,7 @@
       },
       {
         "type": "show_message",
-        "message": "Rylos: Unit 734. Submit for correction. Pain is just data leaving the body.\n\nGh0st steps forward anyway. \"My name is not a unit number.\""
+        "message": "Gh0st steps in front of the others. “Log this under Gh0st.”"
       }
     ]
   },
@@ -7564,8 +7584,8 @@
         "to_stage_id": "steal_and_escape"
       },
       {
-        "type": "show_message",
-        "message": "The Titan Walker buckles into the platform. Gh0st lowers his blade. Choice is the point."
+        "type": "play_cinematic",
+        "scene_id": "scene_w4_rylos_spared"
       }
     ],
     "recover_recorded_victory": true
@@ -7688,46 +7708,44 @@
     ],
     "actions": [
       {
-        "type": "set_quest_task_done",
-        "quest_id": "w4_mq20",
-        "task_id": "escape_launch"
-      },
-      {
-        "type": "give_xp",
-        "xp": 1200
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w4_mq20"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w4_mq20_complete"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w5_access_unlocked"
-      },
-      {
-        "type": "start_quest",
-        "quest_id": "w5_mq21"
-      },
-      {
-        "type": "track_quest",
-        "quest_id": "w5_mq21"
-      },
-      {
-        "type": "warp",
-        "room_id": "orbital_executive_dock",
-        "travel_transition": "launch"
-      },
-      {
-        "type": "show_message",
-        "message": "The stolen engine kicks the Astra into high orbit while the Phase-Cutter Arrays carve open the pursuit net. Below, Gh0st leaves Rylos alive. A command broadcast cuts across the flight channel."
-      },
-      {
-        "type": "start_dialogue",
-        "npc": "line:vale_w4_mq20_coup"
+        "type": "play_cinematic",
+        "scene_id": "scene_w4_outer_shield",
+        "on_complete": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w4_mq20",
+            "task_id": "escape_launch"
+          },
+          {
+            "type": "give_xp",
+            "xp": 1200
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w4_mq20"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w4_mq20_complete"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w5_access_unlocked"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w5_mq21"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w5_mq21"
+          },
+          {
+            "type": "warp",
+            "room_id": "orbital_executive_dock",
+            "travel_transition": "launch"
+          }
+        ]
       }
     ]
   },
@@ -7843,7 +7861,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Halo fills the viewport like a crown around the planet. The stolen Deep-Core Engine holds the climb, the Phase-Cutter Arrays warm under the hull, and Vale answers by folding a fighter screen around the Ring. This is not a destination anymore. It is a siege."
+        "message": "Compliance fighters sweep past the docking approach. The crew will have to clear the screen before forcing the collar."
       }
     ]
   },
@@ -8679,7 +8697,7 @@
       },
       {
         "type": "show_message",
-        "message": "Elara forces the blast doors open from inside the system. She is present, fighting, and running out of time. Gh0st reaches for the tank and stops when he sees the cables move with her breathing. Beside the tank, the Anchor relic turns within reach."
+        "message": "Elara opens the access lock from inside the tank. The Anchor cradle releases."
       }
     ]
   },
@@ -8708,46 +8726,48 @@
     ],
     "actions": [
       {
-        "type": "set_quest_task_done",
-        "quest_id": "w5_mq24",
-        "task_id": "take_anchor"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w5_anchor_taken"
-      },
-      {
-        "type": "give_item",
-        "item_id": "anchor_relic",
-        "quantity": 1
-      },
-      {
-        "type": "unlock_skill",
-        "skill_id": "source_art_stasis"
-      },
-      {
-        "type": "give_xp",
-        "xp": 1300
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w5_mq24"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w5_mq24_complete"
-      },
-      {
-        "type": "start_quest",
-        "quest_id": "w5_mq25"
-      },
-      {
-        "type": "track_quest",
-        "quest_id": "w5_mq25"
-      },
-      {
-        "type": "show_message",
-        "message": "Nova takes the relic from the machine using Elara as a living processor and freezes the charging Hunter-Killer in a single clean instant. Stasis unlocked. Elara is free enough to scream, but not free enough to leave before Vale drags the Ring into the Tear."
+        "type": "play_cinematic",
+        "scene_id": "scene_w5_anchor_stasis",
+        "on_complete": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w5_mq24",
+            "task_id": "take_anchor"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w5_anchor_taken"
+          },
+          {
+            "type": "give_item",
+            "item_id": "anchor_relic",
+            "quantity": 1
+          },
+          {
+            "type": "unlock_skill",
+            "skill_id": "source_art_stasis"
+          },
+          {
+            "type": "give_xp",
+            "xp": 1300
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w5_mq24"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w5_mq24_complete"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w5_mq25"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w5_mq25"
+          }
+        ]
       }
     ]
   },
@@ -8818,10 +8838,6 @@
         "type": "advance_quest_stage",
         "quest_id": "w5_mq25",
         "to_stage_id": "critical_escape"
-      },
-      {
-        "type": "show_message",
-        "message": "Stasis washes over Vale and fails. He smiles like Nova has confirmed his thesis, executes Thorne for building too small, absorbs the Ring's energy, and tears space open. The Compliance Avatar blocks the breach."
       }
     ]
   },
@@ -8863,7 +8879,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Avatar loses cohesion. Gravity stutters, the Ring splits, and the Tear pulls every loose fragment upward. Vale is already beyond it with Elara's signal bleeding through the static."
+        "message": "The Avatar breaks apart. The deck tilts toward the breach. Elara is still on the far side of the ruptured deck."
       }
     ],
     "recover_recorded_victory": true
@@ -8893,42 +8909,44 @@
     ],
     "actions": [
       {
-        "type": "set_quest_task_done",
-        "quest_id": "w5_mq25",
-        "task_id": "enter_tear"
-      },
-      {
-        "type": "give_xp",
-        "xp": 1600
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w5_mq25"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w5_mq25_complete"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w6_access_unlocked"
-      },
-      {
-        "type": "warp",
-        "room_id": "source_campfire",
-        "travel_transition": "source"
-      },
-      {
-        "type": "start_quest",
-        "quest_id": "w6_mq26"
-      },
-      {
-        "type": "track_quest",
-        "quest_id": "w6_mq26"
-      },
-      {
-        "type": "show_message",
-        "message": "Nova refuses to leave Elara behind or let Vale turn the Source into one obedient voice. The Ring collapses around the breach, the crew leaps together, and every separate voice becomes a thread in the dark before they wake beside a blue waveform fire."
+        "type": "play_cinematic",
+        "scene_id": "scene_w5_cross_the_tear",
+        "on_complete": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w5_mq25",
+            "task_id": "enter_tear"
+          },
+          {
+            "type": "give_xp",
+            "xp": 1600
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w5_mq25"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w5_mq25_complete"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_access_unlocked"
+          },
+          {
+            "type": "warp",
+            "room_id": "source_campfire",
+            "travel_transition": "source"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w6_mq26"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w6_mq26"
+          }
+        ]
       }
     ]
   },
@@ -9202,48 +9220,50 @@
     ],
     "actions": [
       {
-        "type": "set_quest_task_done",
-        "quest_id": "w6_mq26",
-        "task_id": "reassemble_team"
-      },
-      {
-        "type": "advance_quest_stage",
-        "quest_id": "w6_mq26",
-        "to_stage_id": "reassembly"
-      },
-      {
-        "type": "give_item",
-        "item_id": "key_relic",
-        "quantity": 1
-      },
-      {
-        "type": "give_xp",
-        "xp": 1700
-      },
-      {
-        "type": "complete_quest",
-        "quest_id": "w6_mq26"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w6_mq26_complete"
-      },
-      {
-        "type": "start_quest",
-        "quest_id": "w6_mq27"
-      },
-      {
-        "type": "track_quest",
-        "quest_id": "w6_mq27"
-      },
-      {
-        "type": "warp",
-        "room_id": "source_echo_mines",
-        "travel_transition": "source"
-      },
-      {
-        "type": "show_message",
-        "message": "Zeke, Gh0st, and Orion return with the parts of themselves Vale would have edited out. The song-fire gathers those separate voices into the Key, not as ownership, but as permission to carry each other forward."
+        "type": "play_cinematic",
+        "scene_id": "scene_w6_song_fire_reunion",
+        "on_complete": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_mq26",
+            "task_id": "reassemble_team"
+          },
+          {
+            "type": "advance_quest_stage",
+            "quest_id": "w6_mq26",
+            "to_stage_id": "reassembly"
+          },
+          {
+            "type": "give_item",
+            "item_id": "key_relic",
+            "quantity": 1
+          },
+          {
+            "type": "give_xp",
+            "xp": 1700
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w6_mq26"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_mq26_complete"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w6_mq27"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w6_mq27"
+          },
+          {
+            "type": "warp",
+            "room_id": "source_echo_mines",
+            "travel_transition": "source"
+          }
+        ]
       }
     ]
   },
@@ -9360,11 +9380,11 @@
       {
         "type": "warp",
         "room_id": "source_memory_bridge",
-        "travel_transition": "lift"
+        "travel_transition": "memory_lift"
       },
       {
         "type": "show_message",
-        "message": "The elevator rises through white noise. Vale offers a cleaner beginning with no fear, no Jed, no grief, and no reason for Nova to become herself. She leaves the beginning intact instead of letting him improve it into a lie."
+        "message": "The cage shudders to a stop. The doors part onto a bridge with no far shore in sight."
       }
     ]
   },
@@ -9560,10 +9580,6 @@
         "type": "set_quest_task_done",
         "quest_id": "w6_mq28",
         "task_id": "final_banter"
-      },
-      {
-        "type": "show_message",
-        "message": "Nova: Vale thinks being alone will stop pain.\n\nZeke: Being alone is pain.\n\nGh0st sets one hand on the bridge. Orion adds a low harmony. The path steadies when no one tries to carry it by themselves."
       }
     ]
   },
@@ -9617,7 +9633,7 @@
       {
         "type": "warp",
         "room_id": "source_memory_stair",
-        "travel_transition": "source"
+        "travel_transition": "singularity"
       },
       {
         "type": "start_quest",
@@ -9629,7 +9645,7 @@
       },
       {
         "type": "show_message",
-        "message": "The bridge reaches the Memory Stair. Vale offers Nova a perfect world without grief, without Jed's death, without every scar that taught the crew to choose each other. She lets the image fade. Love that cannot survive truth is not love."
+        "message": "The last light of the bridge hangs behind the crew. Ahead, a door, a hull, and a catwalk wait in the dark. From behind the door comes the familiar tap of a wrench."
       }
     ]
   },
@@ -9995,10 +10011,6 @@
       {
         "type": "set_milestone",
         "milestone": "ms_w6_refused_jed_revision"
-      },
-      {
-        "type": "show_message",
-        "message": "Vale offers a mine where Jed never dies. Nova leaves the real door closed, because love edited into comfort is only another cage."
       }
     ]
   },
@@ -10023,10 +10035,6 @@
       {
         "type": "set_milestone",
         "milestone": "ms_w6_refused_astra_revision"
-      },
-      {
-        "type": "show_message",
-        "message": "Vale offers an Astra that never crashes. Orion touches the impossible hull and lets it pass, because erasing the wreck erases everyone it saved."
       }
     ]
   },
@@ -10051,10 +10059,6 @@
       {
         "type": "set_milestone",
         "milestone": "ms_w6_refused_foundry_revision"
-      },
-      {
-        "type": "show_message",
-        "message": "Vale offers Gh0st a clean origin with no assembly line and no guilt. Gh0st refuses the lie because choice only matters after the damage is real."
       }
     ]
   },
@@ -10102,7 +10106,7 @@
       },
       {
         "type": "show_message",
-        "message": "The stair climbs through every world the crew survived. Vale offers polished revisions: a kinder mine, a safer jungle, a cleaner Spire, a Foundry without screaming, a Ring without bodies. Nova keeps the scars because they belong to real people. The eastern ascent now holds beneath their feet, leading to World-Fracture Landing."
+        "message": "The stair extends east. Nova waits until she hears the others on the first step, then climbs toward World-Fracture Landing."
       }
     ]
   },
@@ -10272,10 +10276,6 @@
         "type": "set_quest_task_done",
         "quest_id": "w6_mq30",
         "task_id": "confront_vale"
-      },
-      {
-        "type": "show_message",
-        "message": "Vale: I will melt the ice. Everyone becomes part of the current. No one is ever alone again.\n\nNova: You are not saving them. You are dissolving them. A voice that cannot say no is not peace."
       }
     ]
   },
@@ -10317,15 +10317,8 @@
         "to_stage_id": "singularity"
       },
       {
-        "type": "audio_layer",
-        "layer": "battle",
-        "cue_id": "battle_stability_shatter",
-        "fade_ms": 0,
-        "loop": false
-      },
-      {
-        "type": "show_message",
-        "message": "Vale’s human outline cracks like porcelain. Two anchors catch the geometry spilling out of him. The Silence rises here. Save at The Center when you are ready to face it."
+        "type": "play_cinematic",
+        "scene_id": "scene_w6_silence_rises"
       }
     ],
     "recover_recorded_victory": true
@@ -10512,10 +10505,6 @@
       {
         "type": "set_milestone",
         "milestone": "ms_w6_aethel_grave_tuned"
-      },
-      {
-        "type": "show_message",
-        "message": "Orion tunes to the spaces between the names. The grave answers as a chorus, never a single note."
       }
     ]
   },
@@ -16703,10 +16692,6 @@
           {
             "type": "track_quest",
             "quest_id": "w3_mq11"
-          },
-          {
-            "type": "show_message",
-            "message": "The Astra follows the low service airlane beneath the distant Planetary Shield. Dominion interference strikes near the Spire; the crew brings her down hard beneath the city."
           }
         ]
       }
@@ -17624,5 +17609,151 @@
       }
     ],
     "recover_recorded_victory": true
+  },
+  {
+    "id": "w6_mq28_final_banter_scene",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_mq28_final_banter_scene"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq28"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w6_mq28",
+        "task_id": "build_bridge"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w6_mq28",
+        "task_id": "final_banter"
+      },
+      {
+        "type": "in_room",
+        "room_id": "source_memory_bridge_span"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:w6_mq28_final_banter_line_1"
+      }
+    ]
+  },
+  {
+    "id": "w6_mq29_refuse_jed_revision_scene",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_mq29_refuse_jed_revision_scene"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq29"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_refused_jed_revision"
+      },
+      {
+        "type": "in_room",
+        "room_id": "source_memory_stair"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:w6_mq29_refuse_jed_revision_line_1"
+      }
+    ]
+  },
+  {
+    "id": "w6_mq29_refuse_astra_revision_scene",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_mq29_refuse_astra_revision_scene"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq29"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_refused_astra_revision"
+      },
+      {
+        "type": "in_room",
+        "room_id": "source_memory_stair"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:w6_mq29_refuse_astra_revision_line_1"
+      }
+    ]
+  },
+  {
+    "id": "w6_mq29_refuse_foundry_revision_scene",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_mq29_refuse_foundry_revision_scene"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w6_mq29"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_refused_foundry_revision"
+      },
+      {
+        "type": "in_room",
+        "room_id": "source_memory_stair"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:w6_mq29_refuse_foundry_revision_line_1"
+      }
+    ]
+  },
+  {
+    "id": "w6_sq29_tune_grave_scene",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_sq29_tune_grave_scene"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w6_aethel_names_traced"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_aethel_grave_tuned"
+      },
+      {
+        "type": "in_room",
+        "room_id": "source_memory_stair"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:w6_sq29_tune_grave_line_1"
+      }
+    ]
   }
 ]

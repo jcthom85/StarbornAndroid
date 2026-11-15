@@ -190,6 +190,7 @@ class HubController(
             val session = sessionStore.state.value
             if (session.hubId == ASTRA_HUB_ID) return
             sessionStore.setAstraReturnLocation(session.worldId, session.hubId, session.roomId)
+            sessionStore.queueAstraBoardingFromMap()
             sessionStore.setLocation(ASTRA_WORLD_ID, ASTRA_HUB_ID, AstraTravel.ENTRY_ROOM_ID)
             sessionStore.visitNode(ASTRA_BRIDGE_NODE_ID)
             onEnter(node)

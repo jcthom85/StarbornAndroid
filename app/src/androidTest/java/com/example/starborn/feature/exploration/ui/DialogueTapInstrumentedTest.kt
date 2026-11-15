@@ -99,7 +99,7 @@ class DialogueTapInstrumentedTest {
             rule.runOnIdle { who = npc }
             rule.mainClock.advanceTimeByFrame()
             rule.onNodeWithTag("dialogue-advance").performTouchInput { click(center) }
-            rule.mainClock.advanceTimeByFrame()
+            rule.mainClock.advanceTimeBy(8_000)
             rule.mainClock.autoAdvance = true
             rule.onNodeWithText("I'll let you get back to it. Take care.").performScrollTo().assertIsDisplayed()
             capture("goodbye-before-tap.png")

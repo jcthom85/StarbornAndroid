@@ -1,9 +1,18 @@
 package com.example.starborn.domain.combat
 
+import com.example.starborn.core.MoshiProvider
+import com.example.starborn.core.platform.DesktopAssetProvider
+import com.example.starborn.data.assets.AssetJsonReader
+import com.example.starborn.domain.inventory.FieldItemRules
+import com.example.starborn.domain.inventory.InventoryEntry
+import com.example.starborn.domain.inventory.InventoryService
+import com.example.starborn.domain.inventory.ItemCatalog
 import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.model.ItemEffect
 import com.example.starborn.domain.model.Skill
 import com.example.starborn.domain.model.StatusDefinition
+import com.example.starborn.feature.combat.presentation.CombatItemPresentation
+import com.example.starborn.feature.combat.viewmodel.TargetRequirement
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -216,6 +225,49 @@ class CombatActionValidationTest {
             CombatAction.SkillUse(actorId = player.id, skillId = skill.id, targetIds = listOf(enemy.id))
         ) { CombatReward() }
         assertTrue(resultStunned.combatants.getValue(enemy.id).hp < 100)
+    }
+
+    @Test
+    fun `authored recovery items heal and cleanse only the selected ally`() {
+        val reader = AssetJsonReader(DesktopAssetProvider(), MoshiProvider.instance)
+        val items = reader.readList<Item>("items.json").associateBy { it.id }
+        val inventory = InventoryService(object : ItemCatalog {
+            override fun load() = Unit
+            override fun findItem(idOrAlias: String) = items[idOrAlias]
+        })
+        val processor = CombatActionProcessor(engine, statusRegistry, { null },
+            consumeItem = inventory::useItem, itemLookup = items::get)
+        val ally = player.copy(id = "ally", side = CombatSide.ALLY)
+        val initial = engine.beginEncounter(CombatSetup(listOf(player, ally), listOf(enemy)))
+        val cases = listOf(
+            Triple("herbal_poultice", 45, setOf("weak")),
+            Triple("antidote_flask", 0, setOf("corrosion", "poison", "erosion")),
+            Triple("burn_salve", 35, setOf("meltdown"))
+        )
+        for ((id, hp, cleared) in cases) {
+            val item = items.getValue(id)
+            assertTrue(CombatItemPresentation.isUsable(InventoryEntry(item, 2)))
+            assertEquals(TargetRequirement.ALLY, CombatItemPresentation.targetRequirement(InventoryEntry(item, 2)))
+            assertEquals(hp == 0, FieldItemRules.isCombatOnly(item, preparedMeal = false))
+            inventory.restore(mapOf(id to 2))
+            val action = CombatAction.ItemUse(player.id, id, ally.id)
+            assertEquals(initial, processor.execute(initial, action) { CombatReward() })
+            assertEquals(2, inventory.snapshot()[id])
+
+            val allStatuses = (cleared + "bleed").map { StatusEffect(it, 3) }
+            val injured = initial.combatants.getValue(ally.id).copy(hp = 40, statusEffects = allStatuses)
+            val active = initial.copy(combatants = initial.combatants + (ally.id to injured))
+            assertEquals(active, processor.execute(active, action.copy(targetId = enemy.id)) { CombatReward() })
+            assertEquals(2, inventory.snapshot()[id])
+
+            val result = processor.execute(active, action) { CombatReward() }
+            val restored = result.combatants.getValue(ally.id)
+            assertEquals(40 + hp, restored.hp)
+            assertEquals(listOf("bleed"), restored.statusEffects.map { it.id })
+            assertEquals(cleared, result.log.filterIsInstance<CombatLogEntry.StatusExpired>()
+                .filter { it.cleansed && it.targetId == ally.id }.map { it.statusId }.toSet())
+            assertEquals(1, inventory.snapshot()[id])
+        }
     }
 
     @Test

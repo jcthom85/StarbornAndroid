@@ -1,6 +1,7 @@
 package com.example.starborn.desktop.ui
 
 import com.example.starborn.shared.ui.typewriterText
+import com.example.starborn.ui.cinematic.rememberCinematicAdvance
 
 import androidx.compose.animation.core.*
 import androidx.compose.animation.core.Animatable as CoreAnimatable
@@ -53,10 +54,11 @@ fun DesktopCinematicOverlay(state: CinematicUiState, services: DesktopAppService
         if (state.presentation == CinematicPresentation.ILLUSTRATED) {
             DesktopIllustratedCinematicOverlay(state, onAdvance, onSkip, services)
         } else {
+            val advanceOnce = rememberCinematicAdvance(state.sceneId, state.stepIndex, onAdvance)
             val text = state.step.text
             var revealed by remember(state.sceneId, state.stepIndex) { mutableIntStateOf(0) }
             val focus = remember { FocusRequester() }
-            val advanceOrReveal = { if (revealed < text.length) revealed = text.length else onAdvance() }
+            val advanceOrReveal = { if (revealed < text.length) revealed = text.length else advanceOnce() }
             LaunchedEffect(state.sceneId, state.stepIndex) {
                 focus.requestFocus()
                 while (revealed < text.length) { delay(28); revealed = (revealed + 1).coerceAtMost(text.length) }
@@ -64,7 +66,7 @@ fun DesktopCinematicOverlay(state: CinematicUiState, services: DesktopAppService
             LaunchedEffect(state.sceneId, state.stepIndex) {
                 state.step.audioCue?.let { services.audioDriver.executeAll(listOf(AudioCommand.Play(AudioCueType.UI, it))) }
                 state.step.voiceCue?.let { services.audioDriver.executeAll(listOf(AudioCommand.Play(AudioCueType.VOICE, it))) }
-                state.step.durationSeconds?.takeIf { it > 0 }?.let { delay((it * 1000).toLong()); onAdvance() }
+                state.step.durationSeconds?.takeIf { it > 0 }?.let { delay((it * 1000).toLong()); advanceOnce() }
             }
             Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = if (state.backdrop == CinematicBackdrop.BLACK) 1f else .72f))
                 .focusRequester(focus).onPreviewKeyEvent { event ->
@@ -72,7 +74,7 @@ fun DesktopCinematicOverlay(state: CinematicUiState, services: DesktopAppService
                         if (event.type == KeyEventType.KeyUp) advanceOrReveal()
                         true
                     } else false
-                }.focusable().clickable(onClick = advanceOrReveal), contentAlignment = Alignment.BottomCenter) {
+                }.focusable().clickable(onClick = advanceOrReveal), contentAlignment = Alignment.Center) {
                 Surface(Modifier.padding(32.dp).widthIn(max = 960.dp).fillMaxWidth(), color = Color(0xF007111A), shape = RoundedCornerShape(16.dp)) {
                     Column(Modifier.padding(24.dp)) {
                         state.step.speaker?.let { Text(it, color = Color(0xFF7BE8FF)) }
@@ -103,8 +105,10 @@ fun DesktopIllustratedCinematicOverlay(
 ) {
     val foreground = LocalDesktopForeground.current
     val stepKey = "${state.sceneId}_${state.stepIndex}"
-    // Survives step changes on purpose: it is the outgoing frame for the next dissolve.
-    val lastRenderedFrame = remember { mutableStateOf<RenderedCinematicFrame?>(null) }
+    val advanceOnce = rememberCinematicAdvance(state.sceneId, state.stepIndex, onAdvance)
+    // Capture the previous step once, before updating its replacement's visible transform.
+    val lastRenderedFrame = remember(state.sceneId) { mutableStateOf<RenderedCinematicFrame?>(null) }
+    val outgoing = remember(stepKey) { lastRenderedFrame.value }
     val durationMs = ((state.step.durationSeconds ?: 4.0) * 1000.0).toLong().coerceAtLeast(500L)
     val waitsForTextReveal = state.step.captionStyle == CinematicCaptionStyle.DIALOGUE ||
         state.step.captionStyle == CinematicCaptionStyle.NARRATION
@@ -158,7 +162,7 @@ fun DesktopIllustratedCinematicOverlay(
                 contentDimmed = true
                 delay(fadeOutMs)
             }
-            onAdvance()
+            advanceOnce()
         }
     }
 
@@ -209,31 +213,34 @@ fun DesktopIllustratedCinematicOverlay(
     }
     // Enforce a minimum safe bleed scale (1.06f) so camera drift Y and screen shake
     // never pull the cropped image edge away from the top or bottom on tall aspect ratio displays.
-    val rawScale = cinematicLerp(
-        state.step.cameraStartScale?.toFloat() ?: legacyStartScale,
-        state.step.cameraEndScale?.toFloat() ?: legacyEndScale,
-        progress
-    )
-    val scale = rawScale.coerceAtLeast(1.06f)
     val density = LocalDensity.current
-    val startX = with(density) { (state.step.cameraStartX ?: 0.0).toFloat().dp.toPx() }
     val endX = with(density) { (state.step.cameraEndX?.toFloat() ?: legacyEndX).dp.toPx() }
-    val startY = with(density) { (state.step.cameraStartY ?: 0.0).toFloat().dp.toPx() }
     val endY = with(density) { (state.step.cameraEndY ?: 0.0).toFloat().dp.toPx() }
+    // Consecutive captions on the same artwork should continue the camera move
+    // from the visible framing, even when the player advances early.
+    val continuousShot = outgoing?.takeIf {
+        state.sceneId != "intro_prologue" && it.imagePath != null && it.imagePath == state.step.imagePath
+    }
+    val startScale = continuousShot?.scale ?: state.step.cameraStartScale?.toFloat() ?: legacyStartScale
+    val endScale = state.step.cameraEndScale?.toFloat() ?: legacyEndScale
+    val startX = continuousShot?.translationX ?: with(density) { (state.step.cameraStartX ?: 0.0).toFloat().dp.toPx() }
+    val startY = continuousShot?.translationY ?: with(density) { (state.step.cameraStartY ?: 0.0).toFloat().dp.toPx() }
+    val scale = cinematicLerp(startScale, endScale, progress).coerceAtLeast(1.06f)
     val driftX = cinematicLerp(startX, endX, progress)
     val driftY = cinematicLerp(startY, endY, progress)
-    // Cross-dissolve, not a re-fade. Previously the frame was a single Image whose alpha came
-    // from an animateFloatAsState that was NOT keyed to the step, so on a step change the target
-    // dipped to 0 for one frame and recovered before the eased tween had moved: every authored
-    // "fade" rendered as a hard cut with a one-frame flicker, and the whole cold open played as a
-    // slideshow. The outgoing frame is now held underneath, frozen at its end transform, and the
-    // incoming frame dissolves over it.
-    val transitionMs = if (state.step.transition == CinematicTransition.CUT) 0 else 520
-    val outgoing = remember(stepKey) { lastRenderedFrame.value }
+    // Keep authored cuts between shots. During a dissolve, draw the outgoing frame
+    // at full opacity beneath the incoming one so black doesn't show through.
+    val transitionMs = if (continuousShot != null || state.step.transition == CinematicTransition.CUT) 0 else 520
     val enter = remember(stepKey) { CoreAnimatable(if (transitionMs == 0) 1f else 0f) }
+    var advanceRequested by remember(stepKey) { mutableStateOf(false) }
+    // A second tap may come in mid-dissolve. Finish that blend, then advance once.
+    val requestAdvance: () -> Unit = {
+        if (enter.value >= 1f) advanceOnce() else advanceRequested = true
+    }
     LaunchedEffect(stepKey) {
         if (transitionMs > 0) {
             enter.animateTo(1f, animationSpec = tween(durationMillis = transitionMs, easing = FastOutSlowInEasing))
+            if (advanceRequested) advanceOnce()
         }
     }
     val dimAlpha by animateFloatAsState(
@@ -350,16 +357,16 @@ fun DesktopIllustratedCinematicOverlay(
     SideEffect {
         lastRenderedFrame.value = RenderedCinematicFrame(
             imagePath = state.step.imagePath,
-            scale = (state.step.cameraEndScale?.toFloat() ?: legacyEndScale).coerceAtLeast(1.06f),
-            translationX = endX,
-            translationY = endY
+            scale = scale,
+            translationX = driftX + impactShakeX.value,
+            translationY = driftY + impactShakeY.value
         )
     }
     val advanceOrReveal: () -> Unit = {
         if (waitsForTextReveal && !captionRevealFinished) {
             revealAllRequest += 1
         } else {
-            onAdvance()
+            requestAdvance()
         }
     }
     val isIntroPrologue = state.sceneId == "intro_prologue"
@@ -394,14 +401,14 @@ fun DesktopIllustratedCinematicOverlay(
     ) {
         // Outgoing frame, frozen where the previous step left it. Drawn only while the
         // dissolve is running, and skipped entirely on a cut.
-        if (outgoing != null && contentAlpha < 1f && !outgoing.imagePath.isNullOrBlank()) {
+        if (outgoing != null && enter.value < 1f && !outgoing.imagePath.isNullOrBlank()) {
             val outgoingPainter = rememberAssetPainter(
                 outgoing.imagePath,
                 fallback = ColorPainter(Color.Black),
                 async = false
             )
             DesktopPortraitBackdrop(outgoingPainter, null,
-                modifier = Modifier.graphicsLayer { alpha = (1f - enter.value) * dimAlpha },
+                modifier = Modifier.graphicsLayer { alpha = dimAlpha },
                 extensionScale = outgoing.scale,
                 extensionTranslationX = outgoing.translationX,
                 extensionTranslationY = outgoing.translationY, animateCenter = true)
@@ -548,19 +555,25 @@ fun DesktopIllustratedCinematicOverlay(
         }
 
         if (state.step.captionStyle != CinematicCaptionStyle.NONE) {
+            val isDialogue = state.step.captionStyle == CinematicCaptionStyle.DIALOGUE
+            val captionEntrance = remember(stepKey) { CoreAnimatable(if (isIntroPrologue) 1f else 0f) }
+            LaunchedEffect(stepKey) {
+                captionEntrance.animateTo(1f, tween(durationMillis = 150))
+            }
             DesktopIllustratedCinematicCaption(
                 state = state,
                 revealAllRequest = revealAllRequest,
                 onRevealFinished = { captionRevealFinished = true },
-                onAdvance = onAdvance,
+                onAdvance = requestAdvance,
                 services = services,
                 modifier = Modifier
-                    // Only follows the frame on the way out; captions keep their own
-                    // reveal animation on the way in.
-                    .graphicsLayer { alpha = if (contentDimmed) contentAlpha else 1f }
-                    .align(Alignment.BottomStart)
-                    .navigationBarsPadding()
-                    .padding(start = 28.dp, end = 28.dp, bottom = 54.dp)
+                    .graphicsLayer { alpha = captionEntrance.value * dimAlpha }
+                    .align(if (isDialogue) Alignment.BottomCenter else Alignment.Center)
+                    .then(
+                        if (isDialogue) Modifier.navigationBarsPadding()
+                            .padding(start = 28.dp, end = 28.dp, bottom = 54.dp)
+                        else Modifier.padding(28.dp)
+                    )
             )
         }
 
@@ -574,8 +587,8 @@ fun DesktopIllustratedCinematicOverlay(
                     .statusBarsPadding()
                     .padding(18.dp)
                     .semantics {
-                        contentDescription = "Skip intro"
-                        onClick(label = "Skip intro") {
+                        contentDescription = if (state.sceneId == "intro_prologue") "Skip intro" else "Skip cinematic"
+                        onClick(label = "Skip cinematic") {
                             onSkip()
                             true
                         }
@@ -668,8 +681,8 @@ private fun DesktopIllustratedCinematicCaption(
         val alert = Color(0xFFFFA45B)
         Surface(
             modifier = modifier
-                .fillMaxWidth()
-                .widthIn(max = 720.dp),
+                .widthIn(max = 720.dp)
+                .fillMaxWidth(),
             color = Color(0xF2070B10),
             contentColor = Color.White,
             border = BorderStroke(1.dp, alert.copy(alpha = 0.72f)),
@@ -855,11 +868,6 @@ private fun CinematicNarrationCard(
     showTapToContinue: Boolean = true,
     modifier: Modifier = Modifier
 ) {
-    val cardAlpha by animateFloatAsState(
-        targetValue = 1f,
-        animationSpec = tween(durationMillis = 500, delayMillis = 100, easing = FastOutSlowInEasing),
-        label = "cinematicCardAlpha"
-    )
     val glowAlpha by rememberInfiniteTransition(label = "cinematicGlow").animateFloat(
         initialValue = 0.25f,
         targetValue = 0.55f,
@@ -879,11 +887,8 @@ private fun CinematicNarrationCard(
 
     Box(
         modifier = modifier
+            .widthIn(max = 720.dp)
             .fillMaxWidth(0.88f)
-            .graphicsLayer {
-                alpha = cardAlpha
-                translationY = (1f - cardAlpha) * 48f
-            }
     ) {
         Box(
             modifier = Modifier

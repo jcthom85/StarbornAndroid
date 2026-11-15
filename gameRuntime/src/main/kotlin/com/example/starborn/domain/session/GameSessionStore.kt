@@ -40,6 +40,15 @@ class GameSessionStore {
             pendingBattleJson = if (it.pendingBattleJson == expectedDescriptorJson) "" else it.pendingBattleJson) }
     }
 
+    private var astraBoardingFromMap = false
+
+    fun queueAstraBoardingFromMap() {
+        astraBoardingFromMap = true
+    }
+
+    fun takeAstraBoardingFromMap(): Boolean =
+        astraBoardingFromMap.also { astraBoardingFromMap = false }
+
     var equipmentRestoreNotice: String? = null
         private set
     private var restoredHpCeilings: ((GameSessionState) -> Map<String, Int>)? = null
@@ -54,6 +63,7 @@ class GameSessionStore {
     val restorationVersion: Long get() = restorationCounter.get()
 
     fun restore(state: GameSessionState) {
+        astraBoardingFromMap = false
         val base = com.example.starborn.domain.leveling.CrewBuildPrototype.grantCore(normalizeArmors(normalizeWeapons(normalizeEquipment(state.withoutRetiredCompanion()))))
         val equipment = ModEquipmentRules.reconcile(base, state)
         val ceilings = if (equipment.partyMemberHp.isEmpty()) emptyMap() else restoredHpCeilings?.invoke(equipment).orEmpty()

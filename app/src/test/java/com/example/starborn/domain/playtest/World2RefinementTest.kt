@@ -283,6 +283,27 @@ class World2RefinementTest {
         assertEquals(350, resumed.state.playerXp)
     }
 
+    @Test fun crossingTheTearResumesBeforeUnlockingTheSourceAndPaysOnce() {
+        val initial = GameSessionState(roomId = "deep_tear", activeQuests = setOf("w5_mq25"),
+            questTasksCompleted = mapOf("w5_mq25" to setOf("defeat_avatar")))
+        val departing = Harness(initial)
+        departing.action("w5_mq25_enter_tear")
+        assertEquals("deep_tear", departing.state.roomId)
+        assertEquals(initial.playerXp, departing.state.playerXp)
+        assertFalse("ms_w6_access_unlocked" in departing.state.completedMilestones)
+        val resumed = Harness(roundTrip(departing.state))
+        resumed.events.resumePendingCinematics()
+        val complete = resumed.scenes.getValue("scene_w5_cross_the_tear")
+        complete()
+        complete()
+        assertEquals("source_campfire", resumed.state.roomId)
+        assertEquals(initial.playerXp + 1600, resumed.state.playerXp)
+        assertTrue("w6_mq26" in resumed.state.activeQuests)
+        assertTrue("ms_w6_access_unlocked" in resumed.state.completedMilestones)
+        resumed.action("w5_mq25_enter_tear")
+        assertEquals(initial.playerXp + 1600, resumed.state.playerXp)
+    }
+
     @Test fun salvageReturnRouteRequiresDiscoveryAndRecoveredConduits() {
         val h = Harness(GameSessionState(activeQuests = setOf("w2_mq05"), roomId = "sector9_hangar_bay"))
         h.action("w2_mq05_return_to_pod"); assertEquals("sector9_hangar_bay", h.state.roomId)

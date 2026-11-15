@@ -212,7 +212,7 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 
 91. From **Manager Patrol Route**, go **east** to **The Elevator** (`source_echo_elevator`).
 
-92. At **The Elevator**, let the arrival scene finish. Confirm **The Echo of the Mines** complete and **The Crossing** active. The story transfers the crew to **Memory Bridge** (`source_memory_bridge`); the bridge’s west route returns through the elevator when needed.
+92. At **The Elevator**, ride the lift through the white noise to Memory Bridge. Confirm **The Echo of the Mines** complete and **The Crossing** active. The story transfers the crew to **Memory Bridge** (`source_memory_bridge`); the bridge’s west route returns through the elevator when needed.
 
 ## 8. The Crossing: four anchors and the shared promise
 
@@ -266,13 +266,13 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 
 ## 9. Refuse the revisions and complete The Aethel Grave
 
-117. At **Memory Stair**, use **Jed's door**. Refuse this revision. All three refusals are required; none is a substitute for another.
+117. At **Memory Stair**, use **Jed's door**. Finish the conversation and choose the refusal beginning **Let go of the latch**. All three refusals are required; none is a substitute for another.
 
-118. At **Memory Stair**, use **Astra wreckage**. Refuse this revision. All three refusals are required; none is a substitute for another.
+118. At **Memory Stair**, use **Astra wreckage**. Finish the conversation and choose the refusal beginning **Keep the scarred Astra**. All three refusals are required; none is a substitute for another.
 
-119. At **Memory Stair**, use **Foundry catwalk**. Refuse this revision. All three refusals are required; none is a substitute for another.
+119. At **Memory Stair**, use **Foundry catwalk**. Finish the conversation and choose the refusal beginning **We go back with you**. All three refusals are required; none is a substitute for another.
 
-120. At **Memory Stair**, use **aethel grave**. Tune the grave after tracing the names. This is its own quest interaction, separate from the final Harmonic Choir Lock.
+120. At **Memory Stair**, use **aethel grave**. Finish Orion’s remembrance after tracing the names. This is its own quest interaction, separate from the final Harmonic Choir Lock.
 
 121. From **Memory Stair**, go **north** to **Mine Dust Step** (`source_memory_stair_node_scale_01`).
 
@@ -382,7 +382,7 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 
 171. At **The Center**, save in a separate pre-ending slot. Confirm both boss objectives and all optional quest rewards. Keep this save if you want to retest the tuning, cinematics or emotional pacing.
 
-172. At **The Center**, use **shared tuning focus**. Solve **Harmonic Choir Lock**: **Heartbeat = 72 BPM**, **Neural Pressure = 36%**, **Choir Phase = 270°**, then submit. Finish or deliberately skip the Final Note and epilogue cinematics through their normal controls. Completion is awarded by the cinematic callback, not merely by opening the sliders.
+172. At **The Center**, use **shared tuning focus**. Solve **Harmonic Choir Lock**: **Heartbeat = 72 BPM**, **Neural Pressure = 36%**, **Choir Phase = 270°**, then select **Tune the Chorus**. Finish or deliberately skip the Final Note and epilogue cinematics through their normal controls. Completion is awarded by the cinematic callback, not merely by opening the sliders.
 
 173. After the ending, confirm **The Final Note** complete, **Tune World** unlocked, 3,000 quest XP awarded, credits seen and arrival at **New World** (`source_new_world`). A save during a pending ending should resume that completion on load; retain the pre-ending save if the callback fails.
 

@@ -1096,9 +1096,9 @@ class ExplorationController(
             room.contains("source") -> {
                 when {
                     "orion" in party ->
-                        "Orion sits cross-legged as the crystal floor shimmers: 'The primordial chords are clearest when the mind is quiet. Rest, Nova—the Source listens with us.'"
+                        "Orion sits beside Nova on the crystal floor. “Close your eyes. I’ll tell you if the sound changes.”"
                     "gh0st" in party ->
-                        "Gh0st monitors her scanner with a soft hum: 'Even my cybernetic HUD is picking up melodic frequency harmonics. Safe to sleep for six hours.'"
+                        "Gh0st checks his scanner. “Nothing moving close to us. I’ll stay up.”"
                     else ->
                         "Nova rests against the crystalline wall. The ambient resonance of the Source washes over her tired muscles, restoring focus and resolve."
                 }
@@ -1106,9 +1106,9 @@ class ExplorationController(
             room.contains("orbital") || room.contains("zenith") -> {
                 when {
                     "zeke" in party ->
-                        "Zeke looks out the observation viewport at the planet below: 'Zenith air scrubbers always taste like ozone and copper. Still beats breathing slag dust. Sleep fast.'"
+                        "Zeke rubs his eyes at the viewport. “I can still taste the slag dust. Try to sleep. I’ll watch the hatch.”"
                     "orion" in party ->
-                        "Orion gazes into the starry void: 'Looking out at the curve of the stars... from up here, all the Dominion's iron fortresses look so small.'"
+                        "Orion rests a hand against the glass. “I can see where the tide turns from here. I used to wait all evening to see that from the shore.”"
                     else ->
                         "Nova rests in the quiet observation alcove. The silent expanse of the stars drifts past the reinforced glass."
                 }
@@ -1116,9 +1116,9 @@ class ExplorationController(
             room.contains("foundry") -> {
                 when {
                     "zeke" in party ->
-                        "Zeke uncaps a water canteen with a tired sigh: 'The heat convection in this sector will bake your rations to dry ash. Hydrate up before you sleep, Nova.'"
+                        "Zeke unscrews the canteen and passes it to Nova. “Drink. I’ll get another when the pipes cool.”"
                     "gh0st" in party ->
-                        "Gh0st listens to the cooling pipes: 'Foundry thermal exhaust masks our heat signature completely. We have a clean resting window.'"
+                        "Gh0st checks the grate above them. “The exhaust will hide us while it’s running. Get some sleep.”"
                     else ->
                         "Nova rests in the warm shadow of the forge heat shields, letting the steady thermal radiation soothe aching joints."
                 }
@@ -1126,9 +1126,9 @@ class ExplorationController(
             room.contains("spire") -> {
                 when {
                     "gh0st" in party ->
-                        "Gh0st keeps watch near the conduit junction: 'Sub-level ICE routines re-index every two hours. I've spoofed our biometric traces. Get some sleep.'"
+                        "Gh0st props himself against the conduit. “I cleared our badge pings. I’ll wake you before the next sweep.”"
                     "orion" in party ->
-                        "Orion listens to the distant hum of neon traffic: 'A million lights in this city, yet so much darkness in between. Rest, Nova—tomorrow we climb higher.'"
+                        "Orion listens to the traffic above them. “That’s a freight car. The sound carries down the pipes. It took me a while to stop getting up for it.”"
                     else ->
                         "Nova rests in the shadowed maintenance niche, sheltered from corporate surveillance drones and neon glare."
                 }
@@ -1136,17 +1136,17 @@ class ExplorationController(
             room.contains("sector9") || room.contains("swamp") -> {
                 when {
                     "zeke" in party ->
-                        "Zeke inspects his boot seals: 'Keep your gear off the moss, Nova. Swamp rot eats through insulation faster than frostbite. Sleep with one eye on the canopy.'"
+                        "Zeke puts his boots on a dry root. “Keep the seals off the moss. Mine are already starting to peel.”"
                     "orion" in party ->
-                        "Orion watches the glowing marsh reeds: 'The bioluminescent spores pulse in rhythm with our breathing. In Sanctuary, we called that harmony.'"
+                        "Orion watches the reeds light up. “They used to do that before the tide came in. We have time for a short rest.”"
                     "gh0st" in party ->
-                        "Gh0st leans against a petrified root: 'Thermal sensors wash out in this swamp mist. Good for resting; better for ambushes. I'll take first watch.'"
+                        "Gh0st settles against a root. “The mist’s too thick for thermal. I’ll listen. Get some sleep.”"
                     else ->
                         "Nova rests on the dry roots above the mist pools. Bioluminescent spores drift past like green embers, steadying her heartbeat."
                 }
             }
             "zeke" in party ->
-                "Zeke sets down his datapad with a sigh: 'Sleep fast, Nova. Shift logs don't forgive a late alarm, rebellion or no rebellion.'"
+                "Zeke sets his datapad face down. “I keep thinking I ought to set the shift alarm. Go ahead and sleep, Nova.”"
             "ms_w1_mq01_cutter_surge" in milestones ->
                 "Nova rests against the bulkhead. The electric ringing in her ears dims to a distant hum, and her pulse steadies."
             else ->
@@ -1850,7 +1850,7 @@ class ExplorationController(
             sessionStore.setAstraReturnLocation(session.worldId, session.hubId, session.roomId)
             sessionStore.setLocation("world_astra", AstraTravel.HUB_ID, AstraTravel.ENTRY_ROOM_ID)
             sessionStore.visitNode(AstraTravel.NODE_ID)
-            warpToRoom(AstraTravel.ENTRY_ROOM_ID, ScriptedTravelStyle.AIRLOCK)
+            warpToRoom(AstraTravel.ENTRY_ROOM_ID, ScriptedTravelStyle.ASTRA_BOARDING)
             postStatus("Astra boarding sequence complete.")
         }
     }
@@ -2582,6 +2582,15 @@ class ExplorationController(
             )
             val initialActions = parseActions(initialRoom)
             val initialConnections = initialRoom?.let { visibleConnections(it) }.orEmpty()
+            val boardingTransition = if (!hubMenu && initialRoom?.id == AstraTravel.ENTRY_ROOM_ID &&
+                sessionStore.takeAstraBoardingFromMap()
+            ) {
+                RoomTransitionUi(
+                    System.nanoTime(), sessionState.astraReturnRoomId ?: initialRoom.id,
+                    initialRoom.id, "passage", null,
+                    scriptedStyle = ScriptedTravelStyle.ASTRA_BOARDING, destinationTitle = initialRoom.title
+                )
+            } else null
             val activeJournal = buildQuestSummariesFromSession(
                 questIds = sessionState.activeQuests,
                 session = sessionState,
@@ -2604,6 +2613,7 @@ class ExplorationController(
                     currentWorld = initialWorld,
                     currentHub = initialHub,
                     currentRoom = initialRoom,
+                    roomTransition = boardingTransition,
                     availableConnections = initialConnections,
                     npcs = visibleNpcsForRoom(initialRoom, sessionState.completedMilestones),
                     npcPresenceNames = npcPresenceNames,
@@ -2922,7 +2932,9 @@ class ExplorationController(
         }
 
         val previousRoom = _uiState.value.currentRoom
+        val boardingFromMap = roomId == AstraTravel.ENTRY_ROOM_ID && sessionStore.takeAstraBoardingFromMap()
         val style = directStyle ?: pending?.takeIf { it.first == roomId }?.second
+            ?: ScriptedTravelStyle.ASTRA_BOARDING.takeIf { boardingFromMap }
         val transition = if (previousRoom != null && previousRoom.id != nextRoom.id && style != null &&
             _uiState.value.cinematic == null) {
             RoomTransitionUi(System.nanoTime(), previousRoom.id, nextRoom.id, "passage",
@@ -5920,6 +5932,10 @@ class ExplorationController(
     }
 
     private fun handleGenericAction(action: GenericAction) {
+        if (action.completedInspection) {
+            showInspection(action.conditionUnmetMessage ?: "There is nothing more to do with ${action.name}.")
+            return
+        }
         when (action.type.lowercase(Locale.getDefault())) {
             "combat_prototype_titan", "combat_prototype_reserves" -> {
                 if ("ms_debug_combat_prototypes" !in sessionStore.state.value.completedMilestones ||
@@ -6112,9 +6128,13 @@ class ExplorationController(
                         roomId.startsWith("foundry_") || roomId.startsWith("orbital_") ||
                         roomId.startsWith("deep_") || roomId.startsWith("source_") ||
                         eventId == "w2_sq02_trace_cliffs" || status == "Objective completed."
-                    if (needsUnavailableFeedback &&
+                    val authoredUnavailable = _uiState.value.currentRoom?.actions
+                        ?.firstOrNull { it["name"] == action.name }?.get("unavailable_message").asStringOrNull()
+                    val worldOne = _uiState.value.currentWorld?.id == "world_1"
+                    if ((needsUnavailableFeedback || worldOne || authoredUnavailable != null) &&
                         !eventManager.canHandleTrigger("player_action", EventPayload.Action(eventId))) {
-                        val message = action.conditionUnmetMessage?.takeIf {
+                        val message = authoredUnavailable ?: action.conditionUnmetMessage?.takeIf {
+                            (!worldOne || needsUnavailableFeedback) &&
                             it.isNotBlank() && it != "Objective completed."
                         } ?: "There is nothing more to do with ${action.name} right now."
                         showInspection(message)
@@ -6246,6 +6266,7 @@ class ExplorationController(
 
     private fun guardedActionMessage(room: Room?, action: RoomAction): String? {
         if (room == null) return null
+        if (action is GenericAction && action.completedInspection) return null
         if (action is ContainerAction && action.stateKey?.let { roomStates[room.id]?.get(it) } == true) return null
         val authored = room.actions.firstOrNull { it["name"] == action.name } ?: return null
         val guards = authored["guarded_by"].asListOrNull().orEmpty()
@@ -6625,13 +6646,21 @@ class ExplorationController(
                 ?: action["action_event"].asStringOrNull()
             val completionMilestone = action["inspection_completion_milestone"].asStringOrNull()
             val session = sessionStore.state.value
-            val inspectionComplete = clueEvent in session.completedEvents ||
-                (completionMilestone != null && completionMilestone in session.completedMilestones)
+            val completionQuest = action["inspection_completion_quest"].asStringOrNull()
+            val completedHandler = eventsById.values.firstOrNull {
+                action["inspection_completion_event"] == null && completionQuest == null &&
+                it.trigger.action == clueEvent && it.id in session.completedEvents
+            }
+            val inspectionComplete = clueEvent in session.completedEvents || completedHandler != null ||
+                (completionMilestone != null && completionMilestone in session.completedMilestones) ||
+                (completionQuest != null && completionQuest in session.completedQuests)
             if (action["inspect_after_completion"] == true && clueEvent != null && inspectionComplete) {
                 val text = action["completed_inspection_message"].asStringOrNull()
-                    ?: eventsById[clueEvent]?.actions?.firstOrNull { it.type == "show_message" }?.message
+                    ?: (completedHandler ?: eventsById[clueEvent])?.actions
+                        ?.firstOrNull { it.type == "show_message" }?.message
                     ?: action["condition_unmet_message"].asStringOrNull()
                 return@mapNotNull GenericAction(name = name, type = "inspect",
+                    actionEvent = action["action_event"].asStringOrNull(),
                     conditionUnmetMessage = text?.substringAfter("\n\n", text), completedInspection = true)
             }
             val discoveryCabinet = action["discovery_cabinet_id"].asStringOrNull()

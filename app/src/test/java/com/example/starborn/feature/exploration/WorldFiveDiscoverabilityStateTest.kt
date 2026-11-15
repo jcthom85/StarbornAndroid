@@ -29,9 +29,10 @@ class WorldFiveDiscoverabilityStateTest {
         )
         handoffs.forEach { (eventId, pair) ->
             val event = events.single { it.id == eventId }
-            assertEquals(1, event.actions.count { it.type == "complete_quest" && it.questId == pair.first })
-            assertEquals(1, event.actions.count { it.type == "start_quest" && it.questId == pair.second })
-            assertEquals(1, event.actions.count { it.type == "track_quest" && it.questId == pair.second })
+            val actions = event.actions.flatMap { action -> listOf(action) + action.onComplete.orEmpty() }
+            assertEquals(1, actions.count { it.type == "complete_quest" && it.questId == pair.first })
+            assertEquals(1, actions.count { it.type == "start_quest" && it.questId == pair.second })
+            assertEquals(1, actions.count { it.type == "track_quest" && it.questId == pair.second })
             assertFalse(events.any { other ->
                 other.trigger.type == "quest_stage_complete" && other.trigger.questId == pair.first &&
                     other.actions.any { it.type == "start_quest" && it.questId == pair.second }

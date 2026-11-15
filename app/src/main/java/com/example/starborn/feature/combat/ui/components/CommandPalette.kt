@@ -555,6 +555,10 @@ private fun combatItemEffectSummary(entry: InventoryEntry): String {
     val effect = entry.item.effect ?: return "No battle effect"
     val parts = mutableListOf<String>()
     effect.restoreHp?.takeIf { it > 0 }?.let { parts += "Restore $it HP" }
+    if (effect.cleanses.isNotEmpty()) {
+        val names = effect.cleanses.joinToString(transform = com.example.starborn.domain.combat.CombatClarity::statusName)
+        parts += "Clear $names"
+    }
     effect.damage?.takeIf { it > 0 }?.let { parts += "Deal $it damage" }
     effect.amount?.takeIf { it > 0 && (effect.restoreHp ?: 0) <= 0 && (effect.damage ?: 0) <= 0 }?.let {
         parts += "Power $it"

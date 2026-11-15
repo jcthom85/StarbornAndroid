@@ -42,9 +42,9 @@ object CombatTutorialCopy {
             if (isLoader) "Watch the Shock pulse break its stability." else "Watch the guard break."
             CombatTutorialStep.SUCCESS ->
             if (isLoader)
-                "Stability broken! Broken targets take 25% more direct damage. Exploiting weaknesses shortens cooldowns. Use Attacks to build Momentum for your next Overcharge!"
+                "Weakness hits deal double Stability damage and shorten your active cooldowns by one turn. A Stability Break delays the enemy’s turn. Hit while it’s Broken for 25% more direct damage."
             else
-                "Hydraulic Kick stripped the shield. Attack to finish the fight and build Momentum for your next Overcharge!"
+                "Hydraulic Kick stripped the shield. Guard Break removes protection. A Stability Break delays the target’s turn. Now attack the exposed trainer."
         }
     }
     fun continueLabel(tutorial: CombatTutorialState): String {

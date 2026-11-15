@@ -50,6 +50,18 @@ class CombatActionProcessor(
             is CombatAction.SnackUse -> {
                 if (!CombatPlaytestBridge.isOpMode && actorState.snackCooldown > 0) return state
             }
+            is CombatAction.ItemUse -> {
+                val effect = itemLookup?.invoke(action.itemId)?.effect
+                if (effect != null && effect.cleanses.isNotEmpty()) {
+                    val targets = resolveTargetsForItem(state, action, itemSupportTargeting(effect.target))
+                    if (targets.none { id ->
+                            val target = state.combatants[id] ?: return@none false
+                            target.isAlive && (target.combatant.side == CombatSide.ENEMY) == (actorState.combatant.side == CombatSide.ENEMY) &&
+                                (((effect.restoreHp ?: 0) > 0 && target.hp < target.combatant.stats.maxHp) ||
+                                    target.statusEffects.any { it.id in effect.cleanses })
+                        }) return state
+                }
+            }
             else -> {}
         }
 
@@ -933,7 +945,13 @@ class CombatActionProcessor(
             action = action,
             fallback = itemSupportTargeting(result.item.effect?.target)
         )
+        val cleanses = result.item.effect?.cleanses.orEmpty()
+        val enemyActor = state.combatants[action.actorId]?.combatant?.side == CombatSide.ENEMY
         targets.forEach { targetId ->
+            val target = working.combatants[targetId] ?: return@forEach
+            if (cleanses.isNotEmpty() && (!target.isAlive || (target.combatant.side == CombatSide.ENEMY) != enemyActor)) {
+                return@forEach
+            }
             if (result.hp > 0) {
                 working = engine.applyHeal(
                     state = working,
@@ -944,6 +962,17 @@ class CombatActionProcessor(
             }
             if (result.buffs.isNotEmpty()) {
                 working = engine.applyBuffs(working, targetId, result.buffs, sourceId = action.actorId)
+            }
+            if (cleanses.isEmpty()) return@forEach
+            val (removed, retained) = target.statusEffects.partition { it.id in cleanses }
+            if (removed.isNotEmpty()) {
+                val healed = working.combatants.getValue(targetId)
+                working = working.copy(
+                    combatants = working.combatants + (targetId to healed.copy(statusEffects = retained)),
+                    log = working.log + removed.distinctBy { it.id }.map {
+                        CombatLogEntry.StatusExpired(working.round, targetId, it.id, cleansed = true)
+                    }
+                )
             }
         }
         return working

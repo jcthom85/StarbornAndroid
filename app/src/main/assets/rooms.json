@@ -495,7 +495,10 @@
         "requires_milestone": "ms_w1_mq01_fault_visible",
         "show_when_state": "light_on",
         "hide_when_state": "conduit_isolated",
-        "condition_unmet_message": "Turn on the bunk light to see the door controls."
+        "condition_unmet_message": "Turn on the bunk light to see the door controls.",
+        "unavailable_message": "Turn on the bunk light to see the door controls.",
+        "inspect_after_completion": true,
+        "completed_inspection_message": "The bypass is holding. The bunk door is open."
       },
       {
         "name": "cargo netting",
@@ -667,7 +670,8 @@
         "action_event": "w1_loot_shower_drain",
         "requires_milestone": "ms_w1_pit_showers_tuned",
         "requires_milestone_not_set": "ms_w1_pit_showers_looted",
-        "condition_unmet_message": "The drain trap is empty."
+        "condition_unmet_message": "Scalding steam covers the grate. Adjust the steam valves before reaching inside.",
+        "unavailable_message": "Scalding steam covers the grate. Adjust the steam valves before reaching inside."
       },
       {
         "name": "tiles",
@@ -727,7 +731,10 @@
         "name": "loader diagnostic strip",
         "type": "generic",
         "action_event": "w1_mq01_inspect_loader_relay",
-        "condition_unmet_message": "The strip flashes SAFETY GOVERNOR BYPASSED beside the cracked relay."
+        "condition_unmet_message": "The strip identifies the exposed Shock relay.",
+        "unavailable_message": "The strip identifies the exposed Shock relay.",
+        "inspect_after_completion": true,
+        "completed_inspection_message": "The exposed relay is logged in Nova’s notes."
       },
       {
         "name": "scrap",
@@ -803,14 +810,20 @@
         "type": "generic",
         "action_event": "w1_mq01_confirm_governor",
         "show_when_milestone": "ms_w1_mq01_cryo_repaired",
-        "condition_unmet_message": "The factory governor blocks the sweep Nova needs for quota. The bypass lead is exposed and waiting for her confirmation."
+        "condition_unmet_message": "Repair the Cryo-Inductor in Tinkering before checking the governor.",
+        "unavailable_message": "Repair the Cryo-Inductor in Tinkering before checking the governor.",
+        "inspect_after_completion": true,
+        "completed_inspection_message": "The governor bypass is confirmed."
       },
       {
         "name": "Flux Liner",
         "type": "generic",
         "action_event": "w1_mq01_patch_flux_liner",
         "show_when_milestone": "ms_w1_mq01_cryo_repaired",
-        "condition_unmet_message": "Patch the suit link and clamp the sacrificial strip to the floor ground."
+        "condition_unmet_message": "Repair the Cryo-Inductor first, then ground the Flux Liner.",
+        "unavailable_message": "Repair the Cryo-Inductor first, then ground the Flux Liner.",
+        "inspect_after_completion": true,
+        "completed_inspection_message": "The suit’s copper strap is clamped to the ground lug."
       },
       {
         "name": "live cutter test",
@@ -818,7 +831,8 @@
         "action_event": "w1_mq01_cutter_surge",
         "show_when_milestone": "ms_w1_mq01_cryo_repaired",
         "hide_when_state": "cutter_surge_complete",
-        "condition_unmet_message": "Ground the Flux Liner and confirm the mining cutter bypass before firing a live test sweep."
+        "condition_unmet_message": "Repair the Cryo-Inductor, ground the Flux Liner and confirm the mining cutter bypass before testing.",
+        "unavailable_message": "Repair the Cryo-Inductor, ground the Flux Liner and confirm the mining cutter bypass before testing."
       }
     ]
   },
@@ -1024,13 +1038,19 @@
         "name": "cargo rail",
         "type": "generic",
         "action_event": "w1_sq03_move_cargo",
-        "condition_unmet_message": "The loader shoves the cargo along the rail, clearing enough space for the trapped workers to breathe."
+        "condition_unmet_message": "Get Boggs’s certification assignment and start the loader before moving the cargo.",
+        "unavailable_message": "Get Boggs’s certification assignment and start the loader before moving the cargo.",
+        "inspect_after_completion": true,
+        "completed_inspection_message": "The cargo is clear of the rail."
       },
       {
         "name": "loader",
         "type": "generic",
         "action_event": "w1_sq03_start_loader",
-        "condition_unmet_message": "The loader coughs awake with enough hydraulic force to move a wall."
+        "condition_unmet_message": "Speak to Foreman Boggs about certification before practicing with the loader.",
+        "unavailable_message": "Speak to Foreman Boggs about certification before practicing with the loader.",
+        "inspect_after_completion": true,
+        "completed_inspection_message": "The loader is powered and ready for the cargo rail."
       },
       {
         "name": "scrap",
@@ -1246,13 +1266,19 @@
         "name": "fans",
         "type": "generic",
         "action_event": "w1_sq02_reroute_airflow",
-        "condition_unmet_message": "The fans cough and stutter, shoving pressure through the wrong part of the vent line."
+        "condition_unmet_message": "Check the vent and speak to the medbay staff before rerouting airflow.",
+        "unavailable_message": "Check the vent and speak to the medbay staff before rerouting airflow.",
+        "inspect_after_completion": true,
+        "completed_inspection_message": "The fans now draw air toward the exhaust stack."
       },
       {
         "name": "vent",
         "type": "generic",
         "action_event": "w1_sq02_patch_vent",
-        "condition_unmet_message": "The cracked vent is leaking poison because pressure is backed up behind the fans."
+        "condition_unmet_message": "Speak to the medbay staff about System Flush before working on the vent.",
+        "unavailable_message": "Speak to the medbay staff about System Flush before working on the vent.",
+        "inspect_after_completion": true,
+        "completed_inspection_message": "Nova has traced the crack to the pressure backed up behind the fans."
       },
       {
         "name": "toxic blockage",
@@ -1262,7 +1288,10 @@
         "guarded_message": "The two Skimmers circle the intake grille. Defeat them before reaching in to clear the toxic blockage.",
         "type": "generic",
         "action_event": "w1_sq02_clear_toxic_blockage",
-        "condition_unmet_message": "The toxic blockage pulses in the redirected updraft, close enough to clear if the airflow is stable."
+        "condition_unmet_message": "Start System Flush and reroute the fans before clearing the blockage.",
+        "unavailable_message": "Start System Flush and reroute the fans before clearing the blockage.",
+        "inspect_after_completion": true,
+        "completed_inspection_message": "The blockage is gone and air moves freely."
       }
     ]
   },
@@ -1494,7 +1523,11 @@
         ],
         "action_event": "w1_sq01_open_rebel_cache",
         "already_open_message": "The rebel cache is empty except for old names scratched into the lid.",
-        "popup_title": "Rebel Cache"
+        "popup_title": "Rebel Cache",
+        "condition_unmet_message": "Ask Scrapper about the hidden stash before opening the cache.",
+        "unavailable_message": "Ask Scrapper about the hidden stash before opening the cache.",
+        "inspect_after_completion": true,
+        "completed_inspection_message": "The open lid still bears the resistance names."
       },
       {
         "name": "security field",
@@ -2415,13 +2448,22 @@
         "name": "terminal",
         "type": "generic",
         "action_event": "start_hack_sq04",
-        "condition_unmet_message": "A high-security interface. The rebel spoof is buried under Dominion compliance layers."
+        "condition_unmet_message": "Check the frozen console and return to the terminal.",
+        "unavailable_message": "Check the frozen console and return to the terminal.",
+        "inspect_after_completion": true,
+        "completed_inspection_message": "The override is recorded. The terminal no longer needs another upload.",
+        "inspection_completion_event": "w1_sq04_compile_spoof",
+        "inspection_completion_quest": "w1_sq04"
       },
       {
         "name": "console",
         "type": "generic",
         "action_event": "w1_sq04_thaw_console",
-        "condition_unmet_message": "The buttons are frozen stiff. You'll need to be careful with the input."
+        "condition_unmet_message": "Check the terminal for the rebel spoof before thawing the console.",
+        "unavailable_message": "Check the terminal for the rebel spoof before thawing the console.",
+        "inspect_after_completion": true,
+        "completed_inspection_message": "The contacts have thawed. The terminal can apply the spoof.",
+        "inspection_completion_event": "w1_sq04_thaw_console_controls"
       },
       {
         "name": "output ports",
@@ -2788,7 +2830,12 @@
         "name": "wheel brake",
         "type": "generic",
         "action_event": "w1_cart_release",
-        "hide_when_milestone": "ms_w1_cart_track_diverted"
+        "hide_when_milestone": "ms_w1_cart_track_diverted",
+        "condition_unmet_message": "Set the track toward the western bulkhead before releasing the brake.",
+        "unavailable_message": "Set the track toward the western bulkhead before releasing the brake.",
+        "inspect_after_completion": true,
+        "completed_inspection_message": "The cart has already opened the western bulkhead.",
+        "inspection_completion_event": "w1_cart_release"
       }
     ]
   },
@@ -3486,6 +3533,12 @@
     "description_variants": [
       {
         "requires_milestones": [
+          "ms_w1_mq04_complete"
+        ],
+        "description": "The car rests on the far side of the shaft. A bent wrench lies at the lip. The shutters on Jed’s side are closed, and his radio is quiet. A shielded service recess still holds emergency dressings."
+      },
+      {
+        "requires_milestones": [
           "ms_w1_mq03_complete"
         ],
         "forbidden_milestones": [
@@ -3628,6 +3681,10 @@
       },
       {
         "name": "escape pod",
+        "guarded_by": [
+          "the_iron_warden"
+        ],
+        "guarded_message": "The Warden is standing over the pod hatch. Zeke can get it open once you bring the Warden down.",
         "type": "generic",
         "condition_unmet_message": "A cargo pod with life-support bolted in like an afterthought. It looks less like rescue than a chance."
       }
@@ -3670,13 +3727,13 @@
           "ms_w1_warden_defeated",
           "ms_w1_zeke_directed_to_pod"
         ],
-        "description": "The Warden lies beside the launch rails. The open hatch leads to the Pod Core, where Zeke is working the controls. Security lights begin their restart sequence."
+        "description": "The Warden lies beside the cargo rails, short of the escape pod. The open hatch leads to the Pod Core, where Zeke is working the controls. Security lights begin their restart sequence."
       },
       {
         "requires_milestones": [
           "ms_w1_warden_defeated"
         ],
-        "description": "The Warden lies beside the launch rails. [npc:Zeke] has the hatch controls open. The alarms have stopped, but the security lights are beginning to reset."
+        "description": "The Warden lies beside the cargo rails, short of the escape pod. [npc:Zeke] has the hatch controls open. The alarms have stopped, but the security lights are beginning to reset."
       }
     ]
   },
@@ -3706,8 +3763,9 @@
       {
         "name": "navigation console",
         "type": "generic",
-        "condition_unmet_message": "The pod capacitors can power a launch. Jed's Chime fits the old authorization port; Zeke is checking how it connects to navigation.",
-        "action_event": "use_nav_console"
+        "condition_unmet_message": "Talk to Zeke and splice the Chime into the console before launching.",
+        "action_event": "use_nav_console",
+        "unavailable_message": "Talk to Zeke and splice the Chime into the console before launching."
       },
       {
         "name": "speaker",
@@ -5032,7 +5090,10 @@
         "forbidden_milestones": [
           "ms_w3_blackmail_unlocked",
           "ms_w3_ledger_weaponized"
-        ]
+        ],
+        "inspect_after_completion": true,
+        "inspection_completion_quest": "w3_sq14",
+        "completed_inspection_message": "The ledger has already been delivered. The crew's decision is recorded."
       },
       {
         "name": "private dead drop",
@@ -5046,7 +5107,10 @@
         "forbidden_milestones": [
           "ms_w3_blackmail_unlocked",
           "ms_w3_ledger_weaponized"
-        ]
+        ],
+        "inspect_after_completion": true,
+        "inspection_completion_quest": "w3_sq14",
+        "completed_inspection_message": "The ledger has already been delivered. The crew's decision is recorded."
       },
       {
         "name": "ledger receipts",
@@ -6960,7 +7024,9 @@
         "requires_milestones": [
           "ms_w4_defective_units_spared"
         ],
-        "condition_unmet_message": "The conveyor still cages every unit Gh0st repairs."
+        "condition_unmet_message": "The conveyor still cages every unit Gh0st repairs.",
+        "inspection_completion_quest": "w4_sq19",
+        "completed_inspection_message": "The units have their instructions. The crew's decision is recorded."
       },
       {
         "name": "worker defense relay",
@@ -6971,7 +7037,9 @@
         "requires_milestones": [
           "ms_w4_defective_units_spared"
         ],
-        "condition_unmet_message": "The relay needs conscious units before it can accept volunteers."
+        "condition_unmet_message": "The relay needs conscious units before it can accept volunteers.",
+        "inspection_completion_quest": "w4_sq19",
+        "completed_inspection_message": "The units have their instructions. The crew's decision is recorded."
       }
     ],
     "enemy_instances": [
@@ -8601,7 +8669,9 @@
         "requires_milestones": [
           "ms_w5_backup_recovered"
         ],
-        "condition_unmet_message": "The mainframe needs a recovered routine before it can remove Vale's ownership flag."
+        "condition_unmet_message": "The mainframe needs a recovered routine before it can remove Vale's ownership flag.",
+        "inspection_completion_quest": "w5_sq24",
+        "completed_inspection_message": "The guardian's new arrangement is settled. The crew's decision is recorded."
       },
       {
         "name": "crew covenant socket",
@@ -8612,7 +8682,9 @@
         "requires_milestones": [
           "ms_w5_backup_recovered"
         ],
-        "condition_unmet_message": "The socket needs a recovered guardian before the crew can offer a mutual covenant."
+        "condition_unmet_message": "The socket needs a recovered guardian before the crew can offer a mutual covenant.",
+        "inspection_completion_quest": "w5_sq24",
+        "completed_inspection_message": "The guardian's new arrangement is settled. The crew's decision is recorded."
       },
       {
         "name": "dead sysadmin",
@@ -9162,15 +9234,15 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The executive armory is open, its rack stripped of the Void Clip. Privilege survived its owner just long enough to be useful against Vale. The director's desk faces the containment field across the deck.",
+        "description": "Thorne lies motionless beside the dark containment field. Vale has crossed the breach. The director's desk and executive armory remain amid the wreckage.",
         "requires_milestones": [
-          "ms_w5_admin_privileges_complete"
+          "ms_w5_soloist_witnessed"
         ]
       },
       {
-        "description": "Thorne is dead. Vale is gone through the breach. The Throne Room is no longer a command center; it is wreckage arranged around a missing voice. The containment field, director's desk and executive armory remain amid the wreckage.",
+        "description": "The executive armory is open and its Void Clip is gone. Across the deck, Thorne's containment field faces Vale's command dais. The director's desk stands between them.",
         "requires_milestones": [
-          "ms_w5_soloist_witnessed"
+          "ms_w5_admin_privileges_complete"
         ]
       },
       {
@@ -9188,7 +9260,8 @@
         "inspection_completion_milestone": "ms_w5_soloist_witnessed",
         "type": "generic",
         "action_event": "w5_mq25_soloist_scene",
-        "condition_unmet_message": "Thorne is trapped behind the field while Vale watches the Anchor."
+        "condition_unmet_message": "Thorne is trapped behind the field while Vale watches the Anchor.",
+        "completed_inspection_message": "The field went dark when Vale closed it around Thorne. The breach he opened leads off the throne deck."
       },
       {
         "name": "executive armory",
@@ -9556,7 +9629,9 @@
         "requires_milestones": [
           "ms_w6_hr_revoked"
         ],
-        "condition_unmet_message": "The exit still asks for a manager's approval."
+        "condition_unmet_message": "The exit still asks for a manager's approval.",
+        "inspection_completion_quest": "w6_sq27",
+        "completed_inspection_message": "The review is closed. Zeke's choice stands, and the records can no longer issue orders."
       },
       {
         "name": "worker broadcast",
@@ -9567,10 +9642,18 @@
         "requires_milestones": [
           "ms_w6_hr_revoked"
         ],
-        "condition_unmet_message": "The broadcast cannot help anyone until Zeke proves the records have no authority."
+        "condition_unmet_message": "The broadcast cannot help anyone until Zeke proves the records have no authority.",
+        "inspection_completion_quest": "w6_sq27",
+        "completed_inspection_message": "The review is closed. Zeke's choice stands, and the records can no longer issue orders."
       }
     ],
     "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w6_workers_unshackled"
+        ],
+        "description": "The vending machine prints blank paper. The worker broadcast carries Zeke's revocation through every file. The unauthorized exit stands open beside it."
+      },
       {
         "requires_milestones": [
           "ms_w6_unshackled_unlocked"
@@ -10088,8 +10171,10 @@
         "name": "campfire promise",
         "inspect_after_completion": true,
         "type": "generic",
-        "action_event": "w6_mq28_final_banter",
-        "condition_unmet_message": "The crew has one quiet moment before the final ascent."
+        "action_event": "w6_mq28_final_banter_scene",
+        "condition_unmet_message": "The crew has one quiet moment before the final ascent.",
+        "inspection_completion_event": "w6_mq28_final_banter",
+        "completed_inspection_message": "The flame is gone. Zeke is still listening for Nova’s squeaky boot, and Orion is still counting four sets of footsteps."
       },
       {
         "name": "final meal",
@@ -10204,24 +10289,30 @@
         "inspect_after_completion": true,
         "inspection_completion_milestone": "ms_w6_refused_jed_revision",
         "type": "generic",
-        "action_event": "w6_mq29_refuse_jed_revision",
-        "condition_unmet_message": "Vale's stair offers a version of the mine where Jed never died."
+        "action_event": "w6_mq29_refuse_jed_revision_scene",
+        "condition_unmet_message": "Vale's stair offers a version of the mine where Jed never died.",
+        "inspection_completion_event": "w6_mq29_refuse_jed_revision",
+        "completed_inspection_message": "Vale offers a mine where Jed never dies. Nova leaves the real door closed, because love edited into comfort is only another cage."
       },
       {
         "name": "Astra wreckage",
         "inspect_after_completion": true,
         "inspection_completion_milestone": "ms_w6_refused_astra_revision",
         "type": "generic",
-        "action_event": "w6_mq29_refuse_astra_revision",
-        "condition_unmet_message": "A polished Astra waits without crash scars, without Sector 9, and without Orion."
+        "action_event": "w6_mq29_refuse_astra_revision_scene",
+        "condition_unmet_message": "A polished Astra waits without crash scars, without Sector 9, and without Orion.",
+        "inspection_completion_event": "w6_mq29_refuse_astra_revision",
+        "completed_inspection_message": "Vale offers an Astra that never crashes. Orion touches the impossible hull and lets it pass, because erasing the wreck erases everyone it saved."
       },
       {
         "name": "Foundry catwalk",
         "inspect_after_completion": true,
         "inspection_completion_milestone": "ms_w6_refused_foundry_revision",
         "type": "generic",
-        "action_event": "w6_mq29_refuse_foundry_revision",
-        "condition_unmet_message": "The Foundry offers Gh0st a clean origin with no bodies behind it."
+        "action_event": "w6_mq29_refuse_foundry_revision_scene",
+        "condition_unmet_message": "The Foundry offers Gh0st a clean origin with no bodies behind it.",
+        "inspection_completion_event": "w6_mq29_refuse_foundry_revision",
+        "completed_inspection_message": "Vale offers Gh0st a clean origin with no assembly line and no guilt. Gh0st refuses the lie because choice only matters after the damage is real."
       },
       {
         "name": "memory stair",
@@ -10240,11 +10331,13 @@
         "inspect_after_completion": true,
         "inspection_completion_milestone": "ms_w6_aethel_grave_tuned",
         "type": "generic",
-        "action_event": "w6_sq29_tune_grave",
+        "action_event": "w6_sq29_tune_grave_scene",
         "requires_milestones": [
           "ms_w6_aethel_names_traced"
         ],
-        "condition_unmet_message": "The grave will not answer until Orion traces the names beneath the threshold."
+        "condition_unmet_message": "The grave will not answer until Orion traces the names beneath the threshold.",
+        "inspection_completion_event": "w6_sq29_tune_grave",
+        "completed_inspection_message": "Orion tunes to the spaces between the names. The grave answers as a chorus, never a single note."
       }
     ],
     "blocked_directions": {
@@ -10533,7 +10626,8 @@
         "inspection_completion_event": "w6_mq30_confront_vale",
         "type": "generic",
         "action_event": "w6_mq30_confront_vale_scene",
-        "condition_unmet_message": "Vale waits at the center of the white ocean, calm enough to make annihilation sound reasonable."
+        "condition_unmet_message": "Vale waits at the center of the white ocean, calm enough to make annihilation sound reasonable.",
+        "completed_inspection_message": "Vale has heard the crew’s answer. The Chorus still waits on his command."
       },
       {
         "name": "shared tuning focus",
@@ -11435,7 +11529,11 @@
         "name": "waterproof cargo case",
         "type": "generic",
         "action_event": "find_vhs_tape_03",
-        "condition_unmet_message": "A buoyant cargo canister washed against the glow-moss rocks."
+        "condition_unmet_message": "The cargo case has a waterproof seal.",
+        "unavailable_message": "The cargo case has a waterproof seal.",
+        "inspect_after_completion": true,
+        "completed_inspection_message": "The seal is open. You recovered Film 03 from the dry sleeve.",
+        "inspection_completion_event": "find_vhs_tape_03"
       }
     ],
     "description_variants": [
@@ -11976,9 +12074,18 @@
       },
       {
         "name": "Scavenge remains",
+        "guarded_by": [
+          "stalker_vine",
+          "spore_spitter"
+        ],
+        "guarded_message": "The Stalker-Vine and Spore-Spitter cover the scout’s remains. Clear the pair before reaching for the distress beacon.",
         "type": "generic",
         "action_event": "w2_sq02_trace_alpha",
-        "condition_unmet_message": "A fallen Dominion scout lies tangled in the vines."
+        "condition_unmet_message": "A fallen Dominion scout lies tangled in the vines.",
+        "unavailable_message": "A fallen Dominion scout lies tangled in the vines.",
+        "inspect_after_completion": true,
+        "completed_inspection_message": "You logged the scout’s distress signal. Follow the remaining Lost Patrol signals.",
+        "inspection_completion_milestone": "ms_w2_beacon_alpha_traced"
       }
     ],
     "enemy_parties": [
@@ -11998,15 +12105,21 @@
     "enemy_instances": [
       {
         "enemy_id": "stalker_vine",
-        "hp": 60,
+        "hp": 74,
         "vitality": 4,
         "stability": 60
       },
       {
         "enemy_id": "spore_spitter",
-        "hp": 30,
+        "hp": 38,
         "vitality": 3,
-        "stability": 30
+        "stability": 38,
+        "extra_drops": [
+          {
+            "id": "stability_gyro_mod",
+            "chance": 1
+          }
+        ]
       }
     ]
   },
@@ -12124,6 +12237,7 @@
         "items": [
           "beast_meat",
           "wiring_bundle",
+          "ballistic_weave",
           "energy_core"
         ],
         "already_open_message": "The torn fabric holds only shredded padding and animal hair.",
@@ -13821,7 +13935,11 @@
         "name": "pedestal",
         "type": "generic",
         "action_event": "w2_sq04_decode_bridge_record",
-        "condition_unmet_message": "The Bridge calibration record lists consent checks, separate carriers, and a mandatory ground."
+        "condition_unmet_message": "The record is still locked. Finish Ancient Echoes with Orion to read it.",
+        "unavailable_message": "The record is still locked. Finish Ancient Echoes with Orion to read it.",
+        "inspect_after_completion": true,
+        "completed_inspection_message": "The decoded record calls for consent from each carrier, separate signal bands, and a physical ground.",
+        "inspection_completion_milestone": "ms_w2_bridge_record_decoded"
       },
       {
         "name": "relic coffer",
@@ -13885,7 +14003,8 @@
         "action_event": "w2_mq03_recover_bridge",
         "show_when_milestone": "ms_w2_orion_briefed",
         "requires_milestone_not_set": "ms_w2_bridge_recovered",
-        "condition_unmet_message": "Speak to the awakened stranger before opening the separate Bridge cradle."
+        "condition_unmet_message": "Finish speaking with Orion at the stasis pod before opening the separate Bridge cradle.",
+        "unavailable_message": "Finish speaking with Orion at the stasis pod before opening the separate Bridge cradle."
       }
     ],
     "npc_presence": [
@@ -13939,13 +14058,13 @@
           "ms_w2_pod_inspected",
           "ms_w2_roots_scanned"
         ],
-        "description": "A vast circular chamber centered on a suspended stasis cylinder beneath a ceiling vent. The slumbering Architect's bio-readings and the deep root lattice have both been mapped into your logs."
+        "description": "A vast circular chamber centered on a suspended stasis pod beneath a ceiling vent. The slumbering Architect's bio-readings and the deep root lattice have both been mapped into your logs."
       },
       {
         "requires_milestones": [
           "ms_w2_pod_inspected"
         ],
-        "description": "A vast circular chamber centered on a suspended stasis cylinder beneath a ceiling vent. The slumbering Architect's bio-readings are logged, while a root lattice pulses through cracks in the floor."
+        "description": "A vast circular chamber centered on a suspended stasis pod beneath a ceiling vent. The slumbering Architect's bio-readings are logged, while a root lattice pulses through cracks in the floor."
       },
       {
         "requires_milestones": [
@@ -14078,7 +14197,11 @@
         "name": "stasis mural overview",
         "type": "generic",
         "action_event": "w2_mq03_read_mural_overview",
-        "condition_unmet_message": "Three empty sockets surround the chamber mural, each showing how one ring protects memory from pressure."
+        "condition_unmet_message": "The overview names three rings: memory, pressure, and return. Compare them with the controls at the Stasis Ring Array.",
+        "unavailable_message": "The overview names three rings: memory, pressure, and return. Compare them with the controls at the Stasis Ring Array.",
+        "inspect_after_completion": true,
+        "completed_inspection_message": "The overview records the three ring roles: memory, pressure, and return.",
+        "inspection_completion_milestone": "ms_w2_stasis_overview_read"
       }
     ],
     "description_variants": [
@@ -14587,13 +14710,21 @@
         "name": "bridge relic",
         "type": "generic",
         "action_event": "w2_mq05_reboot",
-        "condition_unmet_message": "The Astra needs her power conduits restored first. Once the Bridge has ship current, the Chime can authenticate Orion at the console."
+        "condition_unmet_message": "Recover the salvage conduits from the Pod Fragment and bring the Bridge and the Chime here. The conduits supply power. The Chime verifies Orion’s identity.",
+        "unavailable_message": "Recover the salvage conduits from the Pod Fragment and bring the Bridge and the Chime here. The conduits supply power. The Chime verifies Orion’s identity.",
+        "inspect_after_completion": true,
+        "completed_inspection_message": "The Bridge is installed. Use the launch cradle to board the Astra.",
+        "inspection_completion_milestone": "ms_w2_bridge_installed"
       },
       {
         "name": "launch cradle",
         "type": "generic",
         "action_event": "w2_mq05_launch",
-        "condition_unmet_message": "The Astra must have power before you can board her for departure."
+        "condition_unmet_message": "Install the Bridge at the Hangar Bay before boarding.",
+        "unavailable_message": "Install the Bridge at the Hangar Bay before boarding.",
+        "inspect_after_completion": true,
+        "completed_inspection_message": "The cradle is empty. The Astra has left the hangar.",
+        "inspection_completion_milestone": "ms_w2_mq05_complete"
       },
       {
         "name": "salvage return route",
@@ -14620,7 +14751,7 @@
         "requires_milestones": [
           "ms_w2_mq05_complete"
         ],
-        "description": "The Astra's launch cradle is empty. Scorched conduits, cracked scaffolding, and a cooling bridge relic mark the place where the crew clawed a route back to the sky."
+        "description": "The Astra's launch cradle is empty. Scorched conduits and cracked scaffolding surround the empty bridge relic stand."
       },
       {
         "requires_milestones": [
@@ -14629,13 +14760,13 @@
         "forbidden_milestones": [
           "ms_w2_mq05_complete"
         ],
-        "description": "Amber lights trace the Astra's hull. The Bridge is installed and the cargo ramp is down. Board the Astra from the launch cradle; her nav console awaits on the bridge. The salvage return route remains behind you."
+        "description": "Amber lights trace the Astra's hull. The Bridge is installed and the cargo ramp is down. Use the launch cradle to board the Astra. The nav console on the Astra Bridge is ready to plot departure."
       },
       {
         "requires_milestones": [
           "ms_w2_astra_inspected"
         ],
-        "description": "A cavernous launch hangar housing the ancient Astra shuttle in its launch cradle. The flight bridge console displays diagnostic telemetry, while the bridge relic waits on the central dais and a service hatch opens the salvage return route back toward the crashed pod."
+        "description": "A cavernous launch hangar housing the ancient Astra shuttle in its launch cradle. The dark console displays diagnostic telemetry, while the bridge relic waits on the central dais and a service hatch opens the salvage return route back toward the crashed pod."
       }
     ]
   },
@@ -14798,7 +14929,7 @@
       {
         "name": "airlane preview",
         "type": "inspect",
-        "inspect_message": "This is a route preview, not a flight. Release the launch cradle in Hangar Bay when the crew is ready."
+        "inspect_message": "This display previews the route. Board from the launch cradle in Hangar Bay, then confirm departure at the Astra Bridge nav console."
       }
     ]
   },

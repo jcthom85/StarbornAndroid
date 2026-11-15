@@ -13,7 +13,7 @@
       "herb": 1
     },
     "result": "antidote_flask",
-    "description": "Buffer harvested venom with swamp herbs to prepare a neutralizing serum. Cleanses Acid, Poison, and Erosion.",
+    "description": "Buffer harvested venom with swamp herbs to prepare a neutralizing serum. Clears Corrosion, Poison, and Erosion from one ally in combat.",
     "success_message": "You seal the neutralized serum in an Antidote Flask.",
     "discovery_hint": "Start with vial of venom. Try herb."
   },
@@ -40,6 +40,24 @@
       "scrap_metal": 1
     },
     "discovery_hint": "Shape scrap metal with wiring bundle."
+  },
+  {
+    "id": "gear_brawler_rig",
+    "name": "Assemble Brawler Rig",
+    "category": "gear",
+    "method": "assemble",
+    "base": "ballistic_weave",
+    "components": [
+      "wiring_bundle"
+    ],
+    "ingredients": {
+      "ballistic_weave": 1,
+      "wiring_bundle": 1
+    },
+    "result": "zeke_brawler_rig",
+    "description": "Reinforce the harness for Zeke. The weighted buckles improve his power and critical chance in exchange for the Surge Harness’s speed and evasion.",
+    "success_message": "You stitch flexible wiring channels into the weave and assemble a Brawler Rig for Zeke.",
+    "discovery_hint": "Combine the weave from the Hound Nest supply pack with insulated wiring."
   },
   {
     "id": "repair_deep_mine_cabinet",

@@ -48,12 +48,18 @@ fun ScriptedTravelOverlay(
     reducedMotion: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val cover = (1f - kotlin.math.abs(progress * 2f - 1f)).coerceIn(0f, 1f)
+    val fade = 1f - kotlin.math.abs(progress * 2f - 1f)
+    val cover = when (style) {
+        ScriptedTravelStyle.MEMORY_LIFT -> (fade / .55f).coerceIn(0f, 1f)
+        ScriptedTravelStyle.SINGULARITY -> (fade / .72f).coerceIn(0f, 1f)
+        else -> fade.coerceIn(0f, 1f)
+    }
     val dark = Color(0xFF080D12)
     val accent = when (style) {
         ScriptedTravelStyle.FOUNDRY -> Color(0xFFE4A878)
         ScriptedTravelStyle.LAUNCH -> Color(0xFFA7DBF5)
-        ScriptedTravelStyle.SOURCE -> Color(0xFFC5B3E9)
+        ScriptedTravelStyle.ASTRA_BOARDING -> Color(0xFFF7C589)
+        ScriptedTravelStyle.SOURCE, ScriptedTravelStyle.SINGULARITY, ScriptedTravelStyle.MEMORY_LIFT -> Color(0xFFC5B3E9)
         else -> Color(0xFFA3C9CD)
     }
     Box(modifier.fillMaxSize().testTag("scripted-travel").pointerInput(Unit) {
@@ -68,14 +74,41 @@ fun ScriptedTravelOverlay(
             }
 
             when (style) {
-                ScriptedTravelStyle.LIFT, ScriptedTravelStyle.AIRLOCK -> {
+                ScriptedTravelStyle.LIFT, ScriptedTravelStyle.AIRLOCK, ScriptedTravelStyle.MEMORY_LIFT -> {
                     val panelWidth = size.width * .5f * cover
                     val left = Brush.horizontalGradient(listOf(Color(0xFF263940), dark), 0f, size.width * .5f)
                     val right = Brush.horizontalGradient(listOf(dark, Color(0xFF263940)), size.width * .5f, size.width)
                     drawRect(left, size = Size(panelWidth, size.height))
                     drawRect(right, Offset(size.width - panelWidth, 0f), Size(panelWidth, size.height))
+                    if (style == ScriptedTravelStyle.MEMORY_LIFT) {
+                        repeat(6) { band ->
+                            val y = size.height * ((band / 6f + 1f - progress * 2f) % 1f)
+                            drawLine(accent.copy(alpha = .18f * cover), Offset(0f, y),
+                                Offset(size.width, y), 2.dp.toPx())
+                        }
+                    }
                     for (edge in listOf(panelWidth, size.width - panelWidth)) {
                         drawLine(accent.copy(alpha = .4f * cover), Offset(edge, 0f), Offset(edge, size.height), 2.dp.toPx())
+                    }
+                }
+                ScriptedTravelStyle.ASTRA_BOARDING -> {
+                    drawRect(dark.copy(alpha = cover))
+                    val center = Offset(size.width * .5f, size.height * .43f)
+                    val radius = size.minDimension * (.06f + .42f * (progress * 2f).coerceIn(0f, 1f))
+                    val approach = ((.5f - progress) * 5f).coerceIn(0f, 1f)
+                    drawCircle(
+                        accent.copy(alpha = cover * approach * .7f),
+                        radius, center,
+                        style = androidx.compose.ui.graphics.drawscope.Stroke(width = 2.dp.toPx())
+                    )
+                    val door = (cover - approach).coerceIn(0f, 1f)
+                    val width = size.width * .5f * door
+                    val right = size.width - width
+                    drawRect(Color(0xFF172026), size = Size(width, size.height))
+                    drawRect(Color(0xFF172026), Offset(right, 0f), Size(width, size.height))
+                    for (edge in listOf(width, right)) {
+                        drawLine(accent.copy(alpha = door * .7f), Offset(edge, 0f),
+                            Offset(edge, size.height), 2.dp.toPx())
                     }
                 }
                 ScriptedTravelStyle.FOUNDRY -> {
@@ -90,7 +123,7 @@ fun ScriptedTravelOverlay(
                         drawRect(steam)
                     }
                 }
-                ScriptedTravelStyle.LAUNCH, ScriptedTravelStyle.SOURCE -> {
+                ScriptedTravelStyle.LAUNCH, ScriptedTravelStyle.SOURCE, ScriptedTravelStyle.SINGULARITY -> {
                     drawRect(dark.copy(alpha = cover))
                     val center = Offset(size.width * .5f, size.height * .47f)
                     repeat(18) { ray ->

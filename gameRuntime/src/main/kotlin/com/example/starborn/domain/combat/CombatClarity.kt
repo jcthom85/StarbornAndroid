@@ -14,6 +14,8 @@ object CombatClarity {
 
     fun statusName(id: String): String = if (id.startsWith("buff_")) {
         bonus(id.removePrefix("buff_"), 0).substringBefore(" +0")
+    } else if (id == "weak") {
+        "Discord"
     } else id.replace('_', ' ').trim().replaceFirstChar { it.uppercaseChar() }
 
     fun statusAppliedLabel(entry: CombatLogEntry.StatusApplied, name: String = statusName(entry.statusId)): String {

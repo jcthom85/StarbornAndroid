@@ -159,6 +159,52 @@ class ExplorationNavigationInstrumentedTest {
         }
     }
 
+    @Test fun elaraPillOpensTheReunionBesideTheHunterKiller() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val services = compose.runOnUiThread {
+            AppServices(IsolatedProgressionContext(context), isTestSession = true)
+        }
+        lateinit var vm: ExplorationViewModel
+        try {
+            runBlocking {
+                services.userSettingsStore.setTutorialsEnabled(false)
+                services.userSettingsStore.setEnvironmentalEffectsQuality(
+                    com.example.starborn.data.local.EnvironmentalEffectsQuality.OFF
+                )
+            }
+            compose.runOnUiThread {
+                assertTrue(services.debugScenarioError, services.startDebugScenario("w5_anchor_chamber"))
+                services.clearDebugBootstrap()
+                services.sessionStore.setQuestTaskCompleted("w5_mq24", "enter_chamber", true)
+                vm = ExplorationViewModelFactory(services).create(ExplorationViewModel::class.java)
+            }
+            compose.waitUntil(15_000) {
+                vm.uiState.value.currentRoom?.id == "deep_anchor_chamber" && !vm.uiState.value.isLoading
+            }
+            compose.setContent {
+                StarbornTheme {
+                    ExplorationScreen(
+                        vm, services.audioCuePlayer, services.uiEventBus, services.questPresentations,
+                        isTestSession = true
+                    )
+                }
+            }
+            compose.runOnUiThread {
+                services.tutorialManager.cancelAllScheduled()
+                services.promptManager.discardMatching { true }
+                vm.dismissNarration()
+                vm.dismissEventAnnouncement()
+            }
+            compose.onNodeWithTag("engage-hk_droid").assertIsDisplayed()
+            compose.onNodeWithTag("npc-elara").assertIsDisplayed().performTouchInput { click() }
+            compose.waitUntil(5_000) {
+                vm.uiState.value.activeDialogue?.line?.id == "elara_w5_mq24_reunion"
+            }
+        } finally {
+            compose.runOnUiThread { runCatching { vm.runtime.close() }; services.release() }
+        }
+    }
+
     @Test fun spirePatrolShowsCountdownBeforeStartingCombat() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val services = compose.runOnUiThread {
@@ -217,6 +263,38 @@ class ExplorationNavigationInstrumentedTest {
                 assertEquals(listOf("corporate_assassin"), opponents)
                 assertTrue(services.sessionStore.state.value.pendingBattleJson.isNotBlank())
             }
+        } finally {
+            compose.runOnUiThread { runCatching { vm.runtime.close() }; services.release() }
+        }
+    }
+
+    @Test fun worldOneUnavailableActionShowsItsHintOnScreen() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val services = compose.runOnUiThread { AppServices(IsolatedProgressionContext(context), isTestSession = true) }
+        lateinit var vm: ExplorationViewModel
+        try {
+            runBlocking { services.userSettingsStore.setTutorialsEnabled(false) }
+            compose.runOnUiThread {
+                services.sessionStore.restore(com.example.starborn.domain.session.GameSessionState(
+                    worldId = "world_1", hubId = "hub_1_homestead", roomId = "workshop_dock",
+                    playerId = "nova", partyMembers = listOf("nova")
+                ))
+                vm = ExplorationViewModelFactory(services).create(ExplorationViewModel::class.java)
+            }
+            compose.waitUntil(15_000) { vm.uiState.value.currentRoom?.id == "workshop_dock" }
+            compose.setContent {
+                StarbornTheme {
+                    ExplorationScreen(vm, services.audioCuePlayer, services.uiEventBus, services.questPresentations, isTestSession = true)
+                }
+            }
+            compose.runOnIdle {
+                vm.onActionSelected(vm.uiState.value.actions.single { it.name == "loader" })
+            }
+            val hint = "Speak to Foreman Boggs about certification before practicing with the loader."
+            compose.waitUntil(5_000) {
+                compose.onAllNodesWithText(hint, substring = true).fetchSemanticsNodes().isNotEmpty()
+            }
+            compose.onNodeWithText(hint, substring = true).assertIsDisplayed()
         } finally {
             compose.runOnUiThread { runCatching { vm.runtime.close() }; services.release() }
         }

@@ -50,10 +50,10 @@ Clarity comes before style. A player should understand what physically happened,
 - Deflects fear into practical tasks. Serious emotion makes him quieter, not more eloquent.
 
 **Zeke**
-- Uses policy language when frightened or hiding behind his job.
-- Corporate-HR cadence remains his humor and armor even as trust grows, but it becomes less evasive.
-- His humor comes from noticing absurd rules, not inserting buzzwords into every sentence.
-- Under immediate danger, he is precise and surprisingly decisive.
+- Notices what a machine is doing and what the people around it need. He may check a reading twice before he trusts it.
+- He knows Dominion procedure from his checkpoint job. That knowledge matters when he is working a Dominion system.
+- His dry humor comes from the situation and his familiarity with the crew.
+- Under pressure he gives precise instructions, admits what he can’t verify, and follows through.
 
 **Orion**
 - May carry more lyricism than the others, but immediate instructions remain intelligible.

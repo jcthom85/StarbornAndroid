@@ -48,11 +48,11 @@
           "response": [
             {
               "speaker": "Mechanic",
-              "text": "Scavvers dragged in a crate of micro-cores—perfect for overclocking your drone."
+              "text": "Scavvers dragged in a crate of micro-cores. Have a look before the good ones go."
             },
             {
               "speaker": "Mechanic",
-              "text": "I've stashed the best ones under the counter. Ask if you want the premium batch."
+              "text": "I tested the whole crate this morning. The good ones are on the left."
             }
           ]
         },
@@ -551,7 +551,7 @@
           "response": [
             {
               "speaker": "Sentinel-3",
-              "text": "The ground sings. The canopy sings. Even the wreckage hums at 432 Hz. You must learn to listen."
+              "text": "Acoustic sweep running. The canopy registers first. The wreckage answers at a delay."
             }
           ]
         }
@@ -716,7 +716,7 @@
           "response": [
             {
               "speaker": "Rylan",
-              "text": "The Anvil is overheating. Dominion pushed the output past safe thresholds to power their orbital tether. If you're going deeper, insulate your gear."
+              "text": "Dominion kept the tether fed by running the Forge past its limit. Check your seals before you head any deeper."
             }
           ]
         }
@@ -835,7 +835,7 @@
           "response": [
             {
               "speaker": "David",
-              "text": "Thirty years in logistics taught me that the secret isn't just supply lines—it's good food, good company, and treating people like family."
+              "text": "Thirty years in supply. You start to notice who’s always last in line. I save those folks a plate."
             }
           ]
         }

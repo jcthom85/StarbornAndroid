@@ -72,7 +72,7 @@
       {
         "type": "dialogue",
         "speaker": "Ollie",
-        "text": "Touch my name on your HUD, choose Talk, and let's catch up to him before he locks up."
+        "text": "Come on. If he’s started clearing the bench, we’ll have to help."
       }
     ]
   },
@@ -483,40 +483,56 @@
         "type": "narration",
         "text": "The pod's capacitors kick it off the rail. Nova catches one last glimpse of the colony. Beside her, the Chime opens the launch interlock, then locks navigation onto its paired beacon.",
         "audio_cue": "sfx_pod_launch",
-        "music_cue": "music_crash_flight"
+        "music_cue": "music_crash_flight",
+        "duration_seconds": 7.1,
+        "image": "images/rooms/world_1/launch_bay.webp"
       },
       {
         "type": "narration",
-        "text": "Zeke pulls at the route controls. The display snaps back to the same heading. Ahead, the permitted corridor slides out of reach and the planetary shield fills the viewport."
+        "text": "Zeke pulls at the route controls. The display snaps back to the same heading. Ahead, the permitted corridor slides out of reach and the planetary shield fills the viewport.",
+        "duration_seconds": 5.8,
+        "image": "images/rooms/world_1/launch_pod.webp"
       },
       {
         "type": "narration",
-        "text": "The shield rejects the pod. White light floods the cabin; the impact tears a stabilizer loose and throws them back toward Sector 9."
+        "text": "The shield rejects the pod. White light floods the cabin; the impact tears a stabilizer loose and throws them back toward Sector 9.",
+        "duration_seconds": 4.5,
+        "image": "images/rooms/world_1/launch_pod.webp"
       },
       {
         "type": "dialogue",
         "speaker": "Zeke",
         "emote": "worried",
         "text": "It won't let me turn! Nova, I can't get us clear!",
-        "audio_cue": "sfx_security_lockdown"
+        "audio_cue": "sfx_security_lockdown",
+        "duration_seconds": 4.2,
+        "image": "images/rooms/world_1/launch_pod.webp"
       },
       {
         "type": "dialogue",
         "text": "Look at me. Hook your arm through the frame. I'm here.",
         "audio_cue": "sfx_combat_plasma_arc",
         "speaker": "Nova",
-        "emote": "worried"
+        "emote": "worried",
+        "duration_seconds": 6.8,
+        "image": "images/rooms/world_1/launch_pod.webp"
       },
       {
         "type": "narration",
-        "text": "The navigation console arcs and goes dark. Zeke grips the frame beside Nova as the pod rolls into the storm. Rain hammers the hull. The thrusters sputter out."
+        "text": "The navigation console arcs and goes dark. Zeke grips the frame beside Nova as the pod rolls into the storm. Rain hammers the hull. The thrusters sputter out.",
+        "duration_seconds": 6.5
       },
       {
         "type": "narration",
         "text": "Black branches rush across the viewport. The pod tears through the canopy and hits hard. Nova's hand is still reaching for Zeke when the lights go out.",
-        "audio_cue": "sfx_crash_impact"
+        "audio_cue": "sfx_crash_impact",
+        "duration_seconds": 7.0,
+        "image": "images/rooms/world_2/crash_site.webp"
       }
-    ]
+    ],
+    "presentation": "illustrated",
+    "backdrop": "black",
+    "skippable": true
   },
   {
     "id": "scene_sq04_hack",
@@ -609,7 +625,6 @@
         "type": "dialogue",
         "speaker": "???",
         "text": "Broadcast my identity. Get it away from them.",
-        "portrait": "images/characters/emotes/orion_angry.png",
         "caption_style": "dialogue",
         "image": "images/cinematics/intro_chime_launch_v1.webp",
         "camera_start_scale": 1.06,
@@ -652,7 +667,6 @@
         "type": "dialogue",
         "speaker": "???",
         "text": "Mute the room. Seal me in.",
-        "portrait": "images/characters/emotes/orion_worried.png",
         "caption_style": "dialogue",
         "image": "images/cinematics/intro_orion_stasis_v1.webp",
         "camera_start_scale": 1.0,
@@ -748,7 +762,7 @@
       {
         "type": "dialogue",
         "speaker": "Gh0st",
-        "text": "The order is still there. The voice behind it is not. I warned you about that thing because I chose to."
+        "text": "The order’s still in my head. I lowered the rifle anyway."
       },
       {
         "type": "dialogue",
@@ -758,12 +772,12 @@
       {
         "type": "dialogue",
         "speaker": "Gh0st",
-        "text": "Agreed. I need to know why the channel went silent. Your route may lead to an answer."
+        "text": "Agreed. If we find another receiver, I want to check it."
       },
       {
         "type": "dialogue",
         "speaker": "Orion",
-        "text": "Then start here. The Bridge needs willing hands, not another command."
+        "text": "Then stay here a moment. Nova, wait for the others before you open it."
       },
       {
         "type": "narration",
@@ -775,7 +789,7 @@
         "type": "dialogue",
         "speaker": "Orion",
         "emote": "worried",
-        "text": "Close it. The Bridge connects; it does not make one body carry the circuit."
+        "text": "Close it. Zeke, get a ground on her bracer. Gh0st, can you take her other hand?"
       },
       {
         "type": "narration",
@@ -785,7 +799,7 @@
         "type": "dialogue",
         "speaker": "Gh0st",
         "emote": "confident",
-        "text": "No command attached. Proceed."
+        "text": "I’ve got her. Go ahead."
       },
       {
         "type": "narration",
@@ -796,7 +810,7 @@
         "type": "dialogue",
         "speaker": "Nova",
         "emote": "confident",
-        "text": "Link. Not merge. I get it."
+        "text": "My hand’s stopped shaking. Can you both still feel the current?"
       }
     ]
   },
@@ -808,35 +822,177 @@
         "type": "narration",
         "text": "The Ascended falls, but Vale's forced network remains active. Five protocol signatures align through the crew's practiced circuit and complete the Key's access pattern.",
         "audio_cue": "sfx_combat_enemy_void_blast",
-        "music_cue": "music_w6_boss_final"
+        "music_cue": "music_w6_boss_final",
+        "duration_seconds": 8.5,
+        "transition": "fade",
+        "image": "images/cinematics/w6_ending_circuit_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.09
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Gh0st",
+        "text": "I can still hear someone on the other side. They’re asking for the door.",
+        "duration_seconds": 5.4,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_circuit_v1.webp",
+        "camera_start_scale": 1.09,
+        "camera_end_scale": 1.11,
+        "caption_style": "dialogue"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Orion",
+        "text": "I hear them. Keep that line open.",
+        "duration_seconds": 3.2,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_circuit_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.09,
+        "caption_style": "dialogue"
+      },
+      {
+        "type": "narration",
+        "text": "Nova reaches for the Key. Around her fingers, the five signatures begin to pull into one. She opens her hand.",
+        "duration_seconds": 7.2,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_circuit_v1.webp",
+        "camera_start_scale": 1.09,
+        "camera_end_scale": 1.11
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
         "emote": "confident",
-        "text": "Ground lead failed. Zeke, manual bus. Gh0st, brace left. Orion, hold the counter-tone."
+        "text": "Ground lead failed. Zeke, manual bus. Gh0st, brace left. Orion, hold the counter-tone.",
+        "duration_seconds": 5.1,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_circuit_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.09,
+        "caption_style": "dialogue"
       },
       {
         "type": "narration",
         "text": "The interface rejects Zeke, so he holds the bare ground path by hand. Gh0st takes the force aimed at the crew. Orion keeps the counter-tone level.",
-        "audio_cue": "sfx_combat_plasma_arc"
+        "audio_cue": "sfx_combat_plasma_arc",
+        "duration_seconds": 9.1,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_circuit_v1.webp",
+        "camera_start_scale": 1.09,
+        "camera_end_scale": 1.11
       },
       {
         "type": "dialogue",
         "speaker": "Orion",
         "emote": "confident",
-        "text": "The Key is open. Release root access when the corridor clears."
+        "text": "The Key is open. Release root access when the corridor clears.",
+        "duration_seconds": 4.4,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_circuit_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.09,
+        "caption_style": "dialogue"
       },
       {
         "type": "narration",
         "text": "Nova opens a regional corridor, drops Vale's forced links, and releases root access. Her Source connection burns out as the network closes.",
-        "audio_cue": "wpn_orion_resonance"
+        "audio_cue": "wpn_orion_resonance",
+        "duration_seconds": 7.9,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_circuit_v1.webp",
+        "camera_start_scale": 1.09,
+        "camera_end_scale": 1.11
       },
       {
         "type": "narration",
-        "text": "They fall together."
+        "text": "They fall together.",
+        "duration_seconds": 3.1,
+        "transition": "fade",
+        "image": "images/cinematics/w6_ending_crossing_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.09
+      },
+      {
+        "type": "narration",
+        "text": "A long second passes. Zeke coughs. Gh0st gets an arm under him.",
+        "duration_seconds": 4.8,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_crossing_v1.webp",
+        "camera_start_scale": 1.09,
+        "camera_end_scale": 1.11
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Zeke",
+        "text": "Nova? Can you hear me?",
+        "duration_seconds": 3.1,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_crossing_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.09,
+        "caption_style": "dialogue"
+      },
+      {
+        "type": "narration",
+        "text": "Nova reaches for the Source and feels only the cold floor. Zeke’s voice reaches her through a thin, high whine.",
+        "duration_seconds": 7.2,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_crossing_v1.webp",
+        "camera_start_scale": 1.09,
+        "camera_end_scale": 1.11
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "text": "I can hear you. Keep talking.",
+        "duration_seconds": 3.1,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_crossing_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.09,
+        "caption_style": "dialogue"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Orion",
+        "text": "The corridor’s holding. I can hear people calling through it. Let’s get you up.",
+        "duration_seconds": 5.4,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_crossing_v1.webp",
+        "camera_start_scale": 1.09,
+        "camera_end_scale": 1.11,
+        "caption_style": "dialogue"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Gh0st",
+        "portrait": "images/characters/emotes/gh0st_idle.png",
+        "text": "Elara? If you hear me, wait at the opening. We’re coming through.",
+        "duration_seconds": 5.6,
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w6_ending_crossing_v1.webp"
+      },
+      {
+        "type": "narration",
+        "text": "A hand reaches back through the corridor. Gh0st catches it. “I’ve got you, Elara.”",
+        "duration_seconds": 5.8,
+        "image": "images/cinematics/w6_ending_crossing_v1.webp"
+      },
+      {
+        "type": "narration",
+        "text": "The crew crosses together. Behind them, the last forced link goes dark.",
+        "duration_seconds": 4.8,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_crossing_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.09,
+        "fade_out_seconds": 1.2
       }
-    ]
+    ],
+    "skippable": true,
+    "backdrop": "black",
+    "presentation": "illustrated"
   },
   {
     "id": "scene_w6_epilogue_credits",
@@ -845,58 +1001,181 @@
       {
         "type": "narration",
         "text": "Morning in the Colony. One regional corridor stands open. Vale and Harmony are gone here; Dominion traffic still moves beyond the sector.",
-        "music_cue": "music_epilogue"
+        "music_cue": "music_epilogue",
+        "duration_seconds": 7.9,
+        "transition": "fade",
+        "image": "images/cinematics/w6_ending_morning_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.09
       },
       {
         "type": "narration",
-        "text": "At Zeke's diner, Nova remembers Tideglass sand in her boots and Zeke complaining about salt in the filters. Her tuning hand trembles against the photograph."
+        "text": "At Zeke's diner, Nova remembers Tideglass sand in her boots and Zeke complaining about salt in the filters. Her tuning hand trembles against the photograph.",
+        "duration_seconds": 8.8,
+        "transition": "fade",
+        "image": "images/cinematics/w6_ending_diner_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.09
       },
       {
         "type": "dialogue",
         "speaker": "Zeke",
         "emote": "idle",
-        "text": "For record accuracy: I complained about corrosion. The humidity was an associated grievance."
+        "text": "It ate through two filters. I’m allowed to complain.",
+        "duration_seconds": 5.1,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_diner_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.09,
+        "caption_style": "dialogue"
       },
       {
         "type": "dialogue",
         "speaker": "Gh0st",
         "emote": "cool",
-        "text": "You also threw a canteen at me. Accuracy: 94%."
+        "text": "You threw the canteen before I could check the filters. Good aim.",
+        "duration_seconds": 3.8,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_diner_v1.webp",
+        "camera_start_scale": 1.09,
+        "camera_end_scale": 1.11,
+        "caption_style": "dialogue"
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
         "emote": "happy",
-        "text": "The Source is gone. The thin whine stayed. I remember the rest."
+        "text": "I can’t feel the Source anymore. My ears are still ringing. I remember the rest.",
+        "duration_seconds": 4.8,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_diner_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.09,
+        "caption_style": "dialogue"
       },
       {
         "type": "dialogue",
         "speaker": "Orion",
         "emote": "happy",
-        "text": "Good. Now you can hear the wind."
+        "text": "Good. Now you can hear the wind.",
+        "duration_seconds": 3.2,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_diner_v1.webp",
+        "camera_start_scale": 1.09,
+        "camera_end_scale": 1.11,
+        "caption_style": "dialogue"
       },
       {
-        "type": "dialogue",
-        "speaker": "Nova",
-        "emote": "idle",
-        "text": "Sounds like a good day. Fill me in on the rest?"
+        "type": "narration",
+        "text": "Outside, the repair crew rolls a ladder across the street. The sound makes Nova turn. For a second she expects the mine bell.",
+        "duration_seconds": 8.2,
+        "transition": "fade",
+        "image": "images/cinematics/w6_ending_morning_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.09
       },
       {
         "type": "dialogue",
         "speaker": "Zeke",
-        "emote": "happy",
-        "text": "Pull up a chair. It is a long story."
+        "text": "They asked if we could spare a hand on the receiver after breakfast. I said we’d come look.",
+        "duration_seconds": 6.6,
+        "transition": "fade",
+        "image": "images/cinematics/w6_ending_diner_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.09,
+        "caption_style": "dialogue"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Gh0st",
+        "text": "Elara said she’d meet us there. I told her we’d wait.",
+        "duration_seconds": 4.4,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_diner_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.09,
+        "caption_style": "dialogue"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Orion",
+        "text": "Leave it tuned to the corridor. Someone may still be trying to get home.",
+        "duration_seconds": 5.4,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_diner_v1.webp",
+        "camera_start_scale": 1.09,
+        "camera_end_scale": 1.11,
+        "caption_style": "dialogue"
+      },
+      {
+        "type": "narration",
+        "text": "Nova puts the photograph down and reaches for a cup. The tremor sends it rattling against the saucer. Zeke steadies the saucer with one finger.",
+        "duration_seconds": 8.8,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_diner_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.09
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "text": "Jed used to hand me the lamp before he asked if I was ready.",
+        "duration_seconds": 5.4,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_diner_v1.webp",
+        "camera_start_scale": 1.09,
+        "camera_end_scale": 1.11,
+        "caption_style": "dialogue"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Zeke",
+        "text": "Are you ready?",
+        "duration_seconds": 3.1,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_diner_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.09,
+        "caption_style": "dialogue"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "text": "For breakfast. Ask me about the receiver after.",
+        "duration_seconds": 3.5,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_diner_v1.webp",
+        "camera_start_scale": 1.09,
+        "camera_end_scale": 1.11,
+        "caption_style": "dialogue"
+      },
+      {
+        "type": "narration",
+        "text": "Zeke takes the chair beside her. Through the open window, the repair crew calls for someone to hold the ladder.",
+        "duration_seconds": 7.2,
+        "transition": "cut",
+        "image": "images/cinematics/w6_ending_diner_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.09
       },
       {
         "type": "narration",
         "text": "STAR BORN",
-        "music_cue": "music_credits_ending"
+        "music_cue": "music_credits_ending",
+        "duration_seconds": 3.1,
+        "transition": "fade"
       },
       {
         "type": "narration",
-        "text": "Created by the Starborn team. Thank you for playing."
+        "text": "Created by the Starborn team. Thank you for playing.",
+        "duration_seconds": 3.8,
+        "transition": "cut",
+        "fade_out_seconds": 1.2
       }
-    ]
+    ],
+    "skippable": true,
+    "backdrop": "black",
+    "presentation": "illustrated"
   },
   {
     "id": "scene_w2_astra_departure",
@@ -904,27 +1183,455 @@
     "steps": [
       {
         "type": "narration",
-        "text": "The Astra rises from the cradle. Jungle and tideglass fall away below; the Planetary Shield remains a distant ceiling.",
+        "text": "",
+        "duration_seconds": 4.5,
+        "image": "images/rooms/world_2/hangar_bay.webp",
+        "audio_cue": "sfx_w2_astra_launch",
+        "transition": "fade",
+        "caption_style": "none",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.12
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Zeke",
+        "portrait": "images/characters/emotes/zeke_idle.png",
+        "text": "Power’s steady. She’s holding.",
+        "duration_seconds": 3.5,
+        "caption_style": "dialogue",
+        "image": "images/rooms/astra/bridge.webp"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Orion",
+        "portrait": "images/characters/emotes/orion_idle.png",
+        "text": "Keep her low, under the Shield. I’ll call the turn for the Spire.",
+        "duration_seconds": 5.2,
+        "caption_style": "dialogue",
+        "image": "images/rooms/astra/bridge.webp"
+      },
+      {
+        "type": "narration",
+        "text": "The Spire rises above the service lanes. A guidance light turns red.",
+        "duration_seconds": 4.5,
+        "image": "images/rooms/world_3/spire_vent_output.webp",
+        "transition": "fade"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Zeke",
+        "portrait": "images/characters/emotes/zeke_worried.png",
+        "text": "That signal’s pulling us off the lane. I’m on the manual bus.",
+        "duration_seconds": 5.1,
+        "caption_style": "dialogue",
+        "image": "images/rooms/astra/bridge.webp"
+      },
+      {
+        "type": "narration",
+        "text": "The deck tilts. Gh0st catches Orion by the harness.",
+        "duration_seconds": 4.3,
+        "image": "images/rooms/astra/bridge.webp",
+        "audio_cue": "sfx_combat_plasma_arc"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "portrait": "images/characters/emotes/nova_confident.png",
+        "text": "There’s the city. Take us down below the street lights.",
+        "duration_seconds": 4.5,
+        "caption_style": "dialogue",
+        "image": "images/rooms/astra/bridge.webp"
+      },
+      {
+        "type": "narration",
+        "text": "",
+        "duration_seconds": 2.7,
+        "audio_cue": "sfx_crash_impact",
+        "transition": "cut",
+        "caption_style": "none"
+      },
+      {
+        "type": "narration",
+        "text": "Below the street, rain fills the dents in the Astra’s hull.",
+        "duration_seconds": 5.0,
+        "image": "images/rooms/world_3/spire_sewers_landing.webp",
+        "transition": "fade"
+      }
+    ],
+    "presentation": "illustrated",
+    "backdrop": "black",
+    "skippable": true
+  },
+  {
+    "id": "scene_w1_lift_separation",
+    "title": "The Cargo Lift",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The car pulls away. Across the gap, Jed still has both hands on the lever.",
+        "duration_seconds": 4.5,
+        "image": "images/rooms/world_1/launch_lift.webp",
+        "audio_cue": "sfx_w3_elevator_rise"
+      },
+      {
+        "type": "narration",
+        "text": "The shutters meet. Jed’s end of the radio goes quiet.",
+        "duration_seconds": 3.2,
+        "audio_cue": "sfx_door_airlock_close",
+        "transition": "cut"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Zeke",
+        "portrait": "images/characters/emotes/zeke_idle.png",
+        "text": "Nova. I’m still here. Follow my light.",
+        "duration_seconds": 3.8,
+        "caption_style": "dialogue"
+      }
+    ],
+    "presentation": "illustrated",
+    "backdrop": "black",
+    "skippable": true
+  },
+  {
+    "id": "scene_w3_foundry_flight",
+    "title": "Through the Curtain",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The rooftop guns fall quiet.",
+        "duration_seconds": 3,
+        "image": "images/rooms/world_3/spire_landing_pad_roof.webp",
         "audio_cue": "sfx_w2_astra_launch"
       },
       {
         "type": "dialogue",
         "speaker": "Orion",
-        "text": "Keep below the hard deck. This service airlane takes us to the Spire; we are not crossing the outer shield."
+        "portrait": "images/characters/emotes/orion_idle.png",
+        "text": "Through the seam on my count. Three. Two. Now.",
+        "duration_seconds": 4,
+        "caption_style": "dialogue",
+        "image": "images/rooms/astra/bridge.webp"
       },
       {
         "type": "narration",
-        "text": "Dominion interference floods the local guidance bands. Gh0st braces the crew while Zeke holds the manual ground path."
+        "text": "The curtain flashes across the hull. The outer Shield still holds above them.",
+        "duration_seconds": 4,
+        "image": "images/rooms/astra/bridge.webp",
+        "audio_cue": "sfx_combat_plasma_arc"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Zeke",
+        "portrait": "images/characters/emotes/zeke_idle.png",
+        "text": "I can keep her low. The Foundry has the engine and cutters we need.",
+        "duration_seconds": 4.5,
+        "caption_style": "dialogue",
+        "image": "images/rooms/astra/bridge.webp"
+      },
+      {
+        "type": "narration",
+        "text": "The landing struts scrape volcanic glass.",
+        "duration_seconds": 3.8,
+        "image": "images/rooms/world_4/foundry_slag_landing.webp",
+        "transition": "fade"
+      }
+    ],
+    "presentation": "illustrated",
+    "backdrop": "black",
+    "skippable": true
+  },
+  {
+    "id": "scene_w4_rylos_spared",
+    "title": "At Titan Dock",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The Titan’s hatch hangs open. Rylos reaches for a sidearm he can’t lift.",
+        "duration_seconds": 4.3,
+        "image": "images/rooms/world_4/foundry_titan_dock.webp"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Gh0st",
+        "portrait": "images/characters/emotes/gh0st_idle.png",
+        "text": "Leave it. There’s a way out behind you.",
+        "duration_seconds": 3.8,
+        "caption_style": "dialogue",
+        "image": "images/rooms/world_4/foundry_titan_dock.webp"
+      },
+      {
+        "type": "narration",
+        "text": "Gh0st lowers his blade and leaves the hatch open.",
+        "duration_seconds": 3.6,
+        "image": "images/rooms/world_4/foundry_titan_dock.webp"
+      }
+    ],
+    "presentation": "illustrated",
+    "backdrop": "black",
+    "skippable": true
+  },
+  {
+    "id": "scene_w4_outer_shield",
+    "title": "Beyond the Shield",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The empty engine cradle shakes. Work lights go out along the line.",
+        "duration_seconds": 4,
+        "image": "images/rooms/world_4/foundry_titan_dock.webp",
+        "audio_cue": "sfx_distant_gate_rumble"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Zeke",
+        "portrait": "images/characters/emotes/zeke_idle.png",
+        "text": "Engine’s holding. Give me the arrays. Now.",
+        "duration_seconds": 4,
+        "caption_style": "dialogue",
+        "image": "images/rooms/astra/bridge.webp",
+        "audio_cue": "sfx_w2_astra_launch"
+      },
+      {
+        "type": "narration",
+        "text": "The arrays cut a narrow opening. The engine drives the Astra through before it closes.",
+        "duration_seconds": 5.2,
+        "image": "images/rooms/astra/bridge.webp",
+        "audio_cue": "sfx_combat_plasma_arc"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Vale",
+        "portrait": "images/npcs/vale.webp",
+        "text": "Commander Rylos, bring up the ownership register. Director Thorne’s signature is no longer valid.",
+        "duration_seconds": 6.7,
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w4_coup_display_v1.webp"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Thorne",
+        "portrait": "images/npcs/thorne.webp",
+        "text": "That register includes my name because I paid for everything attached to it. Read it again.",
+        "duration_seconds": 6.1,
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w4_coup_display_v1.webp"
+      },
+      {
+        "type": "narration",
+        "text": "",
+        "duration_seconds": 0.75,
+        "caption_style": "none",
+        "image": "images/cinematics/w4_coup_display_v1.webp",
+        "transition": "cut"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Vale",
+        "portrait": "images/npcs/vale.webp",
+        "text": "It includes the authorization you gave me at the Spire. I’ve extended it to the Ring. All sectors, lock down.",
+        "duration_seconds": 7.4,
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w4_coup_display_v1.webp"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Gh0st",
+        "portrait": "images/characters/emotes/gh0st_idle.png",
+        "text": "The Ring used to announce whose orders I was following. Listen. It’s stopped saying her name.",
+        "duration_seconds": 6.5,
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w4_coup_display_v1.webp"
+      },
+      {
+        "type": "narration",
+        "text": "The Astra drops toward Executive Dock as the Ring seals its other approaches.",
+        "duration_seconds": 4,
+        "image": "images/rooms/world_5/orbital_executive_dock.webp",
+        "transition": "fade"
+      }
+    ],
+    "presentation": "illustrated",
+    "backdrop": "black",
+    "skippable": true
+  },
+  {
+    "id": "scene_w5_anchor_stasis",
+    "title": "One Breath",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The Anchor comes free. The Hunter-Killer lunges past the tank.",
+        "duration_seconds": 4.5,
+        "image": "images/rooms/world_5/deep_anchor_chamber.webp",
+        "audio_cue": "sfx_distant_gate_rumble"
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
-        "text": "We have the city beneath us. Bring her down where the sensors cannot follow."
+        "portrait": "images/characters/emotes/nova_scared.png",
+        "text": "Gh0st, down!",
+        "duration_seconds": 2.8,
+        "caption_style": "dialogue",
+        "image": "images/rooms/world_5/deep_anchor_chamber.webp"
       },
       {
         "type": "narration",
-        "text": "The Astra hits hard beneath the Spire. The crew survives, but the airlane is gone behind them."
+        "text": "",
+        "duration_seconds": 2.4,
+        "caption_style": "none",
+        "image": "images/cinematics/w5_stasis_lunge_v1.webp",
+        "transition": "cut",
+        "audio_cue": "sfx_intro_stasis_lock"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Gh0st",
+        "portrait": "images/characters/emotes/gh0st_idle.png",
+        "text": "Elara. Can you feel my hand?",
+        "duration_seconds": 3.7,
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w5_stasis_elara_v1.webp",
+        "transition": "cut"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Elara",
+        "portrait": "images/npcs/elara.webp",
+        "text": "I can feel the glass. The tank still has me. Follow the cable to the Throne Room. I’ll keep the door open.",
+        "duration_seconds": 7.5,
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w5_stasis_elara_v1.webp"
       }
-    ]
+    ],
+    "presentation": "illustrated",
+    "backdrop": "black",
+    "skippable": true
+  },
+  {
+    "id": "scene_w5_cross_the_tear",
+    "title": "Across the Tear",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Through the fracture, Elara grips the last cable. It peels away from the deck.",
+        "duration_seconds": 4,
+        "image": "images/rooms/world_5/deep_tear.webp"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Gh0st",
+        "portrait": "images/characters/emotes/gh0st_scared.png",
+        "text": "Elara! Take my hand!",
+        "duration_seconds": 3,
+        "caption_style": "dialogue",
+        "image": "images/rooms/world_5/deep_tear.webp"
+      },
+      {
+        "type": "narration",
+        "text": "",
+        "duration_seconds": 2.6,
+        "caption_style": "none",
+        "image": "images/cinematics/w5_tear_hands_v1.webp",
+        "transition": "cut",
+        "audio_cue": "sfx_combat_enemy_void_blast"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "portrait": "images/characters/emotes/nova_idle.png",
+        "text": "We’re going after her. Take my arm.",
+        "duration_seconds": 4.2,
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w5_tear_hands_v1.webp"
+      },
+      {
+        "type": "narration",
+        "text": "For a second, four hands hold. Then the grip breaks.",
+        "duration_seconds": 3.2,
+        "transition": "fade"
+      },
+      {
+        "type": "narration",
+        "text": "Nova wakes beside the fire and reaches into empty air.",
+        "duration_seconds": 4.2,
+        "image": "images/rooms/world_6/source_campfire.webp",
+        "transition": "fade"
+      }
+    ],
+    "presentation": "illustrated",
+    "backdrop": "black",
+    "skippable": true
+  },
+  {
+    "id": "scene_w6_song_fire_reunion",
+    "title": "Back at the Fire",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Three sets of footsteps reach the fire from different directions.",
+        "duration_seconds": 4.2,
+        "image": "images/rooms/world_6/source_campfire.webp"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Zeke",
+        "portrait": "images/characters/emotes/zeke_idle.png",
+        "text": "Nova? I’ve got an extra glove. Your hand’s shaking.",
+        "duration_seconds": 4.3,
+        "caption_style": "dialogue",
+        "image": "images/rooms/world_6/source_campfire.webp"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Orion",
+        "portrait": "images/characters/emotes/orion_idle.png",
+        "text": "Listen. I can hear all four of us.",
+        "duration_seconds": 3.6,
+        "caption_style": "dialogue",
+        "image": "images/rooms/world_6/source_campfire.webp"
+      },
+      {
+        "type": "narration",
+        "text": "Gh0st draws up beside them. Four shadows fall across the Key.",
+        "duration_seconds": 4,
+        "image": "images/rooms/world_6/source_campfire.webp"
+      }
+    ],
+    "presentation": "illustrated",
+    "backdrop": "black",
+    "skippable": true
+  },
+  {
+    "id": "scene_w6_silence_rises",
+    "title": "The Silence Rises",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "Vale’s knees buckle. His outline cracks, and the sound goes with it.",
+        "duration_seconds": 4.5,
+        "image": "images/rooms/world_6/source_center.webp",
+        "audio_cue": "battle_stability_shatter"
+      },
+      {
+        "type": "narration",
+        "text": "Two anchors catch the pieces in midair. A new shape pulls itself upright between them.",
+        "duration_seconds": 4.8,
+        "image": "images/rooms/world_6/source_center_node_scale_03.webp",
+        "transition": "fade"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "portrait": "images/characters/emotes/nova_idle.png",
+        "text": "Stay together. Check your gear before we go again.",
+        "duration_seconds": 4,
+        "caption_style": "dialogue",
+        "image": "images/rooms/world_6/source_center.webp"
+      }
+    ],
+    "presentation": "illustrated",
+    "backdrop": "black",
+    "skippable": true
   }
 ]

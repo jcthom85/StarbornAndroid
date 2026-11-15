@@ -133,10 +133,13 @@ data class RoomTransitionUi(
 enum class ScriptedTravelStyle(val durationMs: Int, val departureCue: String, val arrivalCue: String? = null) {
     PASSAGE(580, "ui_room_move"),
     LIFT(1150, "sfx_w3_elevator_rise", "sfx_door_airlock_open"),
+    ASTRA_BOARDING(1700, "sfx_w2_astra_launch", "sfx_door_airlock_open"),
     AIRLOCK(950, "sfx_door_airlock_close", "sfx_door_airlock_open"),
     FOUNDRY(1300, "sfx_door_airlock_open"),
     LAUNCH(2200, "sfx_w2_astra_launch"),
-    SOURCE(1050, "sfx_w2_chime_gate");
+    SOURCE(1050, "sfx_w2_chime_gate"),
+    MEMORY_LIFT(2300, "sfx_w3_elevator_rise", "sfx_door_airlock_open"),
+    SINGULARITY(2900, "sfx_w2_chime_gate");
 
     companion object {
         fun fromAsset(value: String): ScriptedTravelStyle? = entries.firstOrNull { it.name.equals(value, true) }

@@ -29,6 +29,10 @@ object ItemDetails {
             effect.type?.let { add("Effect: ${label(it)}") }
             effect.amount?.let { add("Amount: $it") }
             effect.restoreHp?.let { add("Restore HP: $it") }
+            if (effect.cleanses.isNotEmpty()) {
+                val names = effect.cleanses.joinToString(transform = com.example.starborn.domain.combat.CombatClarity::statusName)
+                add("Clears in combat: $names")
+            }
             effect.damage?.let { add("Damage: $it") }
             effect.status?.let { add("Status: ${resolveName(it)}") }
             effect.target?.let { add("Target: ${label(it)}") }

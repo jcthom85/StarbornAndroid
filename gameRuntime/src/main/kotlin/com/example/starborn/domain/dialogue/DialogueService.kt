@@ -83,10 +83,10 @@ class DialogueSession(
         val available = options.filter { conditionEvaluator.isConditionMet(it.condition) }
         if (available.isEmpty()) return emptyList()
         val exits = available.filter { option ->
-            option.next == null && option.trigger.isNullOrBlank() &&
+            option.exit || (option.next == null && option.trigger.isNullOrBlank() &&
                 (option.id.contains("leave", true) || option.text.contains("later", true) ||
                     option.text.contains("step away", true) || option.text.contains("never mind", true) ||
-                    option.text.contains("busy", true))
+                    option.text.contains("busy", true)))
         }
         return if (exits.isNotEmpty()) available.filterNot { it in exits } + exits
         else {

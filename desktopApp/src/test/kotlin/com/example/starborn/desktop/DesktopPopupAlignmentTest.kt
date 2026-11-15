@@ -15,6 +15,7 @@ import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import java.nio.file.Files
+import kotlin.math.abs
 
 class DesktopPopupAlignmentTest {
     @get:Rule val compose=createComposeRule()
@@ -70,4 +71,45 @@ class DesktopPopupAlignmentTest {
             compose.runOnIdle {assertEquals(1,skips)}
         } finally {services.close();directory.deleteRecursively()}
     }
+    @Test fun illustratedNarrationCentersAndRapidTapsAdvanceOnlyOnce() {
+        val directory = Files.createTempDirectory("cinematic-narration-").toFile()
+        val services = DesktopAppServices(directory, RecordingAudioDriver())
+        val text = "A long enough caption to still be typing after the shot begins. ".repeat(4)
+        val state = CinematicUiState(
+            "illustrated-test", null, CinematicBackdrop.BLACK,
+            presentation = CinematicPresentation.ILLUSTRATED, stepIndex = 0, stepCount = 2,
+            step = CinematicStepUi(CinematicStepType.NARRATION, null, text, durationSeconds = 60.0)
+        )
+        var advances = 0
+        try {
+            compose.mainClock.autoAdvance = false
+            compose.setContent {
+                DesktopStarbornTheme(services) {
+                    DesktopCinematicOverlay(state, services, { advances++ }, {})
+                }
+            }
+            compose.mainClock.advanceTimeByFrame()
+            val viewport = compose.onRoot().getUnclippedBoundsInRoot()
+            val caption = compose.onAllNodesWithText(text, useUnmergedTree = true).onLast()
+                .getUnclippedBoundsInRoot()
+            assertTrue(abs((viewport.left + viewport.right - caption.left - caption.right).value) < 4f)
+            assertTrue(abs((viewport.top + viewport.bottom - caption.top - caption.bottom).value) < 4f)
+
+            val advance = compose.onNodeWithContentDescription(text)
+            advance.performClick()
+            compose.mainClock.advanceTimeBy(100)
+            compose.runOnIdle { assertEquals(0, advances) }
+            advance.performClick()
+            advance.performClick()
+            compose.runOnIdle { assertEquals(0, advances) }
+            compose.mainClock.advanceTimeBy(600)
+            compose.runOnIdle { assertEquals(1, advances) }
+            advance.performClick()
+            compose.runOnIdle { assertEquals(1, advances) }
+        } finally {
+            services.close()
+            directory.deleteRecursively()
+        }
+    }
+
 }

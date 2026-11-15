@@ -281,7 +281,7 @@ internal fun CampaignNavigationHost(
                     services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue))
                 },
                 onEnterNode = { node ->
-                    if (services.sessionStore.state.value.roomId != null) {
+                    if (services.sessionStore.state.value.roomId != null && node.special != "astra") {
                         pendingAreaEntry = com.example.starborn.feature.exploration.viewmodel.AreaEntryUi(
                             System.nanoTime(), node.title, firstVisit = !node.visited
                         )

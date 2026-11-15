@@ -561,7 +561,7 @@ The drone marks a crew member before Heat Burst. Guard that character or interru
 
 235. For a full exploration run, confirm the numbered detours visited all **74 rooms**, both VHS discoveries, the smelter cache, optional magma regulator, wanted regional fishing and arcade discovery. Save to a separate predeparture slot. Ordinary backtracking remains available until you deliberately depart.
 
-236. At **Titan Dock**, use **escape launch**. Launch from Titan Dock only after the audit. **Escape gantry** at Escape Catwalk is an alternate control for this same departure. Confirm **Meltdown** complete and arrival at **Executive Dock** in World 5. The stolen engine/arrays make the Astra high-orbit capable; the Foundry is not a separate second ship.
+236. At **Titan Dock**, use **escape launch**. Launch from Titan Dock only after the audit. **Escape gantry** at Escape Catwalk is an alternate control for this same departure. Watch Vale revoke Thorne’s authority during **Beyond the Shield**. The Astra lands at **Executive Dock** in World 5 when the cinematic ends. Confirm **Meltdown** complete. The stolen engine/arrays make the Astra high-orbit capable; the Foundry is not a separate second ship.
 
 **Check before leaving:** World 5 arrival is stable, Meltdown is complete, and the predeparture save is retained.
 

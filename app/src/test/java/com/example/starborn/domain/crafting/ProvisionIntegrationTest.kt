@@ -87,6 +87,24 @@ class ProvisionIntegrationTest {
         }
     }
 
+    @Test fun fieldRecoveryHealsWhileCombatOnlyAntidoteStaysInInventory() = runTest {
+        val nova = list<Player>("characters.json").single { it.id == "nova" }
+        val use = ItemUseController(inventory, crafting, store) { mapOf(nova.id to nova) }
+        inventory.restore(mapOf("herbal_poultice" to 1, "burn_salve" to 1, "antidote_flask" to 1))
+        assertTrue(use.useItem("antidote_flask") is ItemUseController.Result.Failure)
+        assertTrue(use.useItem("herbal_poultice") is ItemUseController.Result.Failure)
+        assertEquals(1, inventory.snapshot()["antidote_flask"])
+        assertEquals(1, inventory.snapshot()["herbal_poultice"])
+
+        store.setPartyMemberHp(nova.id, 1)
+        assertTrue(use.useItem("herbal_poultice") is ItemUseController.Result.Success)
+        assertEquals(46, store.state.value.partyMemberHp[nova.id])
+        assertTrue(use.useItem("burn_salve") is ItemUseController.Result.Success)
+        assertEquals(81, store.state.value.partyMemberHp[nova.id])
+        assertFalse(inventory.hasItem("herbal_poultice"))
+        assertFalse(inventory.hasItem("burn_salve"))
+    }
+
     @Test fun caughtFishCanBecomeAMealWhoseEffectsAndChefApplyOnlyWhenEaten() = runTest {
         inventory.restore(mapOf("raw_glowfish" to 2,"herb" to 1))
         assertTrue(crafting.cookMeal("provision_glowfish_broth","nova") is CraftingOutcome.Success)

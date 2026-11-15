@@ -76,7 +76,8 @@ data class ItemEffect(
     val buffs: List<BuffEffect>? = null,
     val cooldown: Int? = null,
     @Json(name = "uses_per_battle")
-    val usesPerBattle: Int? = null
+    val usesPerBattle: Int? = null,
+    val cleanses: List<String> = emptyList()
 )
 
 @JsonClass(generateAdapter = true)

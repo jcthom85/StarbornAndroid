@@ -74,11 +74,11 @@ Start: Scrap Yard (`workshop_yard`).
 2. Defeat the **Faulted Loader**. Use an available Shock action when possible; read the current action description rather than relying on an old guide's damage numbers. Heal before a lethal hit, not after one. Clear the victory and tutorial prompts.
 3. Go **north** to Jed's Shutter (`workshop_floor`). Talk to **Jed** if his workshop briefing is available, and finish the conversation.
 4. Open **Menu > Tinkering**. Select **Functional Cryo-Inductor**. The authored repair needs **1 damaged Cryo-Inductor + 1 scrap metal**. Select/insert the damaged base and scrap as requested by the interface, then craft once. Check that the functional device appears and Cryo Vent unlocks.
-5. Close Tinkering. Inspect **Flux Liner** to patch the suit link and clamp the ground strip.
+5. Close Tinkering and finish Jed’s repair follow-up if it opens. Inspect **Flux Liner** to patch the suit link and clamp the ground strip.
 6. Inspect **mining cutter** to confirm the governor bypass. These actions appear after the inductor repair.
 7. Inspect **live cutter test** only after the repair, liner patch, and governor confirmation. Watch the surge and let its callback finish. Talk to Jed afterward if prompted; his directions identify Transit Checkpoint and Zeke's Booth.
 8. Open Journal. **Wake Up Call must be complete** and **Shift Clearance must be active**. If not, check the three preparation actions and finish any open cinematic/dialogue.
-9. Sweep the workshop before leaving: go **north** to Jed's Office (`workshop_office`), inspect **diagnostic bench drawer** for VHS tape 2, then return **south**.
+9. Sweep the workshop before leaving: go **north** to Jed's Office (`workshop_office`), inspect **diagnostic bench drawer**, then return **south**.
 10. Go **west** to Parts Loft (`workshop_loft`). Loot **mod bench**; inspect **parts** and **shipwright's slide rule**. Return **east**.
 11. Go **east** to Tool Shed (`workshop_shed`). Loot **toolbox**. Go **south** to Flooded Basement (`workshop_basement`), turn on **workbench power switch**, then loot **components chest**. Return **north**.
 12. Go **east** to Loading Dock (`workshop_dock`), then **east** to Back Alley (`workshop_back`). Loot **salvage dolly**; inspect the remaining lore actions. Return **west**, **west**, **west** to Jed's Shutter, then **south** to Scrap Yard.
@@ -125,7 +125,7 @@ Start: Triage Hall (`medbay_hall`).
 **Main quest: Shift Clearance (`w1_mq02`).** Start: Shift Queue (`checkpoint_queue`).
 
 1. Inspect the queue's listed interactions, then go **north** to Search Bay (`checkpoint_bay`). Talk to **Guard Hank** until Nova's clearance rejection is logged.
-2. Go **east** to Zeke's Booth (`checkpoint_booth`). Talk to **Zeke**, advance to the paperwork choice, and choose **Grid Instability**. Operator Error and Unauthorized Modification are wrong choices; read their feedback and return to the correct choice if offered.
+2. Go **east** to Zeke's Booth (`checkpoint_booth`). Open **discarded document locker** for **Film 02: Memories of Another Life**. Talk to **Zeke**, advance to the paperwork choice, and choose **Grid Instability**. Operator Error and Unauthorized Modification are wrong choices; read their feedback and return to the correct choice if offered.
 3. Finish the conversation. Check you received the **Mine Access Badge** and Shift Clearance completed.
 4. Go **north** to Holding Cell (`checkpoint_cell`). Loot **mortar seam**, read **graffiti**, and inspect **bench**. Return **south** to Zeke's Booth.
 5. Go **west** to Search Bay, **north** to Blast Door A (`checkpoint_door`), then **north** through Transit Tunnel (`checkpoint_tunnel`) to **Concourse Lobby (`admin_lobby`)**. Inspect each intermediate room's interactions as you pass.
@@ -148,14 +148,14 @@ Start: Triage Hall (`medbay_hall`).
 
 Start: Concourse Lobby (`admin_lobby`).
 
-1. Talk to **Foreman Boggs**. His initial review sends you to the shield drill and starts **Heavy Lifting: Required Training (`w1_sq03`)**. Finish all lines so registration fires.
+1. Talk to **Foreman Boggs**. His initial review sends you to the shield drill and starts **Heavy Lifting: Required Training (`w1_sq03`)**. Finish all lines so registration fires. For optional practice, return to Loading Dock before the drill and use **loader**, then **cargo rail**.
 2. Go **east** to Customer Service (`admin_window`), then **east** to Security Post (`admin_security`). Complete the registered **Acoustic Bulwark shield-training fight**. Hydraulic Kick should be unlocked by the drill registration; read its Guard Break description and use it to pressure the shield.
 3. If no training fight/ability appears, return **west, west** to Boggs and finish his training reminder, then revisit the Security Post. Inspecting the decorative shield trainer alone is not the certification reward.
 4. After victory, check Heavy Lifting is Completed and the training has logged. Its authored reward is **100 XP, Heavy Gear, and Hydraulic Fluid**, plus **2 AP** under the current crew progression rules. Review affordable upgrades before descending.
 5. Return **west** to Customer Service, then **west** to Concourse Lobby. Talk to **Boggs again**. This second full conversation authorizes the Deep Mine and reveals/unlocks its node. Training victory alone is not the final authorization conversation.
 6. Sweep the Concourse: go **north** to Observation Deck (`admin_deck`), then **north** to Foreman's Office (`admin_office`); inspect its room actions and return **south**.
 7. Go **east** to Information Kiosk (`admin_kiosk`), then **north** to Staff Lounge (`admin_lounge`). Use **executive dispenser** and read **datapad**; inspect **chairs**. Return **south** to the kiosk, then **south** to Customer Service and **west** to the lobby. Inspect **call queue terminal** while passing Customer Service.
-8. You can optionally revisit Loading Dock via the Homestead map with Heavy Lifting active to try **loader**, then **cargo rail**. This practice route is not required when the Security Post certification is already complete. Do not spend time chasing a second certification payout.
+8. Check the certification receipt in the Journal before leaving the Concourse.
 9. Before descending, complete Protocol Override in section 7. Return to a valid map entrance (Admin Concourse's Concourse Lobby) and choose **Server Room** when available. If its node remains inaccessible, inspect the node's lock message and ensure Shift Clearance and Boggs' conversations are complete.
 
 **Check before leaving:** Heavy Lifting is Completed; Boggs has discussed Sector 4; Deep Mine is revealed/unlocked. The lift still refusing authorization means the Boggs assignment conversation has not fully completed.
@@ -215,7 +215,7 @@ Start: Cavern Junction (`mine_junction`).
 
 - Wake Up Call and Shift Clearance completed.
 - Scavenger's Stash, System Flush, Heavy Lifting, Protocol Override, and The Lost Shift completed.
-- Pit/workshop VHS tapes collected; arcade cabinet discovery recorded.
+- Supply Closet and Zeke’s Booth VHS tapes collected; arcade cabinet discovery recorded.
 - All wanted one-time caches and lore read (use section 12).
 - Cart vault opened and looted; Riot Control Post detour completed if following 100% room coverage.
 - Party healed, equipment reviewed, useful healing items and grenades retained.
@@ -254,7 +254,7 @@ Start: Cavern Junction (`mine_junction`).
 1. From Cargo Lift, go **north** to Security Checkpoint B (`launch_checkpoint`). Defeat **Dominion Dampener + Resonance Buoy**. Inspect **checkpoint** and **floodlights** after the encounter.
 2. Heal, then go **north** to Pod Bay (`launch_bay`). The Iron Warden's arrival advances the main quest to its boss stage.
 3. Talk to **Zeke before the fight** if you want to check his contextual warning. He should talk about the Warden/Pod Bay, not warn you about the old booth's audio recording. This conversation does not splice the Chime while the Warden is undefeated.
-4. Save before committing to the fight if the menu is available. Fight **The Iron Warden**. Cryo Vent's Brittle setup followed by physical attacks and Guard-pressure actions is a useful plan; use the actual action descriptions. Keep healing ready and avoid wasting heavy actions into an intact Guard. The persistent Burst lock-on and Gas pressure rising warnings give you a response turn: use Guard or a suitable interrupt. Below 40% HP, the Warden drops its defenses for Emergency Overclock; watch the faster offensive cycle and recovery windows. Treat numeric damage/HP in older guides as unverified.
+4. Save before committing to the fight if the menu is available. Fight **The Iron Warden**. Victory also awards Nova’s **Laser Blaster**. Cryo Vent's Brittle setup followed by physical attacks and Guard-pressure actions is a useful plan; use the actual action descriptions. Keep healing ready and avoid wasting heavy actions into an intact Guard. The persistent Burst lock-on and Gas pressure rising warnings give you a response turn: use Guard or a suitable interrupt. Below 40% HP, the Warden drops its defenses for Emergency Overclock; watch the faster offensive cycle and recovery windows. Treat numeric damage/HP in older guides as unverified.
 5. Finish victory processing. Check the Warden is defeated and the quest now asks for the launch-pod steps.
 6. **Talk to Zeke in Pod Bay after victory.** Finish the directions so he sends you into The Pod Core. This is the first conversation of a two-room handoff.
 7. Go **north** to **The Pod Core (`launch_pod`)**. **Talk to Zeke again here** and finish the splice conversation. It consumes the Ghost Signal Cell, records the Chime splice, and adds Zeke to the party. Merely moving into the room does not splice it.
@@ -364,7 +364,7 @@ Use this section to finish every side inspection, cache, and lore interaction. C
 - **screens**: Inspect/select this action. In-room feedback: Flickering CRTs displaying local sensor feeds and shipment manifests.
 - **schematics**: Inspect/select this action. In-room feedback: Jed's own hand-drawn plans for engine modifications. They're more art than engineering.
 - **chair**: Inspect/select this action. In-room feedback: Smells like machine oil and Jed's cheap tobacco.
-- **diagnostic bench drawer**: Inspect/select this action. Authored outcomes (when event gates are met): 1 x Film 02: Memories of Another Life. In-room feedback: An old diagnostic bench with a sealed drawer.
+- **diagnostic bench drawer**: Inspect/select this action. In-room feedback: An old diagnostic bench with a sealed drawer.
 
 #### Parts Loft (`workshop_loft`)
 
@@ -523,6 +523,7 @@ Use this section to finish every side inspection, cache, and lore interaction. C
 - **Exits:** West to Search Bay (`checkpoint_bay`); North to Holding Cell (`checkpoint_cell`).
 - **window**: Inspect/select this action. In-room feedback: Smudged with fingerprints and covered in corporate status icons.
 - **speaker**: Inspect/select this action. In-room feedback: A cheap, buzzing intercom. It's the only way to talk to the clerks.
+- **discarded document locker**: Collect **Film 02: Memories of Another Life** once.
 
 #### Holding Cell (`checkpoint_cell`)
 
@@ -962,14 +963,14 @@ These are the current authored objective strings. Compare with the route above i
 **Stage: `clear_cargo_collapse`**
 
 - [ ] Report to Foreman Boggs in the Concourse Lobby. (`talk_to_bogs`)
-- [ ] Optional workshop practice: start the loader at the Loading Dock. (`start_loader`) - optional
-- [ ] Optional workshop practice: clear the cargo rail at the Loading Dock. (`move_cargo`) - optional
 
 **Stage: `guard_break_training`**
 
 - [ ] Learn Hydraulic Kick. (`learn_hydraulic_kick`)
 - [ ] Enter the Security Post (East) and defeat the Shielded Trainer with Guard Break. (`break_training_shield`)
 - [ ] Complete the drill. (`rescue_trapped_workers`)
+- [ ] Optional workshop practice: start the loader at the Loading Dock. (`start_loader`) - optional
+- [ ] Optional workshop practice: clear the cargo rail at the Loading Dock. (`move_cargo`) - optional
 
 ### Protocol Override (`w1_sq04`)
 

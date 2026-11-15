@@ -25,5 +25,6 @@ data class DialogueOption(
     val text: String,
     val next: String? = null,
     val trigger: String? = null,
-    val condition: String? = null
+    val condition: String? = null,
+    val exit: Boolean = false
 )

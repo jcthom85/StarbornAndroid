@@ -796,9 +796,21 @@ class CombatController(
                     targetMode !in setOf("enemy_group", "all_enemies") -> resolveEnemyTargets(current).firstOrNull()
                 else -> null
             }
-            playUiCue("confirm")
             val action = CombatAction.ItemUse(attackerId, entry.item.id, resolvedTarget)
+            if (!entry.item.effect?.cleanses.isNullOrEmpty() && !inventoryService.hasItem(entry.item.id)) {
+                return@updateState current
+            }
             val resolved = actionProcessor.execute(current, action, ::victoryReward)
+            if (resolved === current && !entry.item.effect?.cleanses.isNullOrEmpty()) {
+                _combatBanner.value = CombatBannerMessage(
+                    id = UUID.randomUUID().toString(),
+                    primary = "No effect on this target",
+                    accent = CombatBannerAccent.DEFAULT,
+                    icon = CombatBannerIcon.ITEM
+                )
+                return@updateState current
+            }
+            playUiCue("confirm")
             executed = true
             resolved.applyOutcomeResults(current)
         }
@@ -1933,6 +1945,36 @@ class CombatController(
             }
             newlyBroken.forEach { removeFromReadyQueue(it) }
         }
+        if (updated.outcome == null) {
+            val interrupted = newEntries.filterIsInstance<CombatLogEntry.TurnSkipped>()
+                .lastOrNull { it.reason.endsWith(" interrupted") }
+            val broken = newlyBroken.filter { updated.combatants[it]?.isAlive == true }
+            when {
+                interrupted != null -> setCombatBanner(interrupted, updated)
+                broken.isNotEmpty() -> _combatBanner.value = CombatBannerMessage(
+                    id = UUID.randomUUID().toString(),
+                    primary = "Stability Break",
+                    secondary = broken.joinToString { combatantName(updated, it) } + " · Turn delayed",
+                    accent = CombatBannerAccent.SHOCK,
+                    icon = CombatBannerIcon.BURST,
+                    importance = CombatBannerImportance.IMPORTANT
+                )
+                currentAction is CombatAction.SkillUse &&
+                    skillById[currentAction.skillId]?.combatTags.orEmpty().contains("guard_break") -> {
+                    val removed = updated.combatants.keys.filter { id ->
+                        lostBlockingStatus(previous.combatants[id], updated.combatants[id])
+                    }
+                    if (removed.isNotEmpty()) _combatBanner.value = CombatBannerMessage(
+                        id = UUID.randomUUID().toString(),
+                        primary = "Guard Broken",
+                        secondary = removed.joinToString { combatantName(updated, it) },
+                        accent = CombatBannerAccent.PHYSICAL,
+                        icon = CombatBannerIcon.GUARD,
+                        importance = CombatBannerImportance.IMPORTANT
+                    )
+                }
+            }
+        }
     }
 
     private fun actionEffectDelayMs(action: CombatAction?): Long =
@@ -2122,11 +2164,14 @@ class CombatController(
         val skill = skillById[skillUse.skillId] ?: return false
         val guardBreak = skill.combatTags.orEmpty().any { tag -> tag.equals("guard_break", ignoreCase = true) }
         if (!guardBreak) return false
-        val before = previous.combatants[entry.targetId] ?: return false
-        val after = updated.combatants[entry.targetId] ?: return false
-        val beforeInvulnerable = before.statusEffects.any { it.id.equals("invulnerable", ignoreCase = true) && it.stacks > 0 }
-        val afterInvulnerable = after.statusEffects.any { it.id.equals("invulnerable", ignoreCase = true) && it.stacks > 0 }
-        return beforeInvulnerable && !afterInvulnerable
+        return lostBlockingStatus(previous.combatants[entry.targetId], updated.combatants[entry.targetId])
+    }
+
+    private fun lostBlockingStatus(before: CombatantState?, after: CombatantState?): Boolean {
+        fun hasBlockingStatus(state: CombatantState?) = state?.statusEffects.orEmpty().any {
+            it.stacks > 0 && it.id.lowercase(Locale.ROOT) in setOf("invulnerable", "guard", "shield")
+        }
+        return hasBlockingStatus(before) && !hasBlockingStatus(after)
     }
 
     private fun emitStatusApplied(entry: CombatLogEntry.StatusApplied, delayMs: Long) {
@@ -2432,13 +2477,32 @@ class CombatController(
         entry: CombatLogEntry.StatusExpired,
         state: CombatState
     ): CombatBannerMessage? {
-        return null
+        if (!entry.cleansed) return null
+        return CombatBannerMessage(
+            id = UUID.randomUUID().toString(),
+            primary = "Cleansed ${statusDisplayName(entry.statusId)}",
+            secondary = combatantName(state, entry.targetId),
+            accent = CombatBannerAccent.HEAL,
+            icon = CombatBannerIcon.STATUS,
+            importance = CombatBannerImportance.IMPORTANT
+        )
     }
 
     private fun bannerForTurnSkipped(
         entry: CombatLogEntry.TurnSkipped,
         state: CombatState
     ): CombatBannerMessage? {
+        if (entry.reason.endsWith(" interrupted")) {
+            bannerSession = null
+            return CombatBannerMessage(
+                id = UUID.randomUUID().toString(),
+                primary = "Attack Interrupted",
+                secondary = "${combatantName(state, entry.actorId)} · ${entry.reason.removeSuffix(" interrupted")}",
+                accent = CombatBannerAccent.SHOCK,
+                icon = CombatBannerIcon.BURST,
+                importance = CombatBannerImportance.IMPORTANT
+            )
+        }
         val chargingWeapon = chargingWeaponName(entry.reason)
         if (chargingWeapon == null && combatTextVerbosity != CombatTextVerbosity.VERBOSE && entry.actorId !in playerIdList) {
             return null
@@ -3869,7 +3933,8 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
             }
             is CombatLogEntry.StatusExpired -> {
                 val targetName = state.combatants[entry.targetId]?.combatant?.name ?: entry.targetId
-                "${statusDisplayName(entry.statusId)} expires on $targetName"
+                if (entry.cleansed) "${statusDisplayName(entry.statusId)} cleared from $targetName"
+                else "${statusDisplayName(entry.statusId)} expires on $targetName"
             }
 
             is CombatLogEntry.TurnSkipped -> {

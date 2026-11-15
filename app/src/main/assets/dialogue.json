@@ -263,7 +263,7 @@
   {
     "id": "jed_w1_mq01_intro_5",
     "speaker": "Jed",
-    "text": "And a split cold loop means you come back without fingers. Eat something. Bring the parts to my workshop; we'll get you working.",
+    "text": "That cold loop splits on shift, you’ll lose fingers. Eat. Bring the parts to my workshop and we’ll fit them.",
     "next": "jed_w1_mq01_intro_6"
   },
   {
@@ -275,7 +275,7 @@
   {
     "id": "jed_w1_mq01_workshop_brief_1",
     "speaker": "Jed",
-    "text": "There you are. Put the cutter on the bench. Cold loop's split right along the seam. Open your repair menu; I'll hold the housing.",
+    "text": "Put the cutter here. See that split along the seam? You fit the cold loop. I’ll hold the housing.",
     "condition": "quest_active:w1_mq01,milestone:ms_w1_mq01_jed_talked,milestone_not_set:ms_w1_mq01_workshop_briefed",
     "next": "jed_w1_mq01_workshop_brief_2"
   },
@@ -342,7 +342,7 @@
   {
     "id": "jed_w1_mq02_handoff_3",
     "speaker": "Jed",
-    "text": "Transit Checkpoint on the hub map. If Hank rejects you, turn east from the Search Bay to Zeke's Booth. He knows where a bad form can get lost. I'll head toward the service lift. Don't give them a reason to keep you.",
+    "text": "Try Hank at Transit Checkpoint on the hub map. If he turns you away, head east from the Search Bay to Zeke's Booth. He can buy you time. I’ll head for the service lift.",
     "trigger": "set_milestone:ms_w1_mq02_jed_advised"
   },
   {
@@ -354,7 +354,7 @@
   {
     "id": "jed_w1_launch_lift_idle",
     "speaker": "Jed",
-    "text": "Go, Nova! I've got the manual bypass wedged with my wrench. If I step away, the lift locks down. Get to the Launch Bay!",
+    "text": "Easy. I’ve got the bypass for now. Keep away from the lift motor.",
     "condition": "milestone:ms_w1_mq03_complete,milestone_not_set:ms_w1_mq04_complete"
   },
   {
@@ -556,7 +556,7 @@
     "id": "zeke_w1_booth_idle",
     "speaker": "Zeke",
     "condition": "room:checkpoint_booth",
-    "text": "Keep your voice down. The booth records audio. I can lose a form; losing a recording takes more explaining."
+    "text": "Keep your voice down. This booth records everything. I’ll show you where to stand so it can’t hear you."
   },
   {
     "id": "zeke_w1_warden_wait",
@@ -758,19 +758,19 @@
   {
     "id": "bogs_w1_sq03_intro_2",
     "speaker": "Nova",
-    "text": "There are workers behind that pile.",
+    "text": "Do you need the cargo moved before I can take the drill?",
     "next": "bogs_w1_sq03_intro_3"
   },
   {
     "id": "bogs_w1_sq03_intro_3",
     "speaker": "Foreman Boggs",
-    "text": "Then move the pile. Finish the shield drill while you're there.",
-    "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_quest_task_done:w1_sq03:learn_hydraulic_kick,unlock_skill:nova_hydraulic_kick,set_milestone:ms_w1_sq03_started,set_milestone:ms_w1_sq03_hydraulic_kick_ready,player_action:w1_sq03_register_drill"
+    "text": "Take the drill at Security Post. That’s what gets you down the mine. If you want practice first, the loader and cargo rail are at the Loading Dock.",
+    "trigger": "start_quest:w1_sq03,track_quest:w1_sq03,set_quest_task_done:w1_sq03:talk_to_bogs,set_quest_task_done:w1_sq03:learn_hydraulic_kick,unlock_skill:nova_hydraulic_kick,set_milestone:ms_w1_sq03_started,set_milestone:ms_w1_sq03_hydraulic_kick_ready,advance_quest_stage:w1_sq03:guard_break_training,player_action:w1_sq03_register_drill"
   },
   {
     "id": "bogs_w1_sq03_complete",
     "speaker": "Foreman Boggs",
-    "text": "Cargo route's clear. Your shield certification is logged. Check your journal for the next assignment.",
+    "text": "Your shield certification’s logged. Come see me when you’re ready for Sector 4.",
     "condition": "quest_completed:w1_sq03"
   },
   {
@@ -795,7 +795,7 @@
     "id": "warden_boss_intro_2",
     "speaker": "Nova",
     "emote": "angry",
-    "text": "Jed's behind us holding a lift open. You sent guards after him. Keep your decision. We're leaving.",
+    "text": "Jed stayed behind to hold that lift. You sent guards after him. Open the hatch.",
     "next": "warden_boss_intro_3"
   },
   {
@@ -808,7 +808,7 @@
     "id": "zeke_w1_mq05_defeat_warden_1",
     "speaker": "Zeke",
     "emote": "surprised",
-    "text": "He's down. I keep expecting him to get back up and ask for my employee number. Security's restarting. We have to move.",
+    "text": "He’s down. Nova, the security panel’s booting again. Help me with the hatch.",
     "condition": "quest_active:w1_mq05,quest_stage:w1_mq05:launch_pod,quest_task_not_done:w1_mq05:splice_chime,milestone_not_set:ms_w1_zeke_directed_to_pod,room:launch_bay",
     "next": "zeke_w1_mq05_defeat_warden_2"
   },
@@ -823,7 +823,7 @@
     "id": "zeke_w1_mq05_defeat_warden_3",
     "speaker": "Zeke",
     "emote": "worried",
-    "text": "Then we take it with us. You first. I'll seal the hatch behind you. For once, I get to decide who stays on which side.",
+    "text": "Pass me the Chime once you’re in. I’ll seal the hatch behind us.",
     "trigger": "set_milestone:ms_w1_zeke_directed_to_pod"
   },
   {
@@ -851,7 +851,7 @@
     "id": "zeke_w1_mq05_pod_core_3",
     "speaker": "Zeke",
     "emote": "happy",
-    "text": "Authorization accepted. Power's holding. I can launch us, but I can't promise where we'll land. I'd like to be honest about one form today.",
+    "text": "It took the Chime. Power’s holding. I can get us off the rail. After that, I can’t promise where we’ll land.",
     "next": "zeke_w1_mq05_pod_core_4"
   },
   {
@@ -864,7 +864,7 @@
   {
     "id": "zeke_w2_crash_1",
     "speaker": "Zeke",
-    "text": "Nova? Say something. Anything. I cannot see you through this cracked visor.",
+    "text": "Nova? Say something. I can’t see through this visor.",
     "condition": "quest_active:w2_mq01,quest_task_not_done:w2_mq01:check_on_zeke",
     "next": "zeke_w2_crash_2",
     "music": "music_cinematic_crash"
@@ -878,7 +878,7 @@
   {
     "id": "zeke_w2_crash_3",
     "speaker": "Zeke",
-    "text": "Recycler is running. That is one item on the survival checklist. The pod core... no. We are not getting another launch out of it.",
+    "text": "Recycler’s running. One thing I can cross off. The pod core… no. We’re walking.",
     "next": "zeke_w2_crash_4"
   },
   {
@@ -909,13 +909,13 @@
     "id": "zeke_astra_bridge_idle",
     "speaker": "Zeke",
     "emote": "confident",
-    "text": "Atmospheric route calibrated. The Astra handles heavier than a cargo hopper, but she will fly clean beneath Dominion radar.",
+    "text": "I’ve plotted the low airlane. The Astra handles like a loaded hopper. Give yourself room on the turns.",
     "condition": "milestone:ms_w2_mq05_complete,quest_not_started:w3_mq11"
   },
   {
     "id": "zeke_w2_mq02_intro_1",
     "speaker": "Zeke",
-    "text": "The beacon's pulse is strong, coming from that massive stone gate ahead. But thick razor-vines block the path. Watch your step, Nova.",
+    "text": "Beacon’s straight ahead, through that stone gate. Careful. Those vines cut right through my glove.",
     "condition": "quest_active:w2_mq02,quest_task_not_done:w2_mq02:locate_temple_gate"
   },
   {
@@ -927,14 +927,14 @@
   {
     "id": "zeke_w2_mq03_puzzle_success",
     "speaker": "Zeke",
-    "text": "The chamber finally sounds like one machine. The rings are locking into alignment, and the pod is venting pressure cleanly.",
+    "text": "Pressure’s falling. All three rings are holding. I think you can open it now.",
     "condition": "quest_active:w2_mq03,quest_task_done:w2_mq03:align_stasis_rings",
     "trigger": "player_action:w2_mq03_align_complete"
   },
   {
     "id": "zeke_w2_mq03_puzzle_fail",
     "speaker": "Zeke",
-    "text": "No, the rings are still oscillating. Something in the chamber is still pushing against the rest of the system.",
+    "text": "The rings won’t hold. Check the coolant gauge and the pressure bypass again.",
     "condition": "quest_active:w2_mq03,quest_task_not_done:w2_mq03:align_stasis_rings"
   },
   {
@@ -957,7 +957,8 @@
       },
       {
         "id": "zeke_w2_sq01_decline",
-        "text": "Not right now."
+        "text": "Not right now.",
+        "exit": true
       }
     ]
   },
@@ -965,14 +966,14 @@
     "id": "zeke_w2_post_orion_idle",
     "speaker": "Zeke",
     "emote": "worried",
-    "text": "He asked what happened to the people who were supposed to wake him. I could tell him what the records say. I cannot make myself call it a retirement.",
+    "text": "He asked who was supposed to wake him. I pulled up the roster. Every name had the same word beside it. I couldn’t say it out loud.",
     "condition": "milestone:ms_w2_mq03_complete,milestone_not_set:ms_w2_mq04_complete"
   },
   {
     "id": "zeke_w2_post_ghost_idle",
     "speaker": "Zeke",
     "emote": "worried",
-    "text": "He waited for the ground lead, then offered his hand. A Dominion weapon chose to help. I am still keeping the wrench nearby, but... I noticed.",
+    "text": "He waited for the ground lead, then offered me his hand. I still kept the wrench where I could reach it. He saw. He held his hand out anyway.",
     "condition": "milestone:ms_w2_mq04_complete,milestone_not_set:ms_w2_mq05_complete"
   },
   {
@@ -1042,7 +1043,8 @@
       },
       {
         "id": "orion_w2_sq04_decline",
-        "text": "Not right now."
+        "text": "Not right now.",
+        "exit": true
       }
     ]
   },
@@ -1061,13 +1063,13 @@
   {
     "id": "orion_astra_lounge_idle",
     "speaker": "Orion",
-    "text": "The Astra's hull breathes like an old friend. Once we clear the upper troposphere, I will tune the navigation array for the Spire.",
+    "text": "I remember the approach from the coast. Keep below the Shield and I can talk you through the turn toward the Spire.",
     "condition": "milestone:ms_w2_mq05_complete,quest_not_started:w3_mq11"
   },
   {
     "id": "orion_default_talk",
     "speaker": "Orion",
-    "text": "The current of this place is strong, Nova. I can hear the ocean's resonance."
+    "text": "Give me a moment. I’m listening for what changed when we came in."
   },
   {
     "id": "ghost_confrontation_1",
@@ -1080,7 +1082,7 @@
   {
     "id": "ghost_confrontation_2",
     "speaker": "Player",
-    "text": "Then look at us before you pull that trigger. We broke out of the colony. Who is answering you now?",
+    "text": "We got out of the colony alive. Look at me. Is anyone still on that channel?",
     "next": "ghost_confrontation_3"
   },
   {
@@ -1116,13 +1118,13 @@
   {
     "id": "ghost_astra_lounge_idle",
     "speaker": "Gh0st",
-    "text": "Perimeter scanned. The Astra's airlocks are sealed, and my rifle is tuned. I will watch the cargo ramp while you rest.",
+    "text": "Airlocks are sealed. I’ll watch the cargo ramp. Go get some sleep.",
     "condition": "milestone:ms_w2_mq05_complete,quest_not_started:w3_mq11"
   },
   {
     "id": "ghost_default_talk",
     "speaker": "Gh0st",
-    "text": "My blades are quiet, but my sensors are alert."
+    "text": "I’m listening. Go ahead."
   },
   {
     "id": "jax_w3_mq11_shelter",
@@ -1147,26 +1149,20 @@
   {
     "id": "zeke_w3_mq11_safehouse_end",
     "speaker": "Orion",
-    "text": "Establishing resonance lock. There. The Source is quiet here. The city will hear only rain, faulty neon, and its own arrogance.",
+    "text": "There. I’ve cut the signal at the stairwell. Zeke, check your meter. Can you still pick us up?",
     "trigger": "player_action:w3_mq11_establish_shield"
   },
   {
     "id": "w3_mq12_jax_intro",
     "speaker": "Jax",
     "condition": "quest_active:w3_mq12,quest_task_not_done:w3_mq12:talk_jax",
-    "text": "You want the Upper City? You need timing, credentials, a route, disguises, and the nerve to look bored while they judge your humanity.",
-    "options": [
-      {
-        "id": "jax_w3_mq12_request_codes",
-        "text": "We need a way past the patrols. Can you help?",
-        "next": "w3_mq12_jax_success"
-      }
-    ]
+    "text": "Upstairs they check the badge before they look at your face. Get the timing right and give them the work order they expect.",
+    "next": "nova_w3_mq12_request_codes"
   },
   {
     "id": "w3_mq12_jax_success",
     "speaker": "Jax",
-    "text": "Schedules are on this drive. Gather the underrail timing, badges, and disguises, then assemble everything at the planning table.",
+    "text": "Here. Patrol schedules. Get the underrail timing, badges, and uniforms together before you commit at the planning table.",
     "trigger": "player_action:w3_mq12_talk_jax"
   },
   {
@@ -1212,7 +1208,8 @@
       },
       {
         "id": "ghost_w3_sq12_decline",
-        "text": "Not now."
+        "text": "Not now.",
+        "exit": true
       }
     ]
   },
@@ -1244,7 +1241,7 @@
     "id": "w3_sq13_mika_lights",
     "speaker": "Mika",
     "condition": "quest_active:w3_sq13,quest_task_not_done:w3_sq13:fix_market_lights,milestone_set:ms_w3_market_siphon_traced,milestone_not_set:ms_w3_market_grid_ready",
-    "text": "Just redirect the primary power coupling to light them up. Nothing heroic. Just enough glow to remind people the market is still ours.",
+    "text": "Power’s coming through again. Help me switch it back to the lanterns before another stall packs up.",
     "options": [
       {
         "id": "mika_w3_sq13_fix",
@@ -1257,14 +1254,14 @@
     "id": "w3_mq12_workstation_dialogue",
     "speaker": "System",
     "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:map_patrols,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:copy_badges,quest_task_done:w3_mq12:source_disguises,quest_task_not_done:w3_mq12:hack_blueprints",
-    "text": "Zeke's workstation combines the stolen schedules, copied service badges, and disguise notes into a freight-elevator clearance. The Dominion menus work just like the mine checkpoint; the identities on these badges belong to this building's service crew. The copied work order is for a scheduled Skypark air-filter inspection. Emergency repairs need a separate incident number; guest deliveries use the public concierge.",
+    "text": "The workstation matches the copied badges and uniforms to a freight clearance. Work order: scheduled Skypark air-filter inspection. Emergency repairs require an incident number. Guest deliveries go through the public concierge.",
     "trigger": "player_action:w3_mq12_hack_blueprints"
   },
   {
     "id": "w3_mq12_planning_table_dialogue",
     "speaker": "System",
     "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:map_patrols,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:copy_badges,quest_task_done:w3_mq12:source_disguises,quest_task_done:w3_mq12:hack_blueprints,quest_task_not_done:w3_mq12:assemble_table",
-    "text": "The route is ready: return to Transit Plaza in the copied uniforms, use the freight badges at the service elevator, and ride up to the Upper City laundry intake. Zeke will send the Astra's autopilot clearance to move to the rooftop pad while the crew travels on foot. Once you leave this table, the heist begins. Your cover is the scheduled Skypark air-filter inspection. Keep to the work order if anyone asks.",
+    "text": "Ready to start the heist? Wear the copied uniforms to Transit Plaza and use the freight badges at the service elevator. The lift opens at the Upper City laundry intake. Zeke will send the Astra to the rooftop pad. If questioned, give the work order: scheduled Skypark air-filter inspection.",
     "options": [
       {
         "id": "w3_mq12_assemble_confirm",
@@ -1293,20 +1290,20 @@
   {
     "id": "zeke_w3_mq13_cover",
     "speaker": "Zeke",
-    "text": "[Zeke keeps his voice low as the registry clears.] Right order, right badges. Same trick as the mine checkpoint: give the system a story its own forms already believe.",
+    "text": "[Zeke lowers his voice as the registry clears.] We’re through. Nova, there’s a loose thread on your cuff. Tuck it in before he looks back.",
     "trigger": "player_action:w3_mq13_blend_in"
   },
   {
     "id": "zeke_w3_mq13_console_intro",
     "speaker": "Zeke",
     "condition": "quest_active:w3_mq13,quest_task_done:w3_mq13:blend_in,quest_task_not_done:w3_mq13:disable_sensors",
-    "text": "Standard Dominion scanner grid. They routed it through Laundry because maintenance staff are invisible by design. That makes us useful math.",
+    "text": "Same scanner grid as the mine. Here’s the maintenance login. They left it in the laundry.",
     "next": "zeke_w3_mq13_console_end"
   },
   {
     "id": "zeke_w3_mq13_console_end",
     "speaker": "Zeke",
-    "text": "Same permissions menu as the mine checkpoint. Except this time, I'm revoking your access. Scanners disabled.",
+    "text": "There. Scanners are off. The maintenance log says they passed inspection.",
     "trigger": "player_action:w3_mq13_disable_sensors"
   },
   {
@@ -1319,7 +1316,7 @@
   {
     "id": "orion_w3_mq14_puzzle_end",
     "speaker": "Orion",
-    "text": "Match the field, shutters, and tether routing. The containment relays will drop for six seconds."
+    "text": "Listen when the shutters close. The hum will drop out for six seconds. That’s when you reach for it."
   },
   {
     "id": "zeke_w3_mq14_lens_warning",
@@ -1331,13 +1328,13 @@
   {
     "id": "thorne_w3_lens_recovery_order",
     "speaker": "Thorne",
-    "text": "[The freight route on the vault display turns red.] Administrator, suspend freight access. Recover the Lens intact. I’ve sold access to Harmony for the next ten years. I intend to deliver.",
+    "text": "[The freight route on the vault display turns red.] Administrator, suspend freight access. Recover the Lens intact. We’ve sold ten years of Harmony access. Every hour this vault is closed, someone asks for their money back.",
     "next": "nova_w3_mq14_lens_take"
   },
   {
     "id": "nova_w3_mq14_lens_take",
     "speaker": "Nova",
-    "text": "We did not come this far to ask a cage for permission. I can tune it out.",
+    "text": "Zeke, watch the readout. If it spikes again, tell me before it hits the glass.",
     "trigger": "player_action:w3_mq14_take_lens"
   },
   {
@@ -1350,13 +1347,13 @@
   {
     "id": "thorne_w3_mq14_trap_vale",
     "speaker": "Thorne",
-    "text": "[Thorne’s countermand flashes DENIED.] I gave him recovery access. He’s taken the district’s guns. Get to your ship before he seals the launch route."
+    "text": "[Thorne’s countermand flashes DENIED.] That credential was for recovery. He’s taken the district’s guns. Get to your ship while the launch route still answers to me."
   },
   {
     "id": "vale_w3_mq15_override",
     "speaker": "Vale",
     "condition": "quest_active:w3_mq15,quest_task_not_done:w3_mq15:defeat_administrator",
-    "text": "Recovery access accepted. Administrator, seal the roof and authorize lethal force. No ungoverned signal leaves the Spire.",
+    "text": "Recovery access accepted. Seal the roof. Authorize lethal force. I’ve heard what the Lens carries when every voice has its own way out. I’m closing those exits.",
     "next": "thorne_w3_mq14_trap_vale"
   },
   {
@@ -1382,7 +1379,7 @@
     "id": "zeke_w3_post_social_idle",
     "speaker": "Zeke",
     "emote": "worried",
-    "text": "Upper City execs sip synthetic wine while the Lower City suffocates in smog. Stealing their precious Lens feels like overdue rent.",
+    "text": "The scanner’s still dark. I keep wanting to check it again. Tell me when it’s time to move.",
     "condition": "milestone:ms_w3_mq13_complete,milestone_not_set:ms_w3_mq14_complete"
   },
   {
@@ -1395,37 +1392,37 @@
   {
     "id": "orion_w3_post_shield_idle",
     "speaker": "Orion",
-    "text": "The resonance lock is holding. Outside, this tower screams with millions of artificial frequencies, but here, our harmonics remain undisturbed.",
+    "text": "I can hear our footsteps again. If the room starts ringing, tell me before you open the door.",
     "condition": "milestone:ms_w3_mq11_complete,milestone_not_set:ms_w3_mq12_complete"
   },
   {
     "id": "orion_w3_post_plan_idle",
     "speaker": "Orion",
-    "text": "The heist blueprint feels like music. Every route is an entry in counterpoint. When the signal drops, we must strike in unison.",
+    "text": "I’ll listen for the freight switch. When it goes quiet, we move.",
     "condition": "milestone:ms_w3_mq12_complete,milestone_not_set:ms_w3_mq13_complete"
   },
   {
     "id": "orion_w3_post_social_idle",
     "speaker": "Orion",
-    "text": "The light in the Archive is trapped, forced through prisms to bend to the Curator's will. The Lens deserves to be liberated.",
+    "text": "The light in the Archive keeps returning to the same pane. Someone’s holding it there. I’d like to know what happens when they let it go.",
     "condition": "milestone:ms_w3_mq13_complete,milestone_not_set:ms_w3_mq14_complete"
   },
   {
     "id": "orion_w3_post_lens_idle",
     "speaker": "Orion",
-    "text": "The Lens hums in Nova's grasp. It is calling toward something far deeper—toward the Foundry and the heart of the machine.",
+    "text": "Turn the Lens a little. There. The pull is strongest toward the Foundry.",
     "condition": "milestone:ms_w3_mq14_complete,milestone_not_set:ms_w3_mq15_complete"
   },
   {
     "id": "ghost_w3_post_shield_idle",
     "speaker": "Gh0st",
-    "text": "The safehouse has two blind entryways through the vents. If patrols breach the stairwell, I can hold the corridor for ninety seconds.",
+    "text": "I checked the stairwell. If you hear boots, stay away from the door. I’ll take it.",
     "condition": "milestone:ms_w3_mq11_complete,milestone_not_set:ms_w3_mq12_complete"
   },
   {
     "id": "ghost_w3_post_plan_idle",
     "speaker": "Gh0st",
-    "text": "The heist route avoids primary optic sensors, but patrol dogs still roam the service elevator sub-level. I will take the point.",
+    "text": "I’ll go first at the service elevator. Wait for me to wave you through.",
     "condition": "milestone:ms_w3_mq12_complete,milestone_not_set:ms_w3_mq13_complete"
   },
   {
@@ -1471,20 +1468,20 @@
   {
     "id": "nova_w4_phantom_prompt",
     "speaker": "Nova",
-    "text": "Open it. We face what it says together.",
+    "text": "Open it. I’m here if you want me to read it with you.",
     "trigger": "player_action:w4_mq17_access_phantom_terminal"
   },
   {
     "id": "gh0st_w4_springs_intro",
     "speaker": "Gh0st",
     "condition": "quest_active:w4_mq17,quest_task_done:w4_mq17:access_phantom_terminal,quest_task_not_done:w4_mq17:regroup_springs",
-    "text": "My Source Lock matched the carrier structure in your Fork scar. It paused one trigger. No command followed.",
+    "text": "My Source Lock caught on your Fork scar. It interrupted the trigger. I waited for the next order. There wasn’t one.",
     "next": "gh0st_w4_springs_key"
   },
   {
     "id": "gh0st_w4_springs_key",
     "speaker": "Gh0st",
-    "text": "This key pauses my kill suite. It does not steer me. If I lock up, use it and wait for my decision.",
+    "text": "Take this. If I lock up, it buys me time. Wait for me to tell you when I’m ready.",
     "trigger": "player_action:w4_mq17_regroup_springs"
   },
   {
@@ -1546,27 +1543,29 @@
     "id": "rylos_w4_mq20_intro",
     "speaker": "Rylos",
     "condition": "quest_active:w4_mq20,quest_task_not_done:w4_mq20:confront_rylos",
-    "text": "Director Thorne owns every circuit in this Foundry, Unit 734. She paid for yours as well. Submit for correction. Pain is just data leaving the body.",
+    "text": "Unit 734. Thorne paid for every circuit in this Foundry, including yours. Put down the weapon. I can still log this as a maintenance fault.",
     "trigger": "player_action:w4_mq20_confront_rylos"
   },
   {
     "id": "vale_w4_mq20_coup",
     "speaker": "Vale",
     "condition": "quest_completed:w4_mq20,milestone_set:ms_w5_access_unlocked",
-    "text": "Commander Rylos, the audit is complete. Thorne’s credentials are revoked. Orbital Compliance now answers to me. All sectors, lock down."
+    "text": "Commander Rylos, bring up the ownership register. Director Thorne’s signature is no longer valid.",
+    "scripted_only": true,
+    "next": "vale_w4_mq20_coup_beat_1"
   },
   {
     "id": "zeke_w4_post_airlock_idle",
     "speaker": "Zeke",
     "emote": "worried",
-    "text": "The heat here is chewing through our seals. Slag rivers, automated crushers... Dominion didn't build a factory, they built a crematorium.",
+    "text": "My seal’s curling at the edge. Check yours before we go past the slag.",
     "condition": "milestone:ms_w4_mq16_complete,milestone_not_set:ms_w4_mq17_complete"
   },
   {
     "id": "zeke_w4_post_phantom_idle",
     "speaker": "Zeke",
     "emote": "sad",
-    "text": "Project Phantom wasn't an accident. They cloned and weaponized living recruits. We have to tear down that fabrication line.",
+    "text": "There’s a production number for every bed in that file. If the line’s still running, show me where they cut its power.",
     "condition": "milestone:ms_w4_mq17_complete,milestone_not_set:ms_w4_mq18_complete"
   },
   {
@@ -1586,25 +1585,25 @@
   {
     "id": "orion_w4_post_airlock_idle",
     "speaker": "Orion",
-    "text": "The Source burns like molten glass here. The heat is raw and distorted, crying out against the metal caging it.",
+    "text": "That pressure wave’s coming through the rail. Take your hand off it a moment. Can you still feel it?",
     "condition": "milestone:ms_w4_mq16_complete,milestone_not_set:ms_w4_mq17_complete"
   },
   {
     "id": "orion_w4_post_phantom_idle",
     "speaker": "Orion",
-    "text": "Gh0st's resonance was shattered and forcibly welded to Dominion commands. Yet his true chord endured beneath the static.",
+    "text": "Gh0st went quiet when the terminal read out his number. Give him a minute before we ask what he remembers.",
     "condition": "milestone:ms_w4_mq17_complete,milestone_not_set:ms_w4_mq18_complete"
   },
   {
     "id": "orion_w4_post_assembly_idle",
     "speaker": "Orion",
-    "text": "The discordant pulse of the cloning matrix is silenced. Ahead, in the Forge, the Anvil beats with deep formative rhythm.",
+    "text": "The floor’s stopped vibrating. The Anvil’s still beating through the Forge wall. I can follow that.",
     "condition": "milestone:ms_w4_mq18_complete,milestone_not_set:ms_w4_mq19_complete"
   },
   {
     "id": "orion_w4_post_anvil_idle",
     "speaker": "Orion",
-    "text": "Construct is awakened. With the Anvil, Nova can shape the intangible. But Rylos's machine stands between us and flight.",
+    "text": "The shape held for a breath. We can work on the next breath when we’re clear of the dock.",
     "condition": "milestone:ms_w4_mq19_complete,milestone_not_set:ms_w4_mq20_complete"
   },
   {
@@ -1616,13 +1615,13 @@
   {
     "id": "ghost_w4_post_phantom_idle",
     "speaker": "Gh0st",
-    "text": "They gave me a number and called me vat-born. Now I know Elara was real. I am not their weapon.",
+    "text": "They told me Elara was a voice they’d programmed. The file has her handwriting.",
     "condition": "milestone:ms_w4_mq17_complete,milestone_not_set:ms_w4_mq18_complete"
   },
   {
     "id": "ghost_w4_post_assembly_idle",
     "speaker": "Gh0st",
-    "text": "The fabrication tanks are empty. No more hollow shells will wear my face. The debt moves to Rylos now.",
+    "text": "I counted the empty tanks twice. I needed to see the line stop.",
     "condition": "milestone:ms_w4_mq18_complete,milestone_not_set:ms_w4_mq19_complete"
   },
   {
@@ -1635,7 +1634,7 @@
     "id": "gh0st_w5_mq21_airlock",
     "speaker": "Gh0st",
     "condition": "quest_active:w5_mq21,quest_task_done:w5_mq21:force_dock,quest_task_not_done:w5_mq21:hack_airlock",
-    "text": "Vale locked the Ring to Thorne's old cipher. I know the scar tissue in this code. Give me ten seconds.",
+    "text": "Vale kept Thorne’s cipher. I know where she used to put the override. Give me ten seconds.",
     "trigger": "player_action:w5_mq21_hack_airlock"
   },
   {
@@ -1649,8 +1648,8 @@
     "id": "thorne_w5_mq22_intro",
     "speaker": "Thorne",
     "condition": "quest_active:w5_mq22,quest_task_done:w5_mq22:access_mainframe,quest_task_not_done:w5_mq22:find_thorne",
-    "text": "I built the cage. The Foundry supplied the hardware, and I sold the first Harmony contracts before we knew what it would do to the people inside. Vale used my recovery access to copy the command cipher. Now the Ring answers to him.",
-    "trigger": "player_action:w5_mq22_find_thorne"
+    "text": "I sold Harmony by the seat. The Foundry supplied the hardware, and I signed the orders that kept the seats filled. Vale copied my command cipher while your Lens was still warm. Now I can’t open my own doors.",
+    "next": "thorne_w5_mq22_intro_beat_1"
   },
   {
     "id": "vale_w5_compliance_greeting",
@@ -1662,69 +1661,69 @@
     "id": "thorne_w5_mq23_core",
     "speaker": "Thorne",
     "condition": "quest_active:w5_mq23,quest_task_not_done:w5_mq23:navigate_maze",
-    "text": "Three firewall nodes. Vale changed the locks and trapped me inside my own route. Map the coolant pulse, then clear Alpha, Beta, Gamma."
+    "text": "The coolant pulse still tells you which branch is live. Follow it through Alpha, Beta, and Gamma. Vale changed the locks while I was inside."
   },
   {
     "id": "elara_w5_mq24_reunion",
     "speaker": "Elara",
     "condition": "quest_active:w5_mq24,quest_task_done:w5_mq24:enter_chamber,quest_task_not_done:w5_mq24:find_elara",
-    "text": "734. You are late. I cannot hold the door and the firewall. Take the Anchor. Get them out. That is a direct order, brother.",
-    "trigger": "music_persist:music_elaras_song,player_action:w5_mq24_find_elara",
-    "music": "music_elaras_song"
+    "text": "734. You’re late. I can hold the firewall long enough to open the cradle. Take the Anchor, brother.",
+    "music": "music_elaras_song",
+    "next": "gh0st_w5_answer_elara"
   },
   {
     "id": "vale_w5_mq25_soloist",
     "speaker": "Vale",
     "condition": "quest_active:w5_mq25,quest_task_done:w5_mq25:reach_throne,quest_task_not_done:w5_mq25:witness_soloist",
-    "text": "A choir still contains variance. Variance contains pain. One voice. A solo.",
-    "trigger": "player_action:w5_mq25_soloist"
+    "text": "[A worker’s voice crackles through the dais. “My sister is still down there.” The voice breaks on the last word. Vale steadies it until it holds a single note.] Do you hear how quiet it can be?",
+    "next": "vale_w5_mq25_soloist_beat_1"
   },
   {
     "id": "zeke_w5_post_docking_idle",
     "speaker": "Zeke",
-    "text": "Ring docks are pressurized with false gravity and real arrogance. Watch your boots on the magnetic deck.",
+    "text": "That carpet’s trying to float away. Test the next plate before you put your weight on it.",
     "condition": "milestone:ms_w5_mq21_complete,milestone_not_set:ms_w5_mq22_complete"
   },
   {
     "id": "zeke_w5_post_zerog_idle",
     "speaker": "Zeke",
-    "text": "Thorne thought she owned the leash until Vale slipped it around her neck. Poetic, but still disgusting.",
+    "text": "Her panel kept taking the code and sending it straight back. She must’ve tried it a hundred times.",
     "condition": "milestone:ms_w5_mq22_complete,milestone_not_set:ms_w5_mq23_complete"
   },
   {
     "id": "zeke_w5_post_firewall_idle",
     "speaker": "Zeke",
-    "text": "Coolant maze is burned out. Those firewall nodes had enough juice to fry a cruiser's nav core.",
+    "text": "That coolant gauge has dropped all the way to zero. Keep moving before someone brings the firewall back up.",
     "condition": "milestone:ms_w5_mq23_complete,milestone_not_set:ms_w5_mq24_complete"
   },
   {
     "id": "zeke_w5_post_anchor_idle",
     "speaker": "Zeke",
-    "text": "Turning a living person into station wiring. Thorne and Vale deserve whatever is coming through that Tear.",
+    "text": "They put Elara on the same diagram as the coolant pumps. No name. Just a port number. I keep looking at it.",
     "condition": "milestone:ms_w5_mq24_complete,milestone_not_set:ms_w5_mq25_complete"
   },
   {
     "id": "orion_w5_post_docking_idle",
     "speaker": "Orion",
-    "text": "The orbital ring hums with forced order. It stifles the void's pulse like a copper choke collar.",
+    "text": "At the dock the floor dropped away for a moment. Keep one hand near the rail. It might happen again.",
     "condition": "milestone:ms_w5_mq21_complete,milestone_not_set:ms_w5_mq22_complete"
   },
   {
     "id": "orion_w5_post_zerog_idle",
     "speaker": "Orion",
-    "text": "The Great Silence log proved Thorne twisted the song. But Vale wants to extinguish even the echoes.",
+    "text": "The Great Silence log still had names in it. I wonder whether Vale ever read them aloud.",
     "condition": "milestone:ms_w5_mq22_complete,milestone_not_set:ms_w5_mq23_complete"
   },
   {
     "id": "orion_w5_post_firewall_idle",
     "speaker": "Orion",
-    "text": "The construct shattered into clean light. The server core is bare. Elara's wavelength is waiting ahead.",
+    "text": "I thought the pulse was coming from the server. It’s still there with the core down. Elara’s ahead.",
     "condition": "milestone:ms_w5_mq23_complete,milestone_not_set:ms_w5_mq24_complete"
   },
   {
     "id": "orion_w5_post_anchor_idle",
     "speaker": "Orion",
-    "text": "Elara gave everything to anchor this station. The Tear ripples violently now that the lock is broken.",
+    "text": "I could still hear Elara when we took the Anchor. Let’s get back to her as soon as we can.",
     "condition": "milestone:ms_w5_mq24_complete,milestone_not_set:ms_w5_mq25_complete"
   },
   {
@@ -1736,13 +1735,13 @@
   {
     "id": "ghost_w5_post_zerog_idle",
     "speaker": "Gh0st",
-    "text": "Thorne stripped of her own station. I wanted vengeance, but seeing her powerless feels almost hollow.",
+    "text": "I used to rehearse what I’d say if I got Thorne alone. Then I saw the lock on her door. All I wanted was the list of names.",
     "condition": "milestone:ms_w5_mq22_complete,milestone_not_set:ms_w5_mq23_complete"
   },
   {
     "id": "ghost_w5_post_firewall_idle",
     "speaker": "Gh0st",
-    "text": "I can hear Elara's cipher pinging beyond the gate. She is still fighting in there. We are coming, Elara.",
+    "text": "That’s Elara’s cipher. Three quick pings, then a gap. She’s still working the lock from her side.",
     "condition": "milestone:ms_w5_mq23_complete,milestone_not_set:ms_w5_mq24_complete"
   },
   {
@@ -1755,104 +1754,105 @@
     "id": "zeke_w6_nightmare_release",
     "speaker": "Zeke",
     "condition": "quest_active:w6_mq26,quest_task_done:w6_mq26:rescue_zeke",
-    "text": "I kept telling myself I was surviving the system. I quit. And I do not need to be useful to deserve this family."
+    "text": "I could hear you outside the glass. Kept thinking I’d missed my chance to get up. [Zeke takes a breath.] Can we sit a minute?"
   },
   {
     "id": "gh0st_w6_nightmare_release",
     "speaker": "Gh0st",
     "condition": "quest_active:w6_mq26,quest_task_done:w6_mq26:rescue_gh0st",
-    "text": "I could not save her. I can stop earning my right to exist by bleeding. No more orders."
+    "text": "I couldn’t save her. The order kept coming anyway. [Gh0st lowers his hands.] I can let it go quiet now."
   },
   {
     "id": "orion_w6_nightmare_release",
     "speaker": "Orion",
     "condition": "quest_active:w6_mq26,quest_task_done:w6_mq26:rescue_orion",
-    "text": "They are not dead. They are still in the current. I was frozen. Now I have to remain on the shore a little longer."
+    "text": "I can still hear them in the current. I thought if I waited long enough, someone would come back for me. You did."
   },
   {
     "id": "vale_w6_final_confrontation",
     "speaker": "Vale",
     "condition": "quest_active:w6_mq30,quest_task_not_done:w6_mq30:confront_vale",
-    "text": "Thorne sold Harmony by subscription. I can give it to everyone. I can rebuild the mine so no child remembers hunger, no worker remembers the dead, and no one has a voice apart from mine. Tell me what they lose that was worth the pain.",
-    "trigger": "music_silence_persist,player_action:w6_mq30_confront_vale",
-    "next": "nova_w6_final_answer"
+    "text": "Thorne charged for every voice she let into Harmony. I can reach every room in the Colony at once. No parent will have to tell a child why someone isn’t coming home.",
+    "trigger": "music_silence_persist",
+    "next": "nova_w6_final_jed"
   },
   {
     "id": "nova_w6_final_answer",
     "speaker": "Nova",
     "condition": "quest_active:w6_mq30",
-    "text": "Jed left his handprint where you tried to polish the mine clean. You can take away the grief by taking away everyone we loved. I won’t let you call that saving us."
+    "text": "I wanted to open that door. Then I heard Orion behind me, and Gh0st asking about the people behind the glass. Open the corridor, Vale. Let them decide where they go.",
+    "next": "vale_w6_final_refusal"
   },
   {
     "id": "zeke_w6_post_nightmare_idle",
     "speaker": "Zeke",
-    "text": "Dominion wrote my file in blood, but sitting by this fire, I feel like a man again.",
+    "text": "My hands are still shaking. Give me a minute by the fire, then I’ll check on the others.",
     "condition": "milestone:ms_w6_mq26_complete,milestone_not_set:ms_w6_mq27_complete"
   },
   {
     "id": "zeke_w6_post_mines_idle",
     "speaker": "Zeke",
-    "text": "Seeing our old colony made me sick. Vale tried to sugarcoat the place we both had to escape.",
+    "text": "The old clock was running slow again. I almost put it right before I remembered whose version of the mine we were in.",
     "condition": "milestone:ms_w6_mq27_complete,milestone_not_set:ms_w6_mq28_complete"
   },
   {
     "id": "zeke_w6_post_bridge_idle",
     "speaker": "Zeke",
-    "text": "That bridge held because none of us carried it alone. We walk right up to Vale now.",
+    "text": "I thought the plank would drop when I took my foot off it. Look. It’s still there.",
     "condition": "milestone:ms_w6_mq28_complete,milestone_not_set:ms_w6_mq29_complete"
   },
   {
     "id": "zeke_w6_post_spire_idle",
     "speaker": "Zeke",
-    "text": "Top of the spire. Everything we survived led here. I am seeing this through to the finish.",
+    "text": "I’ve got the lead clipped on. If it comes loose up there, call my name. I’ll hear you.",
     "condition": "milestone:ms_w6_mq29_complete,milestone_not_set:ms_w6_mq30_complete"
   },
   {
     "id": "orion_w6_post_nightmare_idle",
     "speaker": "Orion",
-    "text": "The frozen shore let go of my hands. The choir is not dead; their harmony lives through us.",
+    "text": "I spent so long waiting to hear footsteps on that shore. Would you walk with me a little farther?",
     "condition": "milestone:ms_w6_mq26_complete,milestone_not_set:ms_w6_mq27_complete"
   },
   {
     "id": "orion_w6_post_mines_idle",
     "speaker": "Orion",
-    "text": "Vale cannot counterfeit the warmth of real survival. Your beginnings gave us the strength to endure.",
+    "text": "You stopped at the lift before you went in. Was that where you used to wait for Jed?",
     "condition": "milestone:ms_w6_mq27_complete,milestone_not_set:ms_w6_mq28_complete"
   },
   {
     "id": "orion_w6_post_bridge_idle",
     "speaker": "Orion",
-    "text": "The memory bridge rang like crystal bells. Separate frequencies, but perfectly tuned together across the void.",
+    "text": "I could hear the shore behind us. For a second I wanted to go back. Then I heard you up ahead.",
     "condition": "milestone:ms_w6_mq28_complete,milestone_not_set:ms_w6_mq29_complete"
   },
   {
     "id": "orion_w6_post_spire_idle",
     "speaker": "Orion",
-    "text": "Vale's silence waits just beyond this veil. Stand firm, Nova. We will ring the final note.",
+    "text": "It’s quiet ahead. Keep talking when we go through. It’ll help me find you.",
     "condition": "milestone:ms_w6_mq29_complete,milestone_not_set:ms_w6_mq30_complete"
   },
   {
     "id": "ghost_w6_post_nightmare_idle",
     "speaker": "Gh0st",
-    "text": "Unit 734 is dead. The order loop broke. I am here because I chose to stand with you.",
+    "text": "The order stopped. I stayed anyway. I wanted to be here when the rest of you got back.",
     "condition": "milestone:ms_w6_mq26_complete,milestone_not_set:ms_w6_mq27_complete"
   },
   {
     "id": "ghost_w6_post_mines_idle",
     "speaker": "Gh0st",
-    "text": "Vale tried to sanitize your history. Scars are not mistakes to erase; they are proof we survived.",
+    "text": "That lift looked new. I watched you check the bypass before you stepped on. Did Jed teach you that?",
     "condition": "milestone:ms_w6_mq27_complete,milestone_not_set:ms_w6_mq28_complete"
   },
   {
     "id": "ghost_w6_post_bridge_idle",
     "speaker": "Gh0st",
-    "text": "Four anchors locked tight. Elara's voice echoed in the beams. She knows we are finishing this fight.",
+    "text": "I heard Elara on the bridge. Just once. She said my name.",
     "condition": "milestone:ms_w6_mq28_complete,milestone_not_set:ms_w6_mq29_complete"
   },
   {
     "id": "ghost_w6_post_spire_idle",
     "speaker": "Gh0st",
-    "text": "No retreat, no protocols. We tear down Vale's throne and take our future back.",
+    "text": "If you lose sight of me, call once. I’ll be close.",
     "condition": "milestone:ms_w6_mq29_complete,milestone_not_set:ms_w6_mq30_complete"
   },
   {
@@ -1897,7 +1897,7 @@
   {
     "id": "cook_vance_default_talk",
     "speaker": "Rourke",
-    "text": "Eat up. It is synthetic paste, but it will keep your boots moving under heavy gravity. If you scrape any dried herbs out of the hopper, use the thermal cooker to simmer your dry ration packs into hot soup before a shift."
+    "text": "Eat while it’s hot. Found dried herbs in the hopper? Throw them in the cooker with a dry ration. It almost tastes like soup."
   },
   {
     "id": "mechanic_mira_sq05_turnin",
@@ -1908,12 +1908,12 @@
   {
     "id": "mechanic_mira_default_talk",
     "speaker": "Mira",
-    "text": "Watch your fingers near the loader tracks. Dominion does not issue replacement knuckles. Jed's inside checking the cutter calibrations, and if you ever get power back to the deep mine junction, check on the lost shift in Side Shunt 4."
+    "text": "Watch your fingers near the loader tracks. Dominion doesn’t issue spare knuckles. Jed’s inside. If you get the deep junction running, check Side Shunt 4 for me."
   },
   {
     "id": "kaelen_intro",
     "speaker": "Scout Kaelen",
-    "text": "Step into the firelight where I can see your hands. You don't walk like one of those hollow patrol frames, and you don't smell like a shard-hound.",
+    "text": "Step into the firelight. Let me see your hands. Did you come down through the canopy?",
     "condition": "milestone_not_set:ms_kaelen_talked",
     "options": [
       {
@@ -1942,13 +1942,13 @@
   {
     "id": "kaelen_advice_reply",
     "speaker": "Scout Kaelen",
-    "text": "Stay clear of the razor-vines unless you have a thermal blade or a cauterizing torch. Cold steel just pops their spore pods, and the neurotoxin will melt your lungs. And if you hear low hums in the mist—run. The Beast patrols the high ridge, and it hunts by acoustics.",
+    "text": "Use heat on razor-vines. A cold blade bursts the spore pods. If you hear a low hum in the mist, get off the ridge. The Beast hunts by sound.",
     "next": "kaelen_supplies"
   },
   {
     "id": "kaelen_barrier_reply",
     "speaker": "Scout Kaelen",
-    "text": "They call it the Curfew Shield. Ancient planetary defense net. It doesn't shoot you down—it hardens the air into solid harmonic glass if you exceed orbital threshold. Whatever built that stone temple inland is the only key out.",
+    "text": "The old records call it the Curfew Shield. My hull folded the moment I crossed it. You can still fly below it. If you want off the planet, start with the people who built that temple.",
     "next": "kaelen_supplies"
   },
   {
@@ -1960,7 +1960,7 @@
   {
     "id": "kaelen_repeat_advice",
     "speaker": "Scout Kaelen",
-    "text": "Stay clear of the razor-vines unless you have a thermal blade or a cauterizing torch. Cold steel just pops their spore pods, and the neurotoxin will melt your lungs. And if you hear low hums in the mist—run. The Beast patrols the high ridge, and it hunts by acoustics."
+    "text": "Use heat on razor-vines. A cold blade bursts the spore pods. If you hear a low hum in the mist, get off the ridge. The Beast hunts by sound."
   },
   {
     "id": "kaelen_repeat_default_talk",
@@ -1977,7 +1977,7 @@
       {
         "id": "kaelen_opt_favor_turnin",
         "text": "I've gathered fresh herbs and beast meat from the wilds.",
-        "condition": "milestone:ms_kaelen_favor_asked,milestone_not_set:ms_kaelen_favor_completed,item:herb,item:beast_meat",
+        "condition": "milestone:ms_kaelen_favor_asked,milestone_not_set:ms_kaelen_favor_completed,item:herb*2,item:beast_meat",
         "next": "kaelen_favor_turnin"
       },
       {
@@ -2068,7 +2068,7 @@
   {
     "id": "kaelen_patrol_acknowledged",
     "speaker": "Scout Kaelen",
-    "text": "That cutter... it belonged to Sergeant Leto. So none of them made it out of the glade. I suspected as much when their telemetry flatlined six months ago, but hearing it hurts all the same. Thank you for putting their memory to rest, Nova. Leto would want that cutter in the hands of someone fighting the real enemy. Take this spare battery and salvage.",
+    "text": "[Kaelen turns the cutter over and rubs a nick in the handle.] Leto. I filed three requests to go back for him. Never got past the glade. Keep the cutter, Nova. Here’s a battery that’ll fit.",
     "trigger": "give_item:battery_pack,give_item:scrap_metal*3,give_xp:120,set_milestone:ms_kaelen_patrol_acknowledged",
     "next": "kaelen_repeat_default_talk"
   },
@@ -2092,7 +2092,7 @@
       {
         "id": "rylan_opt_worker",
         "text": "I found Talia's worker tablet near the cooling pool.",
-        "condition": "milestone:ms_w4_worker_traced,milestone_not_set:ms_rylan_worker_acknowledged",
+        "condition": "quest_completed:w4_sq17,milestone_not_set:ms_rylan_worker_acknowledged",
         "next": "rylan_worker_acknowledged"
       },
       {
@@ -2109,21 +2109,21 @@
   {
     "id": "rylan_favor_offer",
     "speaker": "Rylan",
-    "text": "Always. The conveyor crushers blew the pressure manifold on my hydraulic press. I need 1 heavy gear and 1 canister of hydraulic fluid to balance the cylinders. Scavenge those from the conveyor lines, and I'll forge you a custom heat-resistant armor liner.",
+    "text": "The crushers took out my press manifold. Bring me one Heavy Gear and one Hydraulic Fluid. Once the ram’s moving, I can fit you a Heat Liner.",
     "trigger": "set_milestone:ms_rylan_welder_favor_asked",
     "next": "forge_hand_rylan_default_talk"
   },
   {
     "id": "rylan_favor_turnin",
     "speaker": "Rylan",
-    "text": "Clutch timing! Stand back while I cycle the hydraulic press... [Hiss and sparks]. There. Welded tight and sealed against magma heat. Take this Heat Liner—it'll keep your vitals cool when you step into the Forge.",
+    "text": "[Rylan works the press. It holds pressure without a hiss.] There. Try that liner on before you head back to the Forge.",
     "trigger": "take_item:heavy_gear*1,take_item:hydraulic_fluid*1,give_item:heat_liner,give_xp:200,give_credits:250,set_milestone:ms_rylan_welder_favor_completed",
     "next": "forge_hand_rylan_default_talk"
   },
   {
     "id": "rylan_worker_acknowledged",
     "speaker": "Rylan",
-    "text": "You found Talia's tablet? Damn it... I told her the cooling vents were a death trap. But she managed to vent the safe route before the heat got her. She was the best pipe-fitter in the sector. Her sacrifice won't be forgotten. Take this composite plate—she would have wanted you to have it.",
+    "text": "[Rylan wipes the tablet on his sleeve.] Talia marked the safe route. She must’ve stayed to vent it. Leave the tablet with me, would you? Take a plate from my rack.",
     "trigger": "give_item:composite_plate,give_xp:100,set_milestone:ms_rylan_worker_acknowledged",
     "next": "forge_hand_rylan_default_talk"
   },
@@ -2167,7 +2167,7 @@
       {
         "id": "cheno_opt_favor_turnin",
         "text": "I brought the heavy gears and wiring bundles for the center truss.",
-        "condition": "milestone:ms_cheno_rigging_favor_asked,milestone_not_set:ms_cheno_rigging_favor_completed,item:heavy_gear,item:wiring_bundle",
+        "condition": "milestone:ms_cheno_rigging_favor_asked,milestone_not_set:ms_cheno_rigging_favor_completed,item:heavy_gear*2,item:wiring_bundle*2",
         "next": "cheno_favor_turnin"
       },
       {
@@ -2179,32 +2179,32 @@
   {
     "id": "cheno_who_reply",
     "speaker": "Cheno",
-    "text": "Dominion built this Spire tall, but they didn't care much about the foundation holding it together. My crew and I shore up the transit arches, run the heavy power lines for the lower wards, and keep the whole place from tearing itself apart in high-altitude shear winds. It's honest work, and it keeps good people safe.",
+    "text": "We shore up the transit arches and run power to the lower wards. See that cable? If I don’t have it tensioned by shift change, the trains wait.",
     "next": "cheno_default_talk"
   },
   {
     "id": "cheno_music_reply",
     "speaker": "Cheno",
-    "text": "[He lets out a deep, hearty laugh that shakes his toolbelt.] Every weekend, kid! Ran sound for the boys back in the day, ran sound for festivals, weddings, marathons—you name it. If you can make a kick drum punch through a crowd and keep the monitors clean, you can do anything. The kids in the subway car—Chris and Andrew—they've got good heads on their shoulders. We look out for each other.",
+    "text": "Every weekend, kid. I used to haul amps with Chris and Andrew. If you can make a kick drum carry through a packed cargo hold, you can wire a monitor in your sleep.",
     "next": "cheno_default_talk"
   },
   {
     "id": "cheno_friends_reply",
     "speaker": "Cheno",
-    "text": "Life's too short to walk past people with your head down. Out here on the frontier, you're only as good as the folks in your corner. If a buddy calls me from three star systems away stuck in a crater, I don't ask what happened—I just warm up the hauler and bring a tow line. That's how we were raised.",
+    "text": "I’ve had to call for a tow at three in the morning. You remember who picks up. Around here, I try to pick up.",
     "next": "cheno_default_talk"
   },
   {
     "id": "cheno_favor_offer",
     "speaker": "Cheno",
-    "text": "Tell you what: the storm winds off the upper concourse sheared through two of my primary load dampers. I need 2 heavy gears and 2 wiring bundles to re-tension the center truss before the transit trains run tonight. Bring those by, and I'll press you one of my personal load-rated carabiners. It'll keep your armor locked down when the pressure spikes.",
+    "text": "The storm tore out two load dampers. I need two Heavy Gears and two Wiring Bundles before the first train. Bring them up and I’ll press you a carabiner from my own stock.",
     "trigger": "set_milestone:ms_cheno_rigging_favor_asked",
     "next": "cheno_default_talk"
   },
   {
     "id": "cheno_favor_turnin",
     "speaker": "Cheno",
-    "text": "Look at that—solid Dominion-grade alloy! [Cheno takes the parts with massive hands, effortlessly locking them into the pneumatic press with a single smooth clamp.] There. That center truss will hold through a category-five solar gale. A deal's a deal, Nova. Take this—it's forged from salvaged structural titanium. When things get heavy out there, remember you've got friends who've got your back.",
+    "text": "[Cheno clamps the new dampers in place and watches the truss settle.] Good. We can run trains tonight. Here’s your carabiner. I filed the burr off the gate for you.",
     "trigger": "take_item:heavy_gear*2,take_item:wiring_bundle*2,give_item:cheno_carabiner,give_xp:250,give_credits:300,set_milestone:ms_cheno_rigging_favor_completed",
     "next": "cheno_default_talk"
   },
@@ -2249,19 +2249,19 @@
   {
     "id": "chris_poster_reply",
     "speaker": "Chris",
-    "text": "That old thing? Screen-printed it ourselves in a damp basement before Dominion even had jammers over this sector. Played gigs in cargo holds, dive bars, gravel lots—anywhere people needed something real to hold onto. Time moves fast, but that poster reminds me of who we were when the world was wide open.",
+    "text": "We screen-printed it in a damp basement. Played cargo holds, bars, one gravel lot where the generator quit halfway through the set. I think that was the best one.",
     "next": "chris_default_talk"
   },
   {
     "id": "chris_cheno_reply",
     "speaker": "Chris",
-    "text": "Cheno's the absolute best of us. Back when we were touring, he'd haul our amps through sleet storms, dial the front-of-house sound until the walls shook, and still be the first guy laughing at 3:00 AM over cold pizza. You won't find a more loyal soul in this galaxy.",
+    "text": "He once hauled our amps through sleet, mixed the whole show, then asked if we could stop for pizza. Three in the morning. Of course we stopped.",
     "next": "chris_default_talk"
   },
   {
     "id": "chris_writing_reply",
     "speaker": "Chris",
-    "text": "Songs about leaving home, about friends who drift to other cities, and about the things you build that stay behind. Words have weight out here, Nova. When the signal is honest, it travels further than any laser cannon.",
+    "text": "It’s about leaving a place and calling it home for years afterward. I’ve got the first verse. The second still sounds like a letter I should just send.",
     "next": "chris_default_talk"
   },
   {
@@ -2274,7 +2274,7 @@
   {
     "id": "chris_favor_turnin",
     "speaker": "Chris",
-    "text": "You found them! Perfect capacitance. Andrew, solder that bypass lead—I'll patch the output bus. [Sparks flash as solder melts, followed by a crisp, chime-like hum through the monitors. Andrew hits a ringing major chord that echoes cleanly through the pirate airwaves.] Hear that? Clean signal. No Dominion compression, no corporate watermarks. Just pure sound. Nova... thanks for making the climb up here. It means more than you know.",
+    "text": "Andrew, solder the bypass. I’ll patch the output. [Andrew strikes a chord. The monitors carry it cleanly.] There it is. Nova, see if you can still hear us when you get back to the stairs.",
     "next": "andrew_favor_acknowledgment"
   },
   {
@@ -2318,43 +2318,37 @@
   {
     "id": "andrew_hug_reply",
     "speaker": "Andrew",
-    "text": "[Andrew smiles, setting his guitar down carefully on the booth seat.] People spend so much time ducking patrols they forget they're allowed to be human. [He gives Nova a warm, genuine hug.] You're doing good work out there, Nova. Don't let the cold grind you down.",
+    "text": "[Andrew sets his guitar on the bench and opens his arms. He waits for Nova to lean in.] You can stay a minute. The next patrol’s still a ways off.",
     "next": "andrew_default_talk"
   },
   {
     "id": "andrew_wayfarer_reply",
     "speaker": "Andrew",
-    "text": "Sometimes. Life scatters folks—Chris is busy writing, Cheno's keeping the city from caving in, and people grow up. But when we pick up our instruments, it's like no time has passed at all. The music keeps the thread unbroken.",
+    "text": "I miss hearing Cheno laugh from the back of the van. Chris and I still play the old set sometimes. We always start too fast.",
     "next": "andrew_default_talk"
   },
   {
     "id": "andrew_listen_reply",
     "speaker": "Andrew",
-    "text": "[Andrew closes his eyes and plucks a resonant, melodic progression on his acoustic guitar. The sound fills the subway car with aching warmth, echoing softly out toward Cheno's rigging deck.] That one's called 'The Long Drive Home.' For everyone still traveling.",
+    "text": "[Andrew plays a few bars and lets the last chord ring.] That’s ‘The Long Drive Home.’ We used to play it last.",
     "next": "andrew_default_talk"
   },
   {
     "id": "andrew_favor_acknowledgment",
     "speaker": "Andrew",
-    "text": "[Andrew wipes flux from his fingers and looks up with a soft, sincere smile.] Thank you, Nova. Seriously. Sometimes in a galaxy this big, you wonder if anyone's still listening, or if the songs we made together still matter. It's good to know they do.",
-    "options": [
-      {
-        "id": "opt_nova_thanks",
-        "text": "Thank you. Both of you.",
-        "next": "nova_personal_thanks"
-      }
-    ]
+    "text": "[Andrew wipes the flux off his fingers.] Thanks, Nova. I wasn’t sure anyone wanted to hear us anymore.",
+    "next": "nova_personal_thanks"
   },
   {
     "id": "nova_personal_thanks",
     "speaker": "Nova",
-    "text": "Thank you. For the music, for the long road, and for everything you made. Some things don't stop mattering just because life moves on. Keep playing.",
+    "text": "I heard you through the floor before I found the car. I came up to hear the rest. Keep playing.",
     "next": "wayfarer_quest_conclude"
   },
   {
     "id": "wayfarer_quest_conclude",
     "speaker": "Chris",
-    "text": "[Chris blinks back a quiet flash of emotion, then breaks into a wide, bright smile. Andrew steps forward and wraps Nova in a heartfelt hug.] You heard her, brother. Volume up, signal hot. Here, Nova—take this. It's a hand-stamped resonance pick from our first run. When the road gets dark out there, remember you're never flying alone.",
+    "text": "[Chris turns the monitor up and hands Nova a worn pick.] First tour. I’ve got a spare. Andrew, from the top?",
     "trigger": "take_item:rapid_capacitor*1,take_item:wiring_bundle*1,give_item:wayfarer_plectrum,give_xp:300,give_credits:350,set_milestone:ms_wayfarer_broadcast_completed",
     "next": "chris_default_talk"
   },
@@ -2402,7 +2396,7 @@
   {
     "id": "david_cooking_reply",
     "speaker": "David",
-    "text": "Practice, patience, and a whole lot of love. Good food isn't just about fuel—it brings folks together. When people sit down around a table, put their differences aside, and share a hot meal, that's when a camp becomes a family.",
+    "text": "Low heat and a lot of waiting. I put another cut on when I hear someone’s overdue. Gives the rest of us an excuse to stay up.",
     "next": "david_default_talk"
   },
   {
@@ -2479,38 +2473,38 @@
   {
     "id": "cameron_shift_reply",
     "speaker": "Cameron",
-    "text": "Exhausted? Nah, just warmed up! I pulled a double yesterday, caught a three-hour nap on the locker bench, and clocked back in for the relief cycle. In the shipyards back home, if you leave a seam half-welded, the whole drydock floods. Out here, you stay on the line until the pressure gauge settles. That's just how the job gets done.",
+    "text": "Double yesterday. Three hours on the locker bench. I’ll sleep when that gauge holds long enough for the next shift to take it.",
     "next": "pipefitter_cameron_default_talk"
   },
   {
     "id": "cameron_father_reply",
     "speaker": "Cameron",
-    "text": "My dad, Sherman. Best pipe-fitter who ever picked up a torch. Grew up in the mountain valleys before coming down to the docks. He had these big, patient hands—could feel a micro-fracture right through leather gloves. Before he passed, he told me: 'Cameron, do the work clean, don't cut corners, and make sure everyone goes home safe.' I keep his old gloves right here on the rack. Every good weld I lay is for him.",
+    "text": "My dad, Sherman. He used to make me run a finger over every seam before we clocked out. Those are his gloves. I still reach for them when a weld gives me trouble.",
     "next": "pipefitter_cameron_default_talk"
   },
   {
     "id": "cameron_racing_reply",
     "speaker": "Cameron",
-    "text": "[Cameron grins, tapping the checkered flag decals on his heat shield.] Number 24! Nothing beats running wide open on the asphalt—eight hundred horsepower rumbling under the floorboards, fighting for every inch through the turns. Out here in the Foundry, superheated steam behaves just like a race car: if you don't give it smooth curves and clean exhaust, it'll blow right through the wall.",
+    "text": "[Cameron taps the checkered flag on his helmet.] Twenty-four. I used to listen for the engine coming out of the turn. You listen to a steam elbow the same way. If the note changes, get back.",
     "next": "pipefitter_cameron_default_talk"
   },
   {
     "id": "cameron_family_reply",
     "speaker": "Cameron",
-    "text": "[Cameron's expression softens with unmistakable warmth.] That's my girls—Lily, Emma, and little Hannah. Lily plays softball and hits the ball like a thunderbolt, Emma's a total firecracker who never backs down, and little Hannah keeps us all on our toes. My wife Kasey manages that whole circus while I'm pulling sixty hours a week. Every shift I take, every hour of overtime, it's all for them.",
+    "text": "Lily, Emma, and Hannah. Kasey sent that picture after Lily’s game. Emma’s trying to steal the glove and Hannah’s got both hands in the orange slices. I missed that one. I’m trying to get back for the next.",
     "next": "pipefitter_cameron_default_talk"
   },
   {
     "id": "cameron_favor_offer",
     "speaker": "Cameron",
-    "text": "Actually, yeah. The thermal surge off the blast furnaces blew the seal on our primary relief bypass. If I can't flange a new collar, the whole gallery will vent superheated steam. I need 2 Composite Plates to fabricate the housing and 1 unit of Hydraulic Fluid to pressurize the valve actuators. Bring those to me, and I'll forge you a custom high-torque pipe wrench straight off my rack.",
+    "text": "The relief bypass blew its seal. I need two Composite Plates for the collar and one Hydraulic Fluid for the actuator. Bring those and I’ll give you a wrench off my rack.",
     "trigger": "set_milestone:ms_cameron_pipe_favor_asked",
     "next": "pipefitter_cameron_default_talk"
   },
   {
     "id": "cameron_favor_turnin",
     "speaker": "Cameron",
-    "text": "[Cameron grabs the composite plates and slides the hydraulic fluid into the pressure reservoir. With practiced speed, he flanged the joint, sparks flying from his handheld welder, locking the seal in seconds.] Listen to that—zero hiss, steady twelve atmospheres! Grandpappy would be proud. Here, Nova, take this. It's my heavy-duty titanium flange wrench, stamped with Sherman's seal. When things get tight out there, hold the line and don't give up.",
+    "text": "[Cameron fits the collar and waits for the gauge to settle.] Twelve atmospheres. No hiss. Here. Dad stamped that wrench before he gave it to me. Keep it where you can reach it.",
     "trigger": "take_item:composite_plate*2,take_item:hydraulic_fluid*1,give_item:camerons_pipe_wrench,give_xp:350,give_credits:400,set_milestone:ms_cameron_pipe_favor_completed",
     "next": "pipefitter_cameron_default_talk"
   },
@@ -2547,7 +2541,7 @@
       },
       {
         "id": "charles_opt_favor_turnin",
-        "text": "I've brought the circuit boards and focusing lens for your network tap.",
+        "text": "Here are the boards and lens for the tap.",
         "condition": "milestone:ms_charles_analytics_favor_asked,milestone:ms_charles_public_queue_verified,milestone_not_set:ms_charles_analytics_favor_completed,item:circuit_board*2,item:focusing_lens",
         "next": "charles_favor_turnin"
       },
@@ -2566,31 +2560,31 @@
   {
     "id": "charles_mmo_reply",
     "speaker": "Charles",
-    "text": "Both! High-tier MMO raid economies and interstellar corporate monopolies are governed by the exact same principles: drop rates, scarcity choke points, and latency. The Dominion thinks they've built an unbreachable ring, but their supply chains are leaking margin like a broken sieve. If you understand the auction houses, you understand where the whole empire is vulnerable.",
+    "text": "Both. My raid group figured out which seller was holding the upgrade parts. I checked the Ring’s berth records the same way. You’d be surprised how often a queue has an owner.",
     "next": "analyst_charles_default_talk"
   },
   {
     "id": "charles_critique_reply",
     "speaker": "Charles",
-    "text": "[Charles laughs warmly, pushing up his glasses.] That's because I have. If someone brings me a project, a business plan, or a prototype, I don't give them polite applause—I give them the truth. Where does it break? Where's the bloat? What makes it actually matter? Praise without scrutiny is useless. But when something is genuinely brilliant, I will defend it with everything I've got.",
+    "text": "I have. I start with the bit they say can’t break. If it holds, I’ll tell them. If it doesn’t, I’d rather find out before they’ve put a year into it.",
     "next": "analyst_charles_default_talk"
   },
   {
     "id": "charles_frontier_reply",
     "speaker": "Charles",
-    "text": "[A fond, nostalgic grin touches his face.] An old creative work by a close friend. Years ago, he wrote this incredible, sprawling story-in-song—audio drama, rock opera, real human heart. I spent nights listening to every track, tearing the pacing apart, arguing over mix levels and character arcs. He hated me for half the notes and thanked me for all of them. Good ideas deserve someone who cares enough to tell you when a chorus is running two bars too long.",
+    "text": "A friend’s story set to music. He sent me every track. We spent three nights arguing over two bars of a chorus. He kept one.",
     "next": "analyst_charles_default_talk"
   },
   {
     "id": "charles_ethics_reply",
     "speaker": "Charles",
-    "text": "I used to supply throughput forecasts to Thorne's shipping contractors. They called every staff delay unavoidable. I watched executive shuttles leave half-empty while staff transports sat in the queue. [Charles taps the public departure board.] Now Vale's compliance notices say those same workers can't leave. I want them off this ring. That doesn't mean I hand a stranger their names or a key to every door. Check my figures before you ask me to trust yours.",
+    "text": "[Charles taps the public departure board.] I ran forecasts for Thorne’s contractors. Staff shuttles sat full while her executives flew out half-empty. Now Vale won’t let those workers leave at all. You can check the delays yourself. Their names stay off my slate.",
     "next": "analyst_charles_default_talk"
   },
   {
     "id": "charles_favor_offer",
     "speaker": "Charles",
-    "text": "I can build a tactical heuristic for your suit, but I won't connect it to a feed I haven't checked. Compare the advertised waits on my slate with the public queue at the biometric gates. Departure times and berth numbers only; leave passenger records alone. Then bring me two Circuit Boards and one Focusing Lens for an isolated tap. Standard salvage is fine, including anything you've already carried here. If the numbers hold, we both get something useful.",
+    "text": "Check the wait times on my slate against the public board at the biometric gates. Berths and departures only. Bring two Circuit Boards and a Focusing Lens, too. If the timings hold up, I can build you a slate from the feed.",
     "trigger": "set_milestone:ms_charles_analytics_favor_asked",
     "next": "analyst_charles_default_talk",
     "condition": "milestone_not_set:ms_charles_analytics_favor_asked,milestone_not_set:ms_charles_analytics_favor_completed"
@@ -2598,13 +2592,13 @@
   {
     "id": "charles_favor_status",
     "speaker": "Charles",
-    "text": "The biometric gates have a public queue display. Compare its actual departures with the advertised waits on my slate. I need to know whether the delays come from a fault or from somebody holding the berths. After that, two Circuit Boards and one Focusing Lens finish the tap. There's no need to hunt down fresh parts if you already have them.",
+    "text": "The public board is at the biometric gates. Compare its departures with my slate. I’m checking whether someone’s holding the berths. For the tap, I still need two Circuit Boards and one Focusing Lens.",
     "next": "analyst_charles_default_talk"
   },
   {
     "id": "charles_favor_turnin",
     "speaker": "Charles",
-    "text": "[Charles fits the lens into an isolated transmitter and seats both circuit boards. The public departure timings on his slate settle into a steady rhythm.] Your comparison caught the priority holds my model missed. This feed is useful now—and nobody's passenger file had to leave the gate. [He disconnects a small tactical slate and offers it to Nova.] The Venture Heuristic Slate. It'll help you read openings and place your shots. That's the extent of my network access. The rest is up to you.",
+    "text": "[Charles seats the boards and watches the times settle.] You caught the priority holds. I missed them. Here’s the Venture Heuristic Slate. It’ll help you place a shot. I’ve left the passenger feed disconnected.",
     "trigger": "take_item:circuit_board*2,take_item:focusing_lens*1,give_item:charles_heuristic_slate,give_xp:400,give_credits:500,set_milestone:ms_charles_analytics_favor_completed",
     "next": "analyst_charles_default_talk",
     "condition": "milestone:ms_charles_analytics_favor_asked,milestone:ms_charles_public_queue_verified,milestone_not_set:ms_charles_analytics_favor_completed,item:circuit_board*2,item:focusing_lens"
@@ -2612,11 +2606,11 @@
   {
     "id": "charlie_default_talk",
     "speaker": "Charlie",
-    "text": "A soft, fluffy gray-and-white creature peeks out from beneath the mossy log with wide, amber eyes. As you take a step closer, he flinches, retreating several inches into the hollow, his paws trembling slightly. A round, velvety spore puff ball rolls toward your boots.",
+    "text": "[A gray-and-white face peeks from the hollow. You take a step, and Charlie backs away. A spore puff rolls out toward your boot.]",
     "options": [
       {
         "id": "charlie_opt_step_1",
-        "text": "[Leave a dried reed treat by the hollow and take three baby steps back]",
+        "text": "[Leave a reed treat by the hollow and back away]",
         "condition": "milestone_not_set:ms_charlie_trust_1",
         "next": "charlie_step_1_reply"
       },
@@ -2634,7 +2628,7 @@
       },
       {
         "id": "charlie_opt_play",
-        "text": "[Give Charlie a warm head scratch and play fetch with his puff ball]",
+        "text": "[Scratch Charlie’s head and play fetch]",
         "condition": "milestone:ms_charlie_trust_3",
         "next": "charlie_play_reply"
       },
@@ -2653,40 +2647,40 @@
   {
     "id": "charlie_step_1_reply",
     "speaker": "Charlie",
-    "text": "You set down a sweet reed morsel and step backward slowly. Charlie pokes his nose out, sniffing the air with rapid twitches. He looks up at you with wide, tentative wonder, then gently nudges the treat into his den before resting his chin on his paws, watching you with curiosity.",
+    "text": "[Charlie sniffs the treat, pulls it into the hollow, and watches you with his chin on his paws.]",
     "trigger": "set_milestone:ms_charlie_trust_1,give_xp:25",
     "next": "charlie_default_talk"
   },
   {
     "id": "charlie_step_2_reply",
     "speaker": "Charlie",
-    "text": "Charlie bounds after the spore puff ball with sudden, clumsy enthusiasm! He pounces, tumbles over his paws, bats the ball back toward you with both front paws, and lets out a tiny, high-pitched chirp of pure joy.",
+    "text": "[Charlie pounces on the puff, tumbles over his paws, then bats it back with a chirp.]",
     "trigger": "set_milestone:ms_charlie_trust_2,give_xp:35",
     "next": "charlie_default_talk"
   },
   {
     "id": "charlie_step_3_reply",
     "speaker": "Charlie",
-    "text": "Charlie trots right up to you without hesitation. He buries his entire fluffy head firmly into the crook of your arm and neck, pressing in with all his weight and letting out a deep, vibrating purr. He stays like that for a long, quiet moment, basking in safety. When he gently pulls back, he presses a smooth, glowing comfort stone into your palm.",
+    "text": "[Charlie buries his head in the crook of your arm and purrs. When he pulls away, there’s a smooth, glowing stone in your palm.]",
     "trigger": "give_item:charlies_comfort_stone,set_milestone:ms_charlie_trust_3,give_xp:60",
     "next": "charlie_default_talk"
   },
   {
     "id": "charlie_play_reply",
     "speaker": "Charlie",
-    "text": "You toss the spore puff ball into the tall ferns. Charlie scrambles after it in a blur of fur, skidding across the moss before proudly carrying it back in his jaws, purring loudly as he nuzzles your hand.",
+    "text": "[Charlie tears after the puff and skids back with it in his jaws. He nudges your hand to get you to throw again.]",
     "next": "charlie_default_talk"
   },
   {
     "id": "charlie_cuddle_reply",
     "speaker": "Charlie",
-    "text": "Charlie happily curls into a tight circle against your boots, tucking his nose beneath his tail. His steady, rhythmic purr fills the quiet glade with unmistakable peace.",
+    "text": "[Charlie curls against your boots, nose under his tail. The purr keeps going after he closes his eyes.]",
     "next": "charlie_default_talk"
   },
   {
     "id": "creator_jason_default_talk",
     "speaker": "Jason",
-    "text": "Hey! Watch your step around those guitar cables and power supplies. I was just adjusting the clock timing on this signal bus... or was I refactoring the enemy spawn tables? Actually, both. What can I do for you?",
+    "text": "Watch the guitar leads. I’m checking the clock on this signal bus. Or I was, before I opened the star chart. What did you need?",
     "options": [
       {
         "id": "jason_opt_what",
@@ -2728,38 +2722,38 @@
   {
     "id": "jason_what_reply",
     "speaker": "Jason",
-    "text": "[Jason pauses, looks at the four glowing screens, the opened guitar pedal, and the soldering iron in his hand, then chuckles.] Which thing? Over here is an audio synth patch, that monitor's running a procedural star cluster, this slate is a nutritional tracker, and on the bench I'm tweaking the action on a custom six-string. My wife tells me I don't know how to stop. She's completely right, of course.",
+    "text": "[Jason looks from the star chart to the open guitar pedal.] Which thing? I’ve got a synth patch, a star map, and a nutrition tracker running. I sat down to fix the guitar. Ask my wife what time that was.",
     "next": "creator_jason_default_talk"
   },
   {
     "id": "jason_galaxy_reply",
     "speaker": "Jason",
-    "text": "Yeah! It's a little model I've been tinkering with. Six worlds, an old mining colony, a runaway starship called the Astra, and a crew trying to figure out where they belong. The secret to making it work isn't the math or the rendering—it's the people you weave into the fabric. The ones you love are what give the whole universe its gravity.",
+    "text": "Six worlds in a little model. I’ve got an old mining colony and a ship called the Astra. The flight path works. I’m still figuring out what the crew says to each other on the long stretches.",
     "next": "creator_jason_default_talk"
   },
   {
     "id": "jason_finish_reply",
     "speaker": "Jason",
-    "text": "[He grins warmly, brushing sawdust and flux off his jeans.] Eventually! But the joy isn't just getting to the finish line—it's the making of it. Building something with your own hands, sharing it with friends like Chris, Andrew, Cheno, and Charles, and watching it take on a life of its own. Once this one launches, I've already got five more notebooks waiting.",
+    "text": "Eventually. Chris, Andrew, Cheno, and Charles have all had a go at this one. Every time I cross a page out, one of them gives me something worth putting back in.",
     "next": "creator_jason_default_talk"
   },
   {
     "id": "jason_passion_reply",
     "speaker": "Jason",
-    "text": "Every single second of it. If you can make things that make people smile, bring your family closer, or give a friend a world to explore, why would you ever do anything else?",
+    "text": "I had Chris try a build last night. He found a bad turn I’d been staring at for a week. Then he asked to play it again. That’ll keep me at the bench.",
     "next": "creator_jason_default_talk"
   },
   {
     "id": "jason_resonator_reply",
     "speaker": "Jason",
-    "text": "[Jason picks up an intricately wound electromagnetic coil soldered to a miniature audio transducer.] That? It's an experimental harmonic field tuner. Calibrates frequency resonance so your gear operates with zero parasitic drag. Here, take it—I'm about to build a revision with three extra filter stages anyway. Put it to good use out there, Nova.",
+    "text": "[Jason lifts a copper coil from the bench.] Field tuner. You can have this one. I’m already halfway through winding the next.",
     "trigger": "give_item:creators_harmonic_resonator,give_xp:500,set_milestone:ms_jason_resonator_received",
     "next": "creator_jason_default_talk"
   },
   {
     "id": "oliver_default_talk",
     "speaker": "Oliver",
-    "text": "Oliver is curled with regal poise on a plush thermal cushion at the foot of the bunks. His golden eyes open smoothly as you approach. He lets out a single, precise, schedule-affirming meow, reminding you that all shifts must run on time.",
+    "text": "[Oliver opens one eye from his bunk cushion and gives a single, impatient meow.]",
     "options": [
       {
         "id": "oliver_opt_inspect",
@@ -2792,42 +2786,42 @@
   {
     "id": "oliver_inspection_reply",
     "speaker": "Oliver",
-    "text": "Oliver sits up tall, sniffs your sleeve with supreme dignity, and offers a slow, approving blink. The colony's operations may proceed under his continued supervision.",
+    "text": "[Oliver sniffs your sleeve, gives one slow blink, and tucks his paws back under his chest.]",
     "next": "oliver_default_talk"
   },
   {
     "id": "oliver_meal_reply",
     "speaker": "Oliver",
-    "text": "Oliver's ears swivel instantly. He rises to his feet, arches his back into a luxurious stretch, and trots with dignified urgency toward the mess corridor, looking back over his shoulder to ensure you follow.",
+    "text": "[Oliver’s ears prick. He stretches, trots toward the mess, and looks back to see if you’re following.]",
     "next": "oliver_default_talk"
   },
   {
     "id": "oliver_pat_reply",
     "speaker": "Oliver",
-    "text": "Oliver leans into your knuckles, his chin resting comfortably on your fingers as a steady, mechanical-grade purr reverberates through his chest. He gently nudges a polished brass chronometer tag toward you.",
+    "text": "[Oliver leans into your knuckles and starts purring. A brass chronometer tag slides out from under his paw.]",
     "trigger": "give_item:olivers_supervisory_seal,give_xp:25,set_milestone:ms_oliver_tag_received",
     "next": "oliver_default_talk"
   },
   {
     "id": "oliver_pat_again_reply",
     "speaker": "Oliver",
-    "text": "Oliver leans into your knuckles, his chin resting comfortably on your fingers as a steady, mechanical-grade purr reverberates through his chest.",
+    "text": "[Oliver leans into your knuckles and starts purring.]",
     "next": "oliver_default_talk"
   },
   {
     "id": "david_penny_reply",
     "speaker": "David",
-    "text": "That's Penny! Sweetest girl in the sector, but don't try wandering off into the mist without her permission. She considers this whole party her personal flock. She'll sprint full-tilt after a pine cone, wrestle you for ten straight minutes, and then pass out cold right here by the brisket smoker. Best camp companion an old outdoor cook could ask for.",
+    "text": "That’s Penny. She’ll bring you a pine cone, then act offended when you throw it. Leave her a spot by the smoker when she’s done making her rounds.",
     "next": "david_default_talk"
   },
   {
     "id": "penny_default_talk",
     "speaker": "Penny",
-    "text": "Penny bounds forward with full-body enthusiasm, a flurry of shaggy black-and-white curls! She circles your legs, nudges your hips with her nose, and glances around to ensure every single member of the party is standing together in a tight, safe circle.",
+    "text": "[Penny circles the crew, nudging each person with her nose until everyone is standing together.]",
     "options": [
       {
         "id": "penny_opt_wrestle",
-        "text": "[Have an energetic wrestling match with Penny]",
+        "text": "[Wrestle with Penny]",
         "condition": "milestone_not_set:ms_penny_wrestle_completed",
         "next": "penny_wrestle_reply"
       },
@@ -2839,7 +2833,7 @@
       },
       {
         "id": "penny_opt_soothe",
-        "text": "[Give Penny gentle ear scratches and reassure her the pack is safe]",
+        "text": "[Scratch Penny behind the ears]",
         "next": "penny_soothe_reply"
       },
       {
@@ -2851,20 +2845,20 @@
   {
     "id": "penny_wrestle_reply",
     "speaker": "Penny",
-    "text": "You drop to one knee and grapple with Penny! She lets out happy, playful snorts, batting at your arms with fluffy front paws and wagging so hard her whole rear end sways. For two glorious, chaotic minutes she wrestles with maximum energy—then suddenly flops onto the warm stone with a huge doggy sigh, completely exhausted and blissfully happy. She pushes her red woven bandana into your hand.",
+    "text": "[Penny bats at your arms until she tires herself out and flops onto the warm stone. She pushes her red bandana into your hand.]",
     "trigger": "give_item:pennys_herder_bandana,give_xp:50,set_milestone:ms_penny_wrestle_completed",
     "next": "penny_default_talk"
   },
   {
     "id": "penny_play_again_reply",
     "speaker": "Penny",
-    "text": "Penny gives a single ecstatic yip, playfully batting at your forearms before rolling onto her back on the soft river towels, paws in the air, demanding tummy rubs.",
+    "text": "[Penny bats at your arms, rolls onto her back, and waits with all four paws in the air.]",
     "next": "penny_default_talk"
   },
   {
     "id": "penny_soothe_reply",
     "speaker": "Penny",
-    "text": "Penny leans her entire weight against your legs, letting out a soft whimper of pure devotion. Knowing everyone is accounted for, she rests her big shaggy chin on your boot and wags her tail gently.",
+    "text": "[Penny leans against your legs. With the crew all in sight, she rests her chin on your boot.]",
     "next": "penny_default_talk"
   },
   {
@@ -2900,7 +2894,7 @@
       },
       {
         "id": "megan_opt_favor_turnin",
-        "text": "I've brought the chemical catalyst and nano-filaments for the filters.",
+        "text": "I brought the catalyst and filament for the filter.",
         "condition": "milestone:ms_megan_wetland_favor_asked,milestone_not_set:ms_megan_wetland_favor_completed,item:chemical_catalyst,item:nano_filament",
         "next": "megan_favor_turnin"
       },
@@ -2944,14 +2938,14 @@
   {
     "id": "megan_favor_turnin",
     "speaker": "Megan",
-    "text": "Megan fits the replacement filter and checks the first clear sample. “That will keep David's water supply safe. Thank you. Here's the scanner—it helps you keep track of strain before it becomes trouble. And remember to drink some water.”",
+    "text": "[Megan checks the first clear sample.] That’ll keep David’s water safe. Take the scanner. If it says you’re overdoing it, sit down and drink something.",
     "trigger": "take_item:chemical_catalyst*1,take_item:nano_filament*1,give_item:megans_clinical_scanner,give_xp:200,give_credits:250,set_milestone:ms_megan_wetland_favor_completed",
     "next": "megan_default_talk"
   },
   {
     "id": "evelyn_default_talk",
     "speaker": "Evelyn",
-    "text": "[Evelyn hums a sparkling vocal jazz run, gently misting a cluster of glowing blue orchids with a brass atomizer.] Well hello, darling! Mind the roots by the pathway. Aren't these blossoms divine? They simply won't bloom without a little Monk or Coltrane in the morning air. What brings you up to our garden in the sky?",
+    "text": "[Evelyn hums as she mists the orchids.] Hello, darling. Mind the roots. Robert and I keep this garden going. The blue ones get Monk before breakfast.",
     "options": [
       {
         "id": "evelyn_opt_music",
@@ -2983,32 +2977,32 @@
   {
     "id": "evelyn_music_reply",
     "speaker": "Evelyn",
-    "text": "[Evelyn beams, her eyes twinkling.] Oh, absolutely! Pop music makes the stems stiff, and classical makes them too reserved. But jazz? Jazz gives them rhythm, syncopation, and freedom. My father loved music, and I passed that same song right down to my boy Jason. You can hear it echoing through everything he builds.",
+    "text": "A little Monk and up they come. I can’t prove that, but I’m not about to risk a morning without him. My father played records for me. I did the same for Jason.",
     "next": "evelyn_default_talk"
   },
   {
     "id": "evelyn_grandkids_reply",
     "speaker": "Evelyn",
-    "text": "My precious grandbabies, Tyson and Ian! Tyson is such an artist—always building things out of paper and imagination, just like his daddy. And little Ian with his big curious mind, dreaming about astronauts and dinosaurs. Being their Mimi is the greatest joy of my life. I keep their photos tucked right inside my garden ledger.",
+    "text": "Tyson made me a paper orchid. Ian drew a dinosaur eating it. Both are in the garden ledger, if you’d like to see.",
     "next": "evelyn_default_talk"
   },
   {
     "id": "evelyn_robert_reply",
     "speaker": "Evelyn",
-    "text": "[Evelyn lets out a delighted laugh and waves at Robert.] That's my sweet husband, Robert! He used to be a professional mime before he designed specialized industrial mop equipment for high-tech facilities. He made a wonderful living at it, but whenever he gets excited about his heavy-duty buffer pads, the pantomime comes right back out. He's an absolute darling, even if he leaves his buffer keys in the fern pots.",
+    "text": "That’s Robert, my husband. He used to do mime before he started making industrial mops. Ask him about a buffer and he’ll show you how it turns. Ask where he left the key and you’ll get the whole act.",
     "next": "evelyn_default_talk"
   },
   {
     "id": "evelyn_favor_reply",
     "speaker": "Evelyn",
-    "text": "[Evelyn snips a luminous, velvet-blue blossom with silver shears.] Here, sweetheart, take this. It's a Blue Horizon jazz orchid. Keep it near your suit lapel—it'll calm your heart and keep your focus steady when the world gets noisy.",
+    "text": "[Evelyn snips a blue blossom.] Take this one, sweetheart. Blue Horizon. Pin it where you can see it when things get loud.",
     "trigger": "give_item:mimis_jazz_bloom,give_xp:350,set_milestone:ms_evelyn_bloom_received",
     "next": "evelyn_default_talk"
   },
   {
     "id": "robert_default_talk",
     "speaker": "Robert",
-    "text": "[A dapper older gentleman in immaculate linen overalls raises one hand in theatrical greeting. Without speaking, he points to a tiny scuff mark on the glass floor, clutches his chest in silent melodramatic horror, and then presents his gleaming custom mop with a triumphant, silent flourish!]",
+    "text": "[Robert points to a scuff on the glass, clutches his chest, then produces his mop with a flourish.]",
     "options": [
       {
         "id": "robert_opt_mime",
@@ -3040,32 +3034,32 @@
   {
     "id": "robert_mime_reply",
     "speaker": "Robert",
-    "text": "[Robert's face lights up with sheer delight. He breaks character with an educated, gentlemanly chuckle.] Bravo! Splendid form! You understand the theatrical nuance! People think industrial cleaning is just soap and elbow grease. But when you're managing thirty thousand square meters of zero-friction orbital decks, cleanliness is choreography. It's poetry in motion.",
+    "text": "[Robert breaks into a grin.] Splendid wrist work. Keep that up and I’ll put you on the orbital decks. Thirty thousand square meters. We take tea at four.",
     "next": "robert_default_talk"
   },
   {
     "id": "robert_business_reply",
     "speaker": "Robert",
-    "text": "Indeed! High-capacity microfiber loops, electrostatic core tensioners, dual-action fluid dispensers. Every corporate shipyard and high-rise concourse from here to Zenith uses my rigs. I used to enjoy a nice glass of vintage Bordeaux after a long tour, but nowadays good tea, Evelyn's jazz, and a spotless floor are all the reward I need.",
+    "text": "Started with a loop that wouldn’t fling water over the rails. Then the shipyards called. These days I’d rather have tea and listen to Evelyn’s records, but I still keep a spare head in the cart.",
     "next": "robert_default_talk"
   },
   {
     "id": "robert_keys_reply",
     "speaker": "Robert",
-    "text": "[Robert pats his pockets, a look of sudden, comical bewilderment washing over his face.] My buffer ignition key! Did I... ah. Did I leave it on the third tee of the virtual golf range, or behind the hydrangea planter? [He pauses, laughing warmly.] Never mind! A man with a great wife and clean floors can afford to misplace a key now and then.",
+    "text": "[Robert pats his pockets.] The buffer key. I had it on the third tee. Unless I watered the hydrangeas first. Evelyn will know.",
     "next": "robert_default_talk"
   },
   {
     "id": "robert_gift_reply",
     "speaker": "Robert",
-    "text": "[Robert beams, gesturing proudly to a machined titanium balancing flywheel on his cart.] You have an eye for precision engineering! Here—take this high-torque gyroscopic buffer core. It stabilizes inertia and absorbs recoil. Slap it onto your defensive chassis, and nothing will knock you off balance.",
+    "text": "[Robert spins a flywheel on the cart.] Feel that settle? Take it. I’ve got another in the shop, and this one will do more good on your gear.",
     "trigger": "give_item:roberts_buffer_core,give_xp:350,set_milestone:ms_robert_core_received",
     "next": "robert_default_talk"
   },
   {
     "id": "pam_default_talk",
     "speaker": "Pam",
-    "text": "Sit down and eat before you collapse, Nova. You look like a gust of solar wind could blow you into the next crater. I'm Pam. I run this hall; Rourke keeps the kitchen going. What do you need, and don't dance around it.",
+    "text": "Sit and eat before you fall over, Nova. I’m Pam. I run the hall and Rourke keeps the kitchen going. What do you need?",
     "options": [
       {
         "id": "pam_opt_rooster",
@@ -3074,7 +3068,7 @@
       },
       {
         "id": "pam_opt_family",
-        "text": "Do you have family out beyond this sector?",
+        "text": "Who’s in those photos behind the till?",
         "next": "pam_family_reply"
       },
       {
@@ -3097,48 +3091,48 @@
   {
     "id": "pam_rooster_reply",
     "speaker": "Pam",
-    "text": "[Pam crosses her arms with a fierce grin.] You got a problem with roosters? Back home in the mountains, a rooster means morning's here and it's time to get to work. Out here where it's pitch black day and night, you need something with a little strut to remind folks not to give up.",
+    "text": "[Pam folds her arms.] Back in the mountains, a rooster meant morning. Down here the shift bell does his job. I kept the rooster anyway.",
     "next": "pam_default_talk"
   },
   {
     "id": "pam_family_reply",
     "speaker": "Pam",
-    "text": "My kids Megan and Cameron are my whole life! They got transferred off-sector—Megan's out there running clinical science on the coast, smart as a whip and taking care of everybody. And Cameron's working sixty hours a week on the high-pressure pipes, just like his father Sherman used to do. Sherman would be bursting with pride if he could see them. Between them, my grandbabies, and those sweet dogs Kodi and Bella, I've got plenty to be thankful for.",
+    "text": "Megan’s working at a clinic on the coast. Cameron’s on the hot pipes, same work his father Sherman did. He’d have been proud of both of them. I keep their photos behind the till, next to the grandbabies and Kodi and Bella.",
     "next": "pam_default_talk"
   },
   {
     "id": "pam_blunt_reply",
     "speaker": "Pam",
-    "text": "Life's too short to sugar-coat vinegar, child. If someone's being a fool, you tell 'em so they stop. But if they're family or doing the right thing, you back 'em till the wheels fall off.",
+    "text": "If you’re being a fool, I’ll tell you. Then I’ll make you a plate. Now sit down.",
     "next": "pam_default_talk"
   },
   {
     "id": "pam_biscuits_reply",
     "speaker": "Pam",
-    "text": "[Pam shoves a steaming, wrapped tin of mountain-spiced skillet biscuits into your hands.] Take this. Real stone-ground meal and pepper gravy. It'll put some lead in your pencil and keep your shield steady when the miners get rowdy.",
+    "text": "[Pam wraps a tin in a towel and presses it into Nova’s hands.] Pepper gravy’s underneath. Eat them before you go down the shaft. Rourke will tell me if you don’t.",
     "trigger": "give_item:gagas_skillet_biscuits,give_xp:25,set_milestone:ms_pam_biscuits_received",
     "next": "pam_default_talk"
   },
   {
     "id": "jason_meeko_reply",
     "speaker": "Jason",
-    "text": "[Jason looks up with a fond grin.] That's Meeko. Don't let him hear you call him a pet—he considers himself the studio's executive producer and my equal partner. He can be a complete jerk to strangers, but he's got my back no matter what. If he nods at you, consider yourself officially made.",
+    "text": "That’s Meeko. I cleared the chair for him and he took the amplifier. Pretty sure he’s waiting for me to offer him the chair again.",
     "next": "creator_jason_default_talk"
   },
   {
     "id": "meeko_default_talk",
     "speaker": "Meeko",
-    "text": "Meeko narrows his sharp green eyes at you from atop the warm amplifier. He doesn't move a muscle—merely tilts his chin upward with the calm, intimidating presence of an underworld boss granting an audience.",
+    "text": "[Meeko lifts his chin from the warm amplifier and waits to see what you’ll do.]",
     "options": [
       {
         "id": "meeko_opt_respect",
-        "text": "[Offer a respectful nod and address Meeko as an equal business partner]",
+        "text": "[Give Meeko a respectful nod]",
         "condition": "milestone_not_set:ms_meeko_audience_granted",
         "next": "meeko_respect_reply"
       },
       {
         "id": "meeko_opt_familiar",
-        "text": "[Address Meeko with the quiet respect of a made associate]",
+        "text": "[Slow-blink at Meeko]",
         "condition": "milestone:ms_meeko_audience_granted",
         "next": "meeko_familiar_reply"
       },
@@ -3161,44 +3155,44 @@
   {
     "id": "meeko_respect_reply",
     "speaker": "Meeko",
-    "text": "Meeko holds your gaze for three tense seconds. Slowly, he gives a single, subtle dip of his head—acknowledging your professional respect. He uncurls one massive front paw, nudging a heavy brass audio connector across the amp chassis toward you.",
+    "text": "[Meeko gives one slow nod and pushes a brass connector across the amp with his paw.]",
     "trigger": "give_item:meekos_mafia_jack,give_xp:350,set_milestone:ms_meeko_audience_granted",
     "next": "meeko_default_talk"
   },
   {
     "id": "meeko_familiar_reply",
     "speaker": "Meeko",
-    "text": "Meeko gives a slow, dignified blink, resting his paws over the edge of the amplifier. You have been officially recognized as someone worth his time.",
+    "text": "[Meeko blinks once and settles both paws over the edge of the amp.]",
     "next": "meeko_default_talk"
   },
   {
     "id": "meeko_babytalk_reply",
     "speaker": "Meeko",
-    "text": "Meeko's tail twitches once with icy disdain. He turns his head ninety degrees away, staring into the middle distance and completely ignoring your existence until you learn some manners.",
+    "text": "[Meeko’s tail flicks. He turns his head away.]",
     "next": "meeko_default_talk"
   },
   {
     "id": "meeko_habits_reply",
     "speaker": "Meeko",
-    "text": "Meeko lets out a low, gravelly purr that sounds like a heavy diesel engine idling. He looks down at Jason's soldering iron, sighs with deep feline patience, and taps his claws against the amplifier casing.",
+    "text": "[Meeko looks from Jason’s soldering iron to the unoccupied chair. One claw taps the amp casing.]",
     "next": "meeko_default_talk"
   },
   {
     "id": "cheno_family_reply",
     "speaker": "Cheno",
-    "text": "That's my whole world right there. My wife Angela—kindest, most hardworking soul you'll ever meet. Keeps the county running and always has a cold cider waiting on the porch. Our girl Raegan takes right after me: total firecracker, brilliant, always singing 'hee-hee' and making everybody laugh. And her big brother Brody is a rock—college football player, looks out for his sister like a guardian angel. Everything I lift, every bolt I tighten, it's all for them.",
+    "text": "That’s Angela on the porch. Raegan’s singing again. Brody was halfway out the door for football practice, but he stuck around until she finished. I keep it there for the long shifts.",
     "next": "cheno_default_talk"
   },
   {
     "id": "cameron_smokey_reply",
     "speaker": "Cameron",
-    "text": "[Cameron looks over at the collar with a fond, quiet smile.] That was our little buddy Smokey. Bella's brother—he was with Kasey and me for nearly thirteen years. Best dog a guy could ask for. He used to curl right up by the hearth while the girls were doing their lessons. Miss that little guy every single day.",
+    "text": "[Cameron touches the collar.] Smokey. Bella’s brother. Almost thirteen years he slept by the hearth while the girls did their lessons. I still step over that spot when I go home.",
     "next": "pipefitter_cameron_default_talk"
   },
   {
     "id": "david_nancy_reply",
     "speaker": "David",
-    "text": "[David chuckles, wiping down the cedar cutting board.] If you think this is neat, you should see our home quarters back on the coast! My partner Nancy would throw a fit if she found one speck of grease on the floor. She keeps everything immaculate, while I handle the brisket and the wild river stories. We balance each other out pretty darn well.",
+    "text": "[David wipes the cutting board.] Nancy keeps the place running. I keep the fire going. If she ever finds grease in the flour tin again, I’ll be keeping the fire going outdoors.",
     "next": "david_default_talk"
   },
   {
@@ -3286,7 +3280,7 @@
   {
     "id": "brutus_dialogue_claim",
     "speaker": "Pitmaster Brutus",
-    "text": "I don't believe it! The Champion... offline! You took everything the Crucible threw at you and came out glowing! As promised, take the Crucible Forge-Plate. You've earned every dent on it, Champion!",
+    "text": "The Champion’s down! You cleared all three bouts. Come get your Forge-Plate before the crowd climbs the rail.",
     "condition": "milestone:ms_crucible_round3_cleared,quest_not_completed:w4_sq_crucible",
     "trigger": "set_quest_task_done:w4_sq_crucible:task_round3,set_milestone:ms_w4_crucible_champion,complete_quest:w4_sq_crucible,give_xp:500,give_item:crucible_forge_plate,give_credits:350"
   },
@@ -3303,7 +3297,8 @@
       },
       {
         "id": "opt_brutus_wait_round3",
-        "text": "Hold on, let us prepare first."
+        "text": "Hold on, let us prepare first.",
+        "exit": true
       }
     ]
   },
@@ -3326,7 +3321,8 @@
       },
       {
         "id": "opt_brutus_wait_round2",
-        "text": "We need a minute to patch our armor."
+        "text": "We need a minute to patch our armor.",
+        "exit": true
       }
     ]
   },
@@ -3353,14 +3349,15 @@
       },
       {
         "id": "opt_brutus_pass",
-        "text": "Just scoping out the pits."
+        "text": "Just scoping out the pits.",
+        "exit": true
       }
     ]
   },
   {
     "id": "brutus_dialogue_rules",
     "speaker": "Pitmaster Brutus",
-    "text": "Three rounds. First: two Magma Drones and a Welder Bot. Second: a Slag Golem with a welder keeping it running. Third: my Champion with a drone escort. Withdraw if you must; only victory clears a round. Rest between bouts, then ask me to start the next. Clear all three and claim the Forge-Plate, 350 credits, and 500 XP.",
+    "text": "Three bouts. Drones with a welder, then the Slag Golem, then my Champion and its escort. You can pull out and rest between bouts. Win all three and the Forge-Plate’s yours.",
     "options": [
       {
         "id": "opt_brutus_rules_accept",
@@ -3369,7 +3366,8 @@
       },
       {
         "id": "opt_brutus_rules_wait",
-        "text": "Give us a moment to prepare."
+        "text": "Give us a moment to prepare.",
+        "exit": true
       }
     ]
   },
@@ -3549,7 +3547,7 @@
   {
     "id": "orion_w2_awakening_3",
     "speaker": "Orion",
-    "text": "You kept my memory bands apart. I can still hear each of them. Thank you, Nova. The Bridge is in that separate cradle; your Chime opened my pod, but it cannot power the Bridge.",
+    "text": "I can still hear each voice on its own. You kept the bands apart. Thank you, Nova.",
     "next": "orion_w2_awakening_depart"
   },
   {
@@ -3725,7 +3723,7 @@
     "id": "w2_departure_entry",
     "speaker": "Astra Navigation",
     "condition": "quest_active:w2_mq05,quest_task_not_done:w2_mq05:launch_ship",
-    "text": "All four flight seats are ready. The cargo ramp is still down if you need to finish anything in Sector 9. Orion has plotted a low service airlane to the Spire, beneath the outer Planetary Shield.",
+    "text": "Low service airlane to the Spire plotted beneath the Planetary Shield. Cargo ramp open. Confirm departure from the bridge when the crew is ready.",
     "options": [
       {
         "id": "depart",
@@ -3734,7 +3732,8 @@
       },
       {
         "id": "stay",
-        "text": "Stay docked for now."
+        "text": "Stay docked for now.",
+        "exit": true
       }
     ],
     "portrait": "images/npcs/lab_terminal.webp"
@@ -3742,19 +3741,19 @@
   {
     "id": "orion_w2_awakening_nova",
     "speaker": "Nova",
-    "text": "We just got here. I am Nova. The clock says twenty years. Is there someone we should look for?",
+    "text": "We just got here. I’m Nova. That clock says twenty years. Is there someone we should look for?",
     "next": "orion_w2_identity"
   },
   {
     "id": "orion_w2_awakening_zeke",
     "speaker": "Zeke",
-    "text": "We can check the records. When you are ready. You do not have to stand up yet.",
+    "text": "We can check the records when you’re ready. Here. Sit a minute.",
     "next": "orion_w2_awakening_3"
   },
   {
     "id": "orion_w2_awakening_depart",
     "speaker": "Orion",
-    "text": "I cannot stay here counting the years. Take the Bridge. It connects willing carriers, but it needs a physical ground. I will come with you. And that rifle on the ridge has been watching us too long.",
+    "text": "I’ve spent long enough in this room. There’s a Bridge in the sealed cradle. It links willing carriers, one voice to a band, but it needs a ground. I’ll show you. Then we should see who’s been watching us from the ridge.",
     "trigger": "player_action:w2_mq03_talk_to_orion"
   },
   {
@@ -3776,7 +3775,7 @@
     "scripted_only": true,
     "speaker": "Zeke",
     "portrait": "images/npcs/comms_radio.png",
-    "text": "That's the car. Clear the platform. Jed's at the bypass with his wrench. He said to get you across."
+    "text": "The car’s here. Watch the gap. Jed’s holding the bypass for us."
   },
   {
     "id": "orion_w2_identity",
@@ -3788,7 +3787,7 @@
   {
     "id": "ghost_confrontation_pause",
     "speaker": "Nova",
-    "text": "Then keep the rifle down while you decide. We are trying to leave this place alive.",
+    "text": "Keep the rifle down while you work it out. We want to get out of here alive.",
     "next": "ghost_confrontation_warning"
   },
   {
@@ -3962,7 +3961,8 @@
       {
         "id": "leave",
         "text": "Leave the controls.",
-        "next": "w5_bulkheads_leave"
+        "next": "w5_bulkheads_leave",
+        "exit": true
       }
     ]
   },
@@ -4021,7 +4021,8 @@
       {
         "id": "leave",
         "text": "Leave the controls.",
-        "next": "w5_bulkheads_leave"
+        "next": "w5_bulkheads_leave",
+        "exit": true
       }
     ]
   },
@@ -4090,7 +4091,7 @@
   {
     "id": "w3_cover_recover",
     "speaker": "Nova",
-    "text": "The service order lists the crew's actual cover: scheduled Skypark air-filter inspection. What do you tell the Curator?",
+    "text": "[Nova checks the folded work order again.]",
     "options": [
       {
         "id": "correct",
@@ -4112,7 +4113,7 @@
   {
     "id": "w3_case_alibi_question",
     "speaker": "Nova",
-    "text": "Sorrell claims he remained at his corner table from 21:00 onward. Which record contradicts that claim?",
+    "text": "[Nova sets the records on the table.] You said you stayed right here?",
     "options": [
       {
         "id": "correct",
@@ -4138,19 +4139,19 @@
   {
     "id": "w3_case_remote_rebuttal",
     "speaker": "Director Sorrell",
-    "text": "'A unit can vent while I sit beside it. That says nothing about where I went.' The equipment timestamp alone does not contradict his location. The access log records movement.",
+    "text": "A unit can vent while I sit beside it. Show me a record of me leaving the table.",
     "next": "w3_case_alibi_question"
   },
   {
     "id": "w3_case_dispenser_rebuttal",
     "speaker": "Director Sorrell",
-    "text": "'The bar pours drinks all evening. Was I supposed to stop it?' The dispenser record describes the drink, not Sorrell's movements.",
+    "text": "Of course the dispenser logged it. Where does it say I went to the booth?",
     "next": "w3_case_alibi_question"
   },
   {
     "id": "w3_case_physical_question",
     "speaker": "Nova",
-    "text": "Sorrell blames the badge ping on a logging fault. Which evidence independently connects his equipment to the poison?",
+    "text": "[Nova keeps a finger on the access log and pulls the other evidence closer.] All right. Look at the glass.",
     "options": [
       {
         "id": "correct",
@@ -4176,13 +4177,13 @@
   {
     "id": "w3_case_same_record_rebuttal",
     "speaker": "Director Sorrell",
-    "text": "'You are reading the same log twice.' Repeating the disputed record does not answer his objection. The glass and the rig provide a separate physical connection.",
+    "text": "You’re reading the same log twice. I’m asking what else you have.",
     "next": "w3_case_physical_question"
   },
   {
     "id": "w3_case_clean_rebuttal",
     "speaker": "Director Sorrell",
-    "text": "'Then accuse whoever touched it afterward.' A clean dispenser narrows when the poison was added, but it does not identify its source. Compare the residue in the glass with the missing component.",
+    "text": "Then ask who touched the glass after it was poured. You still haven’t shown me where the coolant came from.",
     "next": "w3_case_physical_question"
   },
   {
@@ -4201,5 +4202,310 @@
     "id": "vance_security_aftermath",
     "speaker": "System",
     "text": "[The recorder sends the confession and evidence to salon security. Two guards take Sorrell’s credentials and seat him under guard to await transport. Lyra asks Dax to keep a copy of Malick’s audit.]"
+  },
+  {
+    "id": "w6_mq28_final_banter_line_1",
+    "speaker": "Nova",
+    "text": "[Nova cups her hands around the little flame.] If we lose sight of each other up there, say something I’ll recognize.",
+    "next": "w6_mq28_final_banter_line_2",
+    "scripted_only": true
+  },
+  {
+    "id": "w6_mq28_final_banter_line_2",
+    "speaker": "Zeke",
+    "text": "Your left boot squeaks. I’ve been listening to it since the mine.",
+    "next": "w6_mq28_final_banter_line_3",
+    "scripted_only": true
+  },
+  {
+    "id": "w6_mq28_final_banter_line_3",
+    "speaker": "Gh0st",
+    "text": "[Gh0st rests one hand on the bridge.] I’ll be close enough to hear it.",
+    "next": "w6_mq28_final_banter_line_4",
+    "scripted_only": true
+  },
+  {
+    "id": "w6_mq28_final_banter_line_4",
+    "speaker": "Orion",
+    "text": "Then I’ll listen for four sets of footsteps.",
+    "next": "w6_mq28_final_banter_line_5",
+    "scripted_only": true
+  },
+  {
+    "id": "w6_mq28_final_banter_line_5",
+    "speaker": "Nova",
+    "text": "Four, all the way across.",
+    "trigger": "player_action:w6_mq28_final_banter",
+    "scripted_only": true
+  },
+  {
+    "id": "w6_mq29_refuse_jed_revision_line_1",
+    "speaker": "Jed",
+    "text": "[A wrench taps twice against the bench.] Hold the light a little higher, kid. There. Knew you’d get it.",
+    "next": "w6_mq29_refuse_jed_revision_line_2",
+    "scripted_only": true
+  },
+  {
+    "id": "w6_mq29_refuse_jed_revision_line_2",
+    "speaker": "Nova",
+    "text": "I know what you say next. I’ve been trying to remember how you said it.",
+    "next": "w6_mq29_refuse_jed_revision_line_3",
+    "scripted_only": true
+  },
+  {
+    "id": "w6_mq29_refuse_jed_revision_line_3",
+    "speaker": "Vale",
+    "text": "Open the door. You can hear him say it tomorrow, too.",
+    "next": "w6_mq29_refuse_jed_revision_line_4",
+    "scripted_only": true
+  },
+  {
+    "id": "w6_mq29_refuse_jed_revision_line_4",
+    "speaker": "Nova",
+    "text": "[Her hand stays on the latch.] I want to. That’s what scares me.",
+    "options": [
+      {
+        "id": "w6_mq29_refuse_jed_revision_confirm",
+        "text": "Let go of the latch. “I miss him. Leave him as he was.”",
+        "trigger": "player_action:w6_mq29_refuse_jed_revision"
+      },
+      {
+        "id": "w6_mq29_refuse_jed_revision_leave",
+        "text": "Step away for now."
+      }
+    ],
+    "scripted_only": true
+  },
+  {
+    "id": "w6_mq29_refuse_astra_revision_line_1",
+    "speaker": "Orion",
+    "text": "[Orion runs a finger along the seamless hull.] Where’s the patch you put in after Sector 9?",
+    "next": "w6_mq29_refuse_astra_revision_line_2",
+    "scripted_only": true
+  },
+  {
+    "id": "w6_mq29_refuse_astra_revision_line_2",
+    "speaker": "Vale",
+    "text": "No crash. No patch. Everyone aboard gets home safely.",
+    "next": "w6_mq29_refuse_astra_revision_line_3",
+    "scripted_only": true
+  },
+  {
+    "id": "w6_mq29_refuse_astra_revision_line_3",
+    "speaker": "Orion",
+    "text": "I wasn’t aboard. In this version, my pod never opens.",
+    "next": "w6_mq29_refuse_astra_revision_line_4",
+    "scripted_only": true
+  },
+  {
+    "id": "w6_mq29_refuse_astra_revision_line_4",
+    "speaker": "Nova",
+    "text": "You’re standing right here. I can hear you over the engine.",
+    "options": [
+      {
+        "id": "w6_mq29_refuse_astra_revision_confirm",
+        "text": "Keep the scarred Astra and the crew who flew her.",
+        "trigger": "player_action:w6_mq29_refuse_astra_revision"
+      },
+      {
+        "id": "w6_mq29_refuse_astra_revision_leave",
+        "text": "Step away for now."
+      }
+    ],
+    "scripted_only": true
+  },
+  {
+    "id": "w6_mq29_refuse_foundry_revision_line_1",
+    "speaker": "Vale",
+    "text": "There’s no assembly line on this side. Cross over. No one will ask what you did in the Foundry.",
+    "next": "w6_mq29_refuse_foundry_revision_line_2",
+    "scripted_only": true
+  },
+  {
+    "id": "w6_mq29_refuse_foundry_revision_line_2",
+    "speaker": "Gh0st",
+    "text": "There were people behind that glass. Do they get to cross?",
+    "next": "w6_mq29_refuse_foundry_revision_line_3",
+    "scripted_only": true
+  },
+  {
+    "id": "w6_mq29_refuse_foundry_revision_line_3",
+    "speaker": "Vale",
+    "text": "You won’t remember the glass.",
+    "next": "w6_mq29_refuse_foundry_revision_line_4",
+    "scripted_only": true
+  },
+  {
+    "id": "w6_mq29_refuse_foundry_revision_line_4",
+    "speaker": "Gh0st",
+    "text": "[Gh0st takes his hand off the rail.] Then who goes back for them?",
+    "options": [
+      {
+        "id": "w6_mq29_refuse_foundry_revision_confirm",
+        "text": "“We go back with you.” Let Gh0st turn away.",
+        "trigger": "player_action:w6_mq29_refuse_foundry_revision"
+      },
+      {
+        "id": "w6_mq29_refuse_foundry_revision_leave",
+        "text": "Step away for now."
+      }
+    ],
+    "scripted_only": true
+  },
+  {
+    "id": "w6_sq29_tune_grave_line_1",
+    "speaker": "Orion",
+    "text": "[Orion brushes the dust from one of the names.] I used to pass this one without saying it. I was afraid I’d get it wrong.",
+    "next": "w6_sq29_tune_grave_line_2",
+    "scripted_only": true
+  },
+  {
+    "id": "w6_sq29_tune_grave_line_2",
+    "speaker": "Orion",
+    "text": "Say it with me. Take a breath between the names.",
+    "next": "w6_sq29_tune_grave_line_3",
+    "scripted_only": true
+  },
+  {
+    "id": "w6_sq29_tune_grave_line_3",
+    "speaker": "Nova",
+    "text": "[One voice answers, then another. Nova waits for the last one.] I hear them.",
+    "trigger": "player_action:w6_sq29_tune_grave",
+    "scripted_only": true
+  },
+  {
+    "id": "nova_w6_final_jed",
+    "speaker": "Nova",
+    "text": "At the stair you had Jed tap the wrench twice. You remembered the sound. What happens when he says something you didn’t plan?",
+    "next": "vale_w6_final_reply"
+  },
+  {
+    "id": "vale_w6_final_reply",
+    "speaker": "Vale",
+    "text": "I could stop a fight before it began. Open a sealed mine before the air runs out. All I need is for the current to hold.",
+    "next": "nova_w6_final_answer"
+  },
+  {
+    "id": "vale_w6_final_refusal",
+    "speaker": "Vale",
+    "text": "[Vale closes his hand. The voices behind him fall into time.] I can’t give it back to chance.",
+    "next": "nova_w6_final_resolve"
+  },
+  {
+    "id": "nova_w6_final_resolve",
+    "speaker": "Nova",
+    "text": "[Nova looks back at the crew.] When he tries to pull us into step, keep your own count.",
+    "trigger": "player_action:w6_mq30_confront_vale"
+  },
+  {
+    "id": "nova_w3_mq12_request_codes",
+    "speaker": "Nova",
+    "text": "We need a way past the patrols. Can you help?",
+    "next": "w3_mq12_jax_success",
+    "scripted_only": true
+  },
+  {
+    "id": "vale_w4_mq20_coup_beat_1",
+    "speaker": "Thorne",
+    "text": "That register includes my name because I paid for everything attached to it. Read it again.",
+    "scripted_only": true,
+    "next": "vale_w4_mq20_coup_beat_2"
+  },
+  {
+    "id": "vale_w4_mq20_coup_beat_2",
+    "speaker": "Vale",
+    "text": "[The Foundry and Ring seals turn white on the flight display.] It includes the authorization you gave me at the Spire. I’ve extended it to the Ring. All sectors, lock down.",
+    "scripted_only": true,
+    "next": "vale_w4_mq20_coup_beat_3"
+  },
+  {
+    "id": "vale_w4_mq20_coup_beat_3",
+    "speaker": "Gh0st",
+    "text": "The Ring used to announce whose orders I was following. Listen. It’s stopped saying her name.",
+    "scripted_only": true
+  },
+  {
+    "id": "thorne_w5_mq22_intro_beat_1",
+    "speaker": "Gh0st",
+    "text": "Who’s still in those seats?",
+    "scripted_only": true,
+    "next": "thorne_w5_mq22_intro_beat_2"
+  },
+  {
+    "id": "thorne_w5_mq22_intro_beat_2",
+    "speaker": "Thorne",
+    "text": "The mainframe has their names. My signature is on the orders that put them there. Keep this channel on the record. Follow the coolant pulses through the firewall. They’ll get you to all three nodes.",
+    "scripted_only": true,
+    "trigger": "player_action:w5_mq22_find_thorne"
+  },
+  {
+    "id": "vale_w5_mq25_soloist_beat_1",
+    "speaker": "Thorne",
+    "text": "I know that channel. You’ve got a whole ward on it. I can open their doors if you give me the register.",
+    "scripted_only": true,
+    "next": "vale_w5_mq25_soloist_beat_2"
+  },
+  {
+    "id": "vale_w5_mq25_soloist_beat_2",
+    "speaker": "Vale",
+    "text": "You’d send them back to the same rooms and charge the next ward to take their place. I can give them a world where nobody waits for a door to open.",
+    "scripted_only": true,
+    "next": "vale_w5_mq25_soloist_beat_3"
+  },
+  {
+    "id": "vale_w5_mq25_soloist_beat_3",
+    "speaker": "Thorne",
+    "text": "[Thorne presses her palm against the field.] One of them is still asking for her sister. Let her finish.",
+    "scripted_only": true,
+    "next": "vale_w5_mq25_soloist_beat_4"
+  },
+  {
+    "id": "vale_w5_mq25_soloist_beat_4",
+    "speaker": "Nova",
+    "text": "Gh0st, get to the field. I’ll hold him.",
+    "scripted_only": true,
+    "next": "vale_w5_mq25_soloist_beat_5"
+  },
+  {
+    "id": "vale_w5_mq25_soloist_beat_5",
+    "speaker": "Vale",
+    "text": "[Nova casts Stasis. The light stops at Vale’s feet. He lowers one finger. Thorne’s field contracts, then goes dark. She falls beside the glass.]",
+    "scripted_only": true,
+    "next": "vale_w5_mq25_soloist_beat_6"
+  },
+  {
+    "id": "vale_w5_mq25_soloist_beat_6",
+    "speaker": "Gh0st",
+    "text": "Thorne? [He waits for an answer. The note holds.]",
+    "scripted_only": true,
+    "next": "vale_w5_mq25_soloist_beat_7"
+  },
+  {
+    "id": "vale_w5_mq25_soloist_beat_7",
+    "speaker": "Vale",
+    "text": "[The Ring’s lights go out in strips. The stolen current gathers in his hand.] A choir still leaves room for someone to cry out. One voice. A solo.",
+    "scripted_only": true,
+    "next": "vale_w5_mq25_soloist_beat_8"
+  },
+  {
+    "id": "vale_w5_mq25_soloist_beat_8",
+    "speaker": "Nova",
+    "text": "[The glass opens onto a blue fracture. The Compliance Avatar steps between the crew and the breach.] That cable runs back to Elara. Gh0st, with me.",
+    "scripted_only": true,
+    "trigger": "player_action:w5_mq25_soloist"
+  },
+  {
+    "id": "gh0st_w5_answer_elara",
+    "speaker": "Gh0st",
+    "text": "I thought I’d lost you. Tell me where to put my hands.",
+    "next": "elara_w5_release_cradle",
+    "scripted_only": true
+  },
+  {
+    "id": "elara_w5_release_cradle",
+    "speaker": "Elara",
+    "text": "On the glass. There. Now help Nova lift it. I’ll open the lock from here.",
+    "trigger": "music_persist:music_elaras_song,player_action:w5_mq24_find_elara",
+    "scripted_only": true
   }
 ]

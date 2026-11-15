@@ -5,6 +5,7 @@ import android.view.KeyEvent as AndroidKeyEvent
 import com.example.starborn.MainActivity
 import com.example.starborn.ui.components.maestroTag
 import com.example.starborn.shared.ui.typewriterText
+import com.example.starborn.ui.cinematic.rememberCinematicAdvance
 
 import com.example.starborn.ui.map.*
 import com.example.starborn.ui.vfx.AndroidRoomEnvironmentalEffects
@@ -81,11 +82,11 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -181,8 +182,6 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.buildAnnotatedString
@@ -373,10 +372,8 @@ fun ExplorationScreen(
     combatTransitionVisible: Boolean = false
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val bossOverlapsPanels = uiState.visualEnemyParties.singleOrNull()?.enemies.orEmpty()
-        .any { it == "titan_walker_boss" || it == "administrator_boss" }
-    val bossBottomAllowance = if (bossOverlapsPanels &&
-        uiState.visualEnemyParties.single().enemies.contains("administrator_boss")) 28.dp else 0.dp
+    val bossBottomAllowance = if ("administrator_boss" in
+        uiState.visualEnemyParties.singleOrNull()?.enemies.orEmpty()) 28.dp else 0.dp
     val areaEntry = uiState.areaEntry ?: hubAreaEntry
     var finishedAreaEntryId by rememberSaveable { mutableStateOf<Long?>(null) }
     val areaEntryActive = areaEntry != null && areaEntry.id != finishedAreaEntryId
@@ -1064,6 +1061,9 @@ fun ExplorationScreen(
         val descriptionForPanel = baseRoomDescription
         val visibleNpcs = if (isRoomDark) emptyList() else uiState.npcs
         val visibleGroundItems = if (isRoomDark) emptyMap() else uiState.groundItems
+        val hasLargeEnemy = !isRoomDark && uiState.visualEnemyParties.any { party ->
+            party.enemies.any { enemyPresentationTier(uiState.enemyTiers[it]) != EnemyPresentationTier.STANDARD }
+        }
         val serviceQuickActions = remember(uiState.actions, isRoomDark) {
             if (isRoomDark) {
                 emptyList()
@@ -1127,7 +1127,8 @@ fun ExplorationScreen(
             Column(
                 modifier = Modifier
                     .maestroTag("room-${uiState.currentRoom?.id.orEmpty()}")
-                    .zIndex(if (bossOverlapsPanels) 2f else 0f)
+                    // Room controls take priority over enemy art and its hit targets.
+                    .zIndex(2f)
                     .align(Alignment.TopCenter)
                     .fillMaxWidth(0.9f)
                     .verticalScroll(rememberScrollState()),
@@ -1194,6 +1195,7 @@ fun ExplorationScreen(
                             accentColor = actionAccentColor,
                             borderColor = panelBorderColor,
                             isDark = isRoomDark,
+                            hasLargeEnemy = hasLargeEnemy,
                             onNpcClick = { name -> viewModel.onNpcInteraction(name) },
                             onCollectItem = { itemId -> viewModel.collectGroundItem(itemId) },
                             onCollectAll = { viewModel.collectAllGroundItems() },
@@ -1215,7 +1217,7 @@ fun ExplorationScreen(
                     roomId = uiState.currentRoom?.id,
                     onPartyClick = { enemyId -> if (!approachingCombat) viewModel.engageEnemy(enemyId) },
                     modifier = Modifier
-                        .zIndex(if (bossOverlapsPanels) 1f else 0f)
+                        .zIndex(1f)
                         .graphicsLayer { scaleX = hostileApproachScale; scaleY = hostileApproachScale }
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth()
@@ -3312,113 +3314,62 @@ private fun TuningPuzzleDialog(
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
+                    val choir = puzzle.id == "source_harmonic_focus"
+                    val panelColor = if (choir) Color(0xFF201932) else MaterialTheme.colorScheme.surfaceVariant
+                    val accent = if (choir) Color(0xFFD4BBFF) else MaterialTheme.colorScheme.primary
                     puzzle.sliders.forEach { slider ->
-                        val isLocked = kotlin.math.abs(slider.value - slider.target) <= slider.tolerance
-                        var numericInput by remember(slider.id) {
-                            mutableStateOf(slider.value.roundToInt().toString())
-                        }
-                        LaunchedEffect(slider.value) {
-                            val str = slider.value.roundToInt().toString()
-                            if (numericInput != str && numericInput.toFloatOrNull() != slider.value) {
-                                numericInput = str
-                            }
+                        val aligned = kotlin.math.abs(slider.value - slider.target) <= slider.tolerance
+                        val readoutColor = if (aligned) Color(0xFF81E7B1) else accent
+                        val unit = when (slider.unit) {
+                            "deg" -> "°"
+                            "BPM" -> " BPM"
+                            else -> slider.unit.orEmpty()
                         }
                         Column(
-                            verticalArrangement = Arrangement.spacedBy(4.dp),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(
-                                    if (isLocked) Color(0xFF1B382B).copy(alpha = 0.4f) else Color.Transparent,
-                                    shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
-                                )
-                                .padding(6.dp)
+                            modifier = Modifier.fillMaxWidth()
+                                .background(panelColor, androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
+                                .padding(horizontal = 12.dp, vertical = 8.dp)
                         ) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                val valueLabel = buildString {
-                                    append(slider.label)
-                                    append(": ")
-                                    append(slider.value.roundToInt())
-                                    slider.unit?.takeIf { it.isNotBlank() }?.let { append(it) }
-                                }
-                                Text(
-                                    text = valueLabel,
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = if (isLocked) Color(0xFF69F0AE) else MaterialTheme.colorScheme.onSurface
-                                )
-                                if (isLocked) {
-                                    Text(
-                                        text = "● IN PHASE",
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = Color(0xFF69F0AE)
-                                    )
-                                }
+                                Text(slider.label, style = MaterialTheme.typography.labelLarge)
+                                if (aligned) Text("In phase", color = readoutColor, style = MaterialTheme.typography.labelSmall)
                             }
-                            Slider(
-                                value = slider.value,
-                                onValueChange = {
-                                    numericInput = it.roundToInt().toString()
-                                    onSliderChange(slider.id, it)
-                                },
-                                valueRange = slider.min..slider.max,
-                                modifier = Modifier.semantics {
-                                    contentDescription = "${slider.label} control"
-                                }
-                            )
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 OutlinedButton(
-                                    onClick = {
-                                        val step = if ((slider.max - slider.min) > 100) 5f else 1f
-                                        val newVal = (slider.value - step).coerceIn(slider.min, slider.max)
-                                        numericInput = newVal.roundToInt().toString()
-                                        onSliderChange(slider.id, newVal)
-                                    },
-                                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                                    modifier = Modifier.height(48.dp)
-                                ) {
-                                    Text("-", style = MaterialTheme.typography.titleMedium)
-                                }
-
-                                OutlinedTextField(
-                                    value = numericInput,
-                                    onValueChange = { candidate ->
-                                        if (candidate.isEmpty() || candidate.all(Char::isDigit)) {
-                                            numericInput = candidate
-                                            candidate.toFloatOrNull()?.let { entered ->
-                                                val applied = entered.coerceIn(slider.min, slider.max)
-                                                onSliderChange(slider.id, applied)
-                                            }
-                                        }
-                                    },
-                                    label = { Text("${slider.min.toInt()}–${slider.max.toInt()}") },
-                                    singleLine = true,
-                                    keyboardOptions = KeyboardOptions(
-                                        keyboardType = KeyboardType.Number,
-                                        imeAction = ImeAction.Done
-                                    ),
-                                    modifier = Modifier.weight(1f)
+                                    onClick = { onSliderChange(slider.id, (slider.value - 1f).coerceIn(slider.min, slider.max)) },
+                                    enabled = slider.value > slider.min,
+                                    contentPadding = PaddingValues(horizontal = 12.dp),
+                                    modifier = Modifier.semantics { contentDescription = "Decrease ${slider.label}" }
+                                ) { Text("−") }
+                                Text(
+                                    text = slider.value.roundToInt().toString() + unit,
+                                    color = readoutColor,
+                                    style = MaterialTheme.typography.titleLarge
                                 )
-
                                 OutlinedButton(
-                                    onClick = {
-                                        val step = if ((slider.max - slider.min) > 100) 5f else 1f
-                                        val newVal = (slider.value + step).coerceIn(slider.min, slider.max)
-                                        numericInput = newVal.roundToInt().toString()
-                                        onSliderChange(slider.id, newVal)
-                                    },
-                                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                                    modifier = Modifier.height(48.dp)
-                                ) {
-                                    Text("+", style = MaterialTheme.typography.titleMedium)
-                                }
+                                    onClick = { onSliderChange(slider.id, (slider.value + 1f).coerceIn(slider.min, slider.max)) },
+                                    enabled = slider.value < slider.max,
+                                    contentPadding = PaddingValues(horizontal = 12.dp),
+                                    modifier = Modifier.semantics { contentDescription = "Increase ${slider.label}" }
+                                ) { Text("+") }
                             }
+                            Slider(
+                                value = slider.value,
+                                onValueChange = { onSliderChange(slider.id, it.roundToInt().toFloat()) },
+                                valueRange = slider.min..slider.max,
+                                colors = androidx.compose.material3.SliderDefaults.colors(
+                                    thumbColor = readoutColor, activeTrackColor = readoutColor
+                                ),
+                                modifier = Modifier.semantics { contentDescription = "${slider.label} control" }
+                            )
                         }
                     }
                 }
@@ -3426,7 +3377,7 @@ private fun TuningPuzzleDialog(
         },
         confirmButton = {
             if (puzzle.presentation !in setOf("counter_tune", "prism_optics")) {
-                Button(onClick = onSubmit) { Text("Engage Handshake") }
+                Button(onClick = onSubmit) { Text(if (puzzle.id == "source_harmonic_focus") "Tune the Chorus" else "Engage Handshake") }
             }
         },
         dismissButton = {
@@ -5194,7 +5145,8 @@ internal fun RoomEntitySection(
     onCollectItem: (String) -> Unit,
     onCollectAll: () -> Unit,
     onAction: (RoomAction) -> Unit,
-    onTravel: (RoomAction) -> Unit = onAction
+    onTravel: (RoomAction) -> Unit = onAction,
+    hasLargeEnemy: Boolean = false
 ) {
     val itemEntries = remember(groundItems, itemDisplayName, itemIsEquipment) {
         groundItems.entries.sortedWith(
@@ -5240,6 +5192,7 @@ internal fun RoomEntitySection(
                             accentColor = accentColor,
                             borderColor = borderColor,
                             isDark = isDark,
+                            softenEdges = hasLargeEnemy,
                             onClick = { onNpcClick(npc) }
                         )
                     }
@@ -5557,6 +5510,7 @@ private fun NpcPresenceChip(
     accentColor: Color,
     borderColor: Color,
     isDark: Boolean,
+    softenEdges: Boolean,
     onClick: () -> Unit
 ) {
     var visibleState by remember(npc) { mutableStateOf(false) }
@@ -5587,7 +5541,11 @@ private fun NpcPresenceChip(
     Surface(
         onClick = onClick,
         shape = RoundedCornerShape(12.dp),
-        color = Color(0xFF071018).copy(alpha = if (isDark) 0.88f else 0.76f),
+        color = Color(0xFF071018).copy(alpha = when {
+            isDark -> 0.88f
+            softenEdges -> 0.48f
+            else -> 0.76f
+        }),
         border = BorderStroke(
             1.dp,
             accentColor.copy(alpha = if (isDark) (0.68f + 0.30f * halo).coerceAtMost(1f) else (0.54f + 0.38f * halo).coerceAtMost(1f))
@@ -5604,6 +5562,16 @@ private fun NpcPresenceChip(
     ) {
         Row(
             modifier = Modifier
+                .then(
+                    if (softenEdges) Modifier.background(
+                        Brush.horizontalGradient(
+                            0f to Color.Transparent,
+                            0.06f to Color(0xE6071018),
+                            0.94f to Color(0xE6071018),
+                            1f to Color.Transparent
+                        )
+                    ) else Modifier
+                )
                 .background(
                     Brush.horizontalGradient(
                         colors = listOf(
@@ -7684,6 +7652,7 @@ fun CinematicOverlay(
         return
     }
 
+    val advanceOnce = rememberCinematicAdvance(state.sceneId, state.stepIndex, onAdvance)
     val stepKey = remember(state.sceneId, state.stepIndex) { "${state.sceneId}_${state.stepIndex}" }
     LaunchedEffect(stepKey, audioCuePlayer) {
         state.step.audioCue?.takeIf { it.isNotBlank() }?.let { cue ->
@@ -7719,8 +7688,8 @@ fun CinematicOverlay(
             DialogueOverlay(
                 dialogue = dialogueUi,
                 choices = emptyList(),
-                onAdvance = onAdvance,
-                onChoice = { onAdvance() },
+                onAdvance = advanceOnce,
+                onChoice = { advanceOnce() },
                 onPlayVoice = {},
                 onPlayMurmur = { cue ->
                     audioCuePlayer?.execute(
@@ -7755,6 +7724,7 @@ fun CinematicOverlay(
         revealedCount = 0
         revealFinished = false
         for (i in 1..fullText.length) {
+            if (revealFinished) return@LaunchedEffect
             revealedCount = i
             delay(28L)
         }
@@ -7782,7 +7752,7 @@ fun CinematicOverlay(
                 indication = null
             ) {
                 if (revealFinished) {
-                    onAdvance()
+                    advanceOnce()
                 } else {
                     revealedCount = fullText.length
                     revealFinished = true
@@ -7794,7 +7764,8 @@ fun CinematicOverlay(
             fullText = fullText,
             displayedText = displayedText,
             revealFinished = revealFinished,
-            isLastStep = state.stepIndex + 1 >= state.stepCount
+            isLastStep = state.stepIndex + 1 >= state.stepCount,
+            modifier = Modifier.safeDrawingPadding()
         )
     }
 }
@@ -7808,11 +7779,6 @@ private fun CinematicNarrationCard(
     showTapToContinue: Boolean = true,
     modifier: Modifier = Modifier
 ) {
-    val cardAlpha by animateFloatAsState(
-        targetValue = 1f,
-        animationSpec = tween(durationMillis = 500, delayMillis = 100, easing = FastOutSlowInEasing),
-        label = "cinematicCardAlpha"
-    )
     val glowAlpha by rememberInfiniteTransition(label = "cinematicGlow").animateFloat(
         initialValue = 0.25f,
         targetValue = 0.55f,
@@ -7832,11 +7798,8 @@ private fun CinematicNarrationCard(
 
     Box(
         modifier = modifier
+            .widthIn(max = 720.dp)
             .fillMaxWidth(0.88f)
-            .graphicsLayer {
-                alpha = cardAlpha
-                translationY = (1f - cardAlpha) * 48f
-            }
     ) {
         Box(
             modifier = Modifier
@@ -7937,8 +7900,10 @@ private fun IllustratedCinematicOverlay(
     modifier: Modifier = Modifier
 ) {
     val stepKey = "${state.sceneId}_${state.stepIndex}"
-    // Survives step changes on purpose: it is the outgoing frame for the next dissolve.
-    val lastRenderedFrame = remember { mutableStateOf<RenderedCinematicFrame?>(null) }
+    val advanceOnce = rememberCinematicAdvance(state.sceneId, state.stepIndex, onAdvance)
+    // Capture the previous step once, before updating its replacement's visible transform.
+    val lastRenderedFrame = remember(state.sceneId) { mutableStateOf<RenderedCinematicFrame?>(null) }
+    val outgoing = remember(stepKey) { lastRenderedFrame.value }
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val durationMs = ((state.step.durationSeconds ?: 4.0) * 1000.0).toLong().coerceAtLeast(500L)
     val waitsForTextReveal = state.step.captionStyle == CinematicCaptionStyle.DIALOGUE ||
@@ -7993,7 +7958,7 @@ private fun IllustratedCinematicOverlay(
                 contentDimmed = true
                 delay(fadeOutMs)
             }
-            onAdvance()
+            advanceOnce()
         }
     }
 
@@ -8044,31 +8009,34 @@ private fun IllustratedCinematicOverlay(
     }
     // Enforce a minimum safe bleed scale (1.06f) so camera drift Y and screen shake
     // never pull the cropped image edge away from the top or bottom on tall aspect ratio displays.
-    val rawScale = lerp(
-        state.step.cameraStartScale?.toFloat() ?: legacyStartScale,
-        state.step.cameraEndScale?.toFloat() ?: legacyEndScale,
-        progress
-    )
-    val scale = rawScale.coerceAtLeast(1.06f)
     val density = LocalDensity.current
-    val startX = with(density) { (state.step.cameraStartX ?: 0.0).toFloat().dp.toPx() }
     val endX = with(density) { (state.step.cameraEndX?.toFloat() ?: legacyEndX).dp.toPx() }
-    val startY = with(density) { (state.step.cameraStartY ?: 0.0).toFloat().dp.toPx() }
     val endY = with(density) { (state.step.cameraEndY ?: 0.0).toFloat().dp.toPx() }
+    // Consecutive captions on the same artwork should continue the camera move
+    // from the visible framing, even when the player advances early.
+    val continuousShot = outgoing?.takeIf {
+        state.sceneId != "intro_prologue" && it.imagePath != null && it.imagePath == state.step.imagePath
+    }
+    val startScale = continuousShot?.scale ?: state.step.cameraStartScale?.toFloat() ?: legacyStartScale
+    val endScale = state.step.cameraEndScale?.toFloat() ?: legacyEndScale
+    val startX = continuousShot?.translationX ?: with(density) { (state.step.cameraStartX ?: 0.0).toFloat().dp.toPx() }
+    val startY = continuousShot?.translationY ?: with(density) { (state.step.cameraStartY ?: 0.0).toFloat().dp.toPx() }
+    val scale = lerp(startScale, endScale, progress).coerceAtLeast(1.06f)
     val driftX = lerp(startX, endX, progress)
     val driftY = lerp(startY, endY, progress)
-    // Cross-dissolve, not a re-fade. Previously the frame was a single Image whose alpha came
-    // from an animateFloatAsState that was NOT keyed to the step, so on a step change the target
-    // dipped to 0 for one frame and recovered before the eased tween had moved: every authored
-    // "fade" rendered as a hard cut with a one-frame flicker, and the whole cold open played as a
-    // slideshow. The outgoing frame is now held underneath, frozen at its end transform, and the
-    // incoming frame dissolves over it.
-    val transitionMs = if (state.step.transition == CinematicTransition.CUT) 0 else 520
-    val outgoing = remember(stepKey) { lastRenderedFrame.value }
+    // Keep authored cuts between shots. During a dissolve, draw the outgoing frame
+    // at full opacity beneath the incoming one so black doesn't show through.
+    val transitionMs = if (continuousShot != null || state.step.transition == CinematicTransition.CUT) 0 else 520
     val enter = remember(stepKey) { CoreAnimatable(if (transitionMs == 0) 1f else 0f) }
+    var advanceRequested by remember(stepKey) { mutableStateOf(false) }
+    // A second tap may come in mid-dissolve. Finish that blend, then advance once.
+    val requestAdvance: () -> Unit = {
+        if (enter.value >= 1f) advanceOnce() else advanceRequested = true
+    }
     LaunchedEffect(stepKey) {
         if (transitionMs > 0) {
             enter.animateTo(1f, animationSpec = tween(durationMillis = transitionMs, easing = FastOutSlowInEasing))
+            if (advanceRequested) advanceOnce()
         }
     }
     val dimAlpha by animateFloatAsState(
@@ -8185,16 +8153,16 @@ private fun IllustratedCinematicOverlay(
     SideEffect {
         lastRenderedFrame.value = RenderedCinematicFrame(
             imagePath = state.step.imagePath,
-            scale = (state.step.cameraEndScale?.toFloat() ?: legacyEndScale).coerceAtLeast(1.06f),
-            translationX = endX,
-            translationY = endY
+            scale = scale,
+            translationX = driftX + impactShakeX.value,
+            translationY = driftY + impactShakeY.value
         )
     }
     val advanceOrReveal: () -> Unit = {
         if (waitsForTextReveal && !captionRevealFinished) {
             revealAllRequest += 1
         } else {
-            onAdvance()
+            requestAdvance()
         }
     }
     val isIntroPrologue = state.sceneId == "intro_prologue"
@@ -8229,7 +8197,7 @@ private fun IllustratedCinematicOverlay(
     ) {
         // Outgoing frame, frozen where the previous step left it. Drawn only while the
         // dissolve is running, and skipped entirely on a cut.
-        if (outgoing != null && contentAlpha < 1f && !outgoing.imagePath.isNullOrBlank()) {
+        if (outgoing != null && enter.value < 1f && !outgoing.imagePath.isNullOrBlank()) {
             val outgoingPainter = rememberAssetPainter(
                 outgoing.imagePath,
                 fallback = ColorPainter(Color.Black),
@@ -8242,7 +8210,7 @@ private fun IllustratedCinematicOverlay(
                 modifier = Modifier
                     .fillMaxSize()
                     .graphicsLayer {
-                        alpha = (1f - enter.value) * dimAlpha
+                        alpha = dimAlpha
                         scaleX = outgoing.scale
                         scaleY = outgoing.scale
                         translationX = outgoing.translationX
@@ -8401,19 +8369,25 @@ private fun IllustratedCinematicOverlay(
         }
 
         if (state.step.captionStyle != CinematicCaptionStyle.NONE) {
+            val isDialogue = state.step.captionStyle == CinematicCaptionStyle.DIALOGUE
+            val captionEntrance = remember(stepKey) { CoreAnimatable(if (isIntroPrologue) 1f else 0f) }
+            LaunchedEffect(stepKey) {
+                captionEntrance.animateTo(1f, tween(durationMillis = 150))
+            }
             IllustratedCinematicCaption(
                 state = state,
                 revealAllRequest = revealAllRequest,
                 onRevealFinished = { captionRevealFinished = true },
-                onAdvance = onAdvance,
+                onAdvance = requestAdvance,
                 audioCuePlayer = audioCuePlayer,
                 modifier = Modifier
-                    // Only follows the frame on the way out; captions keep their own
-                    // reveal animation on the way in.
-                    .graphicsLayer { alpha = if (contentDimmed) contentAlpha else 1f }
-                    .align(Alignment.BottomStart)
-                    .navigationBarsPadding()
-                    .padding(start = 28.dp, end = 28.dp, bottom = 54.dp)
+                    .graphicsLayer { alpha = captionEntrance.value * dimAlpha }
+                    .align(if (isDialogue) Alignment.BottomCenter else Alignment.Center)
+                    .then(
+                        if (isDialogue) Modifier.navigationBarsPadding()
+                            .padding(start = 28.dp, end = 28.dp, bottom = 54.dp)
+                        else Modifier.safeDrawingPadding().padding(28.dp)
+                    )
             )
         }
 
@@ -8427,8 +8401,8 @@ private fun IllustratedCinematicOverlay(
                     .statusBarsPadding()
                     .padding(18.dp)
                     .semantics {
-                        contentDescription = "Skip intro"
-                        onClick(label = "Skip intro") {
+                        contentDescription = if (state.sceneId == "intro_prologue") "Skip intro" else "Skip cinematic"
+                        onClick(label = "Skip cinematic") {
                             onSkip()
                             true
                         }
@@ -8514,8 +8488,8 @@ private fun IllustratedCinematicCaption(
         val alert = Color(0xFFFFA45B)
         Surface(
             modifier = modifier
-                .fillMaxWidth()
-                .widthIn(max = 720.dp),
+                .widthIn(max = 720.dp)
+                .fillMaxWidth(),
             color = Color(0xF2070B10),
             contentColor = Color.White,
             border = BorderStroke(1.dp, alert.copy(alpha = 0.72f)),

@@ -24,10 +24,13 @@ class World2AuthoredContractTest {
         for((id,oldId) in identities) {
             val before=original.getValue(oldId);val now=enemies.getValue(id)
             assertEquals(before.copy(id=now.id,name=now.name,abilities=now.abilities,description=now.description,
-                flavor=now.flavor,authored=now.authored),now)
+                flavor=now.flavor,authored=now.authored,portrait=now.portrait,sprite=now.sprite),now)
         }
         // Pit identities remain unchanged, including their behavior and rewards.
-        for(id in listOf("echo_borer","siren_skimmer")) assertEquals(original.getValue(id),enemies.getValue(id))
+        for (id in listOf("echo_borer", "siren_skimmer")) {
+            val now = enemies.getValue(id)
+            assertEquals(original.getValue(id).copy(portrait = now.portrait, sprite = now.sprite), now)
+        }
         val supplies=mapOf("sector9_stream_wetlands" to "herb","sector9_wilds_thickets" to "herb",
             "sector9_wilds_nest" to "beast_meat","sector9_foyer_left_gallery" to "scrap_metal",
             "sector9_conduit_junction" to "wiring_bundle","sector9_vents_gantry" to "battery")

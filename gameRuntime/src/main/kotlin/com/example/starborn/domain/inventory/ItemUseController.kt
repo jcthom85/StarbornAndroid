@@ -77,6 +77,12 @@ class ItemUseController(
         if (resolvedTargets.isEmpty()) {
             return Result.Failure("Select a valid target.")
         }
+        if (effect.cleanses.isNotEmpty() && resolvedTargets.none { id ->
+                val maxHp = maxHpFor(id, characters) ?: return@none false
+                (sessionState.partyMemberHp[id] ?: maxHp) < maxHp
+            }) {
+            return Result.Failure("The selected character is already at full HP.")
+        }
         val result = inventoryService.useItem(itemId)
             ?: return Result.Failure("You don't have that item.")
         val message = when (result) {

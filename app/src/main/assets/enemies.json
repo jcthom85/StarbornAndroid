@@ -333,13 +333,13 @@
     "combat_behavior": "oppressive",
     "combat_role": "defender",
     "hp": 250,
-    "stability": 65,
-    "strength": 6,
+    "stability": 80,
+    "strength": 9,
     "vitality": 6,
     "agility": 3,
     "focus": 8,
     "luck": 4,
-    "speed": 7,
+    "speed": 10,
     "element": "physical",
     "resistances": {
       "shock": -100,
@@ -364,6 +364,12 @@
     "drops": [
       {
         "id": "warden_keycard",
+        "chance": 1,
+        "qty_min": 1,
+        "qty_max": 1
+      },
+      {
+        "id": "nova_laser_blaster",
         "chance": 1,
         "qty_min": 1,
         "qty_max": 1
@@ -651,7 +657,7 @@
         "sector9_recover"
       ],
       "windups": {
-        "sector9_mend": "Roots drawing from a finite reserve"
+        "sector9_mend": "Roots channeling a heal"
       },
       "resource_labels": {
         "sector9_mend": "Root reserves"
@@ -763,8 +769,7 @@
     "authored": {
       "cycle": [
         "beast_hunt_claw",
-        "sector9_exposed_recovery",
-        "sector9_recover"
+        "sector9_exposed_recovery"
       ],
       "windups": {
         "beast_hunt_claw": "Prey marked — hunting lunge",
@@ -778,8 +783,7 @@
         "cycle": [
           "beast_frenzy_claw",
           "beast_frenzy_pounce",
-          "sector9_exposed_recovery",
-          "sector9_recover"
+          "sector9_exposed_recovery"
         ],
         "remove_statuses": [
           "sector9_carapace"

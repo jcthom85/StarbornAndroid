@@ -203,7 +203,7 @@ Both fern and spore scans are in Resonant Canopy. Reach gamma before recovering 
 
 74. From **Crash Site**, go **south** to **Resonant Canopy** (`sector9_canopy`).
 
-75. At **Resonant Canopy**, clear the Stalker-Vine / Spore-Spitter pair (focus the healer first). This can credit The Signal canopy-clear task and reveal ridge/temple nodes. Read **low-frequency hum**, note **crystalline ferns** and **drifting spores** for after Botanist acceptance, and use **Scavenge remains** to start/advance Lost Patrol alpha. The Moss Borer pair at Glow-Moss Cavern is also accepted for The Signal; older interrupted Echo-Borer battles retain that credit.
+75. At **Resonant Canopy**, clear the Stalker-Vine / Spore-Spitter pair (focus the healer first). Victory grants a **Stability Gyro Mod** and opens access to the scout’s remains. This can credit The Signal canopy-clear task and reveal ridge/temple nodes. Read **low-frequency hum**, note **crystalline ferns** and **drifting spores** for after Botanist acceptance, and use **Scavenge remains** to start/advance Lost Patrol alpha. The Moss Borer pair at Glow-Moss Cavern is also accepted for The Signal; older interrupted Echo-Borer battles retain that credit.
 
 76. From **Resonant Canopy**, go **south** to **Spore Thickets** (`sector9_wilds_thickets`).
 
@@ -211,7 +211,7 @@ Both fern and spore scans are in Resonant Canopy. Reach gamma before recovering 
 
 78. From **Spore Thickets**, go **east** to **Hound Nest** (`sector9_wilds_nest`).
 
-79. At **Hound Nest**, defeat the two Shard-Hounds to retrieve the guarded supply pack, harvest **shard-hound remains**, and open **trampled supply pack** for Beast Meat, Wiring Bundle and Energy Core.
+79. At **Hound Nest**, defeat the two Shard-Hounds to retrieve the guarded supply pack, harvest **shard-hound remains**, and open **trampled supply pack** for Beast Meat, Wiring Bundle, Ballistic Weave and an Energy Core. The weave and wiring can make Zeke’s **Brawler Rig** in Tinkering.
 
 80. From **Hound Nest**, go **west** to **Spore Thickets** (`sector9_wilds_thickets`) -> **south** to **Poison Hollow** (`sector9_wilds_hollow`).
 
@@ -778,7 +778,7 @@ Two Shard-Hounds circle a shallow den, crystalline spines raised. Shard-hound tr
 - **shard-hound remains** (generic; object: shard-hound remains): Already harvested.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_meat_nest_foraged"}`.
 - Event `w2_forage_meat_nest` prerequisites: `[{"type": "milestone_not_set", "milestone": "ms_w2_meat_nest_foraged"}]`. See the numbered route for its quest/reward sequence.
-- **trampled supply pack** (container; object: trampled supply pack): Open once for Beast Meat, Wiring Bundle, Energy Core. Persisted state: `w2_hound_nest_pack_opened`.
+- **trampled supply pack** (container; object: trampled supply pack): Open once for Beast Meat, Wiring Bundle, Ballistic Weave, and an Energy Core. The weave and wiring can make Zeke’s **Brawler Rig** in Tinkering. Persisted state: `w2_hound_nest_pack_opened`.
 
 #### Poison Hollow (`sector9_wilds_hollow`)
 
@@ -1586,7 +1586,7 @@ A holographic flight-plan projection fills an observation alcove above the hanga
 
 - **Exits:** **south** -> Launch Blast Shield (`sector9_hangar_lock`); **north** -> Mesosphere Storm (`sector9_sky_mesosphere`).
 - **Direct encounters:** none; action-spawned encounters are separate.
-- **airlane preview** (inspect; object: airlane preview): This is a route preview, not a flight. Release the launch cradle in Hangar Bay when the crew is ready.
+- **airlane preview** (inspect; object: airlane preview): This display previews the route. Board from the launch cradle in Hangar Bay, then confirm departure at the Astra Bridge nav console.
 
 #### Mesosphere Storm (`sector9_sky_mesosphere`)
 
@@ -1688,8 +1688,8 @@ Resolve the gate, inspect the ship and use what you learn to restore its systems
 - [ ] Find a way through the Source Gate. (`bypass_source_gate`)
 - [ ] Inspect the Astra's dark console. (`inspect_astra`)
 - [ ] Return to the Pod Fragment and recover the salvage conduits from the wreckage. (`collect_power_conduits`)
-- [ ] At the Hangar Bay, use the recovered conduits to install the Bridge and authenticate Orion with the Chime. (`reboot_bridge_relic`)
-- [ ] Board the Astra from the Hangar Bay, then depart using the bridge nav console. (`launch_ship`)
+- [ ] At Hangar Bay, use bridge relic after recovering the salvage conduits. Bring the Bridge and the Chime. (`reboot_bridge_relic`)
+- [ ] Use launch cradle at Hangar Bay to board. Confirm departure at the nav console on the Astra Bridge. (`launch_ship`)
 
 ### Botanist (`w2_sq01`)
 

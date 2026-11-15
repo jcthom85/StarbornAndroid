@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.VolumeUp
 import com.example.starborn.shared.ui.typewriterText
 
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -115,6 +116,10 @@ fun DialogueOverlay(
         choiceScroll.scrollTo(0)
     }
     var revealedCount by remember(line.id, fullText) { mutableIntStateOf(0) }
+    val textEntrance = remember(line.id, fullText) { Animatable(0f) }
+    LaunchedEffect(line.id, fullText) {
+        textEntrance.animateTo(1f, tween(durationMillis = 120))
+    }
     val revealFinished = revealedCount >= fullText.length
     val displayedText = fullText.take(revealedCount.coerceIn(0, fullText.length))
     val lastVisibleCharacter = displayedText.indexOfLast { !it.isWhitespace() }
@@ -267,6 +272,7 @@ fun DialogueOverlay(
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface,
                             textAlign = TextAlign.Left,
+                            modifier = Modifier.graphicsLayer { alpha = textEntrance.value },
                             onTextLayout = { textLayout = it }
                         )
                         }

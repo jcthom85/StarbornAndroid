@@ -28,9 +28,10 @@ class WorldSixDiscoverabilityStateTest {
         )
         handoffs.forEach { (eventId, pair) ->
             val event = events.single { it.id == eventId }
-            assertEquals(1, event.actions.count { it.type == "complete_quest" && it.questId == pair.first })
-            assertEquals(1, event.actions.count { it.type == "start_quest" && it.questId == pair.second })
-            assertEquals(1, event.actions.count { it.type == "track_quest" && it.questId == pair.second })
+            val actions = event.actions.flatMap { action -> listOf(action) + action.onComplete.orEmpty() }
+            assertEquals(1, actions.count { it.type == "complete_quest" && it.questId == pair.first })
+            assertEquals(1, actions.count { it.type == "start_quest" && it.questId == pair.second })
+            assertEquals(1, actions.count { it.type == "track_quest" && it.questId == pair.second })
             assertFalse(events.any { other ->
                 other.trigger.type == "quest_stage_complete" && other.trigger.questId == pair.first &&
                     other.actions.any { it.type == "start_quest" && it.questId == pair.second }
@@ -91,7 +92,7 @@ class WorldSixDiscoverabilityStateTest {
                 val milestones = keys.filterIndexed { i, _ -> mask and (1 shl i) != 0 }.toSet()
                 val prose = requireNotNull(resolveRoomDescription(room, emptyMap(), milestones, false))
                 room.actions.filter { it["action_event"] != null }.forEach { action ->
-                    val name = action["action_event"] as String
+                    val name = (action["action_event"] as String).removeSuffix("_scene")
                     val event = roomEvents.single { it.trigger.action == name }
                     for (completed in listOf(false, true)) {
                         cases++
@@ -123,7 +124,7 @@ class WorldSixDiscoverabilityStateTest {
                 }
             }
         }
-        assertEquals(42, cases)
+        assertEquals(58, cases)
         val inspectIds = setOf("source_zeke_nightmare_node_scale_01", "source_orion_nightmare_node_scale_01",
             "source_spire_thought_node_scale_01", "source_new_world_node_scale_01", "source_new_world_node_scale_03")
         rooms.filter { it.id in inspectIds }.forEach { room ->
@@ -145,7 +146,7 @@ class WorldSixDiscoverabilityStateTest {
                 val room = rooms.single { it.id == id }
                 val prose = requireNotNull(resolveRoomDescription(room, emptyMap(), milestones, false))
                 room.actions.filter { it["name"] in labels }.forEach { action ->
-                    val name = action["action_event"] as String
+                    val name = (action["action_event"] as String).removeSuffix("_scene")
                     val event = events.single { it.trigger.action == name }
                     for (bits in 0 until 8) {
                         val ready = bits and 1 != 0

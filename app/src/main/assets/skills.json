@@ -166,7 +166,7 @@
     "character": "gh0st",
     "type": "active",
     "max_rank": 5,
-    "description": "Deal 150% ATK as piercing damage.",
+    "description": "Take a precise shot at one enemy.",
     "combat_tags": [
       "dmg",
       "pierce"
@@ -603,7 +603,7 @@
     "name": "Arc Tether",
     "character": "nova",
     "type": "active",
-    "description": "Lashes a high-voltage wire between target and ground, dealing lightning damage and applying Shock.",
+    "description": "Ground an enemy with Nova’s high-voltage line. Deals Shock damage and can inflict Short, which costs the target a turn.",
     "combat_tags": [
       "shock"
     ],
@@ -672,7 +672,7 @@
     "name": "Shatter Blow",
     "character": "zeke",
     "type": "active",
-    "description": "A heavy pneumatic piston strike that fractures enemy armor and applies Weak.",
+    "description": "A heavy piston strike that deals Physical damage and applies Discord. The target deals 25% less damage for 2 of its turns.",
     "combat_tags": [
       "dmg"
     ],
@@ -740,7 +740,7 @@
     "name": "Prism Lance",
     "character": "orion",
     "type": "active",
-    "description": "Channels coherent harmonic light through a focusing crystal, delivering an armor-piercing beam.",
+    "description": "Focus a corrosive beam through Orion’s prism. Deals Acid damage to one enemy.",
     "combat_tags": [
       "acid"
     ],
@@ -887,7 +887,7 @@
     "name": "Hydraulic Kick",
     "character": "nova",
     "type": "active",
-    "description": "A reinforced work-boot strike powered by pressurized pneumatic servos. Shatters enemy Guard and leaves the target Weakened.",
+    "description": "Drive a powered work boot into the target. Strips Guard and shields before dealing damage, then applies Discord to reduce the target’s damage.",
     "combat_tags": [
       "dmg",
       "guard_break"
@@ -904,7 +904,7 @@
     "name": "Pulse Grenade",
     "character": "nova",
     "type": "active",
-    "description": "Lobs a repurposed acoustic excavation charge into the enemy squad, dealing physical concussive damage and Staggering the formation.",
+    "description": "Throw an excavation charge for Physical damage to all enemies. Staggered targets skip their next turn.",
     "combat_tags": [
       "aoe",
       "physical"
@@ -2154,12 +2154,12 @@
     "name": "Spore Release",
     "character": "enemy",
     "type": "enemy",
-    "description": "Releases a swelling spore sac at its announced target. Weakness has a finite duration.",
+    "description": "Releases an Acid spore burst at the marked target and applies Discord, reducing its outgoing damage.",
     "combat_tags": [
       "dmg",
       "acid"
     ],
-    "base_power": 80,
+    "base_power": 120,
     "scaling": "atk",
     "cooldown": 0,
     "status_applications": [

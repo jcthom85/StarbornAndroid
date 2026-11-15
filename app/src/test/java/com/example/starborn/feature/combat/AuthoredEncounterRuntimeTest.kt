@@ -32,7 +32,8 @@ class AuthoredEncounterRuntimeTest {
         return base.copy(equippedWeapons=base.equippedWeapons+("nova" to "mining_pistol"),
             inventory=base.inventory+("mining_pistol" to 1))
     }
-    private fun create(ids:List<String>,state:GameSessionState=prototypeFixture(),seed:Int=41):Pair<CombatController,GameSessionStore> {
+    private fun create(ids:List<String>,state:GameSessionState=prototypeFixture(),seed:Int=41,
+        encounter: EncounterDescriptor? = null):Pair<CombatController,GameSessionStore> {
         val store=GameSessionStore().apply { restore(state) }
         val items=reader.readList<Item>("items.json").associateBy { it.id }
         val catalog=object:ItemCatalog { override fun load()=Unit;override fun findItem(idOrAlias:String)=items[idOrAlias] }
@@ -41,7 +42,8 @@ class AuthoredEncounterRuntimeTest {
         return CombatController(assets,CombatEngine(statusRegistry=registry),registry,store,
             InventoryService(catalog).apply { loadItems();restore(state.inventory) },catalog,
             LevelingManager(requireNotNull(assets.loadLevelingData())),requireNotNull(assets.loadProgressionData()),
-            AudioRouter(AudioBindings()),themes,EnvironmentThemeManager(themes),EncounterCoordinator(),ids,
+            AudioRouter(AudioBindings()),themes,EnvironmentThemeManager(themes),
+            EncounterCoordinator().apply { encounter?.let(::setPendingEncounter) },ids,
             tutorialsEnabled=false,elapsedRealtime={dispatcher.scheduler.currentTime},random=SeededCombatRandom(seed)) to store
     }
     private fun step(vm:CombatController) {
@@ -287,6 +289,39 @@ class AuthoredEncounterRuntimeTest {
                 assertEquals(setOf("nova","zeke","orion"),vm.playerParty.map { it.id }.toSet())
                 assertEquals(setOf("the_beast"),result.combatants.values.filter { it.combatant.side==CombatSide.ENEMY }.map { it.combatant.id }.toSet())
                 if(policy=="guard") assertTrue(result.log.filterIsInstance<CombatLogEntry.ActionQueued>().any { it.action is CombatAction.Defend })
+            } finally { vm.close() }
+        }
+    }
+
+    @Test fun earnedCanopyPairSupportsEitherTargetOrderAndPaysTheModOnce() {
+        val arrival = javaClass.getResourceAsStream("/playtest/focused-combat/plant-pair.json")!!.bufferedReader().use {
+            MoshiProvider.instance.adapter(GameSessionState::class.java).fromJson(it.readText())!!
+        }
+        val room = assets.loadRooms().single { it.id == "sector9_canopy" }
+        val enemies = room.enemyParties.orEmpty().single()
+        val descriptor = EncounterDescriptor(room.enemyInstances.orEmpty().map {
+            EncounterEnemyInstance(it.enemyId, hp = it.hp, vitality = it.vitality, stability = it.stability,
+                extraDrops = it.extraDrops)
+        })
+        val evidence = File("build/reports/world2-authored").apply { mkdirs() }
+        for (seed in listOf(17, 41, 73)) for (first in enemies) {
+            val (vm, store) = create(enemies, arrival, seed, descriptor)
+            try {
+                until(vm) {
+                    val state = requireNotNull(vm.combatState)
+                    if (state.outcome != null) return@until true
+                    vm.playerParty.forEach { vm.selectReadyPlayer(it.id) }
+                    if (vm.awaitingAction.value != null) {
+                        val target = (listOf(first) + enemies).first { state.combatants[it]?.isAlive == true }
+                        vm.playerAttack(target)
+                    }
+                    false
+                }
+                val result = requireNotNull(vm.combatState)
+                File(evidence, "canopy-$seed-$first.txt").writeText(result.log.joinToString("\n"))
+                assertTrue("seed=$seed first=$first outcome=${result.outcome}", result.outcome is CombatOutcome.Victory)
+                assertEquals((arrival.inventory["stability_gyro_mod"] ?: 0) + 1,
+                    store.state.value.inventory["stability_gyro_mod"])
             } finally { vm.close() }
         }
     }

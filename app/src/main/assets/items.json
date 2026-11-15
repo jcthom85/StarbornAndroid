@@ -150,7 +150,7 @@
   {
     "id": "foundry_crucible_lining",
     "name": "Crucible Heat Shield",
-    "description": "A heavy ceramic crucible mod that insulates the wearer (+15% Fire/Burn Resistance, +25 Max HP).",
+    "description": "A ceramic shield shaped in a Foundry crucible. Equip it as an accessory for +3 Vitality and +2 Strength.",
     "type": "accessory",
     "value": 850,
     "rarity": "rare",
@@ -279,26 +279,48 @@
   {
     "id": "herbal_poultice",
     "name": "Herbal Poultice",
-    "description": "A soothing botanical compress made from crushed Sector 9 swamp herbs. Restores 45 HP and cleanses Weakness.",
+    "description": "Restores up to 45 HP to one ally. In combat, also clears Discord, which reduces outgoing damage.",
     "type": "consumable",
     "value": 60,
-    "rarity": "common"
+    "rarity": "common",
+    "effect": {
+      "target": "ally",
+      "cleanses": [
+        "weak"
+      ],
+      "restore_hp": 45
+    }
   },
   {
     "id": "antidote_flask",
     "name": "Antidote Flask",
-    "description": "A neutralizing serum brewed from swamp herbs and venom extracts. Cleanses Acid, Poison, and Erosion.",
+    "description": "Clears Corrosion, Poison, and Erosion from one ally in combat.",
     "type": "consumable",
     "value": 120,
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "effect": {
+      "target": "ally",
+      "cleanses": [
+        "corrosion",
+        "poison",
+        "erosion"
+      ]
+    }
   },
   {
     "id": "burn_salve",
     "name": "Cooling Burn Salve",
-    "description": "A cooling topical gel that immediately quenches thermal burns and restores 35 HP.",
+    "description": "Restores up to 35 HP to one ally. In combat, also clears Meltdown, the burning status.",
     "type": "consumable",
     "value": 90,
-    "rarity": "common"
+    "rarity": "common",
+    "effect": {
+      "target": "ally",
+      "cleanses": [
+        "meltdown"
+      ],
+      "restore_hp": 35
+    }
   },
   {
     "id": "miner_gyro_mod",
@@ -335,7 +357,7 @@
   {
     "id": "nova_laser_blaster",
     "name": "Laser Blaster",
-    "description": "A crisp beam emitter built for precision takedowns.",
+    "description": "Nova’s single-target sidearm. Its basic shots hit harder than the Mining Pistol.",
     "aliases": [
       "laser blaster"
     ],
@@ -611,7 +633,7 @@
   {
     "id": "zeke_surge_harness",
     "name": "Surge Harness",
-    "description": "Shock-dampened straps that keep a bruiser light on his feet.",
+    "description": "Flexible armor for Zeke. Grants +4 Defense, +4 Speed and +6 Evasion. The Brawler Rig trades speed and evasion for stronger strikes.",
     "aliases": [
       "surge harness"
     ],
@@ -631,7 +653,7 @@
   {
     "id": "zeke_brawler_rig",
     "name": "Brawler Rig",
-    "description": "Weighted buckles that turn every swing into a statement.",
+    "description": "Weighted armor for Zeke. Grants +6 Defense, +6 Strength and +4 percentage points of weapon crit chance. The Surge Harness is faster and easier to dodge in.",
     "aliases": [
       "brawler rig"
     ],
@@ -1579,7 +1601,7 @@
   {
     "id": "damaged_thermal_cutter",
     "name": "Damaged Thermal Cutter",
-    "description": "A cracked Dominion cutter head. The heating coil still works if Nova can rebuild the handle.",
+    "description": "A cracked Dominion cutter head recovered during Lost Patrol. Rebuild it in Tinkering to open razor-vine shortcuts.",
     "type": "component",
     "value": 0,
     "rarity": "uncommon",
@@ -2478,7 +2500,7 @@
   {
     "id": "stability_gyro_mod",
     "name": "Stability Gyro Mod",
-    "description": "Gyroscopic ring that anchors stance under recoil.",
+    "description": "A gyroscopic stabilizer for an unlocked mod slot. Grants +4 Defense and +2 Speed.",
     "type": "mod",
     "value": 200,
     "buy_price": 400,
@@ -2596,7 +2618,7 @@
   {
     "id": "relic_mod_biolum_focus",
     "name": "Bioluminescent Focus",
-    "description": "An ancient bioluminescent prism that converts weapon discharges into crackling electric arcs.",
+    "description": "An Architect prism weapon mod. Adds Electric to basic attacks when the weapon and any earlier mod supply no element. Has a 25% chance to inflict Shock on hit when this mod supplies the weapon’s status effect.",
     "type": "mod",
     "value": 450,
     "buy_price": 900,
@@ -2885,7 +2907,7 @@
   {
     "id": "source_resin",
     "name": "Source Resin",
-    "description": "Solidified resonance residue that stabilizes energy flow.",
+    "description": "Hardened residue from Source activity. Equip it as a mod for +4 Focus and +4 Vitality, or use it as a Tinkering ingredient.",
     "type": "mod",
     "value": 300,
     "buy_price": 600,
@@ -2902,7 +2924,7 @@
   {
     "id": "rapid_capacitor",
     "name": "Rapid Capacitor",
-    "description": "Overclocked capacitor that boosts Speed and Agility.",
+    "description": "An overclocked capacitor assembled from a Dominion transmitter core. Equip it for +5 Speed and +3 Agility, or use it to build a Resonance Capacitor Mod.",
     "type": "mod",
     "value": 300,
     "buy_price": 600,
@@ -2970,7 +2992,7 @@
   {
     "id": "neon_band",
     "name": "Neon Band",
-    "description": "A band of woven synthetic fiber that pulses with neon light, improving focus and critical hit rates.",
+    "description": "A woven band that glows under neon. Grants +2 Focus and 5 percentage points of critical hit chance.",
     "type": "accessory",
     "value": 250,
     "buy_price": 500,
@@ -2986,7 +3008,7 @@
   {
     "id": "neon_sign_core",
     "name": "Neon Sign Core",
-    "description": "A glass-sealed gas core for a high-intensity neon sign. Buzzes when held.",
+    "description": "A glass-sealed core for the neon sign at The Static. Bring it to Jax to finish the repair.",
     "type": "quest",
     "value": 0,
     "rarity": "common",
@@ -3038,7 +3060,7 @@
   {
     "id": "heat_liner",
     "name": "Heat Liner",
-    "description": "A Foundry thermal liner that turns lethal ambient heat into a survivable problem.",
+    "description": "Insulated Foundry armor. Grants +6 Defense, +20 max HP, and +2 Vitality.",
     "type": "armor",
     "value": 600,
     "buy_price": 1200,
@@ -3105,7 +3127,7 @@
   {
     "id": "deep_core_engine",
     "name": "Deep-Core Engine",
-    "description": "The Foundry heart meant to power the Ascension Cradle. In the Astra, it can push high orbit.",
+    "description": "A Foundry engine built for the Ascension Cradle. Recover it and the Phase-Cutter Arrays before using escape launch at Titan Dock.",
     "type": "quest",
     "value": 0,
     "rarity": "legendary",
@@ -3114,7 +3136,7 @@
   {
     "id": "phase_cutter_arrays",
     "name": "Phase-Cutter Arrays",
-    "description": "Ship-scale arrays that let the Astra slice through orbital interference and fight back.",
+    "description": "Ship-scale cutters for the Astra. Recover them and the Deep-Core Engine before using escape launch at Titan Dock.",
     "type": "quest",
     "value": 0,
     "rarity": "legendary",
@@ -3156,7 +3178,7 @@
   {
     "id": "mag_boots",
     "name": "Mag-Boots",
-    "description": "Magnetic soles that lock onto metal decking and resist forced movement.",
+    "description": "Heavy boots with magnetic soles. Equip them as an accessory for +2 Defense and +2 Vitality.",
     "type": "accessory",
     "value": 850,
     "buy_price": 1700,
@@ -3238,7 +3260,7 @@
       "bridge relic",
       "sanctuary bridge"
     ],
-    "description": "Architect Echo #2. It coordinates distinct willing signals without merging them and requires Astra power plus a recognized identity.",
+    "description": "An Architect relic that links willing carriers on separate bands. Install it in the Astra at Hangar Bay. The salvaged conduits supply power, and the Chime verifies Orion’s identity.",
     "type": "key_item",
     "value": 0,
     "rarity": "mythic",
@@ -3247,7 +3269,7 @@
   {
     "id": "thermal_cutter",
     "name": "Thermal Cutter",
-    "description": "A Dominion salvage torch tuned to cauterize Sector 9 razor-vines before they release toxic spores.",
+    "description": "A repaired Dominion salvage torch. Use it on razor-vine shortcuts to burn through the vines before they release spores.",
     "type": "quest",
     "value": 0,
     "rarity": "uncommon",
@@ -3272,7 +3294,7 @@
   {
     "id": "vhs_tape_02",
     "name": "Film 02: Memories of Another Life",
-    "description": "An analog video cassette labeled 'The Great Frontier - Feature 02: Memories of Another Life'. Preserved in the colony workshop.",
+    "description": "An analog video cassette labeled “The Great Frontier — Feature 02: Memories of Another Life.” Recovered from the discarded document locker in Zeke’s Booth.",
     "aliases": [
       "memories of another life",
       "tape 2",
@@ -3823,7 +3845,7 @@
   {
     "id": "cyano_coolant_injector",
     "name": "Cyano-Coolant Injector",
-    "description": "A weapon mod recovered from Sorrell’s comms core. Adds Freeze to otherwise untyped basic weapon attacks, a 20% freeze-on-hit chance, +4 Focus and +3 Accuracy.",
+    "description": "A weapon mod recovered from Sorrell’s comms core. Adds Freeze to basic attacks when the weapon and any earlier mod supply no element. Has a 20% chance to inflict Freeze on hit when this mod supplies the weapon’s status effect. Grants +4 Focus and +3 Accuracy.",
     "type": "mod",
     "value": 350,
     "rarity": "rare",

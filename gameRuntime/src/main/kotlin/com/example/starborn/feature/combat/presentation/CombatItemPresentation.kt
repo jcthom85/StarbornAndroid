@@ -12,7 +12,7 @@ object CombatItemPresentation {
         if (item.type.equals("snack", true) || item.equipment?.slot.equals("snack", true)) return false
         val effect = item.effect ?: return false
         return (effect.restoreHp ?: 0) > 0 || (effect.damage ?: 0) > 0 ||
-            effect.singleBuff != null || !effect.buffs.isNullOrEmpty()
+            effect.singleBuff != null || !effect.buffs.isNullOrEmpty() || effect.cleanses.isNotEmpty()
     }
 
     fun targetRequirement(entry: InventoryEntry): TargetRequirement {
@@ -24,7 +24,8 @@ object CombatItemPresentation {
             "self", "party", "all_allies", "enemy_group", "all_enemies" -> TargetRequirement.NONE
             else -> when {
                 (effect.damage ?: 0) > 0 -> TargetRequirement.ENEMY
-                (effect.restoreHp ?: 0) > 0 || effect.singleBuff != null || !effect.buffs.isNullOrEmpty() -> TargetRequirement.ALLY
+                (effect.restoreHp ?: 0) > 0 || effect.singleBuff != null ||
+                    !effect.buffs.isNullOrEmpty() || effect.cleanses.isNotEmpty() -> TargetRequirement.ALLY
                 else -> TargetRequirement.NONE
             }
         }

@@ -98,7 +98,7 @@ class InventoryService(
         val effect = item.effect
         val result = when {
             effect == null -> ItemUseResult.None(item)
-            (effect.restoreHp ?: 0) > 0 -> {
+            (effect.restoreHp ?: 0) > 0 || effect.cleanses.isNotEmpty() -> {
                 val buffs = buildList {
                     effect.singleBuff?.let { add(it) }
                     effect.buffs?.let { addAll(it) }
