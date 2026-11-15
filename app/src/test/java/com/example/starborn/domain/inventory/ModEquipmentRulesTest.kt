@@ -13,13 +13,14 @@ import org.junit.Test
 class ModEquipmentRulesTest {
     private val reader = AssetJsonReader(DesktopAssetProvider(), MoshiProvider.instance)
     private val items = reader.readList<Item>("items.json").associateBy { it.id }
+    private val weapons = mapOf("nova_laser_blaster" to 1, "zeke_shock_fists" to 1, "orion_prism_focus" to 1)
     private val store = GameSessionStore().apply {
         setPlayer("nova"); setPartyMembers(listOf("nova", "zeke", "orion"))
         listOf("ms_w1_mq01_complete", "ms_w1_mq02_complete", "ms_w1_mq03_complete", "ms_w1_mq05_complete").forEach(::setMilestone)
+        setInventory(weapons + ("power_lens_mk_i" to 2))
         setEquippedWeapon("nova", "nova_laser_blaster")
         setEquippedWeapon("zeke", "zeke_shock_fists")
         setEquippedWeapon("orion", "orion_prism_focus")
-        setInventory(mapOf("power_lens_mk_i" to 2))
     }
     private val lens = items.getValue("power_lens_mk_i")
 
@@ -62,7 +63,7 @@ class ModEquipmentRulesTest {
     }
 
     @Test fun restorePreservesQuantitiesAndPrefersExplicitBindingsOverLegacyClones() {
-        val raw = store.state.value.copy(inventory = mapOf(lens.id to 1),
+        val raw = store.state.value.copy(inventory = weapons + (lens.id to 1),
             equippedItems = mapOf("weapon_mod1" to lens.id, "nova:weapon_mod2" to lens.id))
         store.restore(raw)
         assertEquals(mapOf("nova:weapon_mod2" to lens.id), store.state.value.equippedItems)
@@ -76,7 +77,7 @@ class ModEquipmentRulesTest {
         val inventory = InventoryService(object : ItemCatalog {
             override fun load() {}
             override fun findItem(idOrAlias: String) = items[idOrAlias]
-        }).apply { loadItems(); addItem(lens.id, 2) }
+        }).apply { loadItems(); restore(weapons + (lens.id to 2)) }
         val crafting = CraftingService(object : CraftingRecipeSource {
             override fun loadCookingRecipes() = reader.readList<CookingRecipe>("recipes_cooking.json")
             override fun loadTinkeringRecipes() = reader.readList<TinkeringRecipe>("recipes_tinkering.json")

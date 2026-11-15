@@ -1330,6 +1330,19 @@ class ExplorationController(
 
     private fun handlePartyMemberJoined(memberId: String) {
         if (memberId.trim().equals("ollie", ignoreCase = true)) return
+        val state = sessionStore.state.value
+        val weapon = com.example.starborn.domain.session.GameBootstrap.defaultWeapons[memberId]
+        if (weapon != null && state.equippedWeapons[memberId] == null && weapon !in state.unlockedWeapons) {
+            if (!inventoryService.hasItem(weapon)) inventoryService.addItem(weapon)
+            sessionStore.setInventory(inventoryService.snapshot())
+            sessionStore.setEquippedWeapon(memberId, weapon)
+        }
+        val armor = com.example.starborn.domain.session.GameBootstrap.defaultArmors[memberId]
+        if (armor != null && state.equippedArmors[memberId] == null && armor !in state.unlockedArmors) {
+            if (!inventoryService.hasItem(armor)) inventoryService.addItem(armor)
+            sessionStore.setInventory(inventoryService.snapshot())
+            sessionStore.setEquippedArmor(memberId, armor)
+        }
         val displayName = charactersById[memberId]?.name
             ?: memberId.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
         val message = "${displayName.ifBlank { "New party member" }} joined the party."
@@ -1988,9 +2001,7 @@ class ExplorationController(
                         },
                         progressionSummary = progressionSummary,
                         equippedItems = newState.equippedItems,
-                        unlockedWeapons = newState.unlockedWeapons,
                         equippedWeapons = newState.equippedWeapons,
-                        unlockedArmors = newState.unlockedArmors,
                         equippedArmors = newState.equippedArmors,
                         skillTreeOverlay = overlay,
                         isTinkeringTutorialActive = tutorialsEnabled &&
@@ -2657,9 +2668,7 @@ class ExplorationController(
                     ),
                     inventoryPreview = buildPreviewFromSnapshot(sessionState.inventory),
                     equippedItems = sessionState.equippedItems,
-                    unlockedWeapons = sessionState.unlockedWeapons,
                     equippedWeapons = sessionState.equippedWeapons,
-                    unlockedArmors = sessionState.unlockedArmors,
                     equippedArmors = sessionState.equippedArmors,
                     visualEnemyParties = initialRoom?.let { room ->
                         val staticVisuals = roomEnemyParties(room).mapIndexed { index, members ->
@@ -4962,13 +4971,13 @@ class ExplorationController(
             telemetry.record("reward_equipped", mapOf("slot_id" to "weapon", "item_id" to null, "character_id" to normalizedCharacter))
             return
         }
-        val unlocked = sessionStore.state.value.unlockedWeapons
-        val resolvedWeaponId = unlocked.firstOrNull { it.equals(weaponId, ignoreCase = true) }
-            ?: inventoryService.state.value.firstOrNull { it.quantity > 0 && it.item.id.equals(weaponId, ignoreCase = true) }?.item?.id
-            ?: return
-        val item = inventoryService.itemDetail(resolvedWeaponId) ?: return
-        if (!isWeaponForCharacter(item, normalizedCharacter)) return
-        sessionStore.setEquippedWeapon(normalizedCharacter, resolvedWeaponId)
+        val item = inventoryService.itemDetail(weaponId) ?: return
+        val resolvedWeaponId = item.id
+        if (!GearRules.matchesSlot(item.equipment, "weapon", normalizedCharacter, item.type)) return
+        if (!sessionStore.setEquippedWeapon(normalizedCharacter, resolvedWeaponId)) {
+            postStatus("No available copy of ${item.name}. Unequip it from another character to move it.")
+            return
+        }
         if (normalizedCharacter == "nova") completeOpeningEquipmentTutorial()
         telemetry.record("reward_equipped", mapOf("slot_id" to "weapon", "item_id" to resolvedWeaponId, "character_id" to normalizedCharacter))
     }
@@ -4981,35 +4990,15 @@ class ExplorationController(
             telemetry.record("reward_equipped", mapOf("slot_id" to "armor", "item_id" to null, "character_id" to normalizedCharacter))
             return
         }
-        val unlocked = sessionStore.state.value.unlockedArmors
-        val resolvedArmorId = unlocked.firstOrNull { it.equals(armorId, ignoreCase = true) }
-            ?: inventoryService.state.value.firstOrNull { it.quantity > 0 && it.item.id.equals(armorId, ignoreCase = true) }?.item?.id
-            ?: return
-        val item = inventoryService.itemDetail(resolvedArmorId) ?: return
-        if (!isArmorItem(item)) return
-        if (!isArmorForCharacter(item, normalizedCharacter)) return
-        sessionStore.setEquippedArmor(normalizedCharacter, resolvedArmorId)
+        val item = inventoryService.itemDetail(armorId) ?: return
+        val resolvedArmorId = item.id
+        if (!GearRules.matchesSlot(item.equipment, "armor", normalizedCharacter, item.type)) return
+        if (!sessionStore.setEquippedArmor(normalizedCharacter, resolvedArmorId)) {
+            postStatus("No available copy of ${item.name}. Unequip it from another character to move it.")
+            return
+        }
         if (normalizedCharacter == "nova") completeOpeningEquipmentTutorial()
         telemetry.record("reward_equipped", mapOf("slot_id" to "armor", "item_id" to resolvedArmorId, "character_id" to normalizedCharacter))
-    }
-
-    private fun isWeaponForCharacter(item: Item, characterId: String): Boolean {
-        val expectedType = GearRules.allowedWeaponTypeFor(characterId) ?: return true
-        val weaponType = item.equipment?.weaponType
-            ?.trim()
-            ?.lowercase(Locale.getDefault())
-            ?: item.type.trim().lowercase(Locale.getDefault())
-        return weaponType == expectedType
-    }
-
-    private fun isArmorItem(item: Item): Boolean {
-        val normalizedType = item.type.trim().lowercase(Locale.getDefault())
-        return normalizedType == "armor" ||
-            item.equipment?.slot?.equals("armor", ignoreCase = true) == true
-    }
-
-    private fun isArmorForCharacter(item: Item, characterId: String): Boolean {
-        return GearRules.matchesSlot(item.equipment, "armor", characterId, item.type)
     }
 
     fun onTinkeringClosed() {
@@ -5082,7 +5071,7 @@ class ExplorationController(
             it.copy(groundItems = getGroundItemsSnapshot(roomId))
         }
         emitEvent(ExplorationEvent.ItemGranted(displayName, quantity))
-        promptManager.enqueue(ItemGrantedPrompt(displayName, quantity))
+        promptManager.enqueue(itemGrantedPrompt(itemId, quantity))
     }
 
     fun collectAllGroundItems() {

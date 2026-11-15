@@ -76,9 +76,7 @@ fun InventoryTabContent(
     inventoryItems: List<InventoryPreviewItemUi>,
     equippedItems: Map<String, String>,
     completedMilestones: Set<String>,
-    unlockedWeapons: Set<String>,
     equippedWeapons: Map<String, String>,
-    unlockedArmors: Set<String>,
     equippedArmors: Map<String, String>,
     partyMembers: List<PartyMemberStatusUi>,
     accentColor: Color,
@@ -236,9 +234,7 @@ fun InventoryTabContent(
                 inventoryItems = inventoryItems,
                 equippedItems = equippedItems,
                 completedMilestones = completedMilestones,
-                unlockedWeapons = unlockedWeapons,
                 equippedWeapons = equippedWeapons,
-                unlockedArmors = unlockedArmors,
                 equippedArmors = equippedArmors,
                 partyMembers = partyMembers,
                 borderColor = borderColor,
@@ -682,9 +678,7 @@ internal fun InventoryEquipmentPreview(
     inventoryItems: List<InventoryPreviewItemUi>,
     equippedItems: Map<String, String>,
     completedMilestones: Set<String>,
-    unlockedWeapons: Set<String>,
     equippedWeapons: Map<String, String>,
-    unlockedArmors: Set<String>,
     equippedArmors: Map<String, String>,
     partyMembers: List<PartyMemberStatusUi>,
     borderColor: Color,
@@ -702,17 +696,13 @@ internal fun InventoryEquipmentPreview(
     val itemNames = remember(inventoryItems) {
         inventoryItems.associate { it.id.lowercase(Locale.getDefault()) to it.name }
     }
-    val weaponOptionIds = remember(unlockedWeapons, equippedWeapons) {
-        val equippedIds = equippedWeapons.values.filter { it.isNotBlank() }
-        (unlockedWeapons + equippedIds)
-            .map { it.trim() }
-            .filter { it.isNotBlank() }
-            .toSet()
-    }
+    val ownedCounts = remember(inventoryItems) { inventoryItems.associate { it.id to it.quantity } }
+    val weaponOptionIds = ownedCounts.keys + equippedWeapons.values
     val weaponItems = remember(weaponOptionIds, resolveWeaponItem) {
         weaponOptionIds.mapNotNull { weaponId ->
             resolveWeaponItem(weaponId)
-        }.sortedBy { it.name.lowercase(Locale.getDefault()) }
+        }.filter { it.equipment?.slot == "weapon" || it.type == "weapon" || GearRules.isWeaponType(it.type) }
+            .sortedBy { it.name.lowercase(Locale.getDefault()) }
     }
     val weaponItemById = remember(weaponItems) {
         weaponItems.associateBy { it.id.lowercase(Locale.getDefault()) }
@@ -733,13 +723,7 @@ internal fun InventoryEquipmentPreview(
     val weaponNames = remember(weaponItems) {
         weaponItems.associate { it.id.lowercase(Locale.getDefault()) to it.name }
     }
-    val armorOptionIds = remember(unlockedArmors, equippedArmors) {
-        val equippedIds = equippedArmors.values.filter { it.isNotBlank() }
-        (unlockedArmors + equippedIds)
-            .map { it.trim() }
-            .filter { it.isNotBlank() }
-            .toSet()
-    }
+    val armorOptionIds = ownedCounts.keys + equippedArmors.values
     val armorItems = remember(armorOptionIds, resolveArmorItem) {
         armorOptionIds.mapNotNull { armorId ->
             resolveArmorItem(armorId)
@@ -914,19 +898,25 @@ internal fun InventoryEquipmentPreview(
                 else -> filterGearOptionsForPreview(inventoryItems, normalizedSlot, characterId)
             }
         }
-        val weaponItemsForCharacter = remember(weaponItems, options, picker) {
+        val weaponItemsForCharacter = remember(weaponItems, options, picker, equippedWeapons, ownedCounts) {
             if (normalizedSlot != "weapon") emptyList() else {
                 val allowedIds = options.map { it.id.lowercase(Locale.getDefault()) }.toSet()
-                weaponItems.filter { allowedIds.contains(it.id.lowercase(Locale.getDefault())) }
+                weaponItems.filter {
+                    it.id.lowercase(Locale.getDefault()) in allowedIds &&
+                        com.example.starborn.domain.inventory.BaseEquipmentRules.canEquip(
+                            ownedCounts[it.id] ?: 0, equippedWeapons, characterId, it.id)
+                }
             }
         }
         val normalizedCharacter = characterId.lowercase(Locale.getDefault())
-        val armorItemsForCharacter = remember(armorItems, picker, normalizedCharacter) {
+        val armorItemsForCharacter = remember(armorItems, picker, normalizedCharacter, equippedArmors, ownedCounts) {
             if (normalizedSlot != "armor") {
                 emptyList()
             } else {
                 armorItems.filter { item ->
-                    GearRules.matchesSlot(item.equipment, "armor", normalizedCharacter, item.type)
+                    GearRules.matchesSlot(item.equipment, "armor", normalizedCharacter, item.type) &&
+                        com.example.starborn.domain.inventory.BaseEquipmentRules.canEquip(
+                            ownedCounts[item.id] ?: 0, equippedArmors, normalizedCharacter, item.id)
                 }
             }
         }
@@ -1348,7 +1338,7 @@ private fun WeaponSelectionDialog(
     if (LocalModernFieldMenu.current) {
         ModernGearPicker(characterName, "Weapon", weapons.map {
             InventoryPreviewItemUi(it.id, it.name, 1, it.type, it.description, it.effect, it.equipment)
-        }, equippedWeaponId, onSelect, onDismiss)
+        }, equippedWeaponId, onSelect, onDismiss, onUnequip = { onSelect(null) })
         return
     }
     val equippedNormalized = remember(equippedWeaponId) { equippedWeaponId?.lowercase(Locale.getDefault()).orEmpty() }
@@ -1414,7 +1404,7 @@ private fun WeaponSelectionDialog(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "No weapons unlocked yet.",
+                                text = "No compatible weapons available. Unequip a weapon from another character to move it.",
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = Color.White.copy(alpha = 0.75f),
                                 textAlign = TextAlign.Center
@@ -1434,7 +1424,7 @@ private fun WeaponSelectionDialog(
                                     isEquipped = isEquipped,
                                     accentColor = accentColor,
                                     borderColor = borderColor,
-                                    onSelect = { onSelect(weapon.id) }
+                                    onSelect = { onSelect(weapon.id.takeUnless { isEquipped }) }
                                 )
                             }
                         }
@@ -1458,7 +1448,7 @@ private fun ArmorSelectionDialog(
     if (LocalModernFieldMenu.current) {
         ModernGearPicker(characterName, "Armor", armors.map {
             InventoryPreviewItemUi(it.id, it.name, 1, it.type, it.description, it.effect, it.equipment)
-        }, equippedArmorId, onSelect, onDismiss)
+        }, equippedArmorId, onSelect, onDismiss, onUnequip = { onSelect(null) })
         return
     }
     val equippedNormalized = remember(equippedArmorId) { equippedArmorId?.lowercase(Locale.getDefault()).orEmpty() }
@@ -1524,7 +1514,7 @@ private fun ArmorSelectionDialog(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "No armor unlocked yet.",
+                                text = "No compatible armor available. Unequip armor from another character to move it.",
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = Color.White.copy(alpha = 0.75f),
                                 textAlign = TextAlign.Center
@@ -1544,7 +1534,7 @@ private fun ArmorSelectionDialog(
                                     isEquipped = isEquipped,
                                     accentColor = accentColor,
                                     borderColor = borderColor,
-                                    onSelect = { onSelect(armor.id) }
+                                    onSelect = { onSelect(armor.id.takeUnless { isEquipped }) }
                                 )
                             }
                         }
@@ -1618,7 +1608,7 @@ private fun WeaponFeatureCard(
                             shape = RoundedCornerShape(10.dp)
                         ) {
                             Text(
-                                text = "EQUIPPED",
+                                text = "UNEQUIP",
                                 style = MaterialTheme.typography.labelSmall,
                                 color = accentColor,
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -1715,7 +1705,7 @@ private fun ArmorFeatureCard(
                             shape = RoundedCornerShape(10.dp)
                         ) {
                             Text(
-                                text = "EQUIPPED",
+                                text = "UNEQUIP",
                                 style = MaterialTheme.typography.labelSmall,
                                 color = accentColor,
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)

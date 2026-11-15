@@ -378,6 +378,8 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 169. From **Firewall Gamma**, go **west** to **Firewall Beta** (`deep_firewall_beta`) → **west** to **Firewall Alpha** (`deep_firewall_alpha`) → **west** to **Mainframe Nave** (`deep_mainframe_nave`) → **south** to **Server Farm** (`orbital_server_farm`) → **east** to **Anchor Chamber** (`deep_anchor_chamber`).
 
+The Firewall Construct drops **Quake Knuckles** for Zeke. Their basic attack hits the group. Keep Shock Fists handy for focused Shock damage.
+
 ## 9. Elara, the Anchor and Graviton Inertia Matrix
 
 170. At **Anchor Chamber**, use **elara**. Finish the reunion conversation. Confirm finding Elara credited before taking the relic.

@@ -573,7 +573,7 @@
   {
     "id": "gh0st_splitter_edge",
     "name": "Splitter Edge",
-    "description": "A sweeping blade that tags every foe in range.",
+    "description": "Gh0st's sweeping blade hits all enemies with each basic attack. The Whisperblade hits harder against a single target.",
     "aliases": [
       "splitter edge"
     ],
@@ -713,7 +713,7 @@
   {
     "id": "orion_driftweave_cloak",
     "name": "Driftweave Cloak",
-    "description": "A weightless cloak for constant repositioning.",
+    "description": "Light armor for Orion. It grants +3 Defense, +4 Speed and +6 Evasion. His Channeler Mantle gives him more Focus and Accuracy.",
     "aliases": [
       "driftweave cloak"
     ],
@@ -1065,7 +1065,7 @@
   {
     "id": "starbar_crunch",
     "name": "Starbar Crunch",
-    "description": "Compressed carbs and caffeine. Tastes like chalk and panic. Keeps your hands from shaking.",
+    "description": "Compressed carbs and caffeine. Tastes like chalk and panic. Equip it in a party member’s Snack slot for +6 Speed. In combat, use Snack to boost evasion for two turns. The action recharges after use.",
     "type": "snack",
     "value": 120,
     "buy_price": 240,
@@ -1187,7 +1187,7 @@
   {
     "id": "ion_poppers",
     "name": "Ion Poppers",
-    "description": "Carbonated stimulant spheres. They pop on your tongue and wake up your optic nerves.",
+    "description": "Carbonated stimulant spheres sealed in a field ration pouch. Equip them in a party member’s Snack slot for +2 Luck. In combat, use Snack to boost accuracy for two turns. The action recharges after use.",
     "type": "snack",
     "value": 190,
     "buy_price": 360,
@@ -1211,7 +1211,7 @@
   {
     "id": "sunder_seeds",
     "name": "Sunder Seeds",
-    "description": "Hard, bitter pits. Chewing them steels your resolve.",
+    "description": "Bitter pits shaken loose from the Source's memory of a meal. Equip them in a Snack slot for +1 Vitality. Use Snack in combat for +6 Defense for two turns. The action recharges after use.",
     "type": "snack",
     "value": 210,
     "buy_price": 400,

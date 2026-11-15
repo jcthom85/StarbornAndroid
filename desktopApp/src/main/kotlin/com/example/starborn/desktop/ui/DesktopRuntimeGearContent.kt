@@ -52,7 +52,7 @@ internal fun DesktopRuntimeGearContent(services: DesktopAppServices, characterId
     val mod = slot in modSlots
     val slotBlockedReason = if (mod) ModEquipmentRules.blockedReason(session, ModLocation(character, slot)) else null
     val slotUnlocked = slotBlockedReason == null
-    val owned = (inventory.map { it.item.id } + session.unlockedWeapons + session.unlockedArmors + listOfNotNull(equipped))
+    val owned = (inventory.map { it.item.id } + listOfNotNull(equipped))
         .distinct().mapNotNull(catalog::get).filter {
             (if (mod) it.type == "mod" || it.equipment?.slot == "mod" else GearRules.matchesSlot(it.equipment, slot, character, it.type)) && it.name.contains(search, true)
         }.sortedBy { it.name }
@@ -123,7 +123,9 @@ internal fun DesktopRuntimeGearContent(services: DesktopAppServices, characterId
                     if (!slotUnlocked) item { Text(slotBlockedReason ?: "This slot is locked by story progress.", color = FieldMenuDesign.textMuted) }
                     else if (owned.isEmpty()) item { Text("No compatible equipment.", color = FieldMenuDesign.textMuted) }
                     if (slotUnlocked) items(owned, key = { it.id }) { item ->
-                        val unlocked = when (slot) { "weapon" -> item.id in session.unlockedWeapons; "armor" -> item.id in session.unlockedArmors; else -> true }
+                        val unlocked = if (slot == "weapon" || slot == "armor") com.example.starborn.domain.inventory.BaseEquipmentRules.canEquip(
+                            session.inventory[item.id] ?: 0, com.example.starborn.domain.inventory.BaseEquipmentRules.assignments(session, slot), character, item.id
+                        ) else true
                         val canEquip = unlocked || item.id == equipped
                         fun equipItem() {
                             val id = item.id.takeUnless { it == equipped }
@@ -209,8 +211,10 @@ internal fun DesktopRuntimeGearContent(services: DesktopAppServices, characterId
                                 ItemDetails.lines(existing, services::contentName).forEach { Text(it, style = MaterialTheme.typography.bodySmall, color = FieldMenuDesign.textMuted) }
                             }
                         }
-                            val unlocked = when (slot) { "weapon" -> item.id in session.unlockedWeapons; "armor" -> item.id in session.unlockedArmors; else -> true }
-                            if (!unlocked) Text("Not unlocked for use yet", color = FieldMenuDesign.gold, style = MaterialTheme.typography.labelSmall)
+                            val unlocked = if (slot == "weapon" || slot == "armor") com.example.starborn.domain.inventory.BaseEquipmentRules.canEquip(
+                            session.inventory[item.id] ?: 0, com.example.starborn.domain.inventory.BaseEquipmentRules.assignments(session, slot), character, item.id
+                        ) else true
+                            if (!unlocked) Text("All copies equipped. Unequip one to move it.", color = FieldMenuDesign.gold, style = MaterialTheme.typography.labelSmall)
                             Button(onClick = {
                                 val id = item.id.takeUnless { it == equipped }
                                 when {

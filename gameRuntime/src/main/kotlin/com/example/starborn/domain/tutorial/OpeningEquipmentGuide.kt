@@ -14,8 +14,8 @@ object OpeningEquipmentGuide {
 
     fun hasKit(state: GameSessionState): Boolean =
         "ms_w1_mq01_jed_talked" in state.completedMilestones &&
-            ("mining_pistol" in state.unlockedWeapons || state.inventory.getOrDefault("mining_pistol", 0) > 0) &&
-            ("nova_flux_liner" in state.unlockedArmors || state.inventory.getOrDefault("nova_flux_liner", 0) > 0)
+            state.inventory.getOrDefault("mining_pistol", 0) > 0 &&
+            state.inventory.getOrDefault("nova_flux_liner", 0) > 0
 
     fun isEquipped(state: GameSessionState): Boolean =
         !state.equippedWeapons["nova"].isNullOrBlank() && !state.equippedArmors["nova"].isNullOrBlank()

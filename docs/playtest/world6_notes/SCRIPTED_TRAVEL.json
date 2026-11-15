@@ -1,0 +1,1562 @@
+{
+  "event_transfers": [
+    {
+      "event": "w1_mq05_use_nav_console",
+      "trigger": {
+        "type": "player_action",
+        "action": "use_nav_console"
+      },
+      "conditions": [
+        {
+          "type": "milestone_set",
+          "milestone": "ms_w1_chime_spliced"
+        },
+        {
+          "type": "quest_active",
+          "quest_id": "w1_mq05"
+        },
+        {
+          "type": "quest_stage",
+          "quest_id": "w1_mq05",
+          "stage_id": "launch_pod"
+        }
+      ],
+      "repeatable": false,
+      "sources": [
+        {
+          "room": "launch_pod",
+          "name": "navigation console"
+        }
+      ],
+      "action_path": "/1/do/2/on_complete/5",
+      "travel": {
+        "type": "warp",
+        "room_id": "sector9_crash_site"
+      }
+    },
+    {
+      "event": "w2_mq05_launch",
+      "trigger": {
+        "type": "player_action",
+        "action": "w2_mq05_launch"
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w2_mq05"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w2_mq05",
+          "task_id": "reboot_bridge_relic"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w2_mq05",
+          "task_id": "launch_ship"
+        },
+        {
+          "type": "in_room",
+          "room_id": "sector9_hangar_bay"
+        }
+      ],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "sector9_hangar_bay",
+          "name": "launch cradle"
+        }
+      ],
+      "action_path": "/0",
+      "travel": {
+        "type": "board_astra",
+        "travel_transition": "airlock"
+      }
+    },
+    {
+      "event": "w3_mq12_use_elevator",
+      "trigger": {
+        "type": "player_action",
+        "action": "w3_mq12_use_elevator"
+      },
+      "conditions": [
+        {
+          "type": "in_room",
+          "room_id": "spire_transit_plaza"
+        }
+      ],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "spire_transit_plaza",
+          "name": "elevator controls"
+        }
+      ],
+      "action_path": "/0/do/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "spire_laundry_service",
+        "travel_transition": "lift"
+      }
+    },
+    {
+      "event": "w3_mq12_to_w3_mq13",
+      "trigger": {
+        "type": "quest_stage_complete",
+        "quest_id": "w3_mq12"
+      },
+      "conditions": [
+        {
+          "type": "quest_completed",
+          "quest_id": "w3_mq12"
+        },
+        {
+          "type": "quest_not_started",
+          "quest_id": "w3_mq13"
+        }
+      ],
+      "repeatable": false,
+      "sources": [],
+      "action_path": "/6",
+      "travel": {
+        "type": "warp",
+        "room_id": "spire_laundry_service",
+        "travel_transition": "lift"
+      }
+    },
+    {
+      "event": "w3_mq15_launch_astra",
+      "trigger": {
+        "type": "player_action",
+        "action": "w3_mq15_launch_astra"
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w3_mq15"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w3_mq15",
+          "task_id": "defeat_administrator"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w3_mq15",
+          "task_id": "scan_shield_gap"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w3_mq15",
+          "task_id": "launch_astra"
+        }
+      ],
+      "repeatable": false,
+      "sources": [
+        {
+          "room": "spire_landing_pad_roof",
+          "name": "launch window"
+        }
+      ],
+      "action_path": "/7",
+      "travel": {
+        "type": "warp",
+        "room_id": "foundry_slag_landing",
+        "travel_transition": "launch"
+      }
+    },
+    {
+      "event": "w4_mq17_regroup_springs",
+      "trigger": {
+        "type": "player_action",
+        "action": "w4_mq17_regroup_springs"
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w4_mq17"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w4_mq17",
+          "task_id": "access_phantom_terminal"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w4_mq17",
+          "task_id": "regroup_springs"
+        }
+      ],
+      "repeatable": false,
+      "sources": [],
+      "action_path": "/10",
+      "travel": {
+        "type": "warp",
+        "room_id": "foundry_conveyor_belt",
+        "travel_transition": "foundry"
+      }
+    },
+    {
+      "event": "w4_mq20_escape_launch",
+      "trigger": {
+        "type": "player_action",
+        "action": "w4_mq20_escape_launch"
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w4_mq20"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w4_mq20",
+          "task_id": "steal_engine"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w4_mq20",
+          "task_id": "steal_arrays"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w4_mq20",
+          "task_id": "escape_launch"
+        }
+      ],
+      "repeatable": false,
+      "sources": [
+        {
+          "room": "foundry_titan_dock",
+          "name": "escape launch"
+        },
+        {
+          "room": "foundry_escape_catwalk",
+          "name": "escape gantry"
+        }
+      ],
+      "action_path": "/7",
+      "travel": {
+        "type": "warp",
+        "room_id": "orbital_executive_dock",
+        "travel_transition": "launch"
+      }
+    },
+    {
+      "event": "w5_mq25_enter_tear",
+      "trigger": {
+        "type": "player_action",
+        "action": "w5_mq25_enter_tear"
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w5_mq25"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w5_mq25",
+          "task_id": "defeat_avatar"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w5_mq25",
+          "task_id": "enter_tear"
+        }
+      ],
+      "repeatable": false,
+      "sources": [
+        {
+          "room": "deep_tear",
+          "name": "reality breach"
+        }
+      ],
+      "action_path": "/5",
+      "travel": {
+        "type": "warp",
+        "room_id": "source_campfire",
+        "travel_transition": "source"
+      }
+    },
+    {
+      "event": "w6_mq26_reassemble",
+      "trigger": {
+        "type": "player_action",
+        "action": "w6_mq26_reassemble"
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w6_mq26"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w6_mq26",
+          "task_id": "rescue_zeke"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w6_mq26",
+          "task_id": "rescue_gh0st"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w6_mq26",
+          "task_id": "rescue_orion"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w6_mq26",
+          "task_id": "reassemble_team"
+        }
+      ],
+      "repeatable": false,
+      "sources": [
+        {
+          "room": "source_campfire",
+          "name": "song-fire"
+        }
+      ],
+      "action_path": "/8",
+      "travel": {
+        "type": "warp",
+        "room_id": "source_echo_mines",
+        "travel_transition": "source"
+      }
+    },
+    {
+      "event": "w6_mq27_reach_elevator",
+      "trigger": {
+        "type": "enter_room",
+        "room": "source_echo_elevator"
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w6_mq27"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w6_mq27",
+          "task_id": "evade_manager"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w6_mq27",
+          "task_id": "reach_elevator"
+        }
+      ],
+      "repeatable": false,
+      "sources": [],
+      "action_path": "/6",
+      "travel": {
+        "type": "warp",
+        "room_id": "source_memory_bridge",
+        "travel_transition": "lift"
+      }
+    },
+    {
+      "event": "w6_mq28_reach_singularity",
+      "trigger": {
+        "type": "player_action",
+        "action": "w6_mq28_reach_singularity"
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w6_mq28"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w6_mq28",
+          "task_id": "final_banter"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w6_mq28",
+          "task_id": "reach_singularity"
+        }
+      ],
+      "repeatable": false,
+      "sources": [
+        {
+          "room": "source_memory_threshold",
+          "name": "singularity threshold"
+        }
+      ],
+      "action_path": "/5",
+      "travel": {
+        "type": "warp",
+        "room_id": "source_memory_stair",
+        "travel_transition": "source"
+      }
+    },
+    {
+      "event": "w6_mq30_tune_world",
+      "trigger": {
+        "type": "player_action",
+        "action": "w6_mq30_tune_world"
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w6_mq30"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w6_mq30",
+          "task_id": "defeat_god_form"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w6_mq30",
+          "task_id": "tune_world"
+        }
+      ],
+      "repeatable": false,
+      "sources": [],
+      "action_path": "/3/on_complete/4",
+      "travel": {
+        "type": "warp",
+        "room_id": "source_new_world"
+      }
+    },
+    {
+      "event": "warp_spire_vent_output_scale_03_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_spire_vent_output_scale_03_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "spire_vent_output_scale_03",
+          "name": "chute"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "spire_vent_output",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_spire_the_static_scale_03_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_spire_the_static_scale_03_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "spire_the_static_scale_03",
+          "name": "fire escape"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "spire_the_static",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_spire_night_market_scale_03_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_spire_night_market_scale_03_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "spire_night_market_scale_03",
+          "name": "slide"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "spire_night_market",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_spire_sewers_scale_03_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_spire_sewers_scale_03_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "spire_sewers_scale_03",
+          "name": "ladder"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "spire_sewers_landing",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_spire_transit_plaza_scale_03_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_spire_transit_plaza_scale_03_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "spire_transit_plaza_scale_03",
+          "name": "turnstile"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "spire_transit_plaza",
+        "travel_transition": "airlock"
+      }
+    },
+    {
+      "event": "warp_spire_laundry_scale_03_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_spire_laundry_scale_03_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "spire_laundry_scale_03",
+          "name": "chute"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "spire_laundry_service",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_spire_skypark_scale_03_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_spire_skypark_scale_03_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "spire_skypark_scale_03",
+          "name": "spiral"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "spire_skypark_dome",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_spire_exec_lounge_scale_05_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_spire_exec_lounge_scale_05_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "spire_exec_lounge_scale_05",
+          "name": "elevator"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "spire_exec_lounge_bar",
+        "travel_transition": "lift"
+      }
+    },
+    {
+      "event": "warp_spire_archive_scale_03_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_spire_archive_scale_03_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "spire_archive_scale_03",
+          "name": "lift"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "spire_archive_vault",
+        "travel_transition": "lift"
+      }
+    },
+    {
+      "event": "warp_spire_landing_pad_scale_04_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_spire_landing_pad_scale_04_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "spire_landing_pad_scale_04",
+          "name": "ladder"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "spire_landing_pad_roof",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_foundry_obsidian_shelf_scale_final_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_foundry_obsidian_shelf_scale_final_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "foundry_obsidian_shelf_scale_final",
+          "name": "slide"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "foundry_slag_landing",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_foundry_slag_river_scale_final_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_foundry_slag_river_scale_final_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "foundry_slag_river_scale_final",
+          "name": "catwalk"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "foundry_slag_river",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_foundry_cooling_springs_scale_final_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_foundry_cooling_springs_scale_final_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "foundry_cooling_springs_scale_final",
+          "name": "drain"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "foundry_cooling_springs",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_foundry_waste_intake_scale_final_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_foundry_waste_intake_scale_final_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "foundry_waste_intake_scale_final",
+          "name": "ladder"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "foundry_waste_intake",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_foundry_service_airlock_scale_final_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_foundry_service_airlock_scale_final_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "foundry_service_airlock_scale_final",
+          "name": "hatch"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "foundry_service_airlock",
+        "travel_transition": "airlock"
+      }
+    },
+    {
+      "event": "warp_foundry_conveyor_belt_scale_final_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_foundry_conveyor_belt_scale_final_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "foundry_conveyor_belt_scale_final",
+          "name": "slide"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "foundry_conveyor_belt",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_foundry_conditioning_scale_final_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_foundry_conditioning_scale_final_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "foundry_conditioning_scale_final",
+          "name": "valve"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "foundry_conditioning_chamber",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_foundry_forge_scale_final_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_foundry_forge_scale_final_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "foundry_forge_scale_final",
+          "name": "flue"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "foundry_forge_anvil",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_foundry_power_core_scale_final_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_foundry_power_core_scale_final_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "foundry_power_core_scale_final",
+          "name": "lift"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "foundry_power_core",
+        "travel_transition": "lift"
+      }
+    },
+    {
+      "event": "warp_foundry_titan_dock_scale_final_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_foundry_titan_dock_scale_final_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "foundry_titan_dock_scale_final",
+          "name": "scaffolding"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "foundry_titan_dock",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_orbital_executive_dock_scale_final_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_orbital_executive_dock_scale_final_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "orbital_executive_dock_scale_final",
+          "name": "chute"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "orbital_executive_dock",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_orbital_grand_concourse_scale_final_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_orbital_grand_concourse_scale_final_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "orbital_grand_concourse_scale_final",
+          "name": "express escalator"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "orbital_grand_concourse",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_orbital_solarium_scale_final_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_orbital_solarium_scale_final_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "orbital_solarium_scale_final",
+          "name": "stairwell"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "orbital_solarium",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_orbital_security_hub_scale_final_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_orbital_security_hub_scale_final_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "orbital_security_hub_scale_final",
+          "name": "hatch"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "orbital_security_hub",
+        "travel_transition": "airlock"
+      }
+    },
+    {
+      "event": "warp_orbital_service_shaft_scale_final_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_orbital_service_shaft_scale_final_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "orbital_service_shaft_scale_final",
+          "name": "guide"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "orbital_service_shaft",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_deep_server_farm_scale_04_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_deep_server_farm_scale_04_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "deep_server_farm_scale_04",
+          "name": "slide"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "orbital_server_farm",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_deep_anchor_chamber_scale_08_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_deep_anchor_chamber_scale_08_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "deep_anchor_chamber_scale_08",
+          "name": "anchor cable"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "deep_anchor_chamber",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_deep_throne_room_scale_07_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_deep_throne_room_scale_07_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "deep_throne_room_scale_07",
+          "name": "lift"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "deep_throne_room",
+        "travel_transition": "lift"
+      }
+    },
+    {
+      "event": "warp_deep_tear_scale_06_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_deep_tear_scale_06_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "deep_tear_scale_06",
+          "name": "reality slipstream"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "deep_tear",
+        "travel_transition": "source"
+      }
+    },
+    {
+      "event": "warp_source_campfire_node_scale_final_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_source_campfire_node_scale_final_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "source_campfire_node_scale_final",
+          "name": "trail"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "source_campfire",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_source_zeke_nightmare_node_scale_03_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_source_zeke_nightmare_node_scale_03_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "source_zeke_nightmare_node_scale_03",
+          "name": "door"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "source_zeke_nightmare",
+        "travel_transition": "airlock"
+      }
+    },
+    {
+      "event": "warp_source_gh0st_nightmare_node_scale_03_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_source_gh0st_nightmare_node_scale_03_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "source_gh0st_nightmare_node_scale_03",
+          "name": "clean signal"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "source_gh0st_nightmare",
+        "travel_transition": "source"
+      }
+    },
+    {
+      "event": "warp_source_orion_nightmare_node_scale_03_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_source_orion_nightmare_node_scale_03_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "source_orion_nightmare_node_scale_03",
+          "name": "harmonic wave"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "source_orion_nightmare",
+        "travel_transition": "source"
+      }
+    },
+    {
+      "event": "warp_source_echo_mines_node_scale_final_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_source_echo_mines_node_scale_final_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "source_echo_mines_node_scale_final",
+          "name": "echo"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "source_echo_mines",
+        "travel_transition": "source"
+      }
+    },
+    {
+      "event": "warp_source_memory_bridge_node_scale_final_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_source_memory_bridge_node_scale_final_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "source_memory_bridge_node_scale_final",
+          "name": "light beam"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "source_memory_bridge",
+        "travel_transition": "source"
+      }
+    },
+    {
+      "event": "warp_source_memory_stair_node_scale_final_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_source_memory_stair_node_scale_final_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "source_memory_stair_node_scale_final",
+          "name": "slide"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "source_memory_stair",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_source_spire_thought_node_scale_04_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_source_spire_thought_node_scale_04_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "source_spire_thought_node_scale_04",
+          "name": "return circuit"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "source_spire_thought",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "warp_source_center_node_scale_final_to_entry",
+      "trigger": {
+        "type": "player_action",
+        "action": "warp_source_center_node_scale_final_to_entry"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "source_center_node_scale_final",
+          "name": "echo"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "source_center",
+        "travel_transition": "source"
+      }
+    },
+    {
+      "event": "w2_mq05_resolve_gate",
+      "trigger": {
+        "type": "player_action",
+        "action": "w2_mq05_resolve_gate"
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w2_mq05"
+        },
+        {
+          "type": "milestone_set",
+          "milestone": "ms_w2_source_horn_stabilized"
+        },
+        {
+          "type": "milestone_set",
+          "milestone": "ms_w2_source_cup_grounded"
+        },
+        {
+          "type": "milestone_set",
+          "milestone": "ms_w2_source_pressure_mapped"
+        },
+        {
+          "type": "milestone_set",
+          "milestone": "ms_w2_source_breakers_starved"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w2_mq05",
+          "task_id": "bypass_source_gate"
+        }
+      ],
+      "repeatable": false,
+      "sources": [],
+      "action_path": "/2",
+      "travel": {
+        "type": "warp",
+        "room_id": "sector9_hangar_bay",
+        "travel_transition": "airlock"
+      }
+    },
+    {
+      "event": "w2_mq05_confirm_departure",
+      "trigger": {
+        "type": "player_action",
+        "action": "w2_mq05_confirm_departure"
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w2_mq05"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w2_mq05",
+          "task_id": "reboot_bridge_relic"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w2_mq05",
+          "task_id": "launch_ship"
+        },
+        {
+          "type": "in_room",
+          "room_id": "astra_bridge"
+        }
+      ],
+      "repeatable": false,
+      "sources": [],
+      "action_path": "/0/on_complete/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "spire_sewers_landing"
+      }
+    },
+    {
+      "event": "w2_mq05_return_to_pod",
+      "trigger": {
+        "type": "player_action",
+        "action": "w2_mq05_return_to_pod"
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w2_mq05"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w2_mq05",
+          "task_id": "inspect_astra"
+        },
+        {
+          "type": "quest_task_not_done",
+          "quest_id": "w2_mq05",
+          "task_id": "collect_power_conduits"
+        }
+      ],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "sector9_hangar_bay",
+          "name": "salvage return route"
+        }
+      ],
+      "action_path": "/0",
+      "travel": {
+        "type": "warp",
+        "room_id": "sector9_landing_drop",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "w2_mq05_return_to_hangar",
+      "trigger": {
+        "type": "player_action",
+        "action": "w2_mq05_return_to_hangar"
+      },
+      "conditions": [
+        {
+          "type": "quest_active",
+          "quest_id": "w2_mq05"
+        },
+        {
+          "type": "quest_task_done",
+          "quest_id": "w2_mq05",
+          "task_id": "collect_power_conduits"
+        }
+      ],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "sector9_landing_drop",
+          "name": "return to Astra"
+        }
+      ],
+      "action_path": "/0",
+      "travel": {
+        "type": "warp",
+        "room_id": "sector9_hangar_bay",
+        "travel_transition": "passage"
+      }
+    },
+    {
+      "event": "w3_return_to_lower_city",
+      "trigger": {
+        "type": "player_action",
+        "action": "w3_return_to_lower_city"
+      },
+      "conditions": [
+        {
+          "type": "milestone_set",
+          "milestone": "ms_w3_mq12_complete"
+        },
+        {
+          "type": "in_room",
+          "room_id": "spire_service_lift"
+        }
+      ],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "spire_service_lift",
+          "name": "lift panel"
+        }
+      ],
+      "action_path": "/1",
+      "travel": {
+        "type": "warp",
+        "room_id": "spire_transit_plaza",
+        "travel_transition": "lift"
+      }
+    },
+    {
+      "event": "w6_resume_silence_at_center",
+      "trigger": {
+        "type": "player_action",
+        "action": "w6_resume_silence_at_center"
+      },
+      "conditions": [],
+      "repeatable": true,
+      "sources": [
+        {
+          "room": "source_center_node_scale_03",
+          "name": "return to the fracture"
+        }
+      ],
+      "action_path": "/0",
+      "travel": {
+        "type": "warp",
+        "room_id": "source_center",
+        "travel_transition": "source"
+      }
+    }
+  ],
+  "direct_controls": [
+    {
+      "room": "spire_sewers_landing",
+      "action": {
+        "name": "astra",
+        "type": "generic",
+        "condition_unmet_message": "The Astra boarding ramp hums softly, welcoming the crew aboard.",
+        "travel_label": "Board the Astra",
+        "action_event": "source_board_astra"
+      }
+    },
+    {
+      "room": "spire_transit_plaza",
+      "action": {
+        "name": "elevator controls",
+        "type": "generic",
+        "travel_label": "Freight elevator to Laundry Service",
+        "action_event": "w3_mq12_use_elevator",
+        "condition_unmet_message": "The elevator controls require high-level Spire authorization, which is just another way to say the city decides who gets to rise."
+      }
+    },
+    {
+      "room": "spire_service_lift",
+      "action": {
+        "name": "lift panel",
+        "type": "generic",
+        "condition_unmet_message": "The service-lift panel needs the freight clearance established by the heist plan.",
+        "travel_label": "City lift to Transit Plaza",
+        "action_event": "w3_return_to_lower_city",
+        "requires_milestones": [
+          "ms_w3_mq12_complete"
+        ]
+      }
+    },
+    {
+      "room": "spire_landing_pad_roof",
+      "action": {
+        "name": "launch window",
+        "type": "generic",
+        "travel_label": "Depart for the Foundry",
+        "action_event": "w3_mq15_launch_astra",
+        "condition_unmet_message": "Departure requires defeating the Administrator and recording the local security-curtain window with the Lens.",
+        "hide_when_event_completed": "w3_mq15_launch_astra"
+      }
+    },
+    {
+      "room": "spire_vent_output_scale_03",
+      "action": {
+        "name": "chute",
+        "type": "generic",
+        "travel_label": "Chute to Vent Output",
+        "action_event": "warp_spire_vent_output_scale_03_to_entry",
+        "condition_unmet_message": "An optional shortcut returns directly to Vent Output. You can also retrace the room corridors with NSEW swipes."
+      }
+    },
+    {
+      "room": "spire_the_static_scale_03",
+      "action": {
+        "name": "fire escape",
+        "type": "generic",
+        "travel_label": "Fire escape to The Static",
+        "action_event": "warp_spire_the_static_scale_03_to_entry",
+        "condition_unmet_message": "An optional shortcut returns directly to The Static. You can also retrace the room corridors with NSEW swipes."
+      }
+    },
+    {
+      "room": "spire_night_market_scale_03",
+      "action": {
+        "name": "slide",
+        "type": "generic",
+        "travel_label": "Slide to Night Market",
+        "action_event": "warp_spire_night_market_scale_03_to_entry",
+        "condition_unmet_message": "An optional shortcut returns directly to Night Market. You can also retrace the room corridors with NSEW swipes."
+      }
+    },
+    {
+      "room": "spire_sewers_scale_03",
+      "action": {
+        "name": "ladder",
+        "type": "generic",
+        "travel_label": "Ladder to Sewer Landing Pad",
+        "action_event": "warp_spire_sewers_scale_03_to_entry",
+        "condition_unmet_message": "An optional shortcut returns directly to Sewer Landing Pad. You can also retrace the room corridors with NSEW swipes."
+      }
+    },
+    {
+      "room": "spire_transit_plaza_scale_03",
+      "action": {
+        "name": "turnstile",
+        "type": "generic",
+        "travel_label": "Turnstile to Transit Plaza",
+        "action_event": "warp_spire_transit_plaza_scale_03_to_entry",
+        "condition_unmet_message": "An optional shortcut returns directly to Transit Plaza. You can also retrace the room corridors with NSEW swipes."
+      }
+    },
+    {
+      "room": "spire_laundry_scale_03",
+      "action": {
+        "name": "chute",
+        "type": "generic",
+        "travel_label": "Chute to Laundry Service",
+        "action_event": "warp_spire_laundry_scale_03_to_entry",
+        "condition_unmet_message": "An optional shortcut returns directly to Laundry Service. You can also retrace the room corridors with NSEW swipes."
+      }
+    },
+    {
+      "room": "spire_skypark_scale_03",
+      "action": {
+        "name": "spiral",
+        "type": "generic",
+        "travel_label": "Spiral stairs to Skypark Dome",
+        "action_event": "warp_spire_skypark_scale_03_to_entry",
+        "condition_unmet_message": "An optional shortcut returns directly to Skypark Dome. You can also retrace the room corridors with NSEW swipes."
+      }
+    },
+    {
+      "room": "spire_archive_scale_03",
+      "action": {
+        "name": "lift",
+        "type": "generic",
+        "travel_label": "Lift to Archive Vault",
+        "action_event": "warp_spire_archive_scale_03_to_entry",
+        "condition_unmet_message": "An optional shortcut returns directly to Archive Vault. You can also retrace the room corridors with NSEW swipes."
+      }
+    },
+    {
+      "room": "spire_exec_lounge_scale_05",
+      "action": {
+        "name": "elevator",
+        "type": "generic",
+        "travel_label": "Elevator to Exec Lounge",
+        "action_event": "warp_spire_exec_lounge_scale_05_to_entry",
+        "condition_unmet_message": "An optional shortcut returns directly to Exec Lounge. You can also retrace the room corridors with NSEW swipes."
+      }
+    },
+    {
+      "room": "spire_landing_pad_scale_04",
+      "action": {
+        "name": "ladder",
+        "type": "generic",
+        "travel_label": "Ladder to Landing Pad Roof",
+        "action_event": "warp_spire_landing_pad_scale_04_to_entry",
+        "condition_unmet_message": "An optional shortcut returns directly to Landing Pad Roof. You can also retrace the room corridors with NSEW swipes."
+      }
+    }
+  ]
+}

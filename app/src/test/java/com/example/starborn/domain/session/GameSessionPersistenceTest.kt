@@ -13,6 +13,7 @@ import java.util.Locale
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -109,6 +110,38 @@ class GameSessionPersistenceTest {
         val store = GameSessionStore()
         store.restore(state.copy(fishingCleanCatchProgress = 99))
         assertEquals(2, store.state.value.fishingCleanCatchProgress)
+    }
+
+    @Test fun baseGearUsesPhysicalCopiesAndMigratesLegacyUnlocksOnlyOnce() = runBlocking {
+        val store = GameSessionStore()
+        val crew = listOf("nova", "zeke", "orion", "gh0st")
+        store.restore(GameSessionState(
+            partyMembers = crew,
+            unlockedArmors = setOf("heat_liner"),
+            unlockedWeapons = setOf("mining_pistol"),
+            equippedArmors = crew.reversed().associateWith { "heat_liner" },
+            equippedItems = mapOf("nova:weapon" to "mining_pistol")
+        ))
+        val migrated = store.state.value
+        assertEquals(mapOf("nova" to "heat_liner"), migrated.equippedArmors)
+        assertEquals(mapOf("nova" to "mining_pistol"), migrated.equippedWeapons)
+        assertEquals(mapOf("heat_liner" to 1, "mining_pistol" to 1), migrated.inventory)
+        assertNotNull(store.takeEquipmentRestoreNotice())
+        assertFalse(store.setEquippedArmor("zeke", "heat_liner"))
+        assertFalse(store.setEquippedWeapon("other", "mining_pistol"))
+
+        store.setInventory(migrated.inventory + ("heat_liner" to 4))
+        crew.forEach { assertTrue(store.setEquippedArmor(it, "heat_liner")) }
+        assertEquals(crew.toSet(), store.state.value.equippedArmors.keys)
+        assertTrue(store.setEquippedWeapon("nova", null))
+        store.setInventory(store.state.value.inventory - "mining_pistol")
+        persistence.writeSlot(1, store.state.value)
+        store.restore(requireNotNull(persistence.readSlot(1)))
+        assertEquals(4, store.state.value.inventory["heat_liner"])
+        assertFalse("mining_pistol" in store.state.value.inventory)
+        assertFalse(store.setEquippedWeapon("nova", "mining_pistol"))
+        store.setInventory(mapOf("heat_liner" to 3))
+        assertEquals(crew.take(3).toSet(), store.state.value.equippedArmors.keys)
     }
 
     @Test fun legacyModImportKeepsExplicitAssignmentsAheadOfPartyWideDefaults() {

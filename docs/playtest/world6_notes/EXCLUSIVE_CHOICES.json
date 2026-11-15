@@ -1,0 +1,74 @@
+[
+  {
+    "room": "spire_service_lift",
+    "quest": "w3_sq14",
+    "actions": [
+      {
+        "name": "worker network uplink",
+        "inspect_after_completion": null,
+        "completion_quest": null,
+        "completion_milestone": null
+      },
+      {
+        "name": "private dead drop",
+        "inspect_after_completion": null,
+        "completion_quest": null,
+        "completion_milestone": null
+      }
+    ]
+  },
+  {
+    "room": "foundry_conveyor_belt",
+    "quest": "w4_sq19",
+    "actions": [
+      {
+        "name": "conveyor release lock",
+        "inspect_after_completion": true,
+        "completion_quest": null,
+        "completion_milestone": "ms_w4_quality_control_complete"
+      },
+      {
+        "name": "worker defense relay",
+        "inspect_after_completion": true,
+        "completion_quest": null,
+        "completion_milestone": "ms_w4_units_defend_workers"
+      }
+    ]
+  },
+  {
+    "room": "orbital_server_farm",
+    "quest": "w5_sq24",
+    "actions": [
+      {
+        "name": "guardian ownership flag",
+        "inspect_after_completion": true,
+        "completion_quest": null,
+        "completion_milestone": "ms_w5_data_shield_unlocked"
+      },
+      {
+        "name": "crew covenant socket",
+        "inspect_after_completion": true,
+        "completion_quest": null,
+        "completion_milestone": "ms_w5_guardian_covenant"
+      }
+    ]
+  },
+  {
+    "room": "source_zeke_break_room",
+    "quest": "w6_sq27",
+    "actions": [
+      {
+        "name": "unauthorized exit",
+        "inspect_after_completion": true,
+        "completion_quest": "w6_sq27",
+        "completion_milestone": "ms_w6_unshackled_unlocked"
+      },
+      {
+        "name": "worker broadcast",
+        "inspect_after_completion": true,
+        "completion_quest": "w6_sq27",
+        "completion_milestone": "ms_w6_workers_unshackled"
+      }
+    ]
+  }
+]

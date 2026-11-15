@@ -56,6 +56,9 @@ class CookingRefinementTest {
     @Test fun modComparisonUsesRealSlotsAndShowsTradeoffs() {
         store.setPartyMembers(listOf("nova", "zeke"))
         store.setMilestone("ms_w1_mq01_complete")
+        inventory.addItem("nova_laser_blaster")
+        inventory.addItem("zeke_shock_fists")
+        store.setInventory(inventory.snapshot())
         store.setEquippedWeapon("nova", "nova_laser_blaster")
         store.setEquippedWeapon("zeke", "zeke_shock_fists")
         inventory.addItem("power_lens_mk_i")
@@ -153,6 +156,8 @@ class CookingRefinementTest {
     }
 
     @Test fun healingHonorsEquipmentCeilingAndNeverLowersHp() = runTest {
+        inventory.addItem("nova_helioguard_plate")
+        store.setInventory(inventory.snapshot())
         store.setEquippedArmor("nova", "nova_helioguard_plate")
         val ceiling = PartyHealth.maxHp(characters.getValue("nova"), store.state.value, items::get, assets.loadSkillNodes())
         store.setPartyMemberHp("nova", ceiling - 5)

@@ -64,14 +64,16 @@ class GameSessionStore {
 
     fun restore(state: GameSessionState) {
         astraBoardingFromMap = false
-        val base = com.example.starborn.domain.leveling.CrewBuildPrototype.grantCore(normalizeArmors(normalizeWeapons(normalizeEquipment(state.withoutRetiredCompanion()))))
-        val equipment = ModEquipmentRules.reconcile(base, state)
+        val base = com.example.starborn.domain.leveling.CrewBuildPrototype.grantCore(normalizeEquipment(normalizeArmors(normalizeWeapons(state.withoutRetiredCompanion()))))
+        val ownedGear = BaseEquipmentRules.restore(base)
+        val equipment = ModEquipmentRules.reconcile(ownedGear, state)
         val ceilings = if (equipment.partyMemberHp.isEmpty()) emptyMap() else restoredHpCeilings?.invoke(equipment).orEmpty()
         val normalized = equipment.copy(fishingCleanCatchProgress = equipment.fishingCleanCatchProgress.coerceIn(0, 2), partyMemberHp = equipment.partyMemberHp.mapValues { (owner, hp) ->
             ceilings[owner]?.let { hp.coerceIn(0, it.coerceAtLeast(1)) } ?: hp
         })
-        equipmentRestoreNotice = if (normalized.equippedItems != base.equippedItems)
-            "Mod assignments adjusted to match owned copies and available slots."
+        equipmentRestoreNotice = if (ownedGear.equippedWeapons != base.equippedWeapons || ownedGear.equippedArmors != base.equippedArmors ||
+            normalized.equippedItems != ownedGear.equippedItems)
+            "Equipment assignments adjusted to match owned copies and available slots."
             else if (normalized.partyMemberHp != equipment.partyMemberHp)
                 "Loaded health was capped at the current maximum after equipment changes." else null
         restorationCounter.incrementAndGet()
@@ -438,45 +440,29 @@ class GameSessionStore {
         _state.update { it.copy(unlockedArmors = it.unlockedArmors + armorId) }
     }
 
-    fun setEquippedWeapon(characterId: String, weaponId: String?) {
-        if (characterId.trim().equals("ollie", ignoreCase = true)) return
-        if (characterId.isBlank()) return
-        val normalizedId = characterId.trim().lowercase(Locale.getDefault())
-        _state.update { state ->
-            val updated = state.equippedWeapons.toMutableMap()
-            val unlocked = state.unlockedWeapons.toMutableSet()
-            val normalizedWeapon = weaponId?.trim()
-            if (normalizedWeapon.isNullOrBlank()) {
-                updated.remove(normalizedId)
-            } else {
-                updated[normalizedId] = normalizedWeapon
-                unlocked.add(normalizedWeapon)
-            }
-            state.copy(
-                equippedWeapons = updated,
-                unlockedWeapons = unlocked
-            )
-        }
-    }
+    fun setEquippedWeapon(characterId: String, weaponId: String?): Boolean =
+        setBaseEquipment(characterId, weaponId, "weapon")
 
-    fun setEquippedArmor(characterId: String, armorId: String?) {
-        if (characterId.trim().equals("ollie", ignoreCase = true)) return
-        if (characterId.isBlank()) return
-        val normalizedId = characterId.trim().lowercase(Locale.getDefault())
-        _state.update { state ->
-            val updated = state.equippedArmors.toMutableMap()
-            val unlocked = state.unlockedArmors.toMutableSet()
-            val normalizedArmor = armorId?.trim()
-            if (normalizedArmor.isNullOrBlank()) {
-                updated.remove(normalizedId)
-            } else {
-                updated[normalizedId] = normalizedArmor
-                unlocked.add(normalizedArmor)
+    fun setEquippedArmor(characterId: String, armorId: String?): Boolean =
+        setBaseEquipment(characterId, armorId, "armor")
+
+    private fun setBaseEquipment(characterId: String, itemId: String?, slot: String): Boolean {
+        val owner = characterId.trim().lowercase(Locale.ROOT)
+        if (owner.isBlank() || owner == "ollie") return false
+        val item = itemId?.trim()?.takeIf(String::isNotBlank)
+        while (true) {
+            val previous = _state.value
+            val assignments = BaseEquipmentRules.assignments(previous, slot)
+            if (item != null && !BaseEquipmentRules.canEquip(previous.inventory[item] ?: 0, assignments, owner, item)) {
+                return false
             }
-            state.copy(
-                equippedArmors = updated,
-                unlockedArmors = unlocked
+            val updated = if (item == null) assignments - owner else assignments + (owner to item)
+            val next = if (slot == "weapon") previous.copy(
+                equippedWeapons = updated, unlockedWeapons = previous.unlockedWeapons + listOfNotNull(item)
+            ) else previous.copy(
+                equippedArmors = updated, unlockedArmors = previous.unlockedArmors + listOfNotNull(item)
             )
+            if (_state.compareAndSet(previous, next)) return true
         }
     }
 
@@ -509,7 +495,7 @@ class GameSessionStore {
 
     fun setInventory(entries: Map<String, Int>) {
         val normalized = entries.filterValues { it > 0 }
-        _state.update { it.copy(inventory = normalized) }
+        _state.update { BaseEquipmentRules.withInventory(it, normalized) }
     }
 
     /** Empty room entries are intentional receipts: no authored loot remains there. */
@@ -781,39 +767,36 @@ class GameSessionStore {
     }
 
     private fun normalizeWeapons(state: GameSessionState): GameSessionState {
-        val normalized = buildMap {
-            state.equippedWeapons.forEach { (rawKey, rawValue) ->
-                val characterId = rawKey.trim().lowercase(Locale.getDefault())
-                val weaponId = rawValue.trim()
-                if (characterId.isBlank() || weaponId.isBlank()) return@forEach
-                put(characterId, weaponId)
-            }
-        }
-        val unlocked = state.unlockedWeapons.toMutableSet()
-        normalized.values.forEach { unlocked.add(it) }
-        val updated = state.copy(
-            equippedWeapons = normalized,
-            unlockedWeapons = unlocked
-        )
-        return if (updated == state) state else updated
+        val (assignments, legacyItems) = normalizeBaseEquipment(state, "weapon")
+        return state.copy(equippedWeapons = assignments, unlockedWeapons = state.unlockedWeapons + legacyItems + assignments.values)
     }
 
     private fun normalizeArmors(state: GameSessionState): GameSessionState {
-        val normalized = buildMap {
-            state.equippedArmors.forEach { (rawKey, rawValue) ->
-                val characterId = rawKey.trim().lowercase(Locale.getDefault())
-                val armorId = rawValue.trim()
-                if (characterId.isBlank() || armorId.isBlank()) return@forEach
-                put(characterId, armorId)
+        val (assignments, legacyItems) = normalizeBaseEquipment(state, "armor")
+        return state.copy(equippedArmors = assignments, unlockedArmors = state.unlockedArmors + legacyItems + assignments.values)
+    }
+
+    private fun normalizeBaseEquipment(state: GameSessionState, slot: String): Pair<Map<String, String>, Set<String>> {
+        val assignments = mutableMapOf<String, String>()
+        BaseEquipmentRules.assignments(state, slot).forEach { (rawOwner, rawItem) ->
+            val owner = rawOwner.trim().lowercase(Locale.ROOT)
+            val item = rawItem.trim()
+            if (owner.isNotEmpty() && item.isNotEmpty()) assignments[owner] = item
+        }
+        val legacyItems = mutableSetOf<String>()
+        if (!state.physicalGearInventory) {
+            state.equippedItems.forEach { (rawKey, rawItem) ->
+                val key = rawKey.trim().lowercase(Locale.ROOT)
+                val item = rawItem.trim()
+                if (key.substringAfter(':') != slot || item.isEmpty()) return@forEach
+                legacyItems += item
+                if (':' in key) {
+                    val owner = key.substringBefore(':')
+                    if (owner.isNotEmpty() && owner != "ollie") assignments.putIfAbsent(owner, item)
+                }
             }
         }
-        val unlocked = state.unlockedArmors.toMutableSet()
-        normalized.values.forEach { unlocked.add(it) }
-        val updated = state.copy(
-            equippedArmors = normalized,
-            unlockedArmors = unlocked
-        )
-        return if (updated == state) state else updated
+        return assignments to legacyItems
     }
 
     private fun normalizeScopedEquipment(state: GameSessionState): Map<String, String> {

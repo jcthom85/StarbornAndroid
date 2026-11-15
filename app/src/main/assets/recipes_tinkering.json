@@ -60,6 +60,24 @@
     "discovery_hint": "Combine the weave from the Hound Nest supply pack with insulated wiring."
   },
   {
+    "id": "gear_driftweave_cloak",
+    "name": "Assemble Driftweave Cloak",
+    "category": "gear",
+    "method": "assemble",
+    "base": "ballistic_weave",
+    "components": [
+      "circuit_board"
+    ],
+    "ingredients": {
+      "ballistic_weave": 1,
+      "circuit_board": 1
+    },
+    "result": "orion_driftweave_cloak",
+    "description": "Build a light cloak for Orion. It trades Focus and Accuracy for Speed and Evasion.",
+    "success_message": "You stitch the weave into loose panels and wire the board to the cloak's vents.",
+    "discovery_hint": "Combine Ballistic Weave and a Circuit Board. The Foundry Seal Backroom technician locker contains both."
+  },
+  {
     "id": "repair_deep_mine_cabinet",
     "name": "Restore Deep Mine Cabinet",
     "category": "repair",

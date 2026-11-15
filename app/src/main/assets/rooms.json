@@ -286,7 +286,9 @@
       }
     ],
     "npcs": [],
-    "items": [],
+    "items": [
+      "starbar_crunch"
+    ],
     "enemies": [],
     "connections": {
       "south": "pit_shaft",
@@ -9002,7 +9004,14 @@
         "enemy_id": "firewall_construct",
         "occurrence": 1,
         "xp_reward": 510,
-        "credit_reward": 327
+        "credit_reward": 327,
+        "extra_drops": [
+          {
+            "id": "zeke_quake_knuckles",
+            "chance": 1.0,
+            "quantity": 1
+          }
+        ]
       },
       {
         "enemy_id": "prism_surveyor",
@@ -10567,6 +10576,18 @@
       "memory_leak": "The leak pulses with Jed, Thorne, and Elara in the same unfinished frame.",
       "nightmare_guard": "The guard changes faces every time Nova recognizes someone she could not save."
     },
+    "enemy_instances": [
+      {
+        "enemy_id": "nightmare_guard",
+        "extra_drops": [
+          {
+            "id": "sunder_seeds",
+            "chance": 1.0,
+            "quantity": 1
+          }
+        ]
+      }
+    ],
     "blocked_directions": {
       "east": {
         "type": "lock",
@@ -12269,6 +12290,11 @@
         "extra_drops": [
           {
             "id": "beast_meat",
+            "chance": 1.0,
+            "quantity": 1
+          },
+          {
+            "id": "ion_poppers",
             "chance": 1.0,
             "quantity": 1
           }
@@ -16569,12 +16595,20 @@
         "enemy_id": "riot_guard",
         "hp": 135,
         "override_drops": [],
+        "extra_drops": [
+          {
+            "id": "gh0st_splitter_edge",
+            "chance": 1.0,
+            "quantity": 1
+          }
+        ],
         "stability": 80,
         "vitality": 7
       }
     ],
     "enemy_flavor": {
-      "aero_drone": "This service drone carries a recoverable Circuit Board for Field Kit repairs and reinforced fishing gear."
+      "aero_drone": "This service drone carries a recoverable Circuit Board for Field Kit repairs and reinforced fishing gear.",
+      "riot_guard": "A confiscated Splitter Edge hangs in a locked sheath on the guard's belt."
     },
     "connections": {
       "south": "spire_exec_lounge_scale_04"
@@ -22545,7 +22579,8 @@
         "state_key": "foundry_service_airlock_scale_final_cache_opened",
         "items": [
           "pure_iron",
-          "circuit_board"
+          "circuit_board",
+          "ballistic_weave"
         ],
         "popup_title": "Dominion Line-Tech Locker",
         "already_open_message": "The technician locker has already been emptied.",

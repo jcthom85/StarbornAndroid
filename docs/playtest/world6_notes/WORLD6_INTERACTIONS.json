@@ -1,0 +1,1941 @@
+[
+  {
+    "room": "source_campfire",
+    "label": "song-fire",
+    "trigger": "w6_mq26_reassemble",
+    "handlers": [
+      "w6_mq26_reassemble"
+    ],
+    "completion_milestone": null,
+    "completion_quest": null,
+    "inspect_after_completion": false,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "w6_mq26_reassemble",
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq26"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w6_mq26",
+            "task_id": "rescue_zeke"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w6_mq26",
+            "task_id": "rescue_gh0st"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w6_mq26",
+            "task_id": "rescue_orion"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w6_mq26",
+            "task_id": "reassemble_team"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_mq26",
+            "task_id": "reassemble_team"
+          },
+          {
+            "type": "advance_quest_stage",
+            "quest_id": "w6_mq26",
+            "to_stage_id": "reassembly"
+          },
+          {
+            "type": "give_item",
+            "item_id": "key_relic",
+            "quantity": 1
+          },
+          {
+            "type": "give_xp",
+            "xp": 1700
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w6_mq26"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_mq26_complete"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w6_mq27"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w6_mq27"
+          },
+          {
+            "type": "warp",
+            "room_id": "source_echo_mines",
+            "travel_transition": "source"
+          },
+          {
+            "type": "show_message",
+            "message": "Zeke, Gh0st, and Orion return with the parts of themselves Vale would have edited out. The song-fire gathers those separate voices into the Key, not as ownership, but as permission to carry each other forward."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_zeke_nightmare",
+    "label": "backup lattice",
+    "trigger": "w6_sq27_delete_record",
+    "handlers": [
+      "w6_sq27_delete_record"
+    ],
+    "completion_milestone": "ms_w6_hr_backups_found",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "w6_sq27_delete_record",
+        "conditions": [
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w6_sq27"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "start_quest",
+            "quest_id": "w6_sq27"
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_sq27",
+            "task_id": "find_backups"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_hr_backups_found"
+          },
+          {
+            "type": "show_message",
+            "message": "Every cubicle wall contains another copy. Zeke stops trying to delete the file and follows its authorization chain into the review room."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_zeke_review_loop",
+    "label": "authorization chain",
+    "trigger": "w6_sq27_revoke_record",
+    "handlers": [
+      "w6_sq27_revoke_record"
+    ],
+    "completion_milestone": "ms_w6_hr_revoked",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {
+      "requires_milestones": [
+        "ms_w6_hr_backups_found"
+      ]
+    },
+    "events": [
+      {
+        "id": "w6_sq27_revoke_record",
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_hr_backups_found"
+          },
+          {
+            "type": "milestone_not_set",
+            "milestone": "ms_w6_hr_revoked"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_sq27",
+            "task_id": "delete_record"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_hr_revoked"
+          },
+          {
+            "type": "show_message",
+            "message": "Zeke signs one final line: SUBJECT REJECTS YOUR AUTHORITY. Every backup remains, suddenly powerless."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_zeke_break_room",
+    "label": "unauthorized exit",
+    "trigger": "w6_sq27_leave_review",
+    "handlers": [
+      "w6_sq27_leave_review"
+    ],
+    "completion_milestone": "ms_w6_unshackled_unlocked",
+    "completion_quest": "w6_sq27",
+    "inspect_after_completion": true,
+    "completed_message": "The review is closed. Zeke's choice stands, and the records can no longer issue orders.",
+    "prerequisites": {
+      "requires_milestones": [
+        "ms_w6_hr_revoked"
+      ]
+    },
+    "events": [
+      {
+        "id": "w6_sq27_leave_review",
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_hr_revoked"
+          },
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w6_sq27"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_sq27",
+            "task_id": "leave_review"
+          },
+          {
+            "type": "unlock_skill",
+            "skill_id": "zeke_unshackled"
+          },
+          {
+            "type": "give_xp",
+            "xp": 600
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w6_sq27"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_unshackled_unlocked"
+          },
+          {
+            "type": "show_message",
+            "message": "Zeke leaves the records intact as evidence and closes the review without seeking approval. The file no longer has authority over him. Unshackled unlocked."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_zeke_break_room",
+    "label": "worker broadcast",
+    "trigger": "w6_sq27_free_workers",
+    "handlers": [
+      "w6_sq27_free_workers"
+    ],
+    "completion_milestone": "ms_w6_workers_unshackled",
+    "completion_quest": "w6_sq27",
+    "inspect_after_completion": true,
+    "completed_message": "The review is closed. Zeke's choice stands, and the records can no longer issue orders.",
+    "prerequisites": {
+      "requires_milestones": [
+        "ms_w6_hr_revoked"
+      ]
+    },
+    "events": [
+      {
+        "id": "w6_sq27_free_workers",
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_hr_revoked"
+          },
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w6_sq27"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_sq27",
+            "task_id": "leave_review"
+          },
+          {
+            "type": "unlock_skill",
+            "skill_id": "zeke_unshackled"
+          },
+          {
+            "type": "give_xp",
+            "xp": 600
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w6_sq27"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_workers_unshackled"
+          },
+          {
+            "type": "show_message",
+            "message": "Zeke broadcasts the revocation. Every worker file remains as evidence, and none of them can issue another order. Unshackled unlocked."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_gh0st_nightmare",
+    "label": "buried voice",
+    "trigger": "w6_sq28_elara_song",
+    "handlers": [
+      "w6_sq28_elara_song"
+    ],
+    "completion_milestone": "ms_w6_elara_voice_isolated",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "w6_sq28_elara_song",
+        "conditions": [
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w6_sq28"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "start_quest",
+            "quest_id": "w6_sq28"
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_sq28",
+            "task_id": "isolate_voice"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_elara_voice_isolated"
+          },
+          {
+            "type": "show_message",
+            "message": "Gh0st finds one breath the kill-suite cannot classify. Elara's melody continues east beneath every command channel."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_gh0st_kill_suite",
+    "label": "command carrier",
+    "trigger": "w6_sq28_break_command",
+    "handlers": [
+      "w6_sq28_break_command"
+    ],
+    "completion_milestone": "ms_w6_elara_commands_broken",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {
+      "requires_milestones": [
+        "ms_w6_elara_voice_isolated"
+      ]
+    },
+    "events": [
+      {
+        "id": "w6_sq28_break_command",
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_elara_voice_isolated"
+          },
+          {
+            "type": "milestone_not_set",
+            "milestone": "ms_w6_elara_commands_broken"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_sq28",
+            "task_id": "break_command_layer"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_elara_commands_broken"
+          },
+          {
+            "type": "show_message",
+            "message": "Gh0st inverts the order carrier. The weapons fall silent; Elara keeps singing."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_gh0st_elara_signal",
+    "label": "pure audio log",
+    "trigger": "w6_sq28_preserve_song",
+    "handlers": [
+      "w6_sq28_preserve_song"
+    ],
+    "completion_milestone": "ms_w6_source_balance_unlocked",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {
+      "requires_milestones": [
+        "ms_w6_elara_commands_broken"
+      ]
+    },
+    "events": [
+      {
+        "id": "w6_sq28_preserve_song",
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_elara_commands_broken"
+          },
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w6_sq28"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_sq28",
+            "task_id": "recover_song"
+          },
+          {
+            "type": "unlock_skill",
+            "skill_id": "gh0st_source_balance"
+          },
+          {
+            "type": "give_xp",
+            "xp": 600
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w6_sq28"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_source_balance_unlocked"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_source_balance_unlocked"
+          },
+          {
+            "type": "show_message",
+            "message": "Gh0st hears her voice without a command hidden inside it. Source Balance unlocked."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_orion_chorus",
+    "label": "crooked tool marks",
+    "trigger": "w6_sq26_jed_echo",
+    "handlers": [
+      "w6_sq26_jed_echo"
+    ],
+    "completion_milestone": "ms_w6_jed_marks_found",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "w6_sq26_jed_echo",
+        "conditions": [
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w6_sq26"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "start_quest",
+            "quest_id": "w6_sq26"
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_sq26",
+            "task_id": "find_tool_marks"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_jed_marks_found"
+          },
+          {
+            "type": "show_message",
+            "message": "The false mine is flawless. Jed's real bench never was. Three crooked file marks point east, toward the memory that still remembers his hands."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_echo_workbench",
+    "label": "jed echo",
+    "trigger": "w6_sq26_hear_lesson",
+    "handlers": [
+      "w6_sq26_hear_lesson"
+    ],
+    "completion_milestone": "ms_w6_jed_lesson_heard",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {
+      "requires_milestones": [
+        "ms_w6_jed_marks_found"
+      ]
+    },
+    "events": [
+      {
+        "id": "w6_sq26_hear_lesson",
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_jed_marks_found"
+          },
+          {
+            "type": "milestone_not_set",
+            "milestone": "ms_w6_jed_lesson_heard"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_sq26",
+            "task_id": "talk_to_jed"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_jed_lesson_heard"
+          },
+          {
+            "type": "show_message",
+            "message": "Jed's echo offers to stay perfect forever. Nova remembers the real lesson instead: fix what keeps people alive, then let the tool go."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_echo_patrol",
+    "label": "manager patrol",
+    "trigger": "w6_mq27_evade_manager",
+    "handlers": [
+      "w6_mq27_evade_manager"
+    ],
+    "completion_milestone": null,
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "w6_mq27_evade_manager",
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq27"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w6_mq27",
+            "task_id": "enter_mines"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w6_mq27",
+            "task_id": "evade_manager"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_mq27",
+            "task_id": "evade_manager"
+          },
+          {
+            "type": "show_message",
+            "message": "Nova moves between the projections by following details Vale cannot counterfeit: Jed's bad weld, Zeke's scratched initials, the smell of real machine oil."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_echo_patrol",
+    "label": "open shift gate",
+    "trigger": "w6_sq26_carry_legacy",
+    "handlers": [
+      "w6_sq26_carry_legacy"
+    ],
+    "completion_milestone": "ms_w6_legacy_unlocked",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {
+      "requires_milestones": [
+        "ms_w6_jed_lesson_heard"
+      ]
+    },
+    "events": [
+      {
+        "id": "w6_sq26_carry_legacy",
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_jed_lesson_heard"
+          },
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w6_sq26"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_sq26",
+            "task_id": "carry_legacy"
+          },
+          {
+            "type": "unlock_skill",
+            "skill_id": "nova_legacy"
+          },
+          {
+            "type": "give_xp",
+            "xp": 600
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w6_sq26"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_legacy_unlocked"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_legacy_unlocked"
+          },
+          {
+            "type": "show_message",
+            "message": "The memory cannot answer, but Nova remembers what survival was supposed to protect. Legacy unlocked."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_memory_bridge",
+    "label": "Zeke's anchor",
+    "trigger": "w6_mq28_anchor_zeke",
+    "handlers": [
+      "w6_mq28_anchor_zeke"
+    ],
+    "completion_milestone": "ms_w6_bridge_zeke_anchor",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "w6_mq28_anchor_zeke",
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq28"
+          },
+          {
+            "type": "milestone_not_set",
+            "milestone": "ms_w6_bridge_zeke_anchor"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_bridge_zeke_anchor"
+          },
+          {
+            "type": "show_message",
+            "message": "Zeke gives the bridge the memory of choosing the crew after every useful trick ran out. The static holds one narrow plank."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_memory_bridge",
+    "label": "Gh0st's anchor",
+    "trigger": "w6_mq28_anchor_ghost",
+    "handlers": [
+      "w6_mq28_anchor_ghost"
+    ],
+    "completion_milestone": "ms_w6_bridge_ghost_anchor",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "w6_mq28_anchor_ghost",
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq28"
+          },
+          {
+            "type": "milestone_not_set",
+            "milestone": "ms_w6_bridge_ghost_anchor"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_bridge_ghost_anchor"
+          },
+          {
+            "type": "show_message",
+            "message": "Gh0st gives the bridge the memory of lowering the rifle after the command ended. The next plank forms without asking who authorized it."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_memory_bridge",
+    "label": "Orion's anchor",
+    "trigger": "w6_mq28_anchor_orion",
+    "handlers": [
+      "w6_mq28_anchor_orion"
+    ],
+    "completion_milestone": "ms_w6_bridge_orion_anchor",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "w6_mq28_anchor_orion",
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq28"
+          },
+          {
+            "type": "milestone_not_set",
+            "milestone": "ms_w6_bridge_orion_anchor"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_bridge_orion_anchor"
+          },
+          {
+            "type": "show_message",
+            "message": "Orion gives the bridge the memory of waking to a world that kept moving without him. The third plank hums like grief refusing to dissolve."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_memory_bridge",
+    "label": "Nova's anchor",
+    "trigger": "w6_mq28_anchor_nova",
+    "handlers": [
+      "w6_mq28_anchor_nova"
+    ],
+    "completion_milestone": "ms_w6_bridge_nova_anchor",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "w6_mq28_anchor_nova",
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq28"
+          },
+          {
+            "type": "milestone_not_set",
+            "milestone": "ms_w6_bridge_nova_anchor"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_bridge_nova_anchor"
+          },
+          {
+            "type": "show_message",
+            "message": "Nova gives the bridge Jed's workshop as it was, not as Vale would repair it. The final plank forms with the scar still visible."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_memory_bridge",
+    "label": "unfinished bridge",
+    "trigger": "w6_mq28_build_bridge",
+    "handlers": [
+      "w6_mq28_build_bridge"
+    ],
+    "completion_milestone": null,
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {
+      "requires_milestones": [
+        "ms_w6_bridge_zeke_anchor",
+        "ms_w6_bridge_ghost_anchor",
+        "ms_w6_bridge_orion_anchor",
+        "ms_w6_bridge_nova_anchor"
+      ]
+    },
+    "events": [
+      {
+        "id": "w6_mq28_build_bridge",
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq28"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_bridge_zeke_anchor"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_bridge_ghost_anchor"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_bridge_orion_anchor"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_bridge_nova_anchor"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w6_mq28",
+            "task_id": "build_bridge"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_room_state",
+            "room_id": "source_memory_bridge",
+            "state_key": "bridge_built",
+            "value": true
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_mq28",
+            "task_id": "build_bridge"
+          },
+          {
+            "type": "show_message",
+            "message": "Tideglass sand, Foundry heat, Spire rain, the Astra's engine note, and the Colony's first real morning become solid sections of bridge. Every piece holds because someone else remembers it too. The crossing east to Shared Memory Span holds. The crew pauses there around one last campfire promise."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_memory_bridge_span",
+    "label": "campfire promise",
+    "trigger": "w6_mq28_final_banter",
+    "handlers": [
+      "w6_mq28_final_banter"
+    ],
+    "completion_milestone": null,
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "w6_mq28_final_banter",
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq28"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w6_mq28",
+            "task_id": "build_bridge"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w6_mq28",
+            "task_id": "final_banter"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_mq28",
+            "task_id": "final_banter"
+          },
+          {
+            "type": "show_message",
+            "message": "Nova: Vale thinks being alone will stop pain.\n\nZeke: Being alone is pain.\n\nGh0st sets one hand on the bridge. Orion adds a low harmony. The path steadies when no one tries to carry it by themselves."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_memory_bridge_span",
+    "label": "memory altar box",
+    "trigger": "find_vhs_tape_10",
+    "handlers": [
+      "find_vhs_tape_10"
+    ],
+    "completion_milestone": null,
+    "completion_quest": null,
+    "inspect_after_completion": false,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "find_vhs_tape_10",
+        "conditions": [],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "give_item",
+            "item_id": "vhs_tape_10",
+            "quantity": 1
+          },
+          {
+            "type": "show_message",
+            "message": "Recovered Film 10, 'Shackles,' from The Great Frontier movie collection."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_memory_threshold",
+    "label": "singularity threshold",
+    "trigger": "w6_mq28_reach_singularity",
+    "handlers": [
+      "w6_mq28_reach_singularity"
+    ],
+    "completion_milestone": null,
+    "completion_quest": null,
+    "inspect_after_completion": false,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "w6_mq28_reach_singularity",
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq28"
+          },
+          {
+            "type": "quest_task_done",
+            "quest_id": "w6_mq28",
+            "task_id": "final_banter"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w6_mq28",
+            "task_id": "reach_singularity"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_room_state",
+            "room_id": "source_memory_threshold",
+            "state_key": "crossing_open",
+            "value": true
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_mq28",
+            "task_id": "reach_singularity"
+          },
+          {
+            "type": "give_xp",
+            "xp": 1500
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w6_mq28"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_mq28_complete"
+          },
+          {
+            "type": "warp",
+            "room_id": "source_memory_stair",
+            "travel_transition": "source"
+          },
+          {
+            "type": "start_quest",
+            "quest_id": "w6_mq29"
+          },
+          {
+            "type": "track_quest",
+            "quest_id": "w6_mq29"
+          },
+          {
+            "type": "show_message",
+            "message": "The bridge reaches the Memory Stair. Vale offers Nova a perfect world without grief, without Jed's death, without every scar that taught the crew to choose each other. She lets the image fade. Love that cannot survive truth is not love."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_memory_threshold",
+    "label": "names beneath the light",
+    "trigger": "w6_sq29_aethel_grave",
+    "handlers": [
+      "w6_sq29_aethel_grave"
+    ],
+    "completion_milestone": "ms_w6_aethel_names_traced",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "w6_sq29_aethel_grave",
+        "conditions": [
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w6_sq29"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "start_quest",
+            "quest_id": "w6_sq29"
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_sq29",
+            "task_id": "trace_names"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_aethel_names_traced"
+          },
+          {
+            "type": "show_message",
+            "message": "The names are not an epitaph. Each one answers the next in a pattern that climbs toward the Memory Stair."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_memory_stair",
+    "label": "Jed's door",
+    "trigger": "w6_mq29_refuse_jed_revision",
+    "handlers": [
+      "w6_mq29_refuse_jed_revision"
+    ],
+    "completion_milestone": "ms_w6_refused_jed_revision",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "w6_mq29_refuse_jed_revision",
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq29"
+          },
+          {
+            "type": "milestone_not_set",
+            "milestone": "ms_w6_refused_jed_revision"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_refused_jed_revision"
+          },
+          {
+            "type": "show_message",
+            "message": "Vale offers a mine where Jed never dies. Nova leaves the real door closed, because love edited into comfort is only another cage."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_memory_stair",
+    "label": "Astra wreckage",
+    "trigger": "w6_mq29_refuse_astra_revision",
+    "handlers": [
+      "w6_mq29_refuse_astra_revision"
+    ],
+    "completion_milestone": "ms_w6_refused_astra_revision",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "w6_mq29_refuse_astra_revision",
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq29"
+          },
+          {
+            "type": "milestone_not_set",
+            "milestone": "ms_w6_refused_astra_revision"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_refused_astra_revision"
+          },
+          {
+            "type": "show_message",
+            "message": "Vale offers an Astra that never crashes. Orion touches the impossible hull and lets it pass, because erasing the wreck erases everyone it saved."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_memory_stair",
+    "label": "Foundry catwalk",
+    "trigger": "w6_mq29_refuse_foundry_revision",
+    "handlers": [
+      "w6_mq29_refuse_foundry_revision"
+    ],
+    "completion_milestone": "ms_w6_refused_foundry_revision",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "w6_mq29_refuse_foundry_revision",
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq29"
+          },
+          {
+            "type": "milestone_not_set",
+            "milestone": "ms_w6_refused_foundry_revision"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_refused_foundry_revision"
+          },
+          {
+            "type": "show_message",
+            "message": "Vale offers Gh0st a clean origin with no assembly line and no guilt. Gh0st refuses the lie because choice only matters after the damage is real."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_memory_stair",
+    "label": "memory stair",
+    "trigger": "w6_mq29_climb_stair",
+    "handlers": [
+      "w6_mq29_climb_stair"
+    ],
+    "completion_milestone": null,
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {
+      "requires_milestones": [
+        "ms_w6_refused_jed_revision",
+        "ms_w6_refused_astra_revision",
+        "ms_w6_refused_foundry_revision"
+      ]
+    },
+    "events": [
+      {
+        "id": "w6_mq29_climb_stair",
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq29"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_refused_jed_revision"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_refused_astra_revision"
+          },
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_refused_foundry_revision"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w6_mq29",
+            "task_id": "climb_stair"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_room_state",
+            "room_id": "source_memory_stair",
+            "state_key": "ascent_open",
+            "value": true
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_mq29",
+            "task_id": "climb_stair"
+          },
+          {
+            "type": "show_message",
+            "message": "The stair climbs through every world the crew survived. Vale offers polished revisions: a kinder mine, a safer jungle, a cleaner Spire, a Foundry without screaming, a Ring without bodies. Nova keeps the scars because they belong to real people. The eastern ascent now holds beneath their feet, leading to World-Fracture Landing."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_memory_stair",
+    "label": "aethel grave",
+    "trigger": "w6_sq29_tune_grave",
+    "handlers": [
+      "w6_sq29_tune_grave"
+    ],
+    "completion_milestone": "ms_w6_aethel_grave_tuned",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {
+      "requires_milestones": [
+        "ms_w6_aethel_names_traced"
+      ]
+    },
+    "events": [
+      {
+        "id": "w6_sq29_tune_grave",
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_aethel_names_traced"
+          },
+          {
+            "type": "milestone_not_set",
+            "milestone": "ms_w6_aethel_grave_tuned"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_sq29",
+            "task_id": "find_grave"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_aethel_grave_tuned"
+          },
+          {
+            "type": "show_message",
+            "message": "Orion tunes to the spaces between the names. The grave answers as a chorus, never a single note."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_memory_fragments",
+    "label": "answering chorus",
+    "trigger": "w6_sq29_carry_chorus",
+    "handlers": [
+      "w6_sq29_carry_chorus"
+    ],
+    "completion_milestone": "ms_w6_ancestral_grace_unlocked",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {
+      "requires_milestones": [
+        "ms_w6_aethel_grave_tuned"
+      ]
+    },
+    "events": [
+      {
+        "id": "w6_sq29_carry_chorus",
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_aethel_grave_tuned"
+          },
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w6_sq29"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_sq29",
+            "task_id": "carry_chorus"
+          },
+          {
+            "type": "unlock_skill",
+            "skill_id": "orion_ancestral_grace"
+          },
+          {
+            "type": "give_xp",
+            "xp": 750
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w6_sq29"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_ancestral_grace_unlocked"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_ancestral_grace_unlocked"
+          },
+          {
+            "type": "show_message",
+            "message": "Orion reads the names of Aethel victims and survivors held by Architect systems. Their continuity remains their own. Ancestral Grace unlocked."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_spire_thought",
+    "label": "wreck timeline",
+    "trigger": "w6_sq30_final_scavenge",
+    "handlers": [
+      "w6_sq30_final_scavenge"
+    ],
+    "completion_milestone": "ms_w6_astra_timeline_identified",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "w6_sq30_final_scavenge",
+        "conditions": [
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w6_sq30"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "start_quest",
+            "quest_id": "w6_sq30"
+          },
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_sq30",
+            "task_id": "identify_timeline"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_astra_timeline_identified"
+          },
+          {
+            "type": "show_message",
+            "message": "The wreck belongs to a timeline where the crew treated survival as certainty. Its fracture signature points into the Impossible Archive."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_spire_archive",
+    "label": "future astra hull",
+    "trigger": "w6_sq30_detach_hull",
+    "handlers": [
+      "w6_sq30_detach_hull"
+    ],
+    "completion_milestone": "ms_w6_astra_hull_detached",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {
+      "requires_milestones": [
+        "ms_w6_astra_timeline_identified"
+      ]
+    },
+    "events": [
+      {
+        "id": "w6_sq30_detach_hull",
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_astra_timeline_identified"
+          },
+          {
+            "type": "milestone_not_set",
+            "milestone": "ms_w6_astra_hull_detached"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_sq30",
+            "task_id": "recover_hull"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_astra_hull_detached"
+          },
+          {
+            "type": "show_message",
+            "message": "Zeke cuts around the impact scar, not through it. The fragment comes free; the doomed future does not follow."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_spire_arena",
+    "label": "empty armor socket",
+    "trigger": "w6_sq30_fit_hull",
+    "handlers": [
+      "w6_sq30_fit_hull"
+    ],
+    "completion_milestone": "ms_w6_final_scavenge_complete",
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {
+      "requires_milestones": [
+        "ms_w6_astra_hull_detached"
+      ]
+    },
+    "events": [
+      {
+        "id": "w6_sq30_fit_hull",
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_w6_astra_hull_detached"
+          },
+          {
+            "type": "quest_not_completed",
+            "quest_id": "w6_sq30"
+          }
+        ],
+        "repeatable": false,
+        "actions": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_sq30",
+            "task_id": "fit_hull"
+          },
+          {
+            "type": "give_item",
+            "item_id": "starborn_mod",
+            "quantity": 1
+          },
+          {
+            "type": "give_xp",
+            "xp": 800
+          },
+          {
+            "type": "complete_quest",
+            "quest_id": "w6_sq30"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_final_scavenge_complete"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_final_scavenge_complete"
+          },
+          {
+            "type": "show_message",
+            "message": "Zeke extracts the future Astra fragment and refuses the timeline it came from. The Starborn mod is not proof the ship dies; it is proof the crew can still change the ending."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_center",
+    "label": "Vale",
+    "trigger": "w6_mq30_confront_vale_scene",
+    "handlers": [
+      "w6_mq30_confront_vale_scene"
+    ],
+    "completion_milestone": null,
+    "completion_quest": null,
+    "inspect_after_completion": true,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "w6_mq30_confront_vale_scene",
+        "conditions": [
+          {
+            "type": "quest_active",
+            "quest_id": "w6_mq30"
+          },
+          {
+            "type": "quest_task_not_done",
+            "quest_id": "w6_mq30",
+            "task_id": "confront_vale"
+          },
+          {
+            "type": "in_room",
+            "room_id": "source_center"
+          }
+        ],
+        "repeatable": true,
+        "actions": [
+          {
+            "type": "start_dialogue",
+            "npc": "line:vale_w6_final_confrontation"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_new_world",
+    "label": "beach photograph",
+    "trigger": "w6_replay_epilogue",
+    "handlers": [
+      "w6_replay_epilogue"
+    ],
+    "completion_milestone": null,
+    "completion_quest": null,
+    "inspect_after_completion": false,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "w6_replay_epilogue",
+        "conditions": [
+          {
+            "type": "milestone_set",
+            "milestone": "ms_game_complete"
+          }
+        ],
+        "repeatable": true,
+        "actions": [
+          {
+            "type": "play_cinematic",
+            "scene_id": "scene_w6_epilogue_credits"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_zeke_nightmare_node_scale_03",
+    "label": "door",
+    "trigger": "warp_source_zeke_nightmare_node_scale_03_to_entry",
+    "handlers": [
+      "warp_source_zeke_nightmare_node_scale_03_to_entry"
+    ],
+    "completion_milestone": null,
+    "completion_quest": null,
+    "inspect_after_completion": false,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "warp_source_zeke_nightmare_node_scale_03_to_entry",
+        "conditions": [],
+        "repeatable": true,
+        "actions": [
+          {
+            "type": "show_message",
+            "message": "You take the door, emerging back at Infinite Cubicle."
+          },
+          {
+            "type": "warp",
+            "room_id": "source_zeke_nightmare",
+            "travel_transition": "airlock"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_gh0st_nightmare_node_scale_03",
+    "label": "clean signal",
+    "trigger": "warp_source_gh0st_nightmare_node_scale_03_to_entry",
+    "handlers": [
+      "warp_source_gh0st_nightmare_node_scale_03_to_entry"
+    ],
+    "completion_milestone": null,
+    "completion_quest": null,
+    "inspect_after_completion": false,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "warp_source_gh0st_nightmare_node_scale_03_to_entry",
+        "conditions": [],
+        "repeatable": true,
+        "actions": [
+          {
+            "type": "show_message",
+            "message": "You take the clean signal, emerging back at Endless War."
+          },
+          {
+            "type": "warp",
+            "room_id": "source_gh0st_nightmare",
+            "travel_transition": "source"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_orion_nightmare_node_scale_03",
+    "label": "harmonic wave",
+    "trigger": "warp_source_orion_nightmare_node_scale_03_to_entry",
+    "handlers": [
+      "warp_source_orion_nightmare_node_scale_03_to_entry"
+    ],
+    "completion_milestone": null,
+    "completion_quest": null,
+    "inspect_after_completion": false,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "warp_source_orion_nightmare_node_scale_03_to_entry",
+        "conditions": [],
+        "repeatable": true,
+        "actions": [
+          {
+            "type": "show_message",
+            "message": "You take the harmonic wave, emerging back at Silent Shore."
+          },
+          {
+            "type": "warp",
+            "room_id": "source_orion_nightmare",
+            "travel_transition": "source"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_spire_thought_node_scale_04",
+    "label": "return circuit",
+    "trigger": "warp_source_spire_thought_node_scale_04_to_entry",
+    "handlers": [
+      "warp_source_spire_thought_node_scale_04_to_entry"
+    ],
+    "completion_milestone": null,
+    "completion_quest": null,
+    "inspect_after_completion": false,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "warp_source_spire_thought_node_scale_04_to_entry",
+        "conditions": [],
+        "repeatable": true,
+        "actions": [
+          {
+            "type": "show_message",
+            "message": "You take the circuit, emerging back at Spire of Thought."
+          },
+          {
+            "type": "warp",
+            "room_id": "source_spire_thought",
+            "travel_transition": "passage"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_center_node_scale_03",
+    "label": "return to the fracture",
+    "trigger": "w6_resume_silence_at_center",
+    "handlers": [
+      "w6_resume_silence_at_center"
+    ],
+    "completion_milestone": null,
+    "completion_quest": null,
+    "inspect_after_completion": false,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "w6_resume_silence_at_center",
+        "conditions": [],
+        "repeatable": true,
+        "actions": [
+          {
+            "type": "warp",
+            "room_id": "source_center",
+            "travel_transition": "source"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_campfire_node_scale_final",
+    "label": "trail",
+    "trigger": "warp_source_campfire_node_scale_final_to_entry",
+    "handlers": [
+      "warp_source_campfire_node_scale_final_to_entry"
+    ],
+    "completion_milestone": null,
+    "completion_quest": null,
+    "inspect_after_completion": false,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "warp_source_campfire_node_scale_final_to_entry",
+        "conditions": [],
+        "repeatable": true,
+        "actions": [
+          {
+            "type": "show_message",
+            "message": "You take the trail, emerging back at The Campfire."
+          },
+          {
+            "type": "warp",
+            "room_id": "source_campfire",
+            "travel_transition": "passage"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_echo_mines_node_scale_final",
+    "label": "echo",
+    "trigger": "warp_source_echo_mines_node_scale_final_to_entry",
+    "handlers": [
+      "warp_source_echo_mines_node_scale_final_to_entry"
+    ],
+    "completion_milestone": null,
+    "completion_quest": null,
+    "inspect_after_completion": false,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "warp_source_echo_mines_node_scale_final_to_entry",
+        "conditions": [],
+        "repeatable": true,
+        "actions": [
+          {
+            "type": "show_message",
+            "message": "You take the echo, emerging back at Echo of the Mines."
+          },
+          {
+            "type": "warp",
+            "room_id": "source_echo_mines",
+            "travel_transition": "source"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_memory_bridge_node_scale_final",
+    "label": "light beam",
+    "trigger": "warp_source_memory_bridge_node_scale_final_to_entry",
+    "handlers": [
+      "warp_source_memory_bridge_node_scale_final_to_entry"
+    ],
+    "completion_milestone": null,
+    "completion_quest": null,
+    "inspect_after_completion": false,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "warp_source_memory_bridge_node_scale_final_to_entry",
+        "conditions": [],
+        "repeatable": true,
+        "actions": [
+          {
+            "type": "show_message",
+            "message": "You take the light beam, emerging back at Memory Bridge."
+          },
+          {
+            "type": "warp",
+            "room_id": "source_memory_bridge",
+            "travel_transition": "source"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_memory_stair_node_scale_final",
+    "label": "slide",
+    "trigger": "warp_source_memory_stair_node_scale_final_to_entry",
+    "handlers": [
+      "warp_source_memory_stair_node_scale_final_to_entry"
+    ],
+    "completion_milestone": null,
+    "completion_quest": null,
+    "inspect_after_completion": false,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "warp_source_memory_stair_node_scale_final_to_entry",
+        "conditions": [],
+        "repeatable": true,
+        "actions": [
+          {
+            "type": "show_message",
+            "message": "You take the slide, emerging back at Memory Stair."
+          },
+          {
+            "type": "warp",
+            "room_id": "source_memory_stair",
+            "travel_transition": "passage"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_center_node_scale_final",
+    "label": "echo",
+    "trigger": "warp_source_center_node_scale_final_to_entry",
+    "handlers": [
+      "warp_source_center_node_scale_final_to_entry"
+    ],
+    "completion_milestone": null,
+    "completion_quest": null,
+    "inspect_after_completion": false,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "warp_source_center_node_scale_final_to_entry",
+        "conditions": [],
+        "repeatable": true,
+        "actions": [
+          {
+            "type": "show_message",
+            "message": "You take the echo, emerging back at The Center."
+          },
+          {
+            "type": "warp",
+            "room_id": "source_center",
+            "travel_transition": "source"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "room": "source_new_world_node_scale_final",
+    "label": "call astra shuttle",
+    "trigger": "source_board_astra",
+    "handlers": [
+      "source_board_astra"
+    ],
+    "completion_milestone": null,
+    "completion_quest": null,
+    "inspect_after_completion": false,
+    "completed_message": null,
+    "prerequisites": {},
+    "events": [
+      {
+        "id": "source_board_astra",
+        "conditions": [],
+        "repeatable": true,
+        "actions": [
+          {
+            "type": "show_message",
+            "message": "The shuttle climbs through the morning atmosphere, docking smoothly with the Astra in high orbit."
+          }
+        ]
+      }
+    ]
+  }
+]

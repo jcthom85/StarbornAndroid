@@ -12,8 +12,8 @@ class SessionInventoryBridge(
     init { inventory.addSnapshotListener(listener) }
 
     fun restore(state: GameSessionState) {
-        inventory.restore(state.inventory)
-        session.restore(state.copy(inventory = inventory.snapshot()))
+        session.restore(state)
+        inventory.restore(session.state.value.inventory)
     }
 
     fun snapshot(): GameSessionState = session.state.value.copy(inventory = inventory.snapshot())

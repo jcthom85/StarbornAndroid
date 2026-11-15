@@ -326,6 +326,97 @@ class AuthoredEncounterRuntimeTest {
         }
     }
 
+    @Test fun anUnequippedWeaponDoesNotCarryIntoCombat() {
+        val fixture = prototypeFixture()
+        val arrival = fixture.copy(
+            equippedWeapons = fixture.equippedWeapons - "nova",
+            unlockedWeapons = fixture.unlockedWeapons + "mining_pistol"
+        )
+        val (vm, _) = create(listOf("the_iron_warden"), arrival)
+        try {
+            assertNull(vm.combatState!!.combatants.getValue("nova").combatant.weapon)
+        } finally { vm.close() }
+    }
+
+    @Test fun earlyOptionalGearCanBeUsedWithoutChangingTheEarnedCombatRoute() {
+        val adapter = MoshiProvider.instance.adapter(GameSessionState::class.java)
+        val project = if (File("src/debug/assets").exists()) File(".") else File("app")
+        val warden = requireNotNull(adapter.fromJson(File(project,
+            "src/debug/assets/playtest/world1/world1_w1_mq05.json").readText())).copy(roomId = "launch_bay")
+        fun fixture(name: String) = requireNotNull(javaClass.getResourceAsStream("/playtest/$name.json"))
+            .bufferedReader().use { requireNotNull(adapter.fromJson(it.readText())) }
+        val canopy = assets.loadRooms().single { it.id == "sector9_canopy" }
+        val canopyDescriptor = EncounterDescriptor(canopy.enemyInstances.orEmpty().map {
+            EncounterEnemyInstance(it.enemyId, hp = it.hp, vitality = it.vitality, stability = it.stability,
+                extraDrops = it.extraDrops)
+        })
+        val results = mutableListOf("fight,seed,loadout,actions,incomingDamage,healingItems")
+        fun compare(
+            fight: String, arrival: GameSessionState, enemies: List<String>, snack: String, owner: String,
+            buff: String, laser: Boolean, encounter: EncounterDescriptor? = null
+        ) {
+            for (seed in listOf(17, 41, 73)) for (loadout in listOf("starter", "equipped", "use-once")) {
+                val state = if (loadout == "starter") arrival else arrival.copy(
+                    inventory = (arrival.inventory + (snack to 1)).let {
+                        if (laser) it + ("nova_laser_blaster" to 1) else it
+                    },
+                    equippedItems = arrival.equippedItems + ("$owner:snack" to snack),
+                    equippedWeapons = if (laser) arrival.equippedWeapons + ("nova" to "nova_laser_blaster")
+                        else arrival.equippedWeapons
+                )
+                val (vm, store) = create(enemies, state, seed, encounter)
+                try {
+                    var used = false
+                    until(vm, limit = 2400) {
+                        val battle = requireNotNull(vm.combatState)
+                        if (battle.outcome != null) return@until true
+                        vm.playerParty.forEach { vm.selectReadyPlayer(it.id) }
+                        val actor = vm.awaitingAction.value ?: return@until false
+                        val wounded = battle.combatants.values.filter {
+                            it.combatant.side == CombatSide.PLAYER && it.isAlive && it.hp < it.combatant.stats.maxHp * .45
+                        }.minByOrNull { it.hp.toDouble() / it.combatant.stats.maxHp }
+                        val heal = vm.inventory.value.filter {
+                            it.quantity > 0 && it.item.type.equals("consumable", true) && (it.item.effect?.restoreHp ?: 0) > 0
+                        }.maxByOrNull { it.item.effect?.restoreHp ?: 0 }
+                        when {
+                            wounded != null && heal != null ->
+                                vm.useItem(heal, if (heal.item.effect?.target == "party") null else wounded.combatant.id)
+                            loadout == "use-once" && actor == owner && !used -> {
+                                assertTrue(vm.canUseSnack(actor))
+                                vm.useSnack()
+                                val after = requireNotNull(vm.combatState).combatants.getValue(actor)
+                                assertTrue(after.buffs.any { it.effect.stat == buff })
+                                assertTrue(vm.snackCooldownRemaining(actor) > 0)
+                                assertFalse(vm.canUseSnack(actor))
+                                used = true
+                            }
+                            else -> vm.playerAttack(enemies.first { battle.combatants[it]?.isAlive == true })
+                        }
+                        false
+                    }
+                    val result = requireNotNull(vm.combatState)
+                    assertTrue("$fight seed=$seed loadout=$loadout outcome=${result.outcome}", result.outcome is CombatOutcome.Victory)
+                    assertEquals(loadout == "use-once", used)
+                    if (loadout != "starter") assertEquals(1, store.state.value.inventory[snack])
+                    val actions = result.log.filterIsInstance<CombatLogEntry.ActionQueued>()
+                        .filter { it.action.actorId in state.partyMembers }
+                    val damage = result.log.filterIsInstance<CombatLogEntry.Damage>()
+                        .filter { it.targetId in state.partyMembers }.sumOf { it.amount }
+                    results += "$fight,$seed,$loadout,${actions.size},$damage,${actions.count { it.action is CombatAction.ItemUse }}"
+                } finally { vm.close() }
+            }
+        }
+        compare("Warden", warden, listOf("the_iron_warden"), "starbar_crunch", "nova", "evasion", laser = false)
+        compare("Canopy", fixture("focused-combat/plant-pair"), listOf("spore_spitter", "stalker_vine"),
+            "starbar_crunch", "nova", "evasion", laser = true, encounter = canopyDescriptor)
+        compare("Beast", fixture("world2-beast-main"), listOf("the_beast"),
+            "ion_poppers", "zeke", "accuracy", laser = true)
+        File("build/reports/world2-readiness/early-optional-gear.csv").apply {
+            requireNotNull(parentFile).mkdirs()
+            writeText(results.joinToString("\n", postfix = "\n"))
+        }
+    }
+
     @Test fun avatarPartnerDeathBreaksPreparationPermanentlyAndOnlyBodyVictoryPays() {
         for (bodyFirst in listOf(false, true)) {
             val (vm, store) = create(listOf("compliance_avatar"))

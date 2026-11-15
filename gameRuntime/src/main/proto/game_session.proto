@@ -62,6 +62,7 @@ message GameSessionProto {
 
   map<string, RoomGroundItemsProto> room_ground_items = 60;
   repeated string viewed_schematics = 61;
+  bool physical_gear_inventory = 62;
 
   reserved 19;
   reserved 28, 29, 30, 31;

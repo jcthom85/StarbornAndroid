@@ -91,8 +91,8 @@ internal fun HubFieldMenu(
         minimap = null, fullMap = null, theme = ui.theme, isCurrentRoomDark = false,
         onMenuAction = viewModel::onMenuActionInvoked, creditsLabel = ui.progressionSummary.creditsLabel,
         inventoryItems = ui.inventoryPreview, equippedItems = ui.equippedItems, completedMilestones = ui.completedMilestones,
-        unlockedWeapons = ui.unlockedWeapons, equippedWeapons = ui.equippedWeapons,
-        unlockedArmors = ui.unlockedArmors, equippedArmors = ui.equippedArmors,
+        equippedWeapons = ui.equippedWeapons,
+        equippedArmors = ui.equippedArmors,
         onEquipItem = viewModel::equipInventoryItem,
         onEquipMod = { slot, item, character ->
             val result = viewModel.requestEquipInventoryMod(slot, item, character)

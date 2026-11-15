@@ -51,10 +51,12 @@ object GameBootstrap {
         val playerId = player?.id ?: "nova"
         val party = if (debug) listOf("nova", "zeke", "orion", "gh0st") else listOf(playerId)
         val roster = players.map { it.id }.ifEmpty { party }
-        val (weapons, equippedWeapons) = startingWeapons(roster, items, debug)
-        val (armors, equippedArmors) = startingArmors(roster, items, debug)
+        val (weapons, equippedWeapons) = startingWeapons(if (debug) roster else party, items, debug)
+        val (armors, equippedArmors) = startingArmors(if (debug) roster else party, items, debug)
         return GameSessionState(worldId = "world_1", hubId = "hub_1_homestead", roomId = "pit_nova_bunk", playerId = playerId,
             progressionPrototypeVersion = com.example.starborn.domain.leveling.CrewBuildPrototype.VERSION,
+            physicalGearInventory = true,
+            inventory = (equippedWeapons.values + equippedArmors.values).groupingBy { it }.eachCount(),
             playerLevel = player?.level ?: 1, playerXp = player?.xp ?: 0, partyMembers = party,
             partyMemberLevels = party.associateWith { player?.level ?: 1 }, partyMemberXp = party.associateWith { player?.xp ?: 0 },
             unlockedWeapons = weapons, unlockedArmors = armors, equippedWeapons = equippedWeapons, equippedArmors = equippedArmors,
@@ -62,11 +64,9 @@ object GameBootstrap {
     }
 
     fun newGamePlus(players: List<Player>, items: List<Item>, previous: GameSessionState): GameSessionState {
-        val retained = previous.migrateCrewProgressionState()
+        val retained = com.example.starborn.domain.inventory.BaseEquipmentRules.restore(previous.migrateCrewProgressionState())
         val base = newGame(players, items)
         val party = retained.partyMembers.ifEmpty { base.partyMembers }
-        val (weapons, equippedWeapons) = startingWeapons(party, items, false)
-        val (armors, equippedArmors) = startingArmors(party, items, false)
         return base.copy(partyMembers = party, playerLevel = retained.playerLevel.coerceAtLeast(base.playerLevel), playerXp = retained.playerXp,
             playerCredits = retained.playerCredits.coerceAtLeast(5000), inventory = retained.inventory,
             unlockedSkills = retained.unlockedSkills, playerAp = retained.playerAp,
@@ -75,8 +75,8 @@ object GameBootstrap {
             purchasedSkillNodes = retained.purchasedSkillNodes,
             partyMemberLevels = retained.partyMemberLevels.ifEmpty { party.associateWith { base.playerLevel } },
             partyMemberXp = retained.partyMemberXp.ifEmpty { party.associateWith { base.playerXp } },
-            unlockedWeapons = retained.unlockedWeapons + weapons, unlockedArmors = retained.unlockedArmors + armors,
-            equippedWeapons = retained.equippedWeapons.ifEmpty { equippedWeapons }, equippedArmors = retained.equippedArmors.ifEmpty { equippedArmors },
+            unlockedWeapons = retained.unlockedWeapons, unlockedArmors = retained.unlockedArmors,
+            equippedWeapons = retained.equippedWeapons, equippedArmors = retained.equippedArmors,
             equippedItems = retained.equippedItems, completedMilestones = setOf("ms_master_protocol_active"))
     }
 }

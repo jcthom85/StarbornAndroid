@@ -52,7 +52,7 @@ At the workshop checkpoint, after certification and before the Fork/Warden, revi
 1. Watch or skip the intro, then wait for the bunk fade to finish. Turn on **bunk light**.
 2. Inspect **door control panel** while the light is on. This isolates the conduit and opens the exit. If the panel is unavailable, confirm the light is on; do not turn it off yet.
 3. Inspect **cargo netting** and **rusty locker** while the light is on. Use **sleeping shelf** if you want to rest. Resting is optional and restores the party; dismiss its prompt fully.
-4. Go **west** to Pod Row (`pit_L2_corridor`). Inspect **sleeping pods** and **posters**.
+4. Go **west** to Pod Row (`pit_L2_corridor`). Pick up **Starbar Crunch** from the room and equip it in Nova’s **Snack** slot for +6 Speed. The **Snack** action in combat boosts her evasion for two turns and then recharges. Inspect **sleeping pods** and **posters**.
 5. Go **west** to Supply Closet (`pit_storage`). Turn on **emergency breaker** before attempting the **loose floor panel**. Inspect the panel for the first VHS tape; also inspect **filter units**. Return **east** to Pod Row.
 6. Go **south** to Lift Shaft (`pit_shaft`). Inspect **ladder** and **pipe**.
 7. Go **west** to Jed's Bunk (`pit_jed_bunk`). Talk to **Jed** until he has told you to visit the workshop and the conversation ends. Inspect **tool case** for spare supplies and **manuals** for lore.
@@ -285,6 +285,7 @@ Use this section to finish every side inspection, cache, and lore interaction. C
 #### Pod Row (`pit_L2_corridor`)
 
 - **Exits:** South to Lift Shaft (`pit_shaft`); East to Nova's Bunk (`pit_nova_bunk`); West to Supply Closet (`pit_storage`).
+- **Ground pickup:** Starbar Crunch.
 - **sleeping pods**: Inspect/select this action. In-room feedback: Most doors carry a name, a shift code, and a repair tally.
 - **posters**: Inspect/select this action. In-room feedback: The faces of the 'Founders' are faded and covered in grease stains.
 

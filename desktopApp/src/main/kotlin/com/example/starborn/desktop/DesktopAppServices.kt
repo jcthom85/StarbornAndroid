@@ -324,7 +324,6 @@ class DesktopAppServices(
         inventoryBridge.restore(seedState.migrateOpeningNarrativeState().migrateCrewProgressionState())
         sessionStore.resetTutorialProgress()
         sessionStore.resetQuestProgress()
-        inventoryService.restore(emptyMap())
         if (debugFullInventory) {
             inventoryService.restore(itemRepository.allItems().associate { it.id to 99 })
             sessionStore.addCredits(50_000)
@@ -357,7 +356,6 @@ class DesktopAppServices(
             promptManager.discardMatching { true }
             encounterCoordinator.clear()
             inventoryBridge.restore(snapshot)
-            inventoryService.restore(snapshot.inventory)
             sessionActive = false
             playIntroOnStart = false
             return true
@@ -414,7 +412,6 @@ class DesktopAppServices(
         )
         inventoryBridge.restore(initialState.migrateOpeningNarrativeState().migrateCrewProgressionState())
         node?.let { sessionStore.visitNode(it.id) }
-        inventoryService.restore(emptyMap())
         inventoryService.addItem("medkit", 5)
         sessionActive = false
         playIntroOnStart = false

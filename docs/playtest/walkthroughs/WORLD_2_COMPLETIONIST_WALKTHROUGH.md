@@ -211,7 +211,7 @@ Both fern and spore scans are in Resonant Canopy. Reach gamma before recovering 
 
 78. From **Spore Thickets**, go **east** to **Hound Nest** (`sector9_wilds_nest`).
 
-79. At **Hound Nest**, defeat the two Shard-Hounds to retrieve the guarded supply pack, harvest **shard-hound remains**, and open **trampled supply pack** for Beast Meat, Wiring Bundle, Ballistic Weave and an Energy Core. The weave and wiring can make Zeke’s **Brawler Rig** in Tinkering.
+79. At **Hound Nest**, defeat the two Shard-Hounds for **Ion Poppers** and **Beast Meat** from the victory rewards. Harvest **shard-hound remains**, then open **trampled supply pack** for Beast Meat, Wiring Bundle, Ballistic Weave and an Energy Core. The weave and wiring can make Zeke’s **Brawler Rig** in Tinkering.
 
 80. From **Hound Nest**, go **west** to **Spore Thickets** (`sector9_wilds_thickets`) -> **south** to **Poison Hollow** (`sector9_wilds_hollow`).
 
@@ -515,7 +515,7 @@ There is no real-time countdown. A correct mask latches until you cross. Follow 
 
 209. At **Transmitter Site**, open **Menu -> Tinkering**, learn Rapid Capacitor schematic, select **Rapid Capacitor Mod**, and craft **Dominion Transmitter Core x1 + Scrap Metal x1 + Wiring Bundle x1**.
 
-210. At **Transmitter Site**, verify Stolen Tech completes for **150 event XP**. A toolbox capacitor may give another copy; only successful assembly after core recovery fulfills this quest. **Known item-copy issue:** Rapid Capacitor currently grants **Speed +5 and Agility +3**; do not assume it shortens skill cooldowns despite that description.
+210. At **Transmitter Site**, verify Stolen Tech completes for **150 event XP**. The toolbox holds a separate copy; assemble the mod after recovering the core to fulfill this quest. Equip **Rapid Capacitor** for **+5 Speed and +3 Agility**, or use it to make a Resonance Capacitor Mod.
 
 **Check before moving on:** All five side quests complete: Botanist, Lost Patrol, Tideglass Day, Ancient Echoes and Stolen Tech. Use journal/recovery reference before launch if anything remains active.
 
@@ -774,7 +774,7 @@ A dense tangle of glowing vines and thorned thickets. The air is thick with purp
 Two Shard-Hounds circle a shallow den, crystalline spines raised. Shard-hound tracks crisscross the mud around shard-hound remains and a trampled supply pack dragged beneath the thorns.
 
 - **Exits:** **west** -> Spore Thickets (`sector9_wilds_thickets`).
-- **Direct encounters:** shard_hound, shard_hound.
+- **Direct encounter:** Shard-Hound pair. Victory guarantees one Ion Poppers and one Beast Meat.
 - **shard-hound remains** (generic; object: shard-hound remains): Already harvested.
 - Action visibility/requirements: `{"requires_milestone_not_set": "ms_w2_meat_nest_foraged"}`.
 - Event `w2_forage_meat_nest` prerequisites: `[{"type": "milestone_not_set", "milestone": "ms_w2_meat_nest_foraged"}]`. See the numbered route for its quest/reward sequence.

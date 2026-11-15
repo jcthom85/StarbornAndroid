@@ -335,6 +335,8 @@ The numbered route includes all eleven quests and every authored World 3 room. O
 
 142. Check that the Service Dumbwaiter squad dropped its guaranteed **Circuit Board**. Its guard braces the squad once before switching to baton rushes.
 
+The guard also drops **Splitter Edge** for Gh0st. Equip it for basic attacks against the whole formation. Keep Whisperblade for stronger focused hits on one enemy.
+
 143. From **Service Dumbwaiter**, go **south** to **Ledger Office** (`spire_exec_lounge_scale_04`) → **south** to **Blackmail Balcony** (`spire_exec_lounge_scale_03`) → **south** to **Private Booth** (`spire_exec_lounge_scale_02`) → **west** to **Velvet Hall** (`spire_exec_lounge_scale_01`) → **north** to **Exec Lounge** (`spire_exec_lounge_bar`) → **north** to **Uniform Sorting** (`spire_uniform_sorting`) → **north** to **Laundry Service** (`spire_laundry_service`) → **east** to **Prism Gallery** (`spire_prism_gallery`) → **east** to **Archive Vault** (`spire_archive_vault`) → **north** to **Donor Gallery** (`spire_donor_gallery`) → **east** to **Skyline VIP Salon** (`spire_skyline_vip_suite`). You are back at the route’s departure point.
 
 **Check before leaving:** The optional Upper City caches, VHS and arcade discovery you want are recorded. The black-site bypass remains open for return. You are back at Skyline VIP Salon.

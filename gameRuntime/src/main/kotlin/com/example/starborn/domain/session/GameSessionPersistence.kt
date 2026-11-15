@@ -253,6 +253,7 @@ private fun GameSessionProto.toState(): GameSessionState = GameSessionState(
     playerXp = playerXp,
     playerAp = playerAp,
     progressionPrototypeVersion = progressionPrototypeVersion,
+    physicalGearInventory = physicalGearInventory,
     purchasedSkillNodes = purchasedSkillNodesMap,
     progressionAwardClaims = progressionAwardClaimsList.toSet(),
     playerCredits = playerCredits,
@@ -360,6 +361,7 @@ private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis())
     playerXp = this@toProto.playerXp
     playerAp = this@toProto.playerAp
     progressionPrototypeVersion = this@toProto.progressionPrototypeVersion
+    physicalGearInventory = this@toProto.physicalGearInventory
     putAllPurchasedSkillNodes(this@toProto.purchasedSkillNodes)
     addAllProgressionAwardClaims(this@toProto.progressionAwardClaims)
     playerCredits = this@toProto.playerCredits
@@ -559,12 +561,8 @@ fun GameSessionPersistence.importLegacySave(file: File, itemCatalog: ItemCatalog
         val quantity = inventoryJson.optInt(key, 0)
         if (quantity > 0) {
             val itemId = resolveItemId(key)
-            if (isWeaponItem(itemId)) {
-                unlockedWeapons += itemId
-            } else {
-                val existing = inventory[itemId] ?: 0
-                inventory[itemId] = existing + quantity
-            }
+            if (isWeaponItem(itemId)) unlockedWeapons += itemId
+            inventory[itemId] = inventory.getOrDefault(itemId, 0) + quantity
         }
     }
 
@@ -886,12 +884,8 @@ private fun importSimpleSave(root: JSONObject, itemCatalog: ItemCatalog): GameSe
         val quantity = inventoryJson.optInt(key, 0)
         if (quantity > 0) {
             val itemId = resolveItemId(key)
-            if (isWeaponItem(itemId)) {
-                unlockedWeapons += itemId
-            } else {
-                val existing = inventory[itemId] ?: 0
-                inventory[itemId] = existing + quantity
-            }
+            if (isWeaponItem(itemId)) unlockedWeapons += itemId
+            inventory[itemId] = inventory.getOrDefault(itemId, 0) + quantity
         }
     }
     val equipmentJson = root.optJSONObject("equipment")

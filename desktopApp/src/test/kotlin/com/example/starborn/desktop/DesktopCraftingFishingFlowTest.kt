@@ -42,7 +42,9 @@ class DesktopCraftingFishingFlowTest {
             services.startNewGame()
             services.sessionStore.setPartyMembers(listOf("nova", "zeke"))
             services.sessionStore.setMilestone("ms_w1_mq01_complete")
+            services.inventoryService.addItem("nova_laser_blaster")
             services.sessionStore.setEquippedWeapon("nova", "nova_laser_blaster")
+            services.inventoryService.addItem("zeke_shock_fists")
             services.sessionStore.setEquippedWeapon("zeke", "zeke_shock_fists")
             services.inventoryService.addItem("power_lens_mk_i")
             assertEquals(com.example.starborn.domain.inventory.ModEquipResult.Success,
@@ -149,6 +151,7 @@ class DesktopCraftingFishingFlowTest {
             val recipe = services.craftingService.tinkeringRecipes.single { it.id == "mod_ergonomic_grip_1" }
             services.craftingService.learnSchematic(recipe.id)
             services.sessionStore.setMilestone("ms_w1_mq01_complete")
+            services.inventoryService.addItem("nova_laser_blaster")
             services.sessionStore.setEquippedWeapon("nova", "nova_laser_blaster")
             services.inventoryService.addItem("power_lens_mk_i")
             assertEquals(com.example.starborn.domain.inventory.ModEquipResult.Success,

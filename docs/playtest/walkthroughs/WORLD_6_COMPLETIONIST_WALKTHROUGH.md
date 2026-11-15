@@ -344,6 +344,8 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 
 154. Before entering the Center, keep a manual save. For recovery, walk west through Impossible Archive, Spire of Thought, World-Fracture Landing, Memory Stair and Singularity Threshold to Shared Memory Span. Use Rest, then reverse that route to return to Memory Defense Arena. All cleared forward locks remain open.
 
+The Nightmare Guard drops **Sunder Seeds** in Memory Defense Arena. Equip them for +1 Vitality. Using **Snack** in the finale grants +6 Defense for two turns and spends that character’s action.
+
 155. From **Memory Defense Arena**, go **east** to **The Center** (`source_center`).
 
 156. At **The Center**, confirm **The Spire of Thought** complete and **The Final Note** active. Review the ten-quest checklist before the finale; all five side quests should now be complete.

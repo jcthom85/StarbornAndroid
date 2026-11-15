@@ -178,6 +178,8 @@ The drone marks a crew member before Heat Burst. Guard that character or interru
 
 66. At **Service Airlock**, use **airlock door**. Finish **Into the Fire** and start **Ghost in the Machine**. Check the **Heat Liner** reward and equip it if suitable for your build.
 
+The airlock awards **one** Heat Liner. Any compatible crew member can wear it. Equip one copy per wearer, and unequip it first to pass it to someone else. Rylan’s favor and the Welder Bench offer additional copies.
+
 67. At **Service Airlock**, use **ammo crate gamma**. Finish **Sabotage** after alpha and beta: **350 XP + Explosive Tip**. Battle drops and crew AP, if separately awarded, are not part of that item payout.
 
 68. From **Service Airlock**, go **east** to **Decon Chamber** (`foundry_decon_chamber`).
@@ -211,6 +213,8 @@ The drone marks a crew member before Heat Burst. Guard that character or interru
 82. From **Maintenance Shelf**, go **north** to **Foundry Seal Backroom** (`foundry_service_airlock_scale_final`).
 
 83. At **Foundry Seal Backroom**, inspect **pressure masks**, **cycling rules**; open **technician locker** for one-time contents.
+
+The locker holds **Pure Iron**, **Ballistic Weave**, and a **Circuit Board**. In Tinkering, use the weave and board to assemble Orion’s **Driftweave Cloak** if you want Speed and Evasion. His Channeler Mantle gives him more Focus and Accuracy.
 
 84. From **Foundry Seal Backroom**, go **south** to **Maintenance Shelf** (`foundry_service_airlock_scale_04`) → **south** to **Pressure Lock Gallery** (`foundry_service_airlock_scale_03`) → **south** to **Decon Drain** (`foundry_service_airlock_scale_02`) → **south** to **Seal Control Nook** (`foundry_service_airlock_scale_01`) → **south** to **Service Airlock** (`foundry_service_airlock`).
 

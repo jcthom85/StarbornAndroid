@@ -58,8 +58,9 @@ class DesktopContentConsistencyTest {
     @Test fun newGamePlusPreservesProgressionAndResetsStory() = withServices { services ->
         val players = services.worldDataSource.loadCharacters()
         val items = services.itemRepository.allItems().toList()
-        val previous = GameBootstrap.newGame(players, items, true).copy(playerLevel = 20, playerXp = 1234,
-            playerCredits = 8000, inventory = mapOf("vhs_tape_01" to 1), completedMilestones = setOf("ms_game_complete"))
+        val initial = GameBootstrap.newGame(players, items, true)
+        val previous = initial.copy(playerLevel = 20, playerXp = 1234,
+            playerCredits = 8000, inventory = initial.inventory + ("vhs_tape_01" to 1), completedMilestones = setOf("ms_game_complete"))
         val seed = GameBootstrap.newGamePlus(players, items, previous)
         assertEquals(previous.partyMembers, seed.partyMembers)
         assertEquals(previous.inventory, seed.inventory)

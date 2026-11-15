@@ -60,6 +60,7 @@ data class GameSessionState(
     val mealChefId: String = "nova",
     val fishingCleanCatchProgress: Int = 0,
     val progressionPrototypeVersion: Int = 0,
+    val physicalGearInventory: Boolean = false,
     val purchasedSkillNodes: Map<String, Int> = emptyMap(),
     val progressionAwardClaims: Set<String> = emptySet()
 )

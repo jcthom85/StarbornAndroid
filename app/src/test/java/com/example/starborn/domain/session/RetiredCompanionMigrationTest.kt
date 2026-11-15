@@ -27,7 +27,7 @@ class RetiredCompanionMigrationTest {
         assertTrue(state.equippedWeapons.isEmpty())
         assertTrue(state.equippedArmors.isEmpty())
         assertTrue(state.equippedItems.isEmpty())
-        assertEquals(old.inventory, state.inventory)
+        assertEquals(old.inventory + ("basic_vest" to 1), state.inventory)
         assertEquals(old.completedMilestones, state.completedMilestones)
         assertTrue("basic_slingshot" in state.unlockedWeapons)
         assertTrue("basic_vest" in state.unlockedArmors)

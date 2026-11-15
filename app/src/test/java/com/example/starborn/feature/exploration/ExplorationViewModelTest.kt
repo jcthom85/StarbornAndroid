@@ -233,8 +233,7 @@ class ExplorationViewModelTest {
         val viewModel = createViewModel()
         val promptManager = getPrivateField<UIPromptManager>(viewModel, "promptManager")
         val sessionStore = getPrivateField<GameSessionStore>(viewModel, "sessionStore")
-        sessionStore.unlockWeapon("mining_pistol")
-        sessionStore.unlockArmor("nova_flux_liner")
+        sessionStore.setInventory(mapOf("mining_pistol" to 1, "nova_flux_liner" to 1))
         sessionStore.setMilestone("ms_w1_mq01_jed_talked")
 
         viewModel.openMenuOverlay(MenuTab.INVENTORY)
@@ -272,8 +271,7 @@ class ExplorationViewModelTest {
         whenever(inventory.itemDetail("mining_pistol")).thenReturn(weapon)
         whenever(inventory.itemDetail("nova_flux_liner")).thenReturn(armor)
         store.startQuest("w1_mq01")
-        store.unlockWeapon("mining_pistol")
-        store.unlockArmor("nova_flux_liner")
+        store.setInventory(mapOf("mining_pistol" to 1, "nova_flux_liner" to 1))
         store.setMilestone(com.example.starborn.domain.tutorial.OpeningEquipmentGuide.MANUAL_KIT)
         store.setMilestone("ms_w1_mq01_jed_talked")
         dispatcher.scheduler.advanceUntilIdle()
@@ -584,6 +582,7 @@ class ExplorationViewModelTest {
         val inventoryFlow = MutableStateFlow<List<InventoryEntry>>(emptyList())
         val inventoryService = mock<InventoryService> {
             on { state } doReturn inventoryFlow
+            on { itemDisplayName(any()) } doAnswer { it.getArgument<String>(0) }
         }
         doAnswer { }.whenever(inventoryService).loadItems()
         doAnswer { }.whenever(inventoryService).addOnItemAddedListener(any())
@@ -908,10 +907,11 @@ class ExplorationViewModelTest {
         assertTrue("Persistent dialogue music should be flagged persistent", persistentAfterTrigger)
 
         // Room warp should reset persistence
-        val warpMethod = viewModel.javaClass.getDeclaredMethod("warpToRoom", String::class.java).apply {
+        val warpMethod = viewModel.javaClass.getDeclaredMethod("warpToRoom", String::class.java,
+            com.example.starborn.feature.exploration.viewmodel.ScriptedTravelStyle::class.java).apply {
             isAccessible = true
         }
-        warpMethod.invoke(viewModel, "pit_nova_bunk")
+        warpMethod.invoke(viewModel, "pit_nova_bunk", null)
         val persistentAfterWarp: Boolean = getPrivateField(viewModel, "dialogueMusicPersistent")
         assertFalse("Room warp should reset dialogue music persistence", persistentAfterWarp)
     }

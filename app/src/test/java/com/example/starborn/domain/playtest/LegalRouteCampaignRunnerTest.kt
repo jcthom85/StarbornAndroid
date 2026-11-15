@@ -115,6 +115,7 @@ class LegalRouteCampaignRunnerTest {
     private val systemsAudit by lazy { CampaignSystemsRouteAudit(AssetJsonReader(DesktopAssetProvider(listOf(assets)), moshi)) }
     private val assistance = mutableListOf<String>()
     private var exportWorld1Checkpoints = false
+    private var exportProgressionSaves = false
     private val publicCombats = mutableListOf<String>()
     private val prototypeSkillsUsed = mutableSetOf<String>()
     private val world3RewardObservations = mutableListOf<String>()
@@ -323,7 +324,7 @@ class LegalRouteCampaignRunnerTest {
         try {
             assertTrue(h.sessionStore.state.value.inventory.isEmpty())
             assertEquals(0, h.sessionStore.state.value.playerAp)
-            LegalCampaignAgent(h).playOpening(inspectLoader)
+            LegalCampaignAgent(h).playOpening(inspectLoader, collectSnack = true)
             val state = h.sessionStore.state.value
             assertTrue(assistance.isEmpty())
             assertEquals(2, state.playerAp)
@@ -336,6 +337,9 @@ class LegalRouteCampaignRunnerTest {
             h.sessionStore.addAp(99)
             assertEquals(saved, h.loadSlot(7))
             assertEquals(2, h.sessionStore.state.value.playerAp)
+            assertEquals(1, h.inventoryService.snapshot()["starbar_crunch"])
+            assertEquals("starbar_crunch", h.sessionStore.state.value.equippedItems["nova:snack"])
+            assertEquals(emptyMap<String, Int>(), h.sessionStore.state.value.roomGroundItems["pit_L2_corridor"])
             val branch = if (inspectLoader) "read-strip" else "fight-first"
             File("build/reports/world1-opening/$branch.txt").apply {
                 requireNotNull(parentFile).mkdirs()
@@ -734,6 +738,7 @@ class LegalRouteCampaignRunnerTest {
                 assertEquals("nova_laser_blaster", h.sessionStore.state.value.equippedWeapons["nova"])
                 h.learnAtVisibleSkillTree("nova", com.example.starborn.domain.leveling.NovaBuildPrototype.GROUNDED)
                 agent.playWorld2(defeatOptionalPairs = true, pairSeed = seed)
+                assertEquals(1, h.inventoryService.snapshot()["ion_poppers"])
                 assertTrue(assistance.isEmpty())
                 File("build/reports/world2-readiness/earned-optional-pairs-$seed.txt").apply {
                     requireNotNull(parentFile).mkdirs()
@@ -783,7 +788,7 @@ class LegalRouteCampaignRunnerTest {
             runner.navigateLegalPath("sector9_stream_falls")
             h.restAtVisibleStop()
             for ((room, enemy) in listOf("sector9_canopy" to "stalker_vine",
-                "sector9_wilds_nest" to "shard_hound", "sector9_stream_cave_depths" to "echo_borer")) {
+                "sector9_wilds_nest" to "shard_hound", "sector9_stream_cave_depths" to "moss_borer")) {
                 runner.navigateLegalPath(room)
                 h.playPublicEncounter(enemy)
             }
@@ -965,6 +970,7 @@ class LegalRouteCampaignRunnerTest {
     @Test
     fun productionWorlds456CompletionistRoutesVerifyBranchesAndCredits() {
         useProductionCrewRules = true
+        exportProgressionSaves = true
         val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
         try {
             val agent = LegalCampaignAgent(h)
@@ -972,6 +978,7 @@ class LegalRouteCampaignRunnerTest {
             h.saveSlot(6)
             val snapshots = mutableListOf<String>()
             for (alternate in listOf(false, true)) {
+                exportProgressionSaves = !alternate
                 h.loadSlot(6)
                 agent.playWorld4(completionist = true, alternate = alternate)
                 assertTrue(h.sessionStore.state.value.completedQuests.containsAll((16..20).map { "w4_sq$it" } + "w4_sq_crucible"))
@@ -1696,13 +1703,25 @@ class LegalRouteCampaignRunnerTest {
             playWorld1AfterCheckpoint(wardenBeforeJed, completionist)
         }
 
-        fun playOpening(inspectLoader: Boolean = true) {
+        fun playOpening(inspectLoader: Boolean = true, collectSnack: Boolean = false) {
             assertEquals("pit_nova_bunk", harness.sessionStore.state.value.roomId)
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w1_mq01"))
 
             // Wake up and isolate safety fault to unlock bunk exit
             performAction("w1_mq01_turn_on_bunk_light")
             performAction("w1_mq01_inspect_safety_fault")
+
+            if (collectSnack) {
+                navigateLegalPath("pit_L2_corridor")
+                assertEquals(1, harness.explorationVm.uiState.value.groundItems["starbar_crunch"])
+                harness.explorationVm.collectGroundItem("starbar_crunch")
+                harness.settle()
+                assertFalse("starbar_crunch" in harness.explorationVm.uiState.value.groundItems)
+                harness.explorationVm.equipInventoryItem("snack", "starbar_crunch", "nova")
+                harness.settle()
+                harness.explorationVm.dismissNarration()
+                harness.settle()
+            }
 
             // Navigate legal path to Jed's bunk
             navigateLegalPath("pit_jed_bunk")
@@ -2148,6 +2167,15 @@ class LegalRouteCampaignRunnerTest {
             harness.restAtVisibleStop()
             navigateLegalPath("spire_exec_lounge_bar")
             if (completionist) harness.buyAtVisibleShop("upper_city_lounge", "medkit", 2)
+            if (completionist) {
+                navigateLegalPath("spire_exec_lounge_scale_05")
+                if (exportProgressionSaves) harness.exportProgressionSave(1, "riot_guard")
+                harness.playPublicEncounter("riot_guard")
+                assertEquals(1, harness.inventoryService.snapshot()["gh0st_splitter_edge"])
+                harness.explorationVm.equipWeapon("gh0st", "gh0st_splitter_edge")
+                harness.settle()
+                assertEquals("gh0st_splitter_edge", harness.sessionStore.state.value.equippedWeapons["gh0st"])
+            }
             navigateLegalPath("spire_landing_pad_roof")
             if (completionist) harness.verifyWorld3RewardEquipment()
             assertFalse("Administrator waits until the security line is cleared",
@@ -2158,10 +2186,9 @@ class LegalRouteCampaignRunnerTest {
             harness.restAtVisibleStop()
             navigateLegalPath("spire_landing_pad_roof")
             if (exportReviewSaves && !completionist) harness.exportSpireReviewSave(16, "administrator_boss")
+            if (exportProgressionSaves) harness.exportProgressionSave(2, "administrator_boss")
             harness.playPublicEncounter("administrator_boss", seed = rooftopSeed)
             if (completionist) {
-                navigateLegalPath("spire_exec_lounge_scale_05")
-                harness.playPublicEncounter("riot_guard")
                 navigateLegalPath("spire_landing_pad_scale_01")
                 harness.playPublicEncounter("aero_drone")
                 navigateLegalPath("spire_landing_pad_scale_03")
@@ -2479,6 +2506,24 @@ class LegalRouteCampaignRunnerTest {
             performAction("w4_mq16_hack_cooling_vents")
             navigateLegalPath("foundry_service_airlock")
             performAction("w4_mq16_enter_airlock")
+            if (completionist) {
+                assertEquals(1, harness.inventoryService.snapshot()["heat_liner"])
+                val previousArmor = harness.sessionStore.state.value.equippedArmors
+                harness.explorationVm.equipArmor("nova", "heat_liner")
+                harness.explorationVm.equipArmor("zeke", "heat_liner")
+                harness.settle()
+                assertEquals("nova", harness.sessionStore.state.value.equippedArmors.entries.single { it.value == "heat_liner" }.key)
+                harness.explorationVm.equipArmor("nova", previousArmor["nova"])
+                harness.explorationVm.equipArmor("zeke", "heat_liner")
+                assertEquals("zeke", harness.sessionStore.state.value.equippedArmors.entries.single { it.value == "heat_liner" }.key)
+                harness.explorationVm.equipArmor("zeke", previousArmor["zeke"])
+                navigateLegalPath("foundry_service_airlock_scale_final")
+                performAction("technician locker")
+                craftItem("gear_driftweave_cloak", "orion_driftweave_cloak")
+                harness.explorationVm.equipArmor("orion", "orion_driftweave_cloak")
+                harness.settle()
+                assertEquals("orion_driftweave_cloak", harness.sessionStore.state.value.equippedArmors["orion"])
+            }
             navigateLegalPath("foundry_waste_intake")
             performAction("w4_mq17_access_phantom_terminal_scene")
             finishDialogue("correct")
@@ -2549,6 +2594,7 @@ class LegalRouteCampaignRunnerTest {
                 harness.explorationVm.dismissBlockedPrompt()
                 harness.settle()
             }
+            if (exportProgressionSaves) harness.exportProgressionSave(3, "titan_walker_boss")
             harness.playPublicEncounter("titan_walker_boss")
             assertTrue("Real Titan victory must advance the quest", "ms_w4_titan_defeated" in harness.sessionStore.state.value.completedMilestones)
             if (exportReviewSaves) {
@@ -2600,6 +2646,7 @@ class LegalRouteCampaignRunnerTest {
 
         fun playWorld5(completionist: Boolean = false, alternate: Boolean = false, avatarBodyFirst: Boolean = false, avatarSeed: Int = 17, sweepOptionalCombat: Boolean = false) {
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w5_mq21"))
+            if (exportProgressionSaves) harness.exportProgressionSave(4)
             if (harness.sessionStore.state.value.progressionPrototypeVersion == 1) {
                 val crew = com.example.starborn.domain.leveling.CrewBuildPrototype
                 val purchases = listOf("nova" to listOf(com.example.starborn.domain.leveling.NovaBuildPrototype.STEPS),
@@ -2655,7 +2702,14 @@ class LegalRouteCampaignRunnerTest {
             assertFalse(harness.sessionStore.state.value.roomStates["deep_anchor_chamber"]?.get("firewall_access_open") == true)
             harness.explorationVm.dismissBlockedPrompt(); harness.settle()
             navigateLegalPath("deep_firewall_gamma")
+            if (exportProgressionSaves) harness.exportProgressionSave(5, "firewall_construct")
             harness.playPublicEncounter("firewall_construct")
+            assertEquals(1, harness.inventoryService.snapshot()["zeke_quake_knuckles"])
+            if (exportProgressionSaves) {
+                harness.explorationVm.equipWeapon("zeke", "zeke_quake_knuckles")
+                harness.settle()
+                assertEquals("zeke_quake_knuckles", harness.sessionStore.state.value.equippedWeapons["zeke"])
+            }
             assertTrue("w5_mq23 completed", harness.sessionStore.state.value.completedQuests.contains("w5_mq23"))
             assertTrue("w5_mq24 active", harness.sessionStore.state.value.activeQuests.contains("w5_mq24"))
             assertEquals(true, harness.sessionStore.state.value.roomStates["deep_anchor_chamber"]?.get("firewall_access_open"))
@@ -2696,6 +2750,7 @@ class LegalRouteCampaignRunnerTest {
             performAction("w5_mq25_enter_tear")
             assertEquals("The breach must wait for the Avatar victory", "deep_tear", harness.sessionStore.state.value.roomId)
             assertFalse("Uncleared breach must not unlock World 6", "ms_w6_access_unlocked" in harness.sessionStore.state.value.completedMilestones)
+            if (exportProgressionSaves) harness.exportProgressionSave(6, "compliance_avatar")
             harness.playPublicEncounter("compliance_avatar", seed = avatarSeed, preferChassis = avatarBodyFirst)
             if (sweepOptionalCombat) {
                 val ringRooms = harness.rooms.filter { it.backgroundImage.contains("/world_5/") && it.enemies.isNotEmpty() }
@@ -2727,6 +2782,7 @@ class LegalRouteCampaignRunnerTest {
 
         fun playWorld6(completionist: Boolean = false, alternate: Boolean = false) {
             assertTrue(harness.sessionStore.state.value.activeQuests.contains("w6_mq26"))
+            if (exportProgressionSaves) harness.exportProgressionSave(7)
             if (useProductionCrewRules) {
                 // Spend earned late-game AP through the public tree before the Source fights.
                 // The historical route's two-node build is not a crew campaign allocation.
@@ -2793,7 +2849,14 @@ class LegalRouteCampaignRunnerTest {
             navigateLegalPath("source_memory_bridge_span")
             harness.restAtVisibleStop()
             navigateLegalPath("source_spire_arena")
+            if (exportProgressionSaves) harness.exportProgressionSave(8, "memory_leak")
             harness.playPublicEncounter("memory_leak")
+            assertEquals(1, harness.inventoryService.snapshot()["sunder_seeds"])
+            if (exportProgressionSaves) {
+                harness.explorationVm.equipInventoryItem("snack", "sunder_seeds", "zeke")
+                harness.settle()
+                assertEquals("sunder_seeds", harness.sessionStore.state.value.equippedItems["zeke:snack"])
+            }
 
             navigateLegalPath("source_center")
             assertTrue("w6_mq29 completed", harness.sessionStore.state.value.completedQuests.contains("w6_mq29"))
@@ -2815,6 +2878,7 @@ class LegalRouteCampaignRunnerTest {
             assertTrue("Final tuning must remain locked before both victories", harness.explorationVm.uiState.value.tuningPuzzle == null)
             assertFalse("Premature tuning must not complete the game", "ms_game_complete" in harness.sessionStore.state.value.completedMilestones)
             if (completionist) harness.verifyStarbornRewardEquipment()
+            if (exportProgressionSaves) harness.exportProgressionSave(9, "ascended_vale")
             harness.playPublicEncounter("ascended_vale")
             harness.explorationVm.onActionSelected(lockedTuning)
             harness.settle()
@@ -3030,7 +3094,7 @@ class LegalRouteCampaignRunnerTest {
         fun loadSlot(slot: Int): GameSessionState = runBlocking {
             val loaded = requireNotNull(persistence.readSlot(slot))
             sessionStore.restore(loaded)
-            inventoryService.restore(loaded.inventory)
+            inventoryService.restore(sessionStore.state.value.inventory)
             settle()
             loaded
         }
@@ -3214,6 +3278,16 @@ class LegalRouteCampaignRunnerTest {
                 elapsedRealtime = { dispatcher.scheduler.currentTime },
                 random = SeededCombatRandom(seed)
             )
+        }
+
+        fun exportProgressionSave(slot: Int, enemyId: String? = null) = runBlocking {
+            val state = sessionStore.state.value
+            check(state.pendingBattleJson.isBlank() && state.battleCheckpoint == null)
+            check(state.pendingEventCinematics.isEmpty() && explorationVm.uiState.value.activeDialogue == null)
+            if (enemyId != null) assertTrue(enemyId in explorationVm.uiState.value.enemies)
+            val saves = GameSessionPersistence(File("build/reports/progression-review/slots").apply { mkdirs() })
+            saves.writeSlot(slot, state)
+            assertEquals(state, saves.readSlot(slot))
         }
 
         fun exportStoryReviewSave(slot: Int) = runBlocking {
@@ -3452,6 +3526,7 @@ class LegalRouteCampaignRunnerTest {
                     .map { it.combatant.id }
                 publicCombats += "room=$room enemies=$encounterIds seed=$seed damageEvents=${state.log.count { it is com.example.starborn.domain.combat.CombatLogEntry.Damage }} xp=${reward.xp} ap=${reward.ap} credits=${reward.credits} persistedHp=${sessionStore.state.value.partyMemberHp} knockedOut=$knockedOut usedItems=$usedItems"
                 val guaranteedDrop = when (room) {
+                    "sector9_wilds_nest" -> "ion_poppers" to 1
                     "spire_exec_lounge_scale_05" -> "circuit_board" to 1
                     "spire_landing_pad_scale_01" -> "wiring_bundle" to 1
                     "spire_landing_pad_scale_03" -> "ration_pack" to 2

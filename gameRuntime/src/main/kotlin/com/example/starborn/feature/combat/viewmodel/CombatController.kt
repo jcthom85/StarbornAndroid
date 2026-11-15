@@ -350,7 +350,6 @@ class CombatController(
         val equippedItemsSnapshot = sessionSnapshot.equippedItems
         val equippedWeaponsSnapshot = sessionSnapshot.equippedWeapons
         val equippedArmorsSnapshot = sessionSnapshot.equippedArmors
-        val unlockedWeaponsSnapshot = sessionSnapshot.unlockedWeapons
         val partyIds = sessionSnapshot.partyMembers
         val resolvedParty = (if (partyIds.isEmpty()) players.take(1) else partyIds.mapNotNull { id ->
             players.find { it.id == id }
@@ -415,7 +414,6 @@ class CombatController(
                 equippedItemsSnapshot,
                 equippedWeaponsSnapshot,
                 equippedArmorsSnapshot,
-                unlockedWeaponsSnapshot,
                 activeMeal
             )
         }
@@ -3073,7 +3071,6 @@ class CombatController(
         equippedItems: Map<String, String>,
         equippedWeapons: Map<String, String>,
         equippedArmors: Map<String, String>,
-        unlockedWeapons: Set<String>,
         mealBuff: com.example.starborn.domain.session.ActiveMealBuff? = null
     ): Combatant =
         run {
@@ -3116,7 +3113,7 @@ class CombatController(
                 ResistanceProfile()
             },
             skills = skills,
-            weapon = resolveCombatWeapon(id, equippedItems, equippedWeapons, unlockedWeapons),
+            weapon = resolveCombatWeapon(id, equippedItems, equippedWeapons),
             talents = com.example.starborn.domain.leveling.CrewBuildPrototype.ownedTalents(sessionStore.state.value, id),
             brokenTurns = 1
         )
@@ -3160,10 +3157,9 @@ class CombatController(
     private fun resolveCombatWeapon(
         characterId: String,
         equippedItems: Map<String, String>,
-        equippedWeapons: Map<String, String>,
-        unlockedWeapons: Set<String>
+        equippedWeapons: Map<String, String>
     ): CombatWeapon? {
-        val item = resolveWeaponItemForCharacter(characterId, equippedWeapons, unlockedWeapons) ?: return null
+        val item = resolveWeaponItemForCharacter(characterId, equippedWeapons) ?: return null
         val equipment = item.equipment ?: return null
         if (!equipment.slot.equals("weapon", ignoreCase = true)) return null
 
@@ -3222,8 +3218,7 @@ class CombatController(
 
     private fun resolveWeaponItemForCharacter(
         characterId: String,
-        equippedWeapons: Map<String, String>,
-        unlockedWeapons: Set<String>
+        equippedWeapons: Map<String, String>
     ): Item? {
         val normalizedId = characterId.trim().lowercase(Locale.getDefault())
         val expectedType = GearRules.allowedWeaponTypeFor(normalizedId)
@@ -3239,17 +3234,7 @@ class CombatController(
         val equippedItem = equippedId?.let { itemCatalog.findItem(it) }
         if (equippedItem != null && matches(equippedItem)) return equippedItem
 
-        val candidates = unlockedWeapons.mapNotNull { itemCatalog.findItem(it) }
-            .filter { matches(it) }
-        return candidates.maxByOrNull { weaponScore(it) }
-    }
-
-    private fun weaponScore(item: Item): Double {
-        val equipment = item.equipment ?: return 0.0
-        val min = equipment.damageMin?.coerceAtLeast(0) ?: 0
-        val max = equipment.damageMax?.coerceAtLeast(min) ?: min
-        val power = equipment.attackPowerMultiplier ?: 1.0
-        return ((min + max) / 2.0) * power
+        return null
     }
 
     private fun equippedWeaponId(
