@@ -47,7 +47,27 @@ The first focused run passed **51 checks**: rest rotation (6), session persisten
 
 The new coverage checks location-copy rotation, all eligible entries before repetition, cycle boundaries, absent/recruited companions, story gates, Astra/Deep Ring selection, old protobuf defaults, save/reload continuity, session fingerprint changes, and event-message coalescing. The controller check verifies that authored messages no longer bypass rotation and repeated full-HP rests do not change healing behavior.
 
-The dialogue comparison confirms that the four existing entries only gained continuation links; their original text, conditions and triggers were preserved. All new continuation targets resolve. The final campaign/build result is recorded below after completion.
+The dialogue comparison confirms that the four existing entries only gained continuation links; their original text, conditions and triggers were preserved. All new continuation targets resolve. The final earned main-campaign route also reached credits, exported all eleven review saves and passed the pending-Echo save/reload branch. The rest checks passed again, and the regular Android build succeeded. The later portrait addition is verified separately below.
+
+## Expression art follow-up
+
+The user authorized generating useful expressions through their OpenAI API key. After inspecting Nova's cool/puzzled/happy portraits and Zeke's cool/puzzled/worried portraits, I chose one restrained addition: **Zeke, sheepish**. The existing worried face reads as alarm and the cool face reads as smug confidence; neither fits his small admission that he checked the scanner three times. An eye roll would make Nova's response to anxiety less sympathetic, so it is not added to that exchange.
+
+The approved `zeke_cool.png` was edited with the image-generation CLI using the OpenAI API, `gpt-image-2`, `quality=low`, 1024×1024. The shipped file is `world_assets/src/main/assets/images/characters/emotes/zeke_sheepish_v1.png`. It is wired as an explicit portrait override on `zeke_w3_pocket_the_scanner`, using the existing dialogue portrait consumer. The neutral portrait and combat/victory expressions are unaffected. Rest cards remain text-based; this expression appears in the companion conversation.
+
+Only the generated face interior is blended into the original portrait. The original alpha is preserved byte-for-byte, and pixels outside the feathered face region remain the original art. The final image was inspected at full size, at 64-pixel dialogue scale, and in a 128-pixel comparison against the source. The prompt and raw output are retained locally in `tmp/imagegen/zeke-sheepish/prompt.txt` and `output/imagegen/zeke_sheepish_edit_v1.png`; neither includes the API key.
+
+After integration, the portrait/emote validator passed (51 emote references checked), the focused rest/dialogue/catalog checks passed, and the regular Android build succeeded. The APK includes the exact final portrait and dialogue assets. The build reflects the current shared workspace, including the separate fishing update; this pass did not edit fishing files. Nothing was installed to either device during this pass.
+
+Final generation prompt:
+
+```text
+Use case: identity-preserve
+Asset type: Starborn dialogue portrait expression variant, Zeke sheepish.
+Input image: edit target is the approved Zeke portrait. Change ONLY the facial expression inside the face mask. Keep his exact identity, spiky blond hair, amber eyes, freckles, blue jacket with yellow trim, white shirt, gloved hand at chest, pose, framing, proportions, thick dark outlines and crisp warm cel shading unchanged.
+Expression: quietly caught out, a slightly sheepish admission to a trusted friend. A small closed-mouth asymmetrical apologetic smile; one eyebrow slightly lifted and the inner eyebrows softened; amber eyes glance slightly sideways. Warm, self-conscious, mildly funny, not smug, distressed, angry, or laughing. Read clearly at 64-pixel portrait size without exaggerated sweat drops or comic symbols.
+Preserve all non-face pixels and the existing backdrop/transparent silhouette. No text, no extra objects, no redesign, no camera or pose changes.
+```
 
 ## Editorial judgment and boundaries
 

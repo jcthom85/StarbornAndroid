@@ -38,8 +38,33 @@ import kotlin.math.sin
 
 val FishingInk = Color(0xFF081B25)
 val FishingGold = Color(0xFFF2CF85)
-val FishingMist = Color(0xFFD7EBED)
+val FishingMist = Color(0xFFEAF6F8)
 val FishingCoral = Color(0xFFFFA38D)
+val FishingButtonSurface = Color(0xFF1B4B5A)
+val FishingButtonHighlight = Color(0xFF266272)
+
+@Composable
+fun FishingTheme(content: @Composable () -> Unit) {
+    val colors = MaterialTheme.colorScheme.copy(
+        background = FishingInk,
+        surface = FishingInk,
+        surfaceVariant = Color(0xFF15313B),
+        onSurface = FishingMist,
+        onSurfaceVariant = Color(0xFFBAD3D8),
+        primary = FishingButtonHighlight,
+        onPrimary = FishingMist,
+        primaryContainer = Color(0xFF183B47),
+        onPrimaryContainer = FishingMist,
+        secondary = Color(0xFF8ED9D3),
+        onSecondary = FishingMist,
+        tertiary = FishingGold,
+        onTertiary = FishingMist,
+        error = FishingCoral,
+        onError = FishingMist,
+        outline = Color(0xFF66858D)
+    )
+    MaterialTheme(colorScheme = colors, content = content)
+}
 
 data class FishingWaterBiomeStyle(
     val horizonGlow: Color,
@@ -128,18 +153,6 @@ fun biomeStyleForZone(zoneId: String?): FishingWaterBiomeStyle = when (zoneId?.l
         fishCoreTint = Color(0xFFC8EFE6),
         fishFinTint = Color(0xFF7AD9C9)
     )
-}
-
-@Composable
-fun FishingTheme(content: @Composable () -> Unit) {
-    val colors = MaterialTheme.colorScheme.copy(
-        background = FishingInk, surface = FishingInk, surfaceVariant = Color(0xFF18353F),
-        onSurface = FishingMist, onSurfaceVariant = Color(0xFFBAD3D8),
-        primary = FishingGold, onPrimary = FishingInk, primaryContainer = Color(0xFF30464B),
-        onPrimaryContainer = FishingMist, secondary = Color(0xFF8ED9D3),
-        tertiary = Color(0xFF8ED9D3), error = FishingCoral, outline = Color(0xFF66858D)
-    )
-    MaterialTheme(colorScheme = colors, content = content)
 }
 
 /**

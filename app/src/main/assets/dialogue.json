@@ -4648,6 +4648,7 @@
     "id": "zeke_w3_pocket_the_scanner",
     "speaker": "Zeke",
     "text": "[Zeke closes the scanner and puts it away.] Three times. All right. Your turn.",
+    "portrait": "images/characters/emotes/zeke_sheepish_v1.png",
     "scripted_only": true
   },
   {
