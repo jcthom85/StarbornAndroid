@@ -32,8 +32,12 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -778,7 +782,7 @@ private fun FixedBottomFishingDock(
                         ) {
                             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                                 Text(
-                                    text = "Cast again",
+                                    text = "Change gear",
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.SemiBold,
                                     color = FishingMist
@@ -798,32 +802,42 @@ private fun FixedBottomFishingDock(
         ) {
             when (state.fishingState) {
                 FishingState.SETUP -> {
-                    val waters = state.journal.count { entry -> entry.species.any { it.caught } }
                     Row(
                         modifier = Modifier.fillMaxSize(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         CompactDockPill(
-                            label = "Rod: ${state.selectedRod?.name ?: "None"}",
+                            label = "Rod",
                             onClick = onOpenRodPicker,
                             modifier = Modifier.weight(1f).fillMaxSize()
                         )
                         CompactDockPill(
-                            label = "Lure: ${state.selectedLure?.name ?: "None"}",
+                            label = "Lure",
                             onClick = onOpenLurePicker,
                             modifier = Modifier.weight(1f).fillMaxSize()
                         )
-                        CompactDockPill(
-                            label = "Log ($waters/${state.journal.size})",
+                        Surface(
                             onClick = onOpenCatchLog,
-                            modifier = Modifier.fillMaxSize().weight(0.72f)
-                        )
+                            shape = RoundedCornerShape(14.dp),
+                            color = Color(0xFF0F252E),
+                            border = BorderStroke(1.dp, FishingGold.copy(alpha = 0.55f)),
+                            modifier = Modifier.size(secondaryRowHeight)
+                        ) {
+                            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.MenuBook,
+                                    contentDescription = "Catch Log",
+                                    tint = FishingGold,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
                     }
                 }
 
                 FishingState.RESULT -> {
                     CompactDockPill(
-                        label = "Return to exploration",
+                        label = "Pack up",
                         onClick = onFinish,
                         modifier = Modifier.fillMaxSize()
                     )
@@ -856,11 +870,11 @@ private fun CompactDockPill(
     ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp)
+            modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp)
         ) {
             Text(
                 text = label,
-                style = MaterialTheme.typography.labelLarge,
+                style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
                 color = FishingMist,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -870,7 +884,7 @@ private fun CompactDockPill(
 }
 
 /**
- * Minimal, low-clutter catch result overlay card with an optional "Details" button.
+ * Minimal, low-clutter catch result overlay card with an inline "Details" action.
  */
 @Composable
 private fun CompactCatchOverlayCard(
@@ -882,6 +896,8 @@ private fun CompactCatchOverlayCard(
     val success = state.lastResult != MinigameResult.FAIL && (catch?.quantity ?: 0) > 0
 
     Surface(
+        onClick = { if (success && catch != null) onOpenDetails() },
+        enabled = success && catch != null,
         shape = RoundedCornerShape(18.dp),
         color = Color(0xEE0D222B),
         border = BorderStroke(1.4.dp, if (success) FishingGold.copy(alpha = 0.75f) else FishingCoral.copy(alpha = 0.65f)),
@@ -893,35 +909,6 @@ private fun CompactCatchOverlayCard(
                 .padding(horizontal = 16.dp, vertical = 14.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = if (success) "Back on shore" else "The water settles",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = if (success) FishingGold else FishingCoral
-                )
-                if (success && catch != null) {
-                    Surface(
-                        onClick = onOpenDetails,
-                        shape = RoundedCornerShape(999.dp),
-                        color = Color(0xFF193C48),
-                        border = BorderStroke(1.dp, Color(0xFF6697A6))
-                    ) {
-                        Text(
-                            text = "Details",
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = FishingMist,
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp)
-                        )
-                    }
-                }
-            }
-
             if (success && catch != null) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -966,16 +953,43 @@ private fun CompactCatchOverlayCard(
                         }
                     }
                 }
-                // Only surface milestone unlocks directly if one actually triggered
-                catch.rewards.firstOrNull()?.let { rewardText ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
-                        text = rewardText,
+                        text = catch.rewards.firstOrNull() ?: "Added to inventory",
                         style = MaterialTheme.typography.bodySmall,
-                        fontWeight = FontWeight.SemiBold,
-                        color = FishingGold
+                        fontWeight = FontWeight.Medium,
+                        color = if (catch.rewards.isNotEmpty()) FishingGold else FishingMist.copy(alpha = 0.72f),
+                        modifier = Modifier.weight(1f)
                     )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Info,
+                            contentDescription = null,
+                            tint = FishingGold,
+                            modifier = Modifier.size(14.dp)
+                        )
+                        Text(
+                            text = "Details ›",
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = FishingGold
+                        )
+                    }
                 }
             } else {
+                Text(
+                    text = "The water settles",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = FishingCoral
+                )
                 Text(
                     text = catch?.message ?: "It slipped away. Cast again whenever you're ready.",
                     style = MaterialTheme.typography.bodyMedium,

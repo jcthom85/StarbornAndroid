@@ -60,12 +60,12 @@ class FishingPortraitInstrumentedTest {
             }
             rule.waitUntil(5_000) { vm.uiState.value.fishingState == FishingState.RESULT }
             if (held) rule.onRoot().performTouchInput { up() }
-            rule.onNodeWithText("Back on shore").assertIsDisplayed()
+            rule.onNodeWithText("Details ›").assertIsDisplayed()
             assertTrue(requireNotNull(vm.uiState.value.lastCatchResult).secured)
             assertTrue(inventory.snapshot().getOrDefault("raw_glowfish", 0) > 0)
             rule.waitUntil(5_000) { deliveries.get() == 1 }
             val secured = inventory.snapshot()
-            rule.onNodeWithText("Cast again").assertIsDisplayed().performClick()
+            rule.onNodeWithText("Change gear").assertIsDisplayed().performClick()
             rule.waitUntil(5_000) { vm.uiState.value.fishingState == FishingState.SETUP }
             assertEquals(secured, inventory.snapshot())
             assertEquals(1, deliveries.get())
