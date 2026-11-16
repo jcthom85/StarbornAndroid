@@ -50,6 +50,8 @@ data class CombatBannerMessage(
     val accent: CombatBannerAccent = CombatBannerAccent.DEFAULT,
     val icon: CombatBannerIcon? = null,
     val tags: List<String> = emptyList(),
-    val importance: CombatBannerImportance = CombatBannerImportance.NORMAL
+    val importance: CombatBannerImportance = CombatBannerImportance.NORMAL,
+    val actorLabel: String? = null,
+    val isPlayerActor: Boolean = false
 )
 

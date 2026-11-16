@@ -45,6 +45,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -63,6 +65,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -1159,24 +1162,43 @@ fun CombatScreen(
                         .fillMaxWidth()
                         .height(56.dp)
                 ) {
-                    if (com.example.starborn.ui.combat.hasAuthoredPreparation(state)) {
-                        com.example.starborn.ui.combat.AuthoredEncounterPanel(state, enemies,
-                            viewModel::focusEnemyTarget, Modifier.align(Alignment.Center),
-                            skillName = viewModel.runtime::skillDisplayName)
-                    } else Row(Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                      Box(Modifier.weight(1f)) {
-                       if (!commandPaletteVisible && !targetMode) {
-                        CombatImpactBanner(
-                            message = if (showCombatActionText) combatBanner else null,
-                            hasInstruction = false,
-                            highContrastMode = highContrastMode,
-                            theme = viewModel.theme,
-                            modifier = Modifier.align(Alignment.Center)
+                    val hasPrep = com.example.starborn.ui.combat.hasAuthoredPreparation(state)
+                    if (hasPrep) {
+                        com.example.starborn.ui.combat.AuthoredEncounterPanel(
+                            state = state,
+                            enemies = enemies,
+                            onTarget = viewModel::focusEnemyTarget,
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .wrapContentHeight(align = Alignment.CenterVertically, unbounded = true),
+                            skillName = viewModel.runtime::skillDisplayName
                         )
-                       }
-                      }
-                      com.example.starborn.ui.combat.AuthoredEncounterStatus(state)
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.Center)
+                            .wrapContentHeight(align = Alignment.CenterVertically, unbounded = true)
+                            .zIndex(4f),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Box(Modifier.weight(1f)) {
+                            if (!commandPaletteVisible && !targetMode) {
+                                CombatImpactBanner(
+                                    message = if (showCombatActionText) combatBanner else null,
+                                    hasInstruction = false,
+                                    highContrastMode = highContrastMode,
+                                    theme = viewModel.theme,
+                                    modifier = Modifier
+                                        .align(Alignment.Center)
+                                        .wrapContentHeight(align = Alignment.CenterVertically, unbounded = true)
+                                )
+                            }
+                        }
+                        if (!hasPrep) {
+                            com.example.starborn.ui.combat.AuthoredEncounterStatus(state)
+                        }
                     }
                 }
                 Spacer(Modifier.height(8.dp))
@@ -1483,20 +1505,23 @@ internal fun CombatImpactBanner(
     val accent = bannerAccentColor(message.accent, theme)
     val tightMode = hasInstruction
     val icon = if (tightMode) null else bannerIcon(message.icon)
+    val bannerShape = RoundedCornerShape(12.dp)
     val primaryStyle = MaterialTheme.typography.titleMedium.copy(
-        fontSize = 16.sp,
+        fontSize = 15.sp,
+        lineHeight = 19.sp,
         fontFamily = CombatNameFont,
         fontWeight = FontWeight.Bold,
-        letterSpacing = 0.5.sp,
-        shadow = Shadow(color = Color.Black, offset = Offset(2f, 2f), blurRadius = 2f)
+        letterSpacing = 0.4.sp,
+        shadow = Shadow(color = Color.Black, offset = Offset(1.5f, 1.5f), blurRadius = 2f)
     )
     val secondaryStyle = MaterialTheme.typography.bodyMedium.copy(
-        color = Color.White.copy(alpha = 0.85f),
+        color = Color(0xFFDCE7EE),
         fontWeight = FontWeight.Medium,
         shadow = Shadow(color = Color.Black, offset = Offset(1f, 1f), blurRadius = 1f)
     )
 
-    Box(
+    @OptIn(ExperimentalLayoutApi::class)
+    Surface(
         modifier = modifier
             .graphicsLayer {
                 this.alpha = alpha.value
@@ -1504,75 +1529,103 @@ internal fun CombatImpactBanner(
                 scaleX = scale.value
                 scaleY = scale.value
             }
-            .fillMaxWidth()
-            .background(
-                color = Color(0xFF0A0C10).copy(alpha = 0.85f), // Solid dark backing for legibility
-                shape = RoundedCornerShape(8.dp)
-            )
-            .padding(vertical = 4.dp)
+            .fillMaxWidth(),
+        color = Color(0xFF08101A).copy(alpha = if (highContrastMode) 0.96f else 0.90f),
+        shape = bannerShape,
+        border = BorderStroke(1.dp, accent.copy(alpha = if (highContrastMode) 0.85f else 0.50f)),
+        shadowElevation = 6.dp
     ) {
-        // Subtle Gradient Highlight
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .background(
-                    brush = Brush.horizontalGradient(
-                        colors = listOf(
-                            accent.copy(alpha = 0.35f),
-                            accent.copy(alpha = 0.05f),
-                            Color.Transparent
-                        ),
-                        startX = 0f,
-                        endX = 300f
-                    ),
-                    shape = RoundedCornerShape(8.dp)
-                )
-        )
-
-        Row(
-            modifier = Modifier
-                .padding(start = 14.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
+        Box(modifier = Modifier.fillMaxWidth()) {
+            // Subtle Gradient Highlight
             Box(
                 modifier = Modifier
-                    .width(4.dp)
-                    .heightIn(min = 32.dp)
-                    .clip(RoundedCornerShape(2.dp))
-                    .background(accent)
+                    .matchParentSize()
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(
+                                accent.copy(alpha = 0.28f),
+                                accent.copy(alpha = 0.05f),
+                                Color.Transparent
+                            ),
+                            startX = 0f,
+                            endX = 320f
+                        ),
+                        shape = bannerShape
+                    )
             )
 
-            if (icon != null) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .shadow(elevation = 4.dp, shape = CircleShape)
-                )
-            }
-
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.Center
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 12.dp, vertical = 7.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Text(
-                    text = message.primary,
-                    style = primaryStyle,
-                    color = Color.White,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                Box(
+                    modifier = Modifier
+                        .width(4.dp)
+                        .heightIn(min = 24.dp)
+                        .clip(RoundedCornerShape(2.dp))
+                        .background(accent)
                 )
-                message.secondary?.takeIf { it.isNotBlank() }?.let { detail ->
-                    Text(
-                        text = detail,
-                        style = secondaryStyle.copy(fontSize = 13.sp, lineHeight = 16.sp),
-                        color = Color.White.copy(alpha = 0.9f),
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
+
+                if (icon != null) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = if (message.isPlayerActor) accent else Color.White,
+                        modifier = Modifier
+                            .size(20.dp)
+                            .shadow(elevation = 3.dp, shape = CircleShape)
                     )
+                }
+
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically)
+                ) {
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                        itemVerticalAlignment = Alignment.CenterVertically
+                    ) {
+                        message.actorLabel?.takeIf { it.isNotBlank() }?.let { actor ->
+                            Surface(
+                                shape = RoundedCornerShape(6.dp),
+                                color = accent.copy(alpha = 0.18f),
+                                border = BorderStroke(1.dp, accent.copy(alpha = 0.55f))
+                            ) {
+                                Text(
+                                    text = actor.uppercase(Locale.getDefault()),
+                                    style = MaterialTheme.typography.labelSmall.copy(
+                                        fontFamily = CombatNameFont,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 10.sp,
+                                        letterSpacing = 0.5.sp
+                                    ),
+                                    color = accent,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                )
+                            }
+                        }
+                        Text(
+                            text = message.primary,
+                            style = primaryStyle,
+                            color = Color.White,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                    message.secondary?.takeIf { it.isNotBlank() }?.let { detail ->
+                        Text(
+                            text = detail,
+                            style = secondaryStyle.copy(fontSize = 12.5.sp, lineHeight = 16.sp),
+                            color = Color(0xFFDCE7EE),
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
             }
         }
@@ -1611,7 +1664,7 @@ private fun bannerAccentColor(accent: CombatBannerAccent, theme: Theme?): Color 
         CombatBannerAccent.ORION -> Color(0xFFB388FF)
         CombatBannerAccent.GHOST -> Color(0xFF80D8FF)
         CombatBannerAccent.OLLIE -> Color(0xFFFFB74D)
-        CombatBannerAccent.ENEMY -> themeColor(theme?.accent, Color(0xFFFF6A5F))
+        CombatBannerAccent.ENEMY -> Color(0xFFFF786E)
     }
 
 internal fun titleCaseName(name: String): String {

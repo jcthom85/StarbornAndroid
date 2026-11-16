@@ -1813,7 +1813,7 @@ class CombatController(
                     if (shouldPauseForAttackAnimation(entry.action)) {
                         pauseForAttackAnimation()
                     }
-                    setCombatBanner(entry, updated)
+                    setCombatBanner(entry, updated, previous = previous)
                 }
                 is CombatLogEntry.Damage -> {
                     val skillUse = currentAction as? CombatAction.SkillUse
@@ -1863,7 +1863,7 @@ class CombatController(
                         scheduleTutorialExplanation(tutorial, CombatTutorialStep.SUCCESS, effectDelayMs)
                     }
                     emitImpact(entry, fxElement, showAttackFx, targetDefeated, effectDelayMs)
-                    setCombatBanner(entry, updated)
+                    setCombatBanner(entry, updated, previous = previous)
                 }
                 is CombatLogEntry.WeaknessReward -> {
                     playBattleCue("weakness_resolve")
@@ -1876,11 +1876,11 @@ class CombatController(
                             "snack_reduced" to (entry.snackCooldownFrom != null)
                         )
                     )
-                    setCombatBanner(entry, updated)
+                    setCombatBanner(entry, updated, previous = previous)
                 }
                 is CombatLogEntry.Heal -> {
                     emitHeal(entry, actionEffectDelayMs(currentAction))
-                    setCombatBanner(entry, updated)
+                    setCombatBanner(entry, updated, previous = previous)
                 }
                 is CombatLogEntry.StatusApplied -> {
                     val scan = currentAction as? CombatAction.SkillUse
@@ -1897,7 +1897,7 @@ class CombatController(
                     }
                     maybePlayErosionWarningCue(entry, updated)
                     emitStatusApplied(entry, actionEffectDelayMs(currentAction))
-                    setCombatBanner(entry, updated, currentAction)
+                    setCombatBanner(entry, updated, currentAction, previous = previous)
                 }
                 is CombatLogEntry.Outcome -> {
                     val outcomeType = when (entry.result) {
@@ -1915,7 +1915,7 @@ class CombatController(
                             outcome = outcomeType
                         )
                     )
-                    setCombatBanner(entry, updated)
+                    setCombatBanner(entry, updated, previous = previous)
                     if (updated.outcome != null) {
                         readyQueue.clear()
                         enemyTurnJob?.cancel()
@@ -1925,7 +1925,7 @@ class CombatController(
                     }
                 }
                 is CombatLogEntry.StatusExpired,
-                is CombatLogEntry.TurnSkipped -> setCombatBanner(entry, updated)
+                is CombatLogEntry.TurnSkipped -> setCombatBanner(entry, updated, previous = previous)
             }
         }
         if (currentAction != null) {
@@ -1947,18 +1947,29 @@ class CombatController(
             val interrupted = newEntries.filterIsInstance<CombatLogEntry.TurnSkipped>()
                 .lastOrNull { it.reason.endsWith(" interrupted") }
             val broken = newlyBroken.filter { updated.combatants[it]?.isAlive == true }
+            val skillAction = currentAction as? CombatAction.SkillUse
+            val skillAttribution = skillAction?.let { action ->
+                val actorName = combatantName(updated, action.actorId)
+                val skillTitle = skillById[action.skillId]?.name
+                if (skillTitle != null) "$actorName · $skillTitle" else actorName
+            }
+            val skillByPlayer = skillAction?.let { action ->
+                updated.combatants[action.actorId]?.combatant?.side != CombatSide.ENEMY
+            } ?: false
             when {
-                interrupted != null -> setCombatBanner(interrupted, updated)
+                interrupted != null -> setCombatBanner(interrupted, updated, previous = previous)
                 broken.isNotEmpty() -> _combatBanner.value = CombatBannerMessage(
                     id = UUID.randomUUID().toString(),
                     primary = "Stability Break",
                     secondary = broken.joinToString { combatantName(updated, it) } + " · Turn delayed",
                     accent = CombatBannerAccent.SHOCK,
                     icon = CombatBannerIcon.BURST,
-                    importance = CombatBannerImportance.IMPORTANT
+                    importance = CombatBannerImportance.IMPORTANT,
+                    actorLabel = skillAttribution,
+                    isPlayerActor = skillByPlayer
                 )
-                currentAction is CombatAction.SkillUse &&
-                    skillById[currentAction.skillId]?.combatTags.orEmpty().contains("guard_break") -> {
+                skillAction != null &&
+                    skillById[skillAction.skillId]?.combatTags.orEmpty().contains("guard_break") -> {
                     val removed = updated.combatants.keys.filter { id ->
                         lostBlockingStatus(previous.combatants[id], updated.combatants[id])
                     }
@@ -1968,7 +1979,9 @@ class CombatController(
                         secondary = removed.joinToString { combatantName(updated, it) },
                         accent = CombatBannerAccent.PHYSICAL,
                         icon = CombatBannerIcon.GUARD,
-                        importance = CombatBannerImportance.IMPORTANT
+                        importance = CombatBannerImportance.IMPORTANT,
+                        actorLabel = skillAttribution,
+                        isPlayerActor = skillByPlayer
                     )
                 }
             }
@@ -2321,7 +2334,10 @@ class CombatController(
     private data class BannerSession(
         val id: String,
         val actorId: String,
+        val actorLabel: String,
+        val isPlayerActor: Boolean,
         val primary: String,
+        val secondary: String?,
         val accent: CombatBannerAccent,
         val icon: CombatBannerIcon?
     )
@@ -2329,7 +2345,8 @@ class CombatController(
     private fun setCombatBanner(
         entry: CombatLogEntry,
         state: CombatState,
-        currentAction: CombatAction? = null
+        currentAction: CombatAction? = null,
+        previous: CombatState? = null
     ) {
         when (combatTextVerbosity) {
             CombatTextVerbosity.VERBOSE -> {
@@ -2349,14 +2366,14 @@ class CombatController(
         }
 
         val update = when (entry) {
-            is CombatLogEntry.ActionQueued -> bannerForActionQueued(entry, state)
+            is CombatLogEntry.ActionQueued -> bannerForActionQueued(entry, state, previous)
             is CombatLogEntry.Damage -> bannerForDamage(entry, state)
             is CombatLogEntry.Heal -> bannerForHeal(entry, state, currentAction)
             is CombatLogEntry.StatusApplied -> bannerForStatusApplied(entry, state, currentAction)
             is CombatLogEntry.StatusExpired -> bannerForStatusExpired(entry, state)
             is CombatLogEntry.TurnSkipped -> bannerForTurnSkipped(entry, state)
             is CombatLogEntry.Outcome -> bannerForOutcome(entry)
-            is CombatLogEntry.WeaknessReward -> bannerForWeaknessReward(entry)
+            is CombatLogEntry.WeaknessReward -> bannerForWeaknessReward(entry, state)
         }
         if (update != null) {
             _combatBanner.value = update
@@ -2367,19 +2384,36 @@ class CombatController(
 
     private fun bannerForActionQueued(
         entry: CombatLogEntry.ActionQueued,
-        state: CombatState
+        state: CombatState,
+        previous: CombatState? = null
     ): CombatBannerMessage? {
         if (entry.action is CombatAction.BasicAttack) {
             clearCombatBanner()
             return null
         }
         val actorId = entry.actorId
+        val actorLabel = combatantName(state, actorId)
+        val isPlayerActor = state.combatants[actorId]?.combatant?.side != CombatSide.ENEMY
         val actionDescriptor = actionDescriptor(entry.action)
         val primary = actionDescriptor.label
+        val momentumSpent = if (isPlayerActor && entry.action is CombatAction.SkillUse) {
+            previous?.combatants?.get(actorId)?.momentum ?: 0
+        } else 0
+        val secondary = when {
+            (entry.action as? CombatAction.SkillUse)?.skillId in setOf("gathering_silence", "avatar_recalibration", "vent_exposure") ->
+                "Recovery window — attack or heal"
+            momentumSpent == 1 -> "Overcharge I · +25% Power"
+            momentumSpent == 2 -> "Overcharge II · +50% Power · -1 CD"
+            momentumSpent >= 3 -> "Max Overcharge · +80% Power · Crit"
+            else -> null
+        }
         val session = BannerSession(
             id = UUID.randomUUID().toString(),
             actorId = actorId,
+            actorLabel = actorLabel,
+            isPlayerActor = isPlayerActor,
             primary = primary,
+            secondary = secondary,
             accent = actionDescriptor.accent ?: accentForActor(actorId, state),
             icon = actionDescriptor.icon
         )
@@ -2390,10 +2424,11 @@ class CombatController(
         return CombatBannerMessage(
             id = session.id,
             primary = session.primary,
-            secondary = if ((entry.action as? CombatAction.SkillUse)?.skillId in setOf("gathering_silence", "avatar_recalibration", "vent_exposure"))
-                "Recovery window — attack or heal" else null,
+            secondary = session.secondary,
             accent = session.accent,
-            icon = session.icon
+            icon = session.icon,
+            actorLabel = session.actorLabel,
+            isPlayerActor = session.isPlayerActor
         )
     }
 
@@ -2420,13 +2455,17 @@ class CombatController(
         }
         val messageId = session?.id ?: UUID.randomUUID().toString()
         val icon = session?.icon ?: actionFallback?.let { actionDescriptor(it).icon } ?: CombatBannerIcon.HEAL
+        val fallbackActor = combatantName(state, entry.sourceId)
+        val fallbackIsPlayer = state.combatants[entry.sourceId]?.combatant?.side != CombatSide.ENEMY
         return CombatBannerMessage(
             id = messageId,
             primary = primary,
-            secondary = null,
+            secondary = session?.secondary,
             accent = CombatBannerAccent.HEAL,
             icon = icon,
-            importance = CombatBannerImportance.IMPORTANT
+            importance = CombatBannerImportance.IMPORTANT,
+            actorLabel = session?.actorLabel ?: fallbackActor,
+            isPlayerActor = session?.isPlayerActor ?: fallbackIsPlayer
         )
     }
 
@@ -2443,13 +2482,20 @@ class CombatController(
         val importance = if (targetIsPlayer) CombatBannerImportance.IMPORTANT else CombatBannerImportance.NORMAL
         val session = bannerSession?.takeIf { actionOwnsStatusBanner(currentAction, entry) }
         val primary = session?.primary ?: statusLabel
+        val secondary = if (session != null) {
+            listOfNotNull(session.secondary, statusLabel.takeIf { !it.equals(primary, ignoreCase = true) })
+                .joinToString(" · ")
+                .ifBlank { null }
+        } else null
         return CombatBannerMessage(
             id = session?.id ?: UUID.randomUUID().toString(),
             primary = primary,
-            secondary = null,
+            secondary = secondary,
             accent = accentForStatus(entry.statusId),
-            icon = CombatBannerIcon.STATUS,
-            importance = importance
+            icon = session?.icon ?: CombatBannerIcon.STATUS,
+            importance = importance,
+            actorLabel = session?.actorLabel ?: combatantName(state, entry.targetId),
+            isPlayerActor = session?.isPlayerActor ?: targetIsPlayer
         )
     }
 
@@ -2512,11 +2558,13 @@ class CombatController(
             primary = reason,
             accent = CombatBannerAccent.DEFAULT,
             icon = if (chargingWeapon != null) CombatBannerIcon.ATTACK else CombatBannerIcon.STATUS,
-            importance = if (chargingWeapon != null) CombatBannerImportance.IMPORTANT else CombatBannerImportance.IMPORTANT
+            importance = if (chargingWeapon != null) CombatBannerImportance.IMPORTANT else CombatBannerImportance.IMPORTANT,
+            actorLabel = combatantName(state, entry.actorId),
+            isPlayerActor = entry.actorId in playerIdList
         )
     }
 
-    private fun bannerForWeaknessReward(entry: CombatLogEntry.WeaknessReward): CombatBannerMessage {
+    private fun bannerForWeaknessReward(entry: CombatLogEntry.WeaknessReward, state: CombatState): CombatBannerMessage {
         bannerSession = null
         val shiftedCooldowns = entry.cooldownReductions.map { shift ->
             val skillName = skillById[shift.skillId]?.name ?: shift.skillId.replace('_', ' ')
@@ -2539,7 +2587,9 @@ class CombatController(
             accent = CombatBannerAccent.SHOCK,
             icon = CombatBannerIcon.BURST,
             tags = listOf("Weakness", "Cooldown -1"),
-            importance = CombatBannerImportance.IMPORTANT
+            importance = CombatBannerImportance.IMPORTANT,
+            actorLabel = combatantName(state, entry.actorId),
+            isPlayerActor = entry.actorId in playerIdList
         )
     }
 

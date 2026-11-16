@@ -1401,6 +1401,8 @@ class CombatViewModelTest {
             assertEquals("Weakness exploited", banner?.primary)
             assertTrue(banner?.secondary.orEmpty().contains("Shock Probe"))
             assertTrue(banner?.secondary.orEmpty().contains("->"))
+            assertEquals("Nova", banner?.actorLabel)
+            assertTrue(banner?.isPlayerActor == true)
             assertEquals(CombatBannerAccent.SHOCK, banner?.accent)
             assertEquals(CombatBannerIcon.BURST, banner?.icon)
             assertEquals(CombatBannerImportance.IMPORTANT, banner?.importance)
@@ -1411,6 +1413,38 @@ class CombatViewModelTest {
                     it is AudioCommand.Play && it.cueId == "battle_weakness_resolve"
                 }
             )
+        } finally {
+            viewModel.viewModelScope.cancel()
+        }
+    }
+
+    @Test
+    fun playerSkillBannerIncludesActorAttributionAndOverchargeSubtitle() = runTest {
+        val viewModel = createWeaknessRewardViewModel()
+        val stateField = CombatViewModel::class.java.getDeclaredField("_state").apply { isAccessible = true }
+        @Suppress("UNCHECKED_CAST")
+        val stateFlow = stateField.get(viewModel) as kotlinx.coroutines.flow.MutableStateFlow<CombatState?>
+        val readyQueueField = CombatViewModel::class.java.getDeclaredField("readyQueue").apply { isAccessible = true }
+        @Suppress("UNCHECKED_CAST")
+        val readyQueue = readyQueueField.get(viewModel) as MutableList<String>
+        try {
+            val initial = requireNotNull(stateFlow.value)
+            val novaState = initial.combatants.getValue("nova")
+            stateFlow.value = initial.copy(
+                combatants = initial.combatants + ("nova" to novaState.copy(momentum = 2))
+            )
+            readyQueue.add("nova")
+            viewModel.selectReadyPlayer("nova")
+            val scanSkill = viewModel.skillsForPlayer("nova").first { it.id == "source_art_scan" }
+            viewModel.useSkill(scanSkill, listOf("shock_weak_drone"))
+            runCurrent()
+
+            val banner = viewModel.combatBanner.value
+            assertNotNull(banner)
+            assertEquals("Scan", banner?.primary)
+            assertEquals("Nova", banner?.actorLabel)
+            assertTrue(banner?.isPlayerActor == true)
+            assertTrue(banner?.secondary.orEmpty().contains("Overcharge II"))
         } finally {
             viewModel.viewModelScope.cancel()
         }

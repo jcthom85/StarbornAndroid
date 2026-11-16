@@ -71,7 +71,7 @@ fun AuthoredEncounterPanel(state: CombatState?, enemies: List<Enemy>, onTarget: 
                         val full = "$source: ${intent.label}" + if (target.isEmpty()) "" else " → ${names.joinToString()}"
                         val slim = compact || preparations.size > 1
                         Surface(
-                            Modifier.widthIn(max = groupWidth).height(if (slim) 24.dp else 38.dp)
+                            Modifier.widthIn(max = groupWidth).heightIn(min = if (slim) 24.dp else 38.dp)
                                 .clickable { onTarget(intent.sourceId) }
                                 .testTag("combat-preparation-${intent.actorId}")
                                 .semantics { contentDescription = full },
