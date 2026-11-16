@@ -513,7 +513,7 @@ fun EnemyInspectionSheet(
     }
 }
 
-private fun weaknessTintColor(element: String): Color =
+internal fun weaknessTintColor(element: String): Color =
     when (element.trim().lowercase(Locale.getDefault())) {
         "burn", "fire" -> Color(0xFFFF8A65)
         "shock", "lightning" -> Color(0xFF7BE4FF)

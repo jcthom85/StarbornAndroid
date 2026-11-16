@@ -192,6 +192,7 @@ class CombatViewModel(
     fun isOverchargeReady(actorId: String) = runtime.isOverchargeReady(actorId)
     fun weaponInfusionFor(actorId: String) = runtime.weaponInfusionFor(actorId)
     fun consumeLevelUpSummaries() = runtime.consumeLevelUpSummaries()
+    fun skillTargetScopeLabel(skill: Skill) = runtime.skillTargetScopeLabel(skill)
     fun targetRequirementFor(skill: Skill) = runtime.targetRequirementFor(skill)
     fun itemDisplayName(itemId: String) = runtime.itemDisplayName(itemId)
     fun registerTimedPromptTap() = runtime.registerTimedPromptTap()

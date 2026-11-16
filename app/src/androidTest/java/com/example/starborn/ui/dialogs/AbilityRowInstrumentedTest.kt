@@ -69,4 +69,116 @@ class AbilityRowInstrumentedTest {
         compose.onNodeWithText("Use").assertIsEnabled().performClick()
         compose.runOnIdle { assertEquals(1, uses) }
     }
+
+    @Test fun overchargedAndCooldownCardsShowTacticalChipsAndCountdown() {
+        val arc = Skill(
+            id = "nova_arc_tether",
+            name = "Arc Tether",
+            character = "nova",
+            type = "active",
+            basePower = 80,
+            cooldown = 2,
+            description = "Lashes one target with a high-voltage tether.",
+            combatTags = listOf("shock"),
+            scaling = "agility",
+            statusApplications = listOf("shock")
+        )
+        val plasma = Skill(
+            id = "nova_plasma_burst",
+            name = "Plasma Burst",
+            character = "nova",
+            type = "active",
+            basePower = 90,
+            cooldown = 3,
+            description = "Detonates superheated plasma across all foes.",
+            combatTags = listOf("burn", "aoe"),
+            scaling = "agility"
+        )
+        compose.setContent {
+            MaterialTheme {
+                Box(Modifier.width(340.dp)) {
+                    androidx.compose.foundation.layout.Column {
+                        AbilityRow(
+                            skill = arc,
+                            cooldownRemaining = 0,
+                            canUse = true,
+                            unavailableReason = null,
+                            highlighted = false,
+                            momentum = 3,
+                            accent = Color(0xFF7BE4FF),
+                            border = Color(0xFF5CCBE8),
+                            highContrastMode = false,
+                            onDetails = {},
+                            onUse = {},
+                            targetScopeLabel = "One enemy"
+                        )
+                        AbilityRow(
+                            skill = plasma,
+                            cooldownRemaining = 2,
+                            canUse = false,
+                            unavailableReason = "On cooldown",
+                            highlighted = false,
+                            momentum = 0,
+                            accent = Color(0xFF7BE4FF),
+                            border = Color(0xFF5CCBE8),
+                            highContrastMode = false,
+                            onDetails = {},
+                            onUse = {},
+                            targetScopeLabel = "All enemies"
+                        )
+                    }
+                }
+            }
+        }
+        compose.onNodeWithText("⚡ 144% · Crit").assertIsDisplayed()
+        compose.onNodeWithText("One enemy").assertIsDisplayed()
+        compose.onNodeWithText("Use").assertIsEnabled()
+        compose.onNodeWithText("On cooldown").assertIsDisplayed()
+        compose.onNodeWithText("2").assertIsDisplayed().assertIsNotEnabled()
+        val arcTitleBounds = compose.onNodeWithText("Arc Tether").fetchSemanticsNode().boundsInRoot
+        val useBounds = compose.onNodeWithText("Use").fetchSemanticsNode().boundsInRoot
+        assertTrue(
+            "Use button ($useBounds) must sit below the skill title ($arcTitleBounds) for Maestro selectors",
+            useBounds.top >= arcTitleBounds.bottom - 2f
+        )
+    }
+
+    @Test fun novaLinkCardRetainsHealsPartyAndRegenLabel() {
+        val link = Skill(
+            id = "nova_link",
+            name = "Link",
+            character = "nova",
+            type = "support",
+            basePower = 90,
+            cooldown = 4,
+            description = "Restore party HP and apply Regen through the Bridge ground.",
+            combatTags = listOf("source", "heal", "support", "aoe"),
+            scaling = "focus",
+            statusApplications = listOf("regen"),
+            targeting = "all_allies"
+        )
+        compose.setContent {
+            MaterialTheme {
+                Box(Modifier.width(340.dp)) {
+                    AbilityRow(
+                        skill = link,
+                        cooldownRemaining = 0,
+                        canUse = true,
+                        unavailableReason = null,
+                        highlighted = false,
+                        momentum = 0,
+                        accent = Color(0xFF7BE4FF),
+                        border = Color(0xFF5CCBE8),
+                        highContrastMode = false,
+                        onDetails = {},
+                        onUse = {},
+                        targetScopeLabel = "All allies"
+                    )
+                }
+            }
+        }
+        compose.onNodeWithText("Heals party + Regen", substring = true).assertIsDisplayed()
+        compose.onNodeWithText("Heal 90 HP").assertIsDisplayed()
+        compose.onNodeWithText("All allies").assertIsDisplayed()
+    }
 }
