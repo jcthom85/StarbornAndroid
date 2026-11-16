@@ -1261,7 +1261,7 @@
     "id": "w3_mq12_planning_table_dialogue",
     "speaker": "System",
     "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:map_patrols,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:copy_badges,quest_task_done:w3_mq12:source_disguises,quest_task_done:w3_mq12:hack_blueprints,quest_task_not_done:w3_mq12:assemble_table",
-    "text": "Ready to start the heist? Wear the copied uniforms to Transit Plaza and use the freight badges at the service elevator. The lift opens at the Upper City laundry intake. Zeke will send the Astra to the rooftop pad. If questioned, give the work order: scheduled Skypark air-filter inspection.",
+    "text": "Ready to move? Wear the copied uniforms to Transit Plaza and badge into the service lift to the Upper City laundry intake. Zeke will meet us on the roof with the Astra. Cover story: Skypark air-filter inspection.",
     "options": [
       {
         "id": "w3_mq12_assemble_confirm",
@@ -2267,7 +2267,7 @@
   {
     "id": "chris_favor_offer",
     "speaker": "Chris",
-    "text": "We're trying to send a pirate feed through the transit tunnels, but the high-frequency transmitter blew a capacitor during the last security sweep. If you can scavenge 1 rapid capacitor and 1 wiring bundle, Andrew and I can bypass the jammer and light up the airwaves.",
+    "text": "Our transit-tunnel pirate transmitter blew a capacitor during the last security sweep. Bring me 1 rapid capacitor and 1 wiring bundle, and Andrew and I can bypass the jammer and light up the airwaves.",
     "trigger": "set_milestone:ms_wayfarer_broadcast_asked",
     "next": "chris_default_talk"
   },

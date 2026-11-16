@@ -384,7 +384,7 @@
       "scrap_metal": 1
     },
     "requires_schematic": true,
-    "discovery_hint": "Recover the Dominion transmitter core to obtain Gh0st?s schematic."
+    "discovery_hint": "Recover the Dominion transmitter core to obtain Gh0st's schematic."
   },
   {
     "id": "mod_photon_core",

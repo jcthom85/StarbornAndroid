@@ -828,7 +828,7 @@
         "chance": 0.3
       }
     ],
-    "description": "Corrosive sewage biological. Applies acid/erosion. May yield Wiring Bundles for Field Kit repairs and fishing lures.",
+    "description": "A pale, acid-slicked scavenger that nests in warm drainage conduits and spits corrosive bile. May yield Wiring Bundles for Field Kit repairs and fishing lures.",
     "portrait": "images/enemies/mutated_crawler_combat.png",
     "authored": {
       "cycle": [
@@ -941,7 +941,7 @@
         "chance": 0.5
       }
     ],
-    "description": "Flying Dominion robot shield droid. Drops Neon Sign Core. Carries the Neon Sign Core for Jax’s repair and may yield a Battery for Pulse Grenades.",
+    "description": "Airborne Dominion patrol drone fitted with a riot barrier and quarantine pulse emitters. Carries the Neon Sign Core for Jax’s repair and may yield a Battery for Pulse Grenades.",
     "portrait": "images/enemies/sentinel_mki_foundry_pass.png",
     "authored": {
       "cycle": [
@@ -1970,7 +1970,7 @@
     "xp_reward": 0,
     "credit_reward": 0,
     "drops": [],
-    "description": "Pursuit threat. Stasis is the intended counter.",
+    "description": "Heavy Dominion pursuit automaton built to run down fugitives with seismic slams and self-repair routines. Stasis locks its actuators cold.",
     "portrait": "images/enemies/hk_droid_combat.png",
     "sprite": [
       "images/enemies/hk_droid_combat.png"
@@ -2232,7 +2232,7 @@
     "xp_reward": 420,
     "credit_reward": 0,
     "drops": [],
-    "description": "Zeke nightmare elite. Break its control loop.",
+    "description": "A towering Source projection wearing the voice and quota board of Zeke's old Foundry overseer. Interrupt its review cycle before judgment lands.",
     "portrait": "images/enemies/manager_projection_source_combat.png",
     "authored": {
       "cycle": [
@@ -2288,7 +2288,7 @@
     "xp_reward": 330,
     "credit_reward": 0,
     "drops": [],
-    "description": "Fast nightmare striker vulnerable to Stasis.",
+    "description": "A hyper-accelerated memory of Dominion shock troopers locked in an endless breach drill. Stasis breaks its firing cadence.",
     "portrait": "images/enemies/endless_war_echo_source_combat.png",
     "authored": {
       "cycle": [
@@ -2343,7 +2343,7 @@
     "xp_reward": 400,
     "credit_reward": 0,
     "drops": [],
-    "description": "Orion nightmare controller. Disruption breaks its silence.",
+    "description": "A hollow tide-wraith formed from Orion's memory of a coast gone quiet after the Chime. Disruption shatters its silencing undertow.",
     "portrait": "images/enemies/silent_shore_wraith_source_combat.png",
     "authored": {
       "cycle": [
@@ -2398,7 +2398,7 @@
         "chance": 0.25
       }
     ],
-    "description": "Basic Source distortion with unstable defenses.",
+    "description": "A flickering silhouette of unindexed memory that lashes out at living minds, though its unstable shell fractures under steady fire.",
     "portrait": "images/enemies/source_shadow_source_combat.png",
     "authored": {
       "cycle": [
@@ -2453,7 +2453,7 @@
         "chance": 0.35
       }
     ],
-    "description": "Turn-order controller vulnerable to shock and hacking.",
+    "description": "A warped Dominion patrol frame reassembled from lattice static. It drags down turn tempo until shock or system overrides short its core.",
     "portrait": "images/enemies/distorted_sentinel_source_combat.png",
     "authored": {
       "cycle": [
@@ -2508,7 +2508,7 @@
         "chance": 0.2
       }
     ],
-    "description": "High-evasion striker exposed by Scan.",
+    "description": "A predatory echo that skips between frames to dodge unassisted fire. Scanning locks onto its phase trail.",
     "portrait": "images/enemies/glitch_hound_source_combat.png",
     "authored": {
       "cycle": [
@@ -2565,7 +2565,7 @@
         "chance": 0.6
       }
     ],
-    "description": "Debuff elite requiring focus fire.",
+    "description": "A swelling rupture of discarded testimony that duplicates nearby threats and erodes the party's resolve unless burned down quickly.",
     "portrait": "images/enemies/memory_leak_source_combat.png",
     "authored": {
       "cycle": [
@@ -2626,7 +2626,7 @@
         "chance": 0.5
       }
     ],
-    "description": "Shielded guilt projection vulnerable to melee pressure.",
+    "description": "An armored bailiff coalesced from institutional guilt, sheltering other echoes behind a heavy ward that buckles under close-quarters strikes.",
     "portrait": "images/enemies/nightmare_guard_source_combat.png",
     "authored": {
       "cycle": [

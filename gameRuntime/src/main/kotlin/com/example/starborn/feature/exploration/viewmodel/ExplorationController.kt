@@ -5020,7 +5020,7 @@ class ExplorationController(
         }
         triggerPlayerAction("tinkering_craft", normalized)
         if (normalized.equals(ArcadeIds.REPAIRED_CORE, ignoreCase = true) && arcadeService.completeDeepMineRepair()) {
-            postStatus("The Hyperion cabinet wakes with an amber pulse. Ollie whistles: transport to the Astra is handled.")
+            postStatus("The Hyperion cabinet wakes with an amber pulse, ready for installation aboard the Astra.")
             updateActionHints(_uiState.value.currentRoom)
         }
     }
@@ -6029,42 +6029,42 @@ class ExplorationController(
                         when (cabinetId) {
                             ArcadeIds.HARMONIC_PULSE -> {
                                 showInspection(
-                                    "Ollie touches the radiant crystal bezel as harmonious chimes echo through the common room deck. " +
+                                    "Nova touches the radiant crystal bezel as harmonious chimes echo through the common room deck. " +
                                         "\"Listen to that resonance... all six cabinets are humming together like a choir. We've built an arcade legend.\" " +
                                         "HARMONIC PULSE completes the Astra arcade collection!"
                                 )
                             }
                             ArcadeIds.ORBITAL_DEFENSE -> {
                                 showInspection(
-                                    "Ollie steps back with a wide grin as the deep cobalt starfield flares into life. " +
+                                    "Nova steps back with a wide grin as the deep cobalt starfield flares into life. " +
                                         "\"Calibrated the twin plasma triggers for instant response. That starfield scroll looks like looking straight out the airlock.\" " +
                                         "ORBITAL DEFENSE 2000 joins the Astra arcade line-up."
                                 )
                             }
                             ArcadeIds.SLAG_CATCHER -> {
                                 showInspection(
-                                    "Ollie wipes a soot smudge off the ceramic marquee. " +
+                                    "Nova wipes a soot smudge off the ceramic marquee. " +
                                         "\"Had to reinforce the lower heat shielding so it doesn't melt through the bulkhead deck. That paddle has zero dead-zone.\" " +
                                         "SLAG CATCHER joins the Astra arcade line-up."
                                 )
                             }
                             ArcadeIds.SPIRE_INFILTRATOR -> {
                                 showInspection(
-                                    "Ollie tests the vector glow on the CRT. " +
+                                    "Nova tests the vector glow on the CRT. " +
                                         "\"Overclocked the flyback transformer so the cyan circuits bleed right off the glass. Look at that mainframe hum.\" " +
                                         "SPIRE INFILTRATOR joins the Astra arcade line-up."
                                 )
                             }
                             ArcadeIds.CANOPY_HOPPER -> {
                                 showInspection(
-                                    "Ollie grins as the emerald marquee flares to life. " +
+                                    "Nova grins as the emerald marquee flares to life. " +
                                         "\"Gave the audio amp extra juice so you can hear the bog-hopper chirp across the mess deck.\" " +
                                         "CANOPY HOPPER joins the Astra arcade line-up."
                                 )
                             }
                             else -> {
                                 showInspection(
-                                    "Ollie rocks back on his heels beside the cabinet, grease across both gloves. " +
+                                    "Nova rocks back on her heels beside the cabinet, grease across both gloves. " +
                                         "\"Had to shave three centimeters off the coin box. Worth it. Listen to that thing breathe.\" " +
                                         "The amber attract screen rolls over, and for once the recreation deck feels built for staying."
                                 )

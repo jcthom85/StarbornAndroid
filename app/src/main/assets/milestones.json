@@ -14,8 +14,8 @@
   {
     "id": "ms_arcade_deep_mine_install_seen",
     "name": "A Corner of Our Own",
-    "description": "Saw Ollie's installation of the restored Deep Mine cabinet aboard the Astra.",
-    "toast": "Ollie finishes the Astra's first arcade cabinet"
+    "description": "Installed the restored Deep Mine cabinet aboard the Astra.",
+    "toast": "Nova finishes the Astra's first arcade cabinet"
   },
   {
     "id": "ms_arcade_deep_mine_silver",
@@ -44,8 +44,8 @@
   {
     "id": "ms_arcade_canopy_hopper_install_seen",
     "name": "Swamp Lights on the Astra",
-    "description": "Saw Ollie's installation of the restored Canopy Hopper cabinet aboard the Astra.",
-    "toast": "Ollie finishes installing Canopy Hopper"
+    "description": "Installed the restored Canopy Hopper cabinet aboard the Astra.",
+    "toast": "Nova finishes installing Canopy Hopper"
   },
   {
     "id": "ms_arcade_canopy_hopper_silver",
@@ -74,8 +74,8 @@
   {
     "id": "ms_arcade_spire_infiltrator_install_seen",
     "name": "High-Speed Overdrive on the Astra",
-    "description": "Saw Ollie's installation of the restored Spire Infiltrator cabinet aboard the Astra.",
-    "toast": "Ollie finishes installing Spire Infiltrator"
+    "description": "Installed the restored Spire Infiltrator cabinet aboard the Astra.",
+    "toast": "Nova finishes installing Spire Infiltrator"
   },
   {
     "id": "ms_arcade_spire_infiltrator_silver",
@@ -104,8 +104,8 @@
   {
     "id": "ms_arcade_slag_catcher_install_seen",
     "name": "Smelter Heat on the Astra",
-    "description": "Saw Ollie's installation of the restored Slag Catcher cabinet aboard the Astra.",
-    "toast": "Ollie finishes installing Slag Catcher"
+    "description": "Installed the restored Slag Catcher cabinet aboard the Astra.",
+    "toast": "Nova finishes installing Slag Catcher"
   },
   {
     "id": "ms_arcade_slag_catcher_silver",
@@ -134,8 +134,8 @@
   {
     "id": "ms_arcade_orbital_defense_install_seen",
     "name": "Zenith Blue on the Astra",
-    "description": "Saw Ollie's installation of the restored Orbital Defense 2000 cabinet aboard the Astra.",
-    "toast": "Ollie finishes installing Orbital Defense"
+    "description": "Installed the restored Orbital Defense 2000 cabinet aboard the Astra.",
+    "toast": "Nova finishes installing Orbital Defense"
   },
   {
     "id": "ms_arcade_orbital_defense_silver",
@@ -164,8 +164,8 @@
   {
     "id": "ms_arcade_harmonic_pulse_install_seen",
     "name": "Resonance on the Astra",
-    "description": "Saw Ollie's installation of the restored Harmonic Pulse cabinet aboard the Astra.",
-    "toast": "Ollie finishes installing Harmonic Pulse"
+    "description": "Installed the restored Harmonic Pulse cabinet aboard the Astra.",
+    "toast": "Nova finishes installing Harmonic Pulse"
   },
   {
     "id": "ms_arcade_harmonic_pulse_silver",

@@ -2388,7 +2388,7 @@
       {
         "id": "armory",
         "title": "Executive Armory",
-        "description": "Open the armory.",
+        "description": "Use the recovered SysAdmin keycard at the Throne Room to unlock the executive armory.",
         "tasks": [
           {
             "id": "open_armory",

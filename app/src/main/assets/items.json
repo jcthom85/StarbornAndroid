@@ -43,7 +43,7 @@
   {
     "id": "deep_mine_cabinet_core",
     "name": "Restored Deep Mine Cabinet Core",
-    "description": "A repaired Hyperion control core ready for Ollie to install aboard the Astra.",
+    "description": "A repaired Hyperion control core ready to install aboard the Astra.",
     "type": "quest",
     "value": 0,
     "rarity": "rare",
@@ -61,7 +61,7 @@
   {
     "id": "canopy_hopper_cabinet_core",
     "name": "Restored Canopy Hopper Core",
-    "description": "A repaired survival pod arcade core ready for Ollie to install aboard the Astra.",
+    "description": "A repaired survival pod arcade core ready to install aboard the Astra.",
     "type": "quest",
     "value": 0,
     "rarity": "rare",
@@ -107,7 +107,7 @@
   {
     "id": "spire_infiltrator_cabinet_core",
     "name": "Restored Spire Infiltrator Core",
-    "description": "A repaired Spire Infiltrator arcade core ready for Ollie to install aboard the Astra.",
+    "description": "A repaired Spire Infiltrator arcade core ready to install aboard the Astra.",
     "type": "quest",
     "value": 0,
     "rarity": "rare",
@@ -116,7 +116,7 @@
   {
     "id": "cyber_visor",
     "name": "ICE Breaker Cyber Visor",
-    "description": "A neon targeting visor awarded for mastering Spire Infiltrator. Enhances vulnerability detection (+10% Crit Chance).",
+    "description": "A neon targeting visor awarded for mastering Spire Infiltrator. Enhances vulnerability detection (+3 Focus, +4% Accuracy).",
     "type": "accessory",
     "value": 1200,
     "rarity": "epic",
@@ -141,7 +141,7 @@
   {
     "id": "slag_catcher_cabinet_core",
     "name": "Restored Slag Catcher Core",
-    "description": "A repaired Foundry smelter arcade core ready for Ollie to install aboard the Astra.",
+    "description": "A repaired Foundry smelter arcade core ready to install aboard the Astra.",
     "type": "quest",
     "value": 0,
     "rarity": "rare",
@@ -165,7 +165,7 @@
   {
     "id": "thermal_solder_gun",
     "name": "Master Smelter Solder Gun",
-    "description": "An industrial high-temp precision tool earned by mastering Slag Catcher (+5 ATK, +3 INT).",
+    "description": "An industrial high-temp precision tool earned by mastering Slag Catcher (+5 Attack, +3 Focus).",
     "type": "accessory",
     "value": 1400,
     "rarity": "epic",
@@ -190,7 +190,7 @@
   {
     "id": "orbital_defense_cabinet_core",
     "name": "Restored Orbital Defense Core",
-    "description": "A repaired Zenith orbital starfighter arcade core ready for Ollie to install aboard the Astra.",
+    "description": "A repaired Zenith orbital starfighter arcade core ready to install aboard the Astra.",
     "type": "quest",
     "value": 0,
     "rarity": "rare",
@@ -214,7 +214,7 @@
   {
     "id": "orbital_deflector_matrix",
     "name": "Orbital Deflector Matrix",
-    "description": "An advanced shielding matrix earned by mastering Orbital Defense 2000 (+15 Max HP, +4 FOC, +3 VIT).",
+    "description": "An advanced shielding matrix earned by mastering Orbital Defense 2000 (+4 Focus, +3 Vitality).",
     "type": "accessory",
     "value": 1600,
     "rarity": "epic",
@@ -239,7 +239,7 @@
   {
     "id": "harmonic_pulse_cabinet_core",
     "name": "Restored Harmonic Pulse Core",
-    "description": "A repaired primordial rhythm arcade core ready for Ollie to install aboard the Astra.",
+    "description": "A repaired primordial rhythm arcade core ready to install aboard the Astra.",
     "type": "quest",
     "value": 0,
     "rarity": "legendary",
@@ -263,7 +263,7 @@
   {
     "id": "source_cadence_crown",
     "name": "Crown of the Primordial Cadence",
-    "description": "A legendary radiant diadem awarded for mastering Harmonic Pulse. Resonates with all 6 cosmic frequencies (+6 Focus, +6 Intelligence, +20 Max HP).",
+    "description": "A legendary radiant diadem awarded for mastering Harmonic Pulse. Resonates with all 6 cosmic frequencies (+6 Focus, +6 Intelligence).",
     "type": "accessory",
     "value": 2500,
     "rarity": "legendary",
@@ -932,7 +932,7 @@
   {
     "id": "battery_pack",
     "name": "Battery Pack",
-    "description": "A simple battery pack for providing a charge.",
+    "description": "A heavy-duty industrial power cell used to jump-start field rigs and craft shock munitions.",
     "type": "component",
     "value": 10,
     "buy_price": 20,
@@ -1010,6 +1010,7 @@
   {
     "id": "communicator",
     "name": "Communicator",
+    "description": "A short-range field transceiver tuned to local crew frequencies.",
     "type": "key_item",
     "value": 0,
     "buy_price": 0,
@@ -1385,7 +1386,7 @@
   {
     "id": "ember_broth",
     "name": "Ember Broth",
-    "description": "Thermos of spicy broth. Burns going down. Reminds you you're alive.",
+    "description": "Thermos of spicy broth. Burns going down. Reminds you that you're alive.",
     "type": "snack",
     "value": 165,
     "buy_price": 330,
@@ -1499,7 +1500,7 @@
   {
     "id": "nano_filament",
     "name": "Nano Filament",
-    "description": "A tiny filament.",
+    "description": "High-tensile conductive thread spun for precision weapon mods, insulated armor weaves, and high-test fishing lines.",
     "type": "component",
     "value": 10,
     "buy_price": 20,
@@ -2046,7 +2047,7 @@
   {
     "id": "celestial_fillet",
     "name": "Celestial Fillet",
-    "description": "Sear of void ray with herbs. Restores 150 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion's perk. In combat: focus +12 for 3 turns; crit +8 for 3 turns to one ally.",
+    "description": "Seared void ray fillet with wild herbs. Restores 150 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion's perk. In combat: focus +12 for 3 turns; crit +8 for 3 turns to one ally.",
     "type": "consumable",
     "value": 240,
     "buy_price": 480,
@@ -3881,7 +3882,7 @@
   {
     "id": "tidal_resonator_mod",
     "name": "Tidal Resonator",
-    "description": "An ancient Aethel acoustic dampener salvaged from the sunken vault. Harmonizes weapon strikes with tidal currents to bludgeon through kinetic barriers.",
+    "description": "An ancient Aethel acoustic dampener salvaged from the sunken vault. Dampens incoming kinetic shock with deep-current baffling, reinforcing plating and focus.",
     "type": "mod",
     "value": 360,
     "buy_price": 720,
@@ -3934,7 +3935,7 @@
   {
     "id": "magma_induction_core_mod",
     "name": "Magma Induction Core",
-    "description": "A geothermal smelting core recovered from the subterranean forge. Channels molten slag energy into devastating kinetic impact strikes.",
+    "description": "A geothermal smelting core recovered from the subterranean forge. Channels thermal-forge induction to bolster heavy strikes and reinforce armor plating.",
     "type": "mod",
     "value": 500,
     "buy_price": 1000,

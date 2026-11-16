@@ -245,7 +245,6 @@
     "type": "enemy",
     "description": "A lightning-charged drill strike.",
     "combat_tags": [
-      "shock",
       "shock"
     ],
     "base_power": 170,
@@ -278,7 +277,6 @@
     "type": "enemy",
     "description": "Blasts a cone of flame.",
     "combat_tags": [
-      "burn",
       "burn"
     ],
     "base_power": 170,
@@ -327,7 +325,7 @@
     "type": "active",
     "base_power": 0,
     "cooldown": 3,
-    "description": "Increases evasion by 15% for 2 turns.",
+    "description": "Detonates a dense particulate canister, granting Shielded and raising Evasion by 15% for 2 turns.",
     "combat_tags": [
       "support"
     ],
@@ -721,7 +719,7 @@
     "name": "Quake Slam",
     "character": "zeke",
     "type": "active",
-    "description": "Slams the deck with full pneumatic force, sending a shockwave across the enemy line that applies Weak, with devastating bonus damage against stunned targets.",
+    "description": "Slams the deck with full pneumatic force, sending a shockwave across the enemy line that applies Discord, with devastating bonus damage against stunned targets.",
     "combat_tags": [
       "aoe"
     ],
@@ -770,7 +768,7 @@
     "name": "Disruption Pulse",
     "character": "orion",
     "type": "active",
-    "description": "Emitters pulse an inverted resonance wave that scrambles targeting sensors and leaves all foes Weakened.",
+    "description": "Emitters pulse an inverted resonance wave that scrambles targeting sensors and applies Discord to all foes.",
     "combat_tags": [
       "aoe"
     ],
@@ -1025,7 +1023,7 @@
     "name": "Cheap Shot",
     "character": "nova",
     "type": "active",
-    "description": "Kicks up a blinding flurry of metal filings into the target's optics, lowering enemy accuracy and granting bonus Evasion.",
+    "description": "Kicks a blinding flurry of metal filings into the target's optics, applying Discord to cut their outgoing damage.",
     "combat_tags": [
       "debuff"
     ],
@@ -1074,7 +1072,7 @@
     "name": "Target Lock",
     "character": "gh0st",
     "type": "active",
-    "description": "Paints the enemy's structural seams with a targeting laser, drastically boosting critical strike vulnerability while raising personal defenses.",
+    "description": "Paints the enemy's structural seams with a targeting laser, applying Marked so incoming attacks land as critical hits.",
     "combat_tags": [
       "debuff",
       "support"
@@ -1298,7 +1296,7 @@
     "name": "Phase Counter",
     "character": "gh0st",
     "type": "active",
-    "description": "Gh0st uses the override key discipline to counter an incoming strike and mark the attacker.",
+    "description": "Gh0st uses the override key discipline to counter an incoming strike and apply Discord to the attacker.",
     "combat_tags": [
       "counter",
       "debuff"
@@ -2334,7 +2332,7 @@
     "name": "Reposition",
     "character": "enemy",
     "type": "enemy",
-    "description": "Reposition.",
+    "description": "Shifts footing to clear targeting locks and reset stance.",
     "combat_tags": [
       "support"
     ],
@@ -2349,7 +2347,7 @@
     "name": "Shield Order",
     "character": "enemy",
     "type": "enemy",
-    "description": "Shield Order.",
+    "description": "Broadcasts a formation directive that raises protective barriers across all allies.",
     "combat_tags": [
       "support"
     ],
@@ -2367,7 +2365,7 @@
     "name": "Shield Brace",
     "character": "enemy",
     "type": "enemy",
-    "description": "Shield Brace.",
+    "description": "Locks riot shields into an overlapping wall, sheltering all allies from incoming fire.",
     "combat_tags": [
       "support"
     ],
@@ -2385,7 +2383,7 @@
     "name": "Baton Rush",
     "character": "enemy",
     "type": "enemy",
-    "description": "Baton Rush.",
+    "description": "Charges forward with a weighted shock baton, battering a target and applying Discord.",
     "combat_tags": [
       "physical"
     ],
@@ -2402,7 +2400,7 @@
     "name": "Ion Burst",
     "character": "enemy",
     "type": "enemy",
-    "description": "Ion Burst.",
+    "description": "Fires a concentrated ion bolt that scrambles the target's weapon systems and applies Discord.",
     "combat_tags": [
       "shock"
     ],
@@ -2419,7 +2417,7 @@
     "name": "Intercept Pulse",
     "character": "enemy",
     "type": "enemy",
-    "description": "Intercept Pulse.",
+    "description": "Fires a snap suppression pulse that disrupts the target's aim and applies Discord.",
     "combat_tags": [
       "shock"
     ],
@@ -2437,7 +2435,7 @@
     "name": "Heat Sweep",
     "character": "enemy",
     "type": "enemy",
-    "description": "Heat Sweep.",
+    "description": "Sweeps a superheated exhaust beam across the entire party.",
     "combat_tags": [
       "burn"
     ],
@@ -2452,7 +2450,7 @@
     "name": "Deploy Interdictor",
     "character": "enemy",
     "type": "enemy",
-    "description": "Deploy Interdictor.",
+    "description": "Unlatches an auxiliary interdictor bay to reinforce local security.",
     "combat_tags": [
       "support"
     ],
@@ -2467,7 +2465,7 @@
     "name": "Laser Lattice",
     "character": "enemy",
     "type": "enemy",
-    "description": "Laser Lattice.",
+    "description": "Projects an intersecting grid of security lasers across all enemies.",
     "combat_tags": [
       "source"
     ],
@@ -2482,7 +2480,7 @@
     "name": "Exposed Vents",
     "character": "enemy",
     "type": "enemy",
-    "description": "Exposed Vents.",
+    "description": "Cracks open overheated exhaust louvers to dump excess heat, leaving the unit's core exposed.",
     "combat_tags": [
       "support"
     ],
@@ -2499,7 +2497,7 @@
     "name": "Emergency Lattice",
     "character": "enemy",
     "type": "enemy",
-    "description": "Emergency Lattice.",
+    "description": "Focuses the security grid into a high-intensity beam on a single target.",
     "combat_tags": [
       "source"
     ],
@@ -2514,7 +2512,7 @@
     "name": "Quarantine Pulse",
     "character": "enemy",
     "type": "enemy",
-    "description": "Quarantine Pulse.",
+    "description": "Discharges a heavy containment shock that jolts a target and applies Discord.",
     "combat_tags": [
       "shock"
     ],
@@ -2661,7 +2659,7 @@
     "name": "Reorienting",
     "character": "enemy",
     "type": "enemy",
-    "description": "Reorienting.",
+    "description": "Recalibrates gyroscopic stabilizers after a heavy maneuver.",
     "combat_tags": [
       "support"
     ],
@@ -2675,7 +2673,7 @@
     "name": "Guided Missile Pass",
     "character": "enemy",
     "type": "enemy",
-    "description": "Guided Missile Pass.",
+    "description": "Banks through the bay while loosing a salvo of tracking micro-missiles at a single target.",
     "combat_tags": [
       "dmg"
     ],
@@ -2689,7 +2687,7 @@
     "name": "Detention Sweep",
     "character": "enemy",
     "type": "enemy",
-    "description": "Detention Sweep.",
+    "description": "Sweeps a wide containment arc to force a single target back.",
     "combat_tags": [
       "dmg"
     ],
@@ -2703,7 +2701,7 @@
     "name": "Gravity Tether",
     "character": "enemy",
     "type": "enemy",
-    "description": "Gravity Tether.",
+    "description": "Locks a gravimetric snare onto a target, dragging down their mobility.",
     "combat_tags": [
       "dmg"
     ],
@@ -2720,7 +2718,7 @@
     "name": "Aperture Beam",
     "character": "enemy",
     "type": "enemy",
-    "description": "Aperture Beam.",
+    "description": "Fires a focused orbital prism beam into a single target.",
     "combat_tags": [
       "dmg"
     ],
@@ -2734,7 +2732,7 @@
     "name": "Mirror Guard",
     "character": "enemy",
     "type": "enemy",
-    "description": "Mirror Guard.",
+    "description": "Angles reflective plating to deflect incoming fire.",
     "combat_tags": [
       "support"
     ],
@@ -2751,7 +2749,7 @@
     "name": "Shield Commitment",
     "character": "enemy",
     "type": "enemy",
-    "description": "Shield Commitment.",
+    "description": "Drives forward behind a locked barrier to slam a single target.",
     "combat_tags": [
       "dmg"
     ],
@@ -2765,7 +2763,7 @@
     "name": "Frequency Sweep",
     "character": "enemy",
     "type": "enemy",
-    "description": "Frequency Sweep.",
+    "description": "Sweeps an attunement beam across a single target.",
     "combat_tags": [
       "dmg"
     ],
@@ -2779,7 +2777,7 @@
     "name": "Directive Execution",
     "character": "enemy",
     "type": "enemy",
-    "description": "Directive Execution.",
+    "description": "Coordinates a synchronized command strike against a designated target.",
     "combat_tags": [
       "dmg"
     ],
@@ -2793,7 +2791,7 @@
     "name": "Coordinated Purge",
     "character": "enemy",
     "type": "enemy",
-    "description": "Coordinated Purge.",
+    "description": "Triggers a linked containment discharge across the entire enemy line.",
     "combat_tags": [
       "dmg"
     ],
@@ -2807,7 +2805,7 @@
     "name": "Unlinked Discharge",
     "character": "enemy",
     "type": "enemy",
-    "description": "Unlinked Discharge.",
+    "description": "Fires an uncoordinated burst after losing command synchronization.",
     "combat_tags": [
       "dmg"
     ],
@@ -2821,7 +2819,7 @@
     "name": "Exposed Command Link",
     "character": "enemy",
     "type": "enemy",
-    "description": "Exposed Command Link.",
+    "description": "Struggles to rebind a severed command relay, leaving the unit's link exposed.",
     "combat_tags": [
       "support"
     ],
@@ -2838,7 +2836,7 @@
     "name": "Command Ward",
     "character": "enemy",
     "type": "enemy",
-    "description": "Command Ward.",
+    "description": "Projects an executive containment ward across all allied units.",
     "combat_tags": [
       "support"
     ],
@@ -2856,7 +2854,7 @@
     "name": "Detention Mark",
     "character": "enemy",
     "type": "enemy",
-    "description": "Detention Mark.",
+    "description": "Paints a target with a high-priority detention beacon.",
     "combat_tags": [
       "dmg"
     ],
@@ -2873,7 +2871,7 @@
     "name": "Capture Cable",
     "character": "enemy",
     "type": "enemy",
-    "description": "Capture Cable.",
+    "description": "Launches a motorized tether cable that drags the target out of position.",
     "combat_tags": [
       "dmg"
     ],
@@ -2890,7 +2888,7 @@
     "name": "Volley Alignment",
     "character": "enemy",
     "type": "enemy",
-    "description": "Volley Alignment.",
+    "description": "Synchronizes targeting vectors across all allied units for a coordinated volley.",
     "combat_tags": [
       "support"
     ],
@@ -2908,7 +2906,7 @@
     "name": "Survey Pulse",
     "character": "enemy",
     "type": "enemy",
-    "description": "Survey Pulse.",
+    "description": "Fires a rangefinding prism bolt that tags a single target.",
     "combat_tags": [
       "dmg"
     ],
@@ -2922,7 +2920,7 @@
     "name": "Amber Frequency — Burn Opening",
     "character": "enemy",
     "type": "enemy",
-    "description": "Amber Frequency — Burn Opening.",
+    "description": "Shifts the prism array to Amber Frequency, resisting Shock while opening a Burn vulnerability.",
     "combat_tags": [
       "support"
     ],
@@ -2939,7 +2937,7 @@
     "name": "Blue Frequency — Shock Opening",
     "character": "enemy",
     "type": "enemy",
-    "description": "Blue Frequency — Shock Opening.",
+    "description": "Shifts the prism array to Blue Frequency, resisting Burn while opening a Shock vulnerability.",
     "combat_tags": [
       "support"
     ],
@@ -2956,7 +2954,7 @@
     "name": "Incomplete Fracture",
     "character": "enemy",
     "type": "enemy",
-    "description": "Incomplete Fracture.",
+    "description": "Releases an unstable burst from a fractured harmonic core.",
     "combat_tags": [
       "dmg"
     ],
@@ -2970,7 +2968,7 @@
     "name": "Fracture Unraveling",
     "character": "enemy",
     "type": "enemy",
-    "description": "Fracture Unraveling.",
+    "description": "The fractured core loses phase lock, exposing its command link.",
     "combat_tags": [
       "support"
     ],
@@ -2987,7 +2985,7 @@
     "name": "Regathering",
     "character": "enemy",
     "type": "enemy",
-    "description": "Regathering.",
+    "description": "Draws scattered harmonic residue back into a coherent form.",
     "base_power": 0,
     "scaling": "focus",
     "cooldown": 0,
@@ -3001,7 +2999,7 @@
     "name": "Exposed Memory",
     "character": "enemy",
     "type": "enemy",
-    "description": "Exposed Memory.",
+    "description": "Splits open under conflicting memories, briefly exposing its core.",
     "base_power": 0,
     "scaling": "focus",
     "cooldown": 0,
@@ -3018,7 +3016,7 @@
     "name": "Performance Demand",
     "character": "enemy",
     "type": "enemy",
-    "description": "Performance Demand.",
+    "description": "Logs a mandatory performance citation against a single target, marking them for judgment.",
     "base_power": 24,
     "scaling": "focus",
     "cooldown": 0,
@@ -3035,7 +3033,7 @@
     "name": "Final Judgment",
     "character": "enemy",
     "type": "enemy",
-    "description": "Final Judgment.",
+    "description": "Delivers a crushing disciplinary strike against a cited target.",
     "base_power": 77,
     "scaling": "focus",
     "cooldown": 0,
@@ -3049,7 +3047,7 @@
     "name": "Designation",
     "character": "enemy",
     "type": "enemy",
-    "description": "Designation.",
+    "description": "Marks a single target for concentrated volley fire.",
     "base_power": 24,
     "scaling": "focus",
     "cooldown": 0,
@@ -3066,7 +3064,7 @@
     "name": "Execution Volley",
     "character": "enemy",
     "type": "enemy",
-    "description": "Execution Volley.",
+    "description": "Unleashes a synchronized firing-squad barrage on the designated target.",
     "base_power": 73,
     "scaling": "focus",
     "cooldown": 0,
@@ -3080,7 +3078,7 @@
     "name": "Silence Tide",
     "character": "enemy",
     "type": "enemy",
-    "description": "Silence Tide.",
+    "description": "Sends a cold wave of static across the party, dealing Source damage and applying Silence.",
     "base_power": 62,
     "scaling": "focus",
     "cooldown": 0,
@@ -3098,7 +3096,7 @@
     "name": "Shadow Slash",
     "character": "enemy",
     "type": "enemy",
-    "description": "Shadow Slash.",
+    "description": "Rakes a single target with a blade of condensed memory static.",
     "base_power": 65,
     "scaling": "focus",
     "cooldown": 0,
@@ -3112,7 +3110,7 @@
     "name": "Fractured Bolt",
     "character": "enemy",
     "type": "enemy",
-    "description": "Fractured Bolt.",
+    "description": "Hurls a jagged bolt of unindexed lattice static at a single target.",
     "base_power": 62,
     "scaling": "focus",
     "cooldown": 0,
@@ -3126,7 +3124,7 @@
     "name": "Glitch Pounce",
     "character": "enemy",
     "type": "enemy",
-    "description": "Glitch Pounce.",
+    "description": "Blinks across the arena in a jagged frame-skip to strike a single target.",
     "base_power": 66,
     "scaling": "focus",
     "cooldown": 0,
@@ -3140,7 +3138,7 @@
     "name": "Borrowed Pressure",
     "character": "enemy",
     "type": "enemy",
-    "description": "Borrowed Pressure.",
+    "description": "Replays a stolen echo of the crew's past battles across the entire party.",
     "base_power": 57,
     "scaling": "focus",
     "cooldown": 0,
@@ -3156,7 +3154,7 @@
     "name": "Shelter the Leak",
     "character": "enemy",
     "type": "enemy",
-    "description": "Shelter the Leak.",
+    "description": "Wraps allied echoes in a protective veil of shared testimony.",
     "base_power": 0,
     "scaling": "focus",
     "cooldown": 0,
@@ -3174,7 +3172,7 @@
     "name": "Accusation",
     "character": "enemy",
     "type": "enemy",
-    "description": "Accusation.",
+    "description": "Drives the weight of an unanswered failure into a single target.",
     "base_power": 69,
     "scaling": "focus",
     "cooldown": 0,
@@ -3188,7 +3186,7 @@
     "name": "Command of Silence",
     "character": "enemy",
     "type": "enemy",
-    "description": "Command of Silence.",
+    "description": "Issues an absolute compliance directive that strikes a single target and imposes Silence.",
     "base_power": 67,
     "scaling": "focus",
     "cooldown": 0,
@@ -3206,7 +3204,7 @@
     "name": "Soloist’s Verdict",
     "character": "enemy",
     "type": "enemy",
-    "description": "Soloist’s Verdict.",
+    "description": "Brings the full weight of the Soloist's baton down on a single target.",
     "base_power": 78,
     "scaling": "focus",
     "cooldown": 0,
@@ -3221,7 +3219,7 @@
     "name": "Erase the Voice",
     "character": "enemy",
     "type": "enemy",
-    "description": "Erase the Voice.",
+    "description": "Cuts a single target's voice from the arrangement, dealing Source damage and applying Silence.",
     "base_power": 69,
     "scaling": "focus",
     "cooldown": 0,
@@ -3239,7 +3237,7 @@
     "name": "Erase the Memory",
     "character": "enemy",
     "type": "enemy",
-    "description": "Erase the Memory.",
+    "description": "Sweeps an erasure chord across the party to scrub unapproved memories.",
     "base_power": 53,
     "scaling": "focus",
     "cooldown": 0,
@@ -3254,7 +3252,7 @@
     "name": "Fractured Command",
     "character": "enemy",
     "type": "enemy",
-    "description": "Fractured Command.",
+    "description": "Lashes out with a dissonant command fragment when the arrangement falters.",
     "base_power": 60,
     "scaling": "focus",
     "cooldown": 0,
@@ -3269,7 +3267,7 @@
     "name": "Great Silence",
     "character": "enemy",
     "type": "enemy",
-    "description": "Great Silence.",
+    "description": "Releases a crushing wave of stillness across the entire party.",
     "base_power": 68,
     "scaling": "focus",
     "cooldown": 0,
@@ -3285,7 +3283,7 @@
     "name": "File the Review",
     "character": "enemy",
     "type": "enemy",
-    "description": "File the Review.",
+    "description": "Stamps an arrears notice onto a single target, marking them for review.",
     "base_power": 35,
     "scaling": "focus",
     "cooldown": 0,
@@ -3302,7 +3300,7 @@
     "name": "Broken Order",
     "character": "enemy",
     "type": "enemy",
-    "description": "Broken Order.",
+    "description": "Fires a jagged shard of corrupted command code at a single target.",
     "base_power": 50,
     "scaling": "focus",
     "cooldown": 0,
@@ -3316,7 +3314,7 @@
     "name": "Low Tide",
     "character": "enemy",
     "type": "enemy",
-    "description": "Low Tide.",
+    "description": "Pulls at the target's footing with a dull undertow, dealing damage and applying Discord.",
     "base_power": 45,
     "scaling": "focus",
     "cooldown": 0,
@@ -3333,7 +3331,7 @@
     "name": "Coolant Vent",
     "character": "enemy",
     "type": "enemy",
-    "description": "Coolant Vent.",
+    "description": "Blasts a single target with pressurized cryo-quench vapor.",
     "base_power": 57,
     "scaling": "atk",
     "cooldown": 0,
@@ -3348,7 +3346,7 @@
     "name": "Magnetic Mark",
     "character": "enemy",
     "type": "enemy",
-    "description": "Magnetic Mark.",
+    "description": "Tags a single target with a magnetized slag beacon that draws heavy forge strikes.",
     "base_power": 22,
     "scaling": "atk",
     "cooldown": 0,
@@ -3365,7 +3363,7 @@
     "name": "Press Rising",
     "character": "enemy",
     "type": "enemy",
-    "description": "Press Rising.",
+    "description": "Draws the hydraulic ram back to the top of its stroke, briefly exposing the housing.",
     "base_power": 0,
     "scaling": "atk",
     "cooldown": 0,
@@ -3382,7 +3380,7 @@
     "name": "Stamping Press",
     "character": "enemy",
     "type": "enemy",
-    "description": "Stamping Press.",
+    "description": "Drops the full tonnage of the stamping ram onto a single target.",
     "base_power": 76,
     "scaling": "atk",
     "cooldown": 0,
@@ -3396,7 +3394,7 @@
     "name": "Checking Jab",
     "character": "enemy",
     "type": "enemy",
-    "description": "Checking Jab.",
+    "description": "Tests the target's guard with a quick piston jab.",
     "base_power": 29,
     "scaling": "atk",
     "cooldown": 0,
@@ -3410,7 +3408,7 @@
     "name": "Hammer Commitment",
     "character": "enemy",
     "type": "enemy",
-    "description": "Hammer Commitment.",
+    "description": "Swings a two-handed forge maul in a committed overhead crush.",
     "base_power": 112,
     "scaling": "atk",
     "cooldown": 0,
@@ -3424,7 +3422,7 @@
     "name": "White-Hot Hammer",
     "character": "enemy",
     "type": "enemy",
-    "description": "White-Hot Hammer.",
+    "description": "Brings a white-hot smelter maul down on a single target in a spray of slag.",
     "base_power": 121,
     "scaling": "atk",
     "cooldown": 0,
@@ -3439,7 +3437,7 @@
     "name": "Exposed Recovery",
     "character": "enemy",
     "type": "enemy",
-    "description": "Exposed Recovery.",
+    "description": "Vents superheated steam after a heavy swing, leaving the frame exposed.",
     "base_power": 0,
     "scaling": "atk",
     "cooldown": 0,
