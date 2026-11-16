@@ -64,5 +64,6 @@ data class FishingReelState(
     val behavior: FishBehaviorDefinition?,
     val phase: FishingFightPhase = FishingFightPhase.CALM,
     val staminaRemaining: Float = 1f,
-    val salvage: Boolean = false
+    val salvage: Boolean = false,
+    val elapsedMs: Long = 0L
 )

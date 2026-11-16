@@ -168,6 +168,12 @@ class FishingController(
         cancelFishing()
     }
 
+    /** Immediately recasts with the currently selected rod and lure without returning to the setup form. */
+    fun castAgain() {
+        cancelFishing()
+        startFishing()
+    }
+
     fun onHookMotionDetected() {
         if (!_uiState.value.motionEnabled || paused) return
         attemptHook()
@@ -331,11 +337,20 @@ class FishingController(
             viewModelScope.launch { _events.emit(FishingEvent.Warning) }
         }
         if (current.tension >= 1f) {
-            finishReeling(success = false, message = "The line snapped under too much tension.")
+            val surgeSnap = current.phase == FishingFightPhase.SURGE || current.phase == FishingFightPhase.WARNING
+            val snapMsg = if (surgeSnap) {
+                "The line snapped during a surge — lift your thumb when the water flares coral."
+            } else {
+                "The line snapped under too much tension — release the reel briefly to let the line cool."
+            }
+            finishReeling(success = false, message = snapMsg)
             return
         }
         if (current.failed) {
-            finishReeling(success = false)
+            finishReeling(
+                success = false,
+                message = "The fish slipped off the slack line — hold the reel while the water is calm."
+            )
             return
         }
         if (current.successful) {
@@ -353,7 +368,8 @@ class FishingController(
                     tension = fight?.tension ?: 0f,
                     isReeling = isReeling,
                     phase = fight?.phase ?: FishingFightPhase.CALM,
-                    staminaRemaining = fight?.staminaRemaining ?: 1f
+                    staminaRemaining = fight?.staminaRemaining ?: 1f,
+                    elapsedMs = fight?.elapsedMs ?: 0L
                 )
             )
         }
@@ -364,7 +380,7 @@ class FishingController(
         isReeling = false
         val encounter = currentEncounter
         if (!success || encounter == null) {
-            val isSnap = message.contains("tension")
+            val isSnap = message.contains("tension", ignoreCase = true) || message.contains("snapped", ignoreCase = true)
             viewModelScope.launch {
                 if (isSnap) _events.emit(FishingEvent.LineSnap)
             }

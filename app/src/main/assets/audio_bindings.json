@@ -257,6 +257,8 @@
     "fishing_cast": "sfx_fishing_cast",
     "fishing_splash": "sfx_fishing_splash",
     "fishing_bite": "sfx_fishing_bite",
+    "fishing_warning": "sfx_fishing_warning",
+    "fishing_snap": "sfx_fishing_snap",
     "fishing_catch": "sfx_fishing_catch",
     "arcade_coin": "sfx_arcade_coin_insert",
     "arcade_jump": "sfx_arcade_jump",

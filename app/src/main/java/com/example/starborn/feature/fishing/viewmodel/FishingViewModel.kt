@@ -43,6 +43,7 @@ class FishingViewModel(
     fun startFishing() = runtime.startFishing()
     fun cancelFishing() = runtime.cancelFishing()
     fun resetFishing() = runtime.resetFishing()
+    fun castAgain() = runtime.castAgain()
     fun onHookMotionDetected() = runtime.onHookMotionDetected()
     fun onHookButtonPressed() = runtime.onHookButtonPressed()
     fun onReelPressed() = runtime.onReelPressed()

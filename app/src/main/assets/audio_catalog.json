@@ -2088,6 +2088,24 @@
       "duration_ms": 1200
     },
     {
+      "id": "sfx_fishing_warning",
+      "category": "sfx",
+      "priority": 5,
+      "gain": 0.85,
+      "fade_in_ms": 0,
+      "fade_out_ms": 150,
+      "duration_ms": 900
+    },
+    {
+      "id": "sfx_fishing_snap",
+      "category": "sfx",
+      "priority": 5,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1100
+    },
+    {
       "id": "sfx_fishing_catch",
       "category": "sfx",
       "priority": 5,

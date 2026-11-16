@@ -43,6 +43,7 @@ import com.example.starborn.domain.fishing.handlingSummary
 import com.example.starborn.domain.fishing.catchSummary
 import com.example.starborn.domain.fishing.MinigameResult
 import com.example.starborn.feature.fishing.viewmodel.*
+import com.example.starborn.ui.fishing.FishingWaterScene
 
 @Composable
 fun DesktopFishingScreen(
@@ -80,9 +81,9 @@ internal fun DesktopFishingContent(services: DesktopAppServices, runtime: Fishin
                 FishingController.FishingEvent.Cast -> cue("fishing_cast")
                 FishingController.FishingEvent.Nibble -> cue("fishing_splash")
                 FishingController.FishingEvent.Bite -> cue("fishing_bite")
-                FishingController.FishingEvent.Warning -> Unit
+                FishingController.FishingEvent.Warning -> cue("fishing_warning")
                 FishingController.FishingEvent.CatchSuccess -> cue("fishing_catch")
-                FishingController.FishingEvent.LineSnap -> cue("fishing_splash")
+                FishingController.FishingEvent.LineSnap -> cue("fishing_snap")
             }
         }
     }
@@ -946,8 +947,13 @@ private fun FishingReelingCockpit(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column {
+                    val unspoiledSignal = when {
+                        reelState?.salvage == true -> "SUBMERGED SALVAGE"
+                        !reelState?.behavior?.fightStyle.isNullOrBlank() -> "UNIDENTIFIED SPECIMEN (${reelState?.behavior?.fightStyle?.uppercase()})"
+                        else -> "UNIDENTIFIED SPECIMEN"
+                    }
                     Text(
-                        text = "ENGAGED BIO-SIGNAL: ${reelState?.fishName?.uppercase() ?: "UNKNOWN SPECIMEN"}",
+                        text = "ENGAGED BIO-SIGNAL: $unspoiledSignal",
                         color = Color.White,
                         fontFamily = fonts.orbitron,
                         fontWeight = FontWeight.Bold,
@@ -984,6 +990,23 @@ private fun FishingReelingCockpit(
             }
 
             HorizontalDivider(color = Color(0xFF14293A))
+
+            // Live Water Basin Viewport
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(148.dp)
+            ) {
+                FishingWaterScene(
+                    state = FishingUiState(
+                        fishingState = FishingState.REELING,
+                        reelState = reelState
+                    ),
+                    onHook = {},
+                    showHeaderText = false,
+                    showTelemetryFooter = false
+                )
+            }
 
             // Gauge 1: Catch Retrieval Progress (Distance to Boat)
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {

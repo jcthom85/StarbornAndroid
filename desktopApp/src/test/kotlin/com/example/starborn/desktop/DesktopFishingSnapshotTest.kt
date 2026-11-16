@@ -31,7 +31,7 @@ class DesktopFishingSnapshotTest {
             }
             composeTestRule.mainClock.advanceTimeBy(300)
 
-            val artifactsDir = File("C:/Users/jcthomas/.gemini/antigravity-ide/brain/4679957f-9fc8-4b49-a04b-cc85f289b043")
+            val artifactsDir = File("build/reports/fishing-portrait")
             artifactsDir.mkdirs()
 
             val node = composeTestRule.onRoot()
@@ -70,7 +70,7 @@ class DesktopFishingSnapshotTest {
 
             // Verify Header & Telemetry
             composeTestRule.onNodeWithText("SONAR").assertExists()
-            composeTestRule.onNodeWithText("SECTOR 9 TIDE POOLS").assertExists()
+            composeTestRule.onNodeWithText("CANOPY TIDE POOLS").assertExists()
             composeTestRule.onNodeWithText("TACKLE & RIGGING PREPARATION").assertExists()
 
             // Verify equipped or available gear cards
