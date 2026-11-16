@@ -325,7 +325,7 @@
     "type": "active",
     "base_power": 0,
     "cooldown": 3,
-    "description": "Detonates a dense particulate canister, granting Shielded and raising Evasion by 15% for 2 turns.",
+    "description": "A dense smoke cloud raises Nova’s Evasion by 15 for 2 turns.",
     "combat_tags": [
       "support"
     ],
@@ -719,7 +719,7 @@
     "name": "Quake Slam",
     "character": "zeke",
     "type": "active",
-    "description": "Slams the deck with full pneumatic force, sending a shockwave across the enemy line that applies Discord, with devastating bonus damage against stunned targets.",
+    "description": "Slams the deck with pneumatic force. Damages all enemies and applies Discord. Deals 65% more damage to targets that are Stunned or Staggered.",
     "combat_tags": [
       "aoe"
     ],
@@ -768,7 +768,7 @@
     "name": "Disruption Pulse",
     "character": "orion",
     "type": "active",
-    "description": "Emitters pulse an inverted resonance wave that scrambles targeting sensors and applies Discord to all foes.",
+    "description": "An inverted resonance wave applies Discord to all enemies, reducing their outgoing damage.",
     "combat_tags": [
       "aoe"
     ],
@@ -1072,7 +1072,7 @@
     "name": "Target Lock",
     "character": "gh0st",
     "type": "active",
-    "description": "Paints the enemy's structural seams with a targeting laser, applying Marked so incoming attacks land as critical hits.",
+    "description": "Applies Marked to one enemy. Attacks that hit it while Marked deal critical damage.",
     "combat_tags": [
       "debuff",
       "support"
@@ -1296,7 +1296,7 @@
     "name": "Phase Counter",
     "character": "gh0st",
     "type": "active",
-    "description": "Gh0st uses the override key discipline to counter an incoming strike and apply Discord to the attacker.",
+    "description": "Gh0st strikes with the opening his override key gives him, dealing damage and applying Discord to one enemy.",
     "combat_tags": [
       "counter",
       "debuff"
@@ -2332,7 +2332,7 @@
     "name": "Reposition",
     "character": "enemy",
     "type": "enemy",
-    "description": "Shifts footing to clear targeting locks and reset stance.",
+    "description": "Shifts footing to reset its stance, giving the party a window to act.",
     "combat_tags": [
       "support"
     ],
@@ -2417,7 +2417,7 @@
     "name": "Intercept Pulse",
     "character": "enemy",
     "type": "enemy",
-    "description": "Fires a snap suppression pulse that disrupts the target's aim and applies Discord.",
+    "description": "Fires a suppression pulse that deals Shock damage and applies Discord to one target.",
     "combat_tags": [
       "shock"
     ],
@@ -2465,7 +2465,7 @@
     "name": "Laser Lattice",
     "character": "enemy",
     "type": "enemy",
-    "description": "Projects an intersecting grid of security lasers across all enemies.",
+    "description": "Projects a grid of security lasers that deals Source damage across the party.",
     "combat_tags": [
       "source"
     ],
@@ -2701,7 +2701,7 @@
     "name": "Gravity Tether",
     "character": "enemy",
     "type": "enemy",
-    "description": "Locks a gravimetric snare onto a target, dragging down their mobility.",
+    "description": "Deals damage and applies Gravity Tether, making one target take more damage.",
     "combat_tags": [
       "dmg"
     ],
@@ -2871,7 +2871,7 @@
     "name": "Capture Cable",
     "character": "enemy",
     "type": "enemy",
-    "description": "Launches a motorized tether cable that drags the target out of position.",
+    "description": "Strikes one target with a powered tether and reduces their outgoing damage.",
     "combat_tags": [
       "dmg"
     ],
@@ -2906,7 +2906,7 @@
     "name": "Survey Pulse",
     "character": "enemy",
     "type": "enemy",
-    "description": "Fires a rangefinding prism bolt that tags a single target.",
+    "description": "Fires a rangefinding prism bolt at a single target.",
     "combat_tags": [
       "dmg"
     ],
@@ -2985,7 +2985,7 @@
     "name": "Regathering",
     "character": "enemy",
     "type": "enemy",
-    "description": "Draws scattered harmonic residue back into a coherent form.",
+    "description": "Draws scattered harmonic residue back into a coherent form, giving the party an opening.",
     "base_power": 0,
     "scaling": "focus",
     "cooldown": 0,
@@ -3237,7 +3237,7 @@
     "name": "Erase the Memory",
     "character": "enemy",
     "type": "enemy",
-    "description": "Sweeps an erasure chord across the party to scrub unapproved memories.",
+    "description": "Sweeps an erasure chord across the party, dealing Source damage.",
     "base_power": 53,
     "scaling": "focus",
     "cooldown": 0,

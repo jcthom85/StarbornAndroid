@@ -268,7 +268,7 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 
 117. At **Memory Stair**, use **Jed's door**. Finish the conversation and choose the refusal beginning **Let go of the latch**. All three refusals are required; none is a substitute for another.
 
-118. At **Memory Stair**, use **Astra wreckage**. Finish the conversation and choose the refusal beginning **Keep the scarred Astra**. All three refusals are required; none is a substitute for another.
+118. At **Memory Stair**, use **cargo pod wreckage**. Finish the conversation and choose the refusal beginning **Keep the journey that brought the crew together**. All three refusals are required; none is a substitute for another.
 
 119. At **Memory Stair**, use **Foundry catwalk**. Finish the conversation and choose the refusal beginning **We go back with you**. All three refusals are required; none is a substitute for another.
 
@@ -476,7 +476,7 @@ The Nightmare Guard drops **Sunder Seeds** in Memory Defense Arena. Equip them f
 
 **Memory Stair**
 
-- [ ] At Memory Stair, reject Jed's door, Astra wreckage and Foundry catwalk, then climb the memory stair. (`climb_stair`)
+- [ ] At Memory Stair, reject Jed's door, cargo pod wreckage and Foundry catwalk, then climb the memory stair. (`climb_stair`)
 - [ ] Survive the Source Shadow wave without surrendering the scars. (`defeat_shadow_wave`)
 
 **Spire of Thought**
@@ -685,7 +685,7 @@ Interactions: Zeke's anchor, Gh0st's anchor, Orion's anchor, Nova's anchor, unfi
 
 ### Shared Memory Span (`source_memory_bridge_span`)
 
-The bridge forms from Tideglass sand, Foundry heat, Spire rain, and the Astra's engine note. Each step belongs to more than one survivor. A campfire promise hangs in the quiet beside a glowing memory altar box.
+The bridge forms from launch rail, ridge roots, blue paint, and scorched bench wood. Each step belongs to more than one survivor. A campfire promise hangs in the quiet beside a glowing memory altar box.
 
 Exits: west → Memory Bridge (`source_memory_bridge`), east → Singularity Threshold (`source_memory_threshold`).
 
@@ -701,11 +701,11 @@ Interactions: singularity threshold, names beneath the light.
 
 ### Memory Stair (`source_memory_stair`)
 
-Jed's door opens into Astra wreckage, Spire glass, Foundry catwalk, and Ring metal arranged around the memory stair. An Aethel grave waits among the fragments. The eastern ascent will not hold until Nova refuses all three revisions and climbs the memory stair. West leads back through the threshold to the shared span.
+Jed’s door, cargo pod wreckage, and a Foundry catwalk surround the memory stair. An Aethel grave stands among them. Refuse all three revisions before climbing east; west returns to the shared span.
 
 Exits: west → Singularity Threshold (`source_memory_threshold`), east → World-Fracture Landing (`source_memory_fragments`), north → Mine Dust Step (`source_memory_stair_node_scale_01`).
 
-Interactions: Jed's door, Astra wreckage, Foundry catwalk, memory stair, aethel grave.
+Interactions: Jed's door, cargo pod wreckage, Foundry catwalk, memory stair, aethel grave.
 
 ### World-Fracture Landing (`source_memory_fragments`)
 
@@ -749,7 +749,7 @@ Interactions: Vale, shared tuning focus.
 
 ### New World (`source_new_world`)
 
-Morning reaches the Colony through an open regional corridor. At Zeke's diner, Nova remembers the beach photograph while her tuning hand trembles against its frame. West reopens the remembered Center for revisiting the Source; north follows the street past the diner.
+The regional corridor is open above the Colony. At Zeke’s diner, Nova rests her trembling hand beside a beach photograph from the crew’s return to Tideglass. West reopens the remembered Center; north follows the street.
 
 Exits: west → The Center (`source_center`), north → Diner Booth (`source_new_world_node_scale_01`).
 
@@ -893,7 +893,7 @@ Interactions: manager blind spot, scuffed floor.
 
 ### Tideglass Span (`source_memory_bridge_node_scale_01`)
 
-A tideglass span forms under the bridge, wet sand hardening into translucent steps marked by tideglass footprints. The beach photo flickers inside each step, laughing badly enough to be true.
+A tideglass span forms below the bridge. Four sets of tideglass footprints appear as the crew steps onto it. A beach photo beneath the glass shows an empty stretch of coast.
 
 Exits: south → Memory Bridge (`source_memory_bridge`), north → Foundry Heat Rib (`source_memory_bridge_node_scale_02`).
 
@@ -1005,7 +1005,7 @@ Interactions: Key orbit, root sparks.
 
 ### Silence Pulpit (`source_center_node_scale_03`)
 
-A Silence pulpit rises from the ocean where Vale's broken human outline becomes blinding geometry. The geometry preaches one painless note while every separate voice in the crew pushes back.
+A Silence pulpit rises from the ocean beneath folds of blinding geometry. The steps remember a sermon that once tried to drown out every separate voice. Through a gap in the light, you can return to the fracture at The Center.
 
 Exits: south → Key Orbit (`source_center_node_scale_02`), north → Source Voice Orbit (`source_center_node_scale_final`).
 

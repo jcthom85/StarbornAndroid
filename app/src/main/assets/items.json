@@ -165,7 +165,7 @@
   {
     "id": "thermal_solder_gun",
     "name": "Master Smelter Solder Gun",
-    "description": "An industrial high-temp precision tool earned by mastering Slag Catcher (+5 Attack, +3 Focus).",
+    "description": "An industrial precision tool awarded for mastering Slag Catcher. Grants +5 Strength and +3 Focus.",
     "type": "accessory",
     "value": 1400,
     "rarity": "epic",
@@ -263,7 +263,7 @@
   {
     "id": "source_cadence_crown",
     "name": "Crown of the Primordial Cadence",
-    "description": "A legendary radiant diadem awarded for mastering Harmonic Pulse. Resonates with all 6 cosmic frequencies (+6 Focus, +6 Intelligence).",
+    "description": "A radiant diadem awarded for mastering Harmonic Pulse. Its six tones resonate in unison. Grants +12 Focus.",
     "type": "accessory",
     "value": 2500,
     "rarity": "legendary",

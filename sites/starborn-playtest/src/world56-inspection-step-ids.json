@@ -70,6 +70,8 @@
   },
   "6": {
     "Orion’s nightmare, the Chorus and campfire memories\nFrom **The Campfire**, go **east** to **Blue Ash Circle** (`source_campfire_node_scale_01`) → **east** to **Silent Shore** (`source_orion_nightmare`). At **Silent Shore**, inspect **black ocean**, **Aethel note**.": "f1a49f18109922a9",
-    "Mine memories and Jed’s Echo\nFrom **Source First Fear**, go **south** to **Manager Blind Spot** (`source_echo_mines_node_scale_04`) → **south** to **Shelter Plastic** (`source_echo_mines_node_scale_03`) → **south** to **Pay Stub Drift** (`source_echo_mines_node_scale_02`) → **west** to **Locker Row Loop** (`source_echo_mines_node_scale_01`) → **north** to **Echo of the Mines** (`source_echo_mines`). At **Echo of the Mines**, inspect **first shelter**, **mine checkpoint**.": "882b83ec08e3c80a"
+    "Mine memories and Jed’s Echo\nFrom **Source First Fear**, go **south** to **Manager Blind Spot** (`source_echo_mines_node_scale_04`) → **south** to **Shelter Plastic** (`source_echo_mines_node_scale_03`) → **south** to **Pay Stub Drift** (`source_echo_mines_node_scale_02`) → **west** to **Locker Row Loop** (`source_echo_mines_node_scale_01`) → **north** to **Echo of the Mines** (`source_echo_mines`). At **Echo of the Mines**, inspect **first shelter**, **mine checkpoint**.": "882b83ec08e3c80a",
+    "Refuse the revisions and complete The Aethel Grave\nAt **Memory Stair**, use **cargo pod wreckage**. Finish the conversation and choose the refusal beginning **Keep the journey that brought the crew together**. All three refusals are required; none is a substitute for another.": "6197c1d477b161cb",
+    "Complete Journal checklist\n- [ ] At Memory Stair, reject Jed's door, cargo pod wreckage and Foundry catwalk, then climb the memory stair. (`climb_stair`)": "16c9f95ed6c03b4d"
   }
 }

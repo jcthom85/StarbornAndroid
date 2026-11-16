@@ -6725,7 +6725,7 @@
       },
       {
         "type": "show_message",
-        "message": "PROJECT PHANTOM opens. Elara's neural map. Gh0st's chip insertion. A factory process built from a person. The truth lands harder than the pistons."
+        "message": "PROJECT PHANTOM: ELARA — NEURAL MAP DERIVATIVE. UNIT 734 — CHIP INSERTION. A handwritten correction crosses out “repeat until compliant.” Beside it: “Allow time for an answer.” Gh0st keeps that page open."
       }
     ]
   },
@@ -6804,7 +6804,7 @@
       },
       {
         "type": "show_message",
-        "message": "Gh0st gives Nova his override key. The first time was programming. The second time is choice. The Assembly floor is still making more bodies for the same crime. The Pipe Gallery maintenance shutter is now cleared; the crew can return from Reject Bay to the Slag Pits."
+        "message": "Nova pockets the override key. Beyond the pipes, the next assembly press starts its cycle. The Pipe Gallery maintenance shutter is now cleared; the crew can return from Reject Bay to the Slag Pits."
       }
     ]
   },
@@ -8157,7 +8157,7 @@
       },
       {
         "type": "show_message",
-        "message": "ARCHITECT PROTOCOL: GREAT SILENCE. Harmony is not philosophy. It is infrastructure: phase corridors, chordprint locks, relay augments, and a labor world engineered never to resist. Thorne sold the cage. Vale decided the cage was too merciful."
+        "message": "ARCHITECT PROTOCOL: GREAT SILENCE. The recovered log maps living voices to control circuits. Harmony’s directory lists occupied seats with the names withheld; their release requests are marked DENIED. The retention orders carry Mara Thorne’s signature. A newer command assigns every output to Vale."
       }
     ]
   },
@@ -8221,7 +8221,7 @@
       },
       {
         "type": "show_message",
-        "message": "Thorne gives up the core access route because Vale has locked her inside her own product. Harmony was her cage with branding. Vale has turned it into a faith with one surviving voice, and Elara is wired into the altar."
+        "message": "Zeke saves the occupied-seat list. Thorne’s coolant map resolves into three marked branches: Alpha, Beta and Gamma. The first leads into the firewall."
       }
     ]
   },
@@ -9412,7 +9412,7 @@
       },
       {
         "type": "show_message",
-        "message": "Zeke gives the bridge the memory of choosing the crew after every useful trick ran out. The static holds one narrow plank."
+        "message": "Zeke grips the edge. “The pod wouldn’t turn. Nova told me to hold the frame. I could do that.” A strip of worn launch rail settles under his hand."
       }
     ]
   },
@@ -9440,7 +9440,7 @@
       },
       {
         "type": "show_message",
-        "message": "Gh0st gives the bridge the memory of lowering the rifle after the command ended. The next plank forms without asking who authorized it."
+        "message": "“The order was still in my head,” Gh0st says. “I lowered the rifle.” Broken roots take shape beneath the next section of bridge."
       }
     ]
   },
@@ -9468,7 +9468,7 @@
       },
       {
         "type": "show_message",
-        "message": "Orion gives the bridge the memory of waking to a world that kept moving without him. The third plank hums like grief refusing to dissolve."
+        "message": "Orion traces a patch of blue beneath the dust. “I painted that ceiling. Zeke found me a place to sit.” The patch widens into a solid span."
       }
     ]
   },
@@ -9496,7 +9496,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova gives the bridge Jed's workshop as it was, not as Vale would repair it. The final plank forms with the scar still visible."
+        "message": "Nova steadies a lamp above a scorched bench. There is room beside it for someone to hold the housing. The last section of bridge forms beneath her feet."
       }
     ]
   },
@@ -9548,7 +9548,7 @@
       },
       {
         "type": "show_message",
-        "message": "Tideglass sand, Foundry heat, Spire rain, the Astra's engine note, and the Colony's first real morning become solid sections of bridge. Every piece holds because someone else remembers it too. The crossing east to Shared Memory Span holds. The crew pauses there around one last campfire promise."
+        "message": "The launch rail joins the ridge roots, the blue ceiling and Jed’s scorched bench. Spire rain runs between the boards. The crossing holds east to Shared Memory Span, where the crew can pause around the campfire promise."
       }
     ]
   },
@@ -9701,17 +9701,19 @@
     ],
     "actions": [
       {
-        "type": "set_quest_task_done",
-        "quest_id": "w6_sq26",
-        "task_id": "talk_to_jed"
-      },
-      {
-        "type": "set_milestone",
-        "milestone": "ms_w6_jed_lesson_heard"
-      },
-      {
-        "type": "show_message",
-        "message": "Jed's echo offers to stay perfect forever. Nova remembers the real lesson instead: fix what keeps people alive, then let the tool go."
+        "type": "play_cinematic",
+        "scene_id": "scene_w6_jed_echo_lesson",
+        "on_complete": [
+          {
+            "type": "set_quest_task_done",
+            "quest_id": "w6_sq26",
+            "task_id": "talk_to_jed"
+          },
+          {
+            "type": "set_milestone",
+            "milestone": "ms_w6_jed_lesson_heard"
+          }
+        ]
       }
     ]
   },
@@ -9760,7 +9762,7 @@
       },
       {
         "type": "show_message",
-        "message": "The memory cannot answer, but Nova remembers what survival was supposed to protect. Legacy unlocked."
+        "message": "Nova checks the hinge before leaning on the shift gate. It holds, and she steps through. Legacy unlocked."
       }
     ]
   },

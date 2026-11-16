@@ -256,6 +256,8 @@ private fun GameSessionProto.toState(): GameSessionState = GameSessionState(
     physicalGearInventory = physicalGearInventory,
     purchasedSkillNodes = purchasedSkillNodesMap,
     progressionAwardClaims = progressionAwardClaimsList.toSet(),
+    heardRestBanter = heardRestBanterList.toSet(),
+    lastRestBanterId = lastRestBanterId,
     playerCredits = playerCredits,
     partyMemberXp = partyMemberXpMap,
     partyMemberLevels = partyMemberLevelsMap,
@@ -364,6 +366,8 @@ private fun GameSessionState.toProto(savedAt: Long = System.currentTimeMillis())
     physicalGearInventory = this@toProto.physicalGearInventory
     putAllPurchasedSkillNodes(this@toProto.purchasedSkillNodes)
     addAllProgressionAwardClaims(this@toProto.progressionAwardClaims)
+    addAllHeardRestBanter(this@toProto.heardRestBanter)
+    lastRestBanterId = this@toProto.lastRestBanterId
     playerCredits = this@toProto.playerCredits
     putAllPartyMemberXp(this@toProto.partyMemberXp)
     putAllPartyMemberLevels(this@toProto.partyMemberLevels)

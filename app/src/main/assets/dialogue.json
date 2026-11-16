@@ -275,9 +275,9 @@
   {
     "id": "jed_w1_mq01_workshop_brief_1",
     "speaker": "Jed",
-    "text": "Put the cutter here. See that split along the seam? You fit the cold loop. I’ll hold the housing.",
+    "text": "[Jed taps the bench twice with his wrench. Nova cuts the power; he passes her the lamp.]",
     "condition": "quest_active:w1_mq01,milestone:ms_w1_mq01_jed_talked,milestone_not_set:ms_w1_mq01_workshop_briefed",
-    "next": "jed_w1_mq01_workshop_brief_2"
+    "next": "jed_w1_mq01_workshop_lamp"
   },
   {
     "id": "jed_w1_mq01_workshop_brief_2",
@@ -733,7 +733,7 @@
   {
     "id": "bogs_w1_mq03_intro_3",
     "speaker": "Foreman Boggs",
-    "text": "Sector 4's relays are failing. Nobody down there gets paid until the junction runs. You're the cutter I have.",
+    "text": "Sector 4’s relays are failing. Director Thorne’s office froze pay until the junction runs. You’re the cutter I have.",
     "next": "bogs_w1_mq03_intro_4"
   },
   {
@@ -1052,7 +1052,8 @@
     "id": "orion_w2_post_stasis_idle",
     "speaker": "Orion",
     "text": "There should be a path to the shore beneath these roots. I walked it every morning. Give me a moment; I am trying to recognize something.",
-    "condition": "milestone:ms_w2_mq03_complete,milestone_not_set:ms_w2_mq04_complete"
+    "condition": "milestone:ms_w2_mq03_complete,milestone_not_set:ms_w2_mq04_complete",
+    "next": "nova_w2_wait_for_orion"
   },
   {
     "id": "orion_w2_post_ghost_idle",
@@ -1156,7 +1157,7 @@
     "id": "w3_mq12_jax_intro",
     "speaker": "Jax",
     "condition": "quest_active:w3_mq12,quest_task_not_done:w3_mq12:talk_jax",
-    "text": "Upstairs they check the badge before they look at your face. Get the timing right and give them the work order they expect.",
+    "text": "Thorne closed the public lifts when the sweeps started. Her freight still goes up. We can use that.",
     "next": "nova_w3_mq12_request_codes"
   },
   {
@@ -1261,7 +1262,7 @@
     "id": "w3_mq12_planning_table_dialogue",
     "speaker": "System",
     "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:map_patrols,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:copy_badges,quest_task_done:w3_mq12:source_disguises,quest_task_done:w3_mq12:hack_blueprints,quest_task_not_done:w3_mq12:assemble_table",
-    "text": "Ready to move? Wear the copied uniforms to Transit Plaza and badge into the service lift to the Upper City laundry intake. Zeke will meet us on the roof with the Astra. Cover story: Skypark air-filter inspection.",
+    "text": "Ready to move? Wear the copied uniforms to Transit Plaza and use the freight badges at the service lift. It opens at the Upper City laundry intake. Zeke will send the Astra’s autopilot to the rooftop pad. Cover story: scheduled Skypark air-filter inspection.",
     "options": [
       {
         "id": "w3_mq12_assemble_confirm",
@@ -1284,7 +1285,7 @@
   {
     "id": "curator_w3_mq13_insult",
     "speaker": "Museum Curator",
-    "text": "A Starborn stray in guest light. Control your pet, or I will call sanitation and security in whichever order is more entertaining.",
+    "text": "[The Curator looks past Orion to Nova.] Keep him beside you. Security will remove anyone without a registry entry.",
     "next": "w3_cover_order"
   },
   {
@@ -1323,7 +1324,7 @@
     "speaker": "Zeke",
     "condition": "quest_active:w3_mq14,quest_task_done:w3_mq14:solve_light_puzzle,quest_task_not_done:w3_mq14:take_lens",
     "text": "Wait. Energy density is spiking before you touch it. It's reading you back, Nova. Grab it, and the feedback lights us up.",
-    "next": "thorne_w3_lens_recovery_order"
+    "next": "nova_w3_lens_urgency"
   },
   {
     "id": "thorne_w3_lens_recovery_order",
@@ -1347,7 +1348,7 @@
   {
     "id": "thorne_w3_mq14_trap_vale",
     "speaker": "Thorne",
-    "text": "[Thorne’s countermand flashes DENIED.] That credential was for recovery. He’s taken the district’s guns. Get to your ship while the launch route still answers to me."
+    "text": "[Thorne’s countermand flashes DENIED.] He’s taken the guns. Get the Lens off his roof. The launch route still answers to me."
   },
   {
     "id": "vale_w3_mq15_override",
@@ -1380,7 +1381,8 @@
     "speaker": "Zeke",
     "emote": "worried",
     "text": "The scanner’s still dark. I keep wanting to check it again. Tell me when it’s time to move.",
-    "condition": "milestone:ms_w3_mq13_complete,milestone_not_set:ms_w3_mq14_complete"
+    "condition": "milestone:ms_w3_mq13_complete,milestone_not_set:ms_w3_mq14_complete",
+    "next": "nova_w3_trust_the_scanner"
   },
   {
     "id": "zeke_w3_post_lens_idle",
@@ -1468,15 +1470,15 @@
   {
     "id": "nova_w4_phantom_prompt",
     "speaker": "Nova",
-    "text": "Open it. I’m here if you want me to read it with you.",
-    "trigger": "player_action:w4_mq17_access_phantom_terminal"
+    "text": "We can read it together.",
+    "next": "gh0st_w4_phantom_boundary"
   },
   {
     "id": "gh0st_w4_springs_intro",
     "speaker": "Gh0st",
     "condition": "quest_active:w4_mq17,quest_task_done:w4_mq17:access_phantom_terminal,quest_task_not_done:w4_mq17:regroup_springs",
     "text": "My Source Lock caught on your Fork scar. It interrupted the trigger. I waited for the next order. There wasn’t one.",
-    "next": "gh0st_w4_springs_key"
+    "next": "nova_w4_springs_handwriting"
   },
   {
     "id": "gh0st_w4_springs_key",
@@ -1615,14 +1617,15 @@
   {
     "id": "ghost_w4_post_phantom_idle",
     "speaker": "Gh0st",
-    "text": "They told me Elara was a voice they’d programmed. The file has her handwriting.",
+    "text": "I kept that page. I want to show Elara her correction is still there.",
     "condition": "milestone:ms_w4_mq17_complete,milestone_not_set:ms_w4_mq18_complete"
   },
   {
     "id": "ghost_w4_post_assembly_idle",
     "speaker": "Gh0st",
     "text": "I counted the empty tanks twice. I needed to see the line stop.",
-    "condition": "milestone:ms_w4_mq18_complete,milestone_not_set:ms_w4_mq19_complete"
+    "condition": "milestone:ms_w4_mq18_complete,milestone_not_set:ms_w4_mq19_complete",
+    "next": "nova_w4_offer_a_minute"
   },
   {
     "id": "ghost_w4_post_anvil_idle",
@@ -1669,7 +1672,7 @@
     "condition": "quest_active:w5_mq24,quest_task_done:w5_mq24:enter_chamber,quest_task_not_done:w5_mq24:find_elara",
     "text": "734. You’re late. I can hold the firewall long enough to open the cradle. Take the Anchor, brother.",
     "music": "music_elaras_song",
-    "next": "gh0st_w5_answer_elara"
+    "next": "gh0st_w5_elara_lamp"
   },
   {
     "id": "vale_w5_mq25_soloist",
@@ -1706,12 +1709,13 @@
     "id": "orion_w5_post_docking_idle",
     "speaker": "Orion",
     "text": "At the dock the floor dropped away for a moment. Keep one hand near the rail. It might happen again.",
-    "condition": "milestone:ms_w5_mq21_complete,milestone_not_set:ms_w5_mq22_complete"
+    "condition": "milestone:ms_w5_mq21_complete,milestone_not_set:ms_w5_mq22_complete",
+    "next": "nova_w5_offer_a_hand"
   },
   {
     "id": "orion_w5_post_zerog_idle",
     "speaker": "Orion",
-    "text": "The Great Silence log still had names in it. I wonder whether Vale ever read them aloud.",
+    "text": "There were names on Thorne’s list. I wonder whether Vale ever read them aloud.",
     "condition": "milestone:ms_w5_mq22_complete,milestone_not_set:ms_w5_mq23_complete"
   },
   {
@@ -1747,7 +1751,7 @@
   {
     "id": "ghost_w5_post_anchor_idle",
     "speaker": "Gh0st",
-    "text": "Her hands were freezing when I unhooked the neural feed. She ordered me to leave. Not this time.",
+    "text": "The glass was cold against my hands. She’s still in there, holding the door for us. We need to reach the other end of that cable.",
     "condition": "milestone:ms_w5_mq24_complete,milestone_not_set:ms_w5_mq25_complete"
   },
   {
@@ -2130,7 +2134,7 @@
   {
     "id": "rylan_forge_intel",
     "speaker": "Rylan",
-    "text": "Past the conveyor belts is the main Anvil. Dominion's been feeding power directly to their orbital tether without cooling breaks. The air in there will bake unshielded flesh in minutes. Keep your thermal defenses maxed.",
+    "text": "Past the conveyors is the Anvil. They keep the tether running through cooling breaks now. Watch the vents before you cross.",
     "next": "forge_hand_rylan_default_talk"
   },
   {
@@ -3059,7 +3063,7 @@
   {
     "id": "pam_default_talk",
     "speaker": "Pam",
-    "text": "Sit and eat before you fall over, Nova. I’m Pam. I run the hall and Rourke keeps the kitchen going. What do you need?",
+    "text": "Sit and eat before you fall over, Nova. Rourke’s got the kitchen going. What do you need?",
     "options": [
       {
         "id": "pam_opt_rooster",
@@ -4279,32 +4283,32 @@
   {
     "id": "w6_mq29_refuse_astra_revision_line_1",
     "speaker": "Orion",
-    "text": "[Orion runs a finger along the seamless hull.] Where’s the patch you put in after Sector 9?",
+    "text": "[Orion touches the unbroken hull.] The cargo pod you came down in. There’s no damage.",
     "next": "w6_mq29_refuse_astra_revision_line_2",
     "scripted_only": true
   },
   {
     "id": "w6_mq29_refuse_astra_revision_line_2",
     "speaker": "Vale",
-    "text": "No crash. No patch. Everyone aboard gets home safely.",
+    "text": "A clear launch. No impact. You and Zeke reach safety.",
     "next": "w6_mq29_refuse_astra_revision_line_3",
     "scripted_only": true
   },
   {
     "id": "w6_mq29_refuse_astra_revision_line_3",
     "speaker": "Orion",
-    "text": "I wasn’t aboard. In this version, my pod never opens.",
+    "text": "You never reach Sector 9. My pod stays closed.",
     "next": "w6_mq29_refuse_astra_revision_line_4",
     "scripted_only": true
   },
   {
     "id": "w6_mq29_refuse_astra_revision_line_4",
     "speaker": "Nova",
-    "text": "You’re standing right here. I can hear you over the engine.",
+    "text": "We found you. I’m keeping that.",
     "options": [
       {
         "id": "w6_mq29_refuse_astra_revision_confirm",
-        "text": "Keep the scarred Astra and the crew who flew her.",
+        "text": "Keep the journey that brought the crew together.",
         "trigger": "player_action:w6_mq29_refuse_astra_revision"
       },
       {
@@ -4427,16 +4431,16 @@
   {
     "id": "thorne_w5_mq22_intro_beat_1",
     "speaker": "Gh0st",
-    "text": "Who’s still in those seats?",
+    "text": "Who’s still in those seats? Open the list before you ask us for anything.",
     "scripted_only": true,
     "next": "thorne_w5_mq22_intro_beat_2"
   },
   {
     "id": "thorne_w5_mq22_intro_beat_2",
     "speaker": "Thorne",
-    "text": "The mainframe has their names. My signature is on the orders that put them there. Keep this channel on the record. Follow the coolant pulses through the firewall. They’ll get you to all three nodes.",
+    "text": "[The occupied-seat list opens beside Thorne’s signature.] Keep the record. I signed those orders.",
     "scripted_only": true,
-    "trigger": "player_action:w5_mq22_find_thorne"
+    "next": "nova_w5_thorne_terms"
   },
   {
     "id": "vale_w5_mq25_soloist_beat_1",
@@ -4506,6 +4510,177 @@
     "speaker": "Elara",
     "text": "On the glass. There. Now help Nova lift it. I’ll open the lock from here.",
     "trigger": "music_persist:music_elaras_song,player_action:w5_mq24_find_elara",
+    "scripted_only": true
+  },
+  {
+    "id": "jed_w1_mq01_workshop_lamp",
+    "speaker": "Jed",
+    "text": "Set it here. You fit the cold loop. I’ll hold the housing.",
+    "scripted_only": true,
+    "next": "jed_w1_mq01_workshop_brief_2"
+  },
+  {
+    "id": "nova_w3_lens_urgency",
+    "speaker": "Nova",
+    "text": "We can’t leave it here. I can take the surge.",
+    "scripted_only": true,
+    "next": "zeke_w3_lens_precaution"
+  },
+  {
+    "id": "zeke_w3_lens_precaution",
+    "speaker": "Zeke",
+    "text": "The glass can’t. Wait until I cut the return feed.",
+    "scripted_only": true,
+    "next": "nova_w3_lens_wait"
+  },
+  {
+    "id": "nova_w3_lens_wait",
+    "speaker": "Nova",
+    "text": "[Nova draws her hand back.] All right. Tell me when.",
+    "scripted_only": true,
+    "next": "zeke_w3_lens_feed_clear"
+  },
+  {
+    "id": "zeke_w3_lens_feed_clear",
+    "speaker": "Zeke",
+    "text": "[Zeke pulls the return lead. The second spike drops off the readout.] Now.",
+    "scripted_only": true,
+    "next": "thorne_w3_lens_recovery_order"
+  },
+  {
+    "id": "gh0st_w4_phantom_boundary",
+    "speaker": "Gh0st",
+    "text": "Let me read it first.",
+    "scripted_only": true,
+    "next": "nova_w4_phantom_wait"
+  },
+  {
+    "id": "nova_w4_phantom_wait",
+    "speaker": "Nova",
+    "text": "[Nova takes her hand off the terminal.] I’ll be here.",
+    "scripted_only": true,
+    "trigger": "player_action:w4_mq17_access_phantom_terminal"
+  },
+  {
+    "id": "nova_w4_springs_handwriting",
+    "speaker": "Nova",
+    "text": "You kept the page with the handwriting.",
+    "scripted_only": true,
+    "next": "gh0st_w4_springs_elara"
+  },
+  {
+    "id": "gh0st_w4_springs_elara",
+    "speaker": "Gh0st",
+    "text": "Elara’s. She used to ask whether I wanted the light left on. Then she’d wait.",
+    "scripted_only": true,
+    "next": "nova_w4_springs_answer"
+  },
+  {
+    "id": "nova_w4_springs_answer",
+    "speaker": "Nova",
+    "text": "What did you tell her?",
+    "scripted_only": true,
+    "next": "gh0st_w4_springs_light"
+  },
+  {
+    "id": "gh0st_w4_springs_light",
+    "speaker": "Gh0st",
+    "text": "Nothing, at first. She came back the next night and asked again.",
+    "scripted_only": true,
+    "next": "gh0st_w4_springs_key"
+  },
+  {
+    "id": "gh0st_w5_elara_lamp",
+    "speaker": "Gh0st",
+    "text": "Do you want the light left on?",
+    "scripted_only": true,
+    "next": "elara_w5_lamp_answer"
+  },
+  {
+    "id": "elara_w5_lamp_answer",
+    "speaker": "Elara",
+    "text": "Please. I want to see you.",
+    "scripted_only": true,
+    "next": "gh0st_w5_answer_elara"
+  },
+  {
+    "id": "nova_w5_thorne_terms",
+    "speaker": "Nova",
+    "text": "We’re getting them out. We’re not restoring your access.",
+    "scripted_only": true,
+    "next": "thorne_w5_route_terms"
+  },
+  {
+    "id": "thorne_w5_route_terms",
+    "speaker": "Thorne",
+    "text": "Vale has mine locked too. Open the firewall and we both get a way through.",
+    "scripted_only": true,
+    "next": "thorne_w5_coolant_route"
+  },
+  {
+    "id": "thorne_w5_coolant_route",
+    "speaker": "Thorne",
+    "text": "Follow the coolant pulses. Alpha, Beta, Gamma. He changed the locks, but he still needs the cooling.",
+    "scripted_only": true,
+    "trigger": "player_action:w5_mq22_find_thorne"
+  },
+  {
+    "id": "nova_w2_wait_for_orion",
+    "speaker": "Nova",
+    "text": "We can wait. Do you want to go back inside?",
+    "scripted_only": true,
+    "next": "orion_w2_choose_the_path"
+  },
+  {
+    "id": "orion_w2_choose_the_path",
+    "speaker": "Orion",
+    "text": "No. Just let me look from here a moment. Then we’ll take the path.",
+    "scripted_only": true
+  },
+  {
+    "id": "nova_w3_trust_the_scanner",
+    "speaker": "Nova",
+    "text": "Leave it alone. You checked it twice. Let me watch the door.",
+    "scripted_only": true,
+    "next": "zeke_w3_pocket_the_scanner"
+  },
+  {
+    "id": "zeke_w3_pocket_the_scanner",
+    "speaker": "Zeke",
+    "text": "[Zeke closes the scanner and puts it away.] Three times. All right. Your turn.",
+    "scripted_only": true
+  },
+  {
+    "id": "nova_w4_offer_a_minute",
+    "speaker": "Nova",
+    "text": "Do you want another minute?",
+    "scripted_only": true,
+    "next": "gh0st_w4_walk_to_the_door"
+  },
+  {
+    "id": "gh0st_w4_walk_to_the_door",
+    "speaker": "Gh0st",
+    "text": "No. Walk with me to the door.",
+    "scripted_only": true
+  },
+  {
+    "id": "nova_w5_offer_a_hand",
+    "speaker": "Nova",
+    "text": "You can take my hand.",
+    "scripted_only": true,
+    "next": "orion_w5_choose_his_pace"
+  },
+  {
+    "id": "orion_w5_choose_his_pace",
+    "speaker": "Orion",
+    "text": "I’d rather go slowly. Stay beside me?",
+    "scripted_only": true,
+    "next": "nova_w5_match_his_pace"
+  },
+  {
+    "id": "nova_w5_match_his_pace",
+    "speaker": "Nova",
+    "text": "[Nova shortens her stride.] I can do slowly.",
     "scripted_only": true
   }
 ]

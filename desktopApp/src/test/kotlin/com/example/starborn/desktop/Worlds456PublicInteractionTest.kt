@@ -176,7 +176,7 @@ class Worlds456PublicInteractionTest {
         val completed = s.exploration.uiState.value.actions.filterIsInstance<GenericAction>()
             .single { it.name == "dock access priority" }
         assertTrue(completed.completedInspection)
-        assertNull(completed.actionEvent)
+        assertEquals("inspect", completed.type)
         compose.runOnIdle { s.exploration.onActionSelected(completed) }; dismissNarration(s)
         assertEquals(before.playerXp + 450, s.sessionStore.state.value.playerXp)
     }

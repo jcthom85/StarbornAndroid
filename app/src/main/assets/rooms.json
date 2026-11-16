@@ -8761,7 +8761,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Great Silence log is open on the mainframe terminal beside the quantum core lattice. A signal labeled Thorne trace pulses beside it, proof that the person who built the cage finally got locked in it.",
+        "description": "The mainframe terminal displays Great Silence records beside the quantum core lattice. Thorne’s signature appears on the retention orders. A Thorne trace pulses on a locked channel beneath them.",
         "requires_milestones": [
           "ms_w5_mainframe_accessed"
         ]
@@ -8783,7 +8783,7 @@
         "inspection_completion_milestone": "ms_w5_thorne_found",
         "type": "generic",
         "action_event": "w5_mq22_find_thorne_scene",
-        "condition_unmet_message": "Thorne's emergency trace is buried behind the Great Silence log."
+        "condition_unmet_message": "Thorne’s emergency signal lies beneath the Great Silence log. Open the mainframe terminal to trace it."
       },
       {
         "id": "inspect_quantum_core",
@@ -9962,7 +9962,8 @@
         "requires_milestones": [
           "ms_w6_jed_marks_found"
         ],
-        "condition_unmet_message": "The echo remains polished and silent until Nova follows Jed's real tool marks."
+        "condition_unmet_message": "The echo remains polished and silent until Nova follows Jed's real tool marks.",
+        "completed_inspection_message": "The repaired lead lies on the bench. Its solder joint holds. Jed’s place beside the lamp is empty."
       },
       {
         "name": "crystalline arcade console",
@@ -10078,7 +10079,7 @@
         "inspection_completion_milestone": "ms_w6_bridge_zeke_anchor",
         "type": "generic",
         "action_event": "w6_mq28_anchor_zeke",
-        "condition_unmet_message": "The bridge needs the memory of someone who chose family after utility failed."
+        "condition_unmet_message": "A bent cargo-pod frame flickers beneath the static."
       },
       {
         "name": "Gh0st's anchor",
@@ -10086,7 +10087,7 @@
         "inspection_completion_milestone": "ms_w6_bridge_ghost_anchor",
         "type": "generic",
         "action_event": "w6_mq28_anchor_ghost",
-        "condition_unmet_message": "The bridge needs the memory of someone who stopped mistaking orders for identity."
+        "condition_unmet_message": "Broken ridge roots appear beneath the outline of a lowered rifle."
       },
       {
         "name": "Orion's anchor",
@@ -10094,7 +10095,7 @@
         "inspection_completion_milestone": "ms_w6_bridge_orion_anchor",
         "type": "generic",
         "action_event": "w6_mq28_anchor_orion",
-        "condition_unmet_message": "The bridge needs the memory of someone who woke from preservation into grief."
+        "condition_unmet_message": "Blue paint shows through a ceiling crowded with roots."
       },
       {
         "name": "Nova's anchor",
@@ -10102,7 +10103,7 @@
         "inspection_completion_milestone": "ms_w6_bridge_nova_anchor",
         "type": "generic",
         "action_event": "w6_mq28_anchor_nova",
-        "condition_unmet_message": "The bridge needs the memory of someone who refuses a painless lie."
+        "condition_unmet_message": "A lamp illuminates a scorched workbench with room for two people."
       },
       {
         "name": "unfinished bridge",
@@ -10115,7 +10116,7 @@
           "ms_w6_bridge_orion_anchor",
           "ms_w6_bridge_nova_anchor"
         ],
-        "condition_unmet_message": "The static needs memories the Source cannot counterfeit."
+        "condition_unmet_message": "Four separate memories flicker where the bridge should meet."
       }
     ],
     "blocked_directions": {
@@ -10162,7 +10163,7 @@
     "weather": "resonance",
     "title": "Shared Memory Span",
     "background_image": "images/rooms/world_6/source_memory_bridge_span.webp",
-    "description": "The bridge forms from Tideglass sand, Foundry heat, Spire rain, and the Astra's engine note. Each step belongs to more than one survivor. A campfire promise hangs in the quiet beside a glowing memory altar box.",
+    "description": "The bridge forms from launch rail, ridge roots, blue paint, and scorched bench wood. Each step belongs to more than one survivor. A campfire promise hangs in the quiet beside a glowing memory altar box.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10202,7 +10203,7 @@
     ],
     "description_variants": [
       {
-        "description": "The bridge forms from Tideglass sand, Foundry heat, Spire rain, and the Astra's engine note. Each step belongs to more than one survivor. A campfire promise hangs in the quiet beside an open, empty memory altar box, its crystal lining still glowing.",
+        "description": "The bridge forms from launch rail, ridge roots, blue paint, and scorched bench wood. Each step belongs to more than one survivor. A campfire promise hangs in the quiet beside an open, empty memory altar box, its crystal lining still glowing.",
         "requires_events": [
           "find_vhs_tape_10"
         ]
@@ -10278,7 +10279,7 @@
     "weather": "resonance",
     "title": "Memory Stair",
     "background_image": "images/rooms/world_6/source_memory_stair.webp",
-    "description": "Jed's door opens into Astra wreckage, Spire glass, Foundry catwalk, and Ring metal arranged around the memory stair. An Aethel grave waits among the fragments. The eastern ascent will not hold until Nova refuses all three revisions and climbs the memory stair. West leads back through the threshold to the shared span.",
+    "description": "Jed's door, [action:Astra wreckage|cargo pod wreckage], and a Foundry catwalk surround the memory stair. An Aethel grave stands among them. Refuse all three revisions before climbing east; west returns to the shared span.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10301,7 +10302,7 @@
         "action_event": "w6_mq29_refuse_jed_revision_scene",
         "condition_unmet_message": "Vale's stair offers a version of the mine where Jed never died.",
         "inspection_completion_event": "w6_mq29_refuse_jed_revision",
-        "completed_inspection_message": "Vale offers a mine where Jed never dies. Nova leaves the real door closed, because love edited into comfort is only another cage."
+        "completed_inspection_message": "The latch is cool. The light beneath Jed’s door has faded, and Nova has left it closed."
       },
       {
         "name": "Astra wreckage",
@@ -10309,9 +10310,9 @@
         "inspection_completion_milestone": "ms_w6_refused_astra_revision",
         "type": "generic",
         "action_event": "w6_mq29_refuse_astra_revision_scene",
-        "condition_unmet_message": "A polished Astra waits without crash scars, without Sector 9, and without Orion.",
+        "condition_unmet_message": "Vale offers the cargo pod a safe launch, with no crash into Sector 9.",
         "inspection_completion_event": "w6_mq29_refuse_astra_revision",
-        "completed_inspection_message": "Vale offers an Astra that never crashes. Orion touches the impossible hull and lets it pass, because erasing the wreck erases everyone it saved."
+        "completed_inspection_message": "The cargo pod’s hull is dented again. Beyond the broken viewport, the path through Sector 9 leads to Orion’s open stasis pod."
       },
       {
         "name": "Foundry catwalk",
@@ -10321,7 +10322,7 @@
         "action_event": "w6_mq29_refuse_foundry_revision_scene",
         "condition_unmet_message": "The Foundry offers Gh0st a clean origin with no bodies behind it.",
         "inspection_completion_event": "w6_mq29_refuse_foundry_revision",
-        "completed_inspection_message": "Vale offers Gh0st a clean origin with no assembly line and no guilt. Gh0st refuses the lie because choice only matters after the damage is real."
+        "completed_inspection_message": "The catwalk leads back toward the occupied tanks. Gh0st has turned away from the empty passage Vale offered."
       },
       {
         "name": "memory stair",
@@ -10333,7 +10334,7 @@
           "ms_w6_refused_astra_revision",
           "ms_w6_refused_foundry_revision"
         ],
-        "condition_unmet_message": "The stair will not hold until Nova refuses the mine, the Astra, and the Foundry as painless lies."
+        "condition_unmet_message": "Three revisions still hold the stair apart. Return to Jed’s door, the cargo pod wreckage and the Foundry catwalk."
       },
       {
         "name": "aethel grave",
@@ -10359,7 +10360,7 @@
             "value": true
           }
         ],
-        "message_locked": "Refuse Jed’s door, the Astra wreckage and the Foundry catwalk, then climb the memory stair before heading east."
+        "message_locked": "Refuse Jed’s door, the cargo pod wreckage and the Foundry catwalk, then climb the memory stair before heading east."
       }
     },
     "description_variants": [
@@ -10367,7 +10368,7 @@
         "requires_state": {
           "ascent_open": true
         },
-        "description": "Jed's door, the Astra wreckage and the Foundry catwalk remain scarred and real. The memory stair holds beneath the crew, its eastern ascent open toward World-Fracture Landing. An Aethel grave waits among the fragments. West leads back through the threshold to the shared span."
+        "description": "Jed's door is closed. The [action:Astra wreckage|cargo pod wreckage] is dented again, and the Foundry catwalk leads back toward occupied tanks. The memory stair opens east. An Aethel grave stands among the fragments; west returns to the shared span."
       },
       {
         "requires_milestones": [
@@ -10375,7 +10376,7 @@
           "ms_w6_refused_astra_revision",
           "ms_w6_refused_foundry_revision"
         ],
-        "description": "Nova has refused the promises behind Jed's door, the Astra wreckage and the Foundry catwalk. Their scars remain. The memory stair has steadied enough to climb. An Aethel grave waits among the fragments. West leads back through the threshold to the shared span."
+        "description": "Nova has left Jed's door closed and refused the revisions around the [action:Astra wreckage|cargo pod wreckage] and Foundry catwalk. The memory stair is steady enough to climb. An Aethel grave stands among the fragments; west returns to the shared span."
       }
     ]
   },
@@ -10700,7 +10701,7 @@
     "env": "source",
     "title": "New World",
     "background_image": "images/rooms/world_6/source_new_world.webp",
-    "description": "Morning reaches the Colony through an open regional corridor. At Zeke's diner, Nova remembers the beach photograph while her tuning hand trembles against its frame. West reopens the remembered Center for revisiting the Source; north follows the street past the diner.",
+    "description": "The regional corridor is open above the Colony. At Zeke’s diner, Nova rests her trembling hand beside a beach photograph from the crew’s return to Tideglass. West reopens the remembered Center; north follows the street.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -10718,7 +10719,7 @@
         "name": "beach photograph",
         "type": "generic",
         "action_event": "w6_replay_epilogue",
-        "condition_unmet_message": "The photograph remembers Tideglass Beach for everyone in it."
+        "condition_unmet_message": "Taken on their first trip back to Tideglass after the corridor opened. Zeke is squinting into the sun; Gh0st has a hand on Orion’s shoulder."
       }
     ],
     "description_variants": [
@@ -10726,7 +10727,7 @@
         "requires_milestones": [
           "ms_game_complete"
         ],
-        "description": "Sunlight spills across the counter at Zeke's diner. Outside, the bells of an unscripted morning echo down the street while Nova rests her hand against the beach photograph. West reopens the remembered Center for revisiting the Source; north follows the street past the diner."
+        "description": "Sunlight spills across the counter at Zeke’s diner. A beach photograph from the crew’s return to Tideglass stands beside Nova’s cup. West reopens the remembered Center; north follows the street past the diner."
       }
     ]
   },
@@ -19931,7 +19932,7 @@
     "weather": "resonance",
     "title": "Anchor Loom",
     "background_image": "images/rooms/world_5/deep_anchor_chamber_scale_03.webp",
-    "description": "An Anchor loom spins gold command-thread around the relic, weaving every Ring permission through Elara's body. The gold spindle jitters each time the crew's signal interrupts Vale's ownership claim.",
+    "description": "An Anchor loom feeds gold command-thread around the relic. Each strand runs back toward Elara’s tank. The gold spindle jerks when the crew interrupts the signal.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -20237,7 +20238,7 @@
     "weather": "resonance",
     "title": "Thorne Cell",
     "background_image": "images/rooms/world_5/deep_throne_room_scale_02.webp",
-    "description": "Thorne's cell hangs beside the dais, close enough for her to watch Vale turn her product into a religion. The containment seam glows brighter whenever she tries to speak.",
+    "description": "Thorne's cell hangs beside the dais. She keeps one hand against the field; the containment seam brightens when she pushes. The controls outside still carry her seal.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -20254,12 +20255,12 @@
       {
         "name": "Thorne's cell",
         "type": "generic",
-        "condition_unmet_message": "Thorne built cages for profit and is still surprised by the view from inside one."
+        "condition_unmet_message": "The field controls display Thorne’s last override attempt: ACCESS REVOKED."
       },
       {
         "name": "containment seam",
         "type": "generic",
-        "condition_unmet_message": "The seam is keyed to Vale now. That is the coup in one strip of light."
+        "condition_unmet_message": "The seam is keyed to Vale’s command cipher. Thorne’s credential flashes red beside it."
       }
     ],
     "enemy_parties": [],
@@ -20405,7 +20406,7 @@
     "weather": "resonance",
     "title": "Avatar Gate",
     "background_image": "images/rooms/world_5/deep_throne_room_scale_06.webp",
-    "description": "An Avatar gate blooms with a compliance halo large enough to frame a boss fight. The halo rotates toward Nova like an accusation, already deciding what shape punishment should take.",
+    "description": "An Avatar gate stands beneath a rotating compliance halo. Each time a gap opens in the hard light, another closes in front of the crew. The narrow passage runs back toward the throne deck.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -20425,7 +20426,7 @@
       {
         "name": "Avatar gate",
         "type": "generic",
-        "condition_unmet_message": "The gate is not guarding Vale. It is turning his argument into a body."
+        "condition_unmet_message": "The gate’s hard-light ribs turn with the Compliance Avatar. Every opening faces away from the crew."
       },
       {
         "name": "compliance halo",
@@ -21527,7 +21528,7 @@
     "weather": "resonance",
     "title": "Tideglass Span",
     "background_image": "images/rooms/world_6/source_memory_bridge_node_scale_01.webp",
-    "description": "A tideglass span forms under the bridge, wet sand hardening into translucent steps marked by tideglass footprints. The beach photo flickers inside each step, laughing badly enough to be true.",
+    "description": "A tideglass span forms below the bridge. Four sets of tideglass footprints appear as the crew steps onto it. A beach photo beneath the glass shows an empty stretch of coast.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -21544,19 +21545,19 @@
       {
         "name": "tideglass span",
         "type": "generic",
-        "condition_unmet_message": "The step holds because Orion remembers the tide and Zeke remembers complaining about sand."
+        "condition_unmet_message": "Orion recognizes the glassy sand along his old coast. The steps hold while the crew crosses."
       },
       {
         "name": "beach photo",
         "type": "generic",
-        "condition_unmet_message": "No one in the image is posed correctly. The Source cannot fake that."
+        "condition_unmet_message": "Orion points to a bend in the empty shoreline. “I used to walk there before breakfast.”"
       },
       {
         "id": "inspect_crystallized_footprint",
         "name": "tideglass footprints",
         "type": "inspect",
         "description": "Examine the crystallized footprints hardening across the bridge span.",
-        "inspect_message": "Six sets of boot prints press into the tideglass, side by side rather than in single file. The glass beneath them glows with a warm, steady luminescence that refuses to scatter in the surrounding void."
+        "inspect_message": "Four sets of footprints harden under the crew’s boots. Each step lights up as someone puts weight on it."
       }
     ]
   },
@@ -22104,7 +22105,7 @@
     "weather": "resonance",
     "title": "Silence Pulpit",
     "background_image": "images/rooms/world_6/source_center_node_scale_03.webp",
-    "description": "A Silence pulpit rises from the ocean. The steps remember a sermon that once tried to drown out every separate voice. The fracture echoes back toward The Center.",
+    "description": "A Silence pulpit rises from the ocean beneath folds of blinding geometry. The steps remember a sermon that once tried to drown out every separate voice. Through a gap in the light, you can return to the fracture at The Center.",
     "npcs": [],
     "items": [],
     "enemies": [],

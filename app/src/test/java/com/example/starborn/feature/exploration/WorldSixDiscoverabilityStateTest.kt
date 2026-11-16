@@ -64,7 +64,7 @@ class WorldSixDiscoverabilityStateTest {
         assertTerms("w6_sq28", "isolate_voice", "source_gh0st_nightmare", "buried voice")
         assertTerms("w6_sq28", "break_command_layer", "source_gh0st_kill_suite", "command carrier")
         assertTerms("w6_sq28", "recover_song", "source_gh0st_elara_signal", "pure audio log")
-        assertTerms("w6_mq29", "climb_stair", "source_memory_stair", "Jed's door", "Astra wreckage", "Foundry catwalk")
+        assertTerms("w6_mq29", "climb_stair", "source_memory_stair", "Jed's door", "cargo pod wreckage", "Foundry catwalk")
         assertTerms("w6_mq30", "use_key", "source_center", "shared tuning focus")
         assertTerms("w6_mq30", "tune_world", "source_center", "shared tuning focus")
         assertTerms("w6_sq29", "trace_names", "source_memory_threshold", "names beneath the light")

@@ -17,15 +17,28 @@ class World56WalkthroughReachabilityTest {
     private val rooms = AssetJsonReader(DesktopAssetProvider(listOf(File(root, "app/src/main/assets"))), MoshiProvider.instance)
         .readList<Room>("rooms.json")
 
-    private fun targets(room: Room, description: String): Set<String> {
+    private fun renderedTargets(room: Room, description: String): Map<String, String> {
         // Visibility gates govern when an action is ready; this check governs whether its
         // authored label can be reached at all. Service pills deliberately aren't inline.
         val inline = room.actions.filter {
             it["type"] !in setOf("rest_stop", "shop", "fishing", "tinkering") &&
                 it["hide_inline"] != true && it["travel_label"] == null
         }.map { GenericAction(name = it["name"] as String, type = "inspect") }
-        return buildInlineActionPlan(description, inline, emptyMap(), room)?.segments.orEmpty()
-            .mapNotNull { (it.target as? InlineActionTarget.Room)?.action?.name }.toSet()
+        val plan = buildInlineActionPlan(description, inline, emptyMap(), room) ?: return emptyMap()
+        return plan.segments.mapNotNull { segment ->
+            (segment.target as? InlineActionTarget.Room)?.action?.name?.let { target ->
+                plan.description.substring(segment.start, segment.end) to target
+            }
+        }.toMap()
+    }
+
+    private fun targets(room: Room, description: String): Set<String> = renderedTargets(room, description).values.toSet()
+
+    @Test fun cargoPodMemoryRetainsItsLegacyTargetInEveryDescription() {
+        val room = rooms.single { it.id == "source_memory_stair" }
+        for (description in listOf(room.description) + room.descriptionVariants.map { it.description }) {
+            assertEquals("Astra wreckage", renderedTargets(room, description)["cargo pod wreckage"])
+        }
     }
 
     @Test fun exportRenderedTargetsForGuideReview() {
@@ -56,9 +69,16 @@ class World56WalkthroughReachabilityTest {
                 val descriptions = listOf(room.description) + room.descriptionVariants.map { it.description }
                 for (label in labels) {
                     if (label in setOf("Rest", "Cook", "Fish")) continue
-                    val raw = room.actions.singleOrNull { (it["name"] as? String)?.equals(label, true) == true }
-                    assertNotNull("Unknown action: $line", raw)
-                    val available = descriptions.map { targets(room, it).any { name -> name.equals(label, true) } }
+                    // A visible alias can differ from the stable action/save key.
+                    // Guides may use the canonical object name or the displayed alias;
+                    // either must lead to an actual rendered link and authored target.
+                    val available = descriptions.map { description ->
+                        renderedTargets(room, description).any { (visible, target) ->
+                            (visible.replace('’', '\'').equals(label.replace('’', '\''), true) ||
+                                target.equals(label, true)) &&
+                                room.actions.count { (it["name"] as? String) == target } == 1
+                        }
+                    }
                     if (inspectMatch != null) assertTrue("Inspection isn't linked in every room state: $line", available.all { it })
                     else assertTrue("Control isn't linked in any room state: $line", available.any { it })
                     checked++

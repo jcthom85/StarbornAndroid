@@ -91,7 +91,8 @@ class World4NavigationPublicTest {
             }
         }
         compose.waitForIdle()
-        assertEquals(listOf("gh0st_w4_phantom_intro", "nova_w4_phantom_prompt"), seen)
+        assertEquals(listOf("gh0st_w4_phantom_intro", "nova_w4_phantom_prompt",
+            "gh0st_w4_phantom_boundary", "nova_w4_phantom_wait"), seen)
         assertTrue("access_phantom_terminal" in s.sessionStore.state.value.questTasksCompleted["w4_mq17"].orEmpty())
         dismissNarration(s)
         compose.waitUntil(5000) {
@@ -132,8 +133,14 @@ class World4NavigationPublicTest {
                 assertEquals("ms_w4_arrays_stolen" in milestones, actions.single { it.name == arraysName }.completedInspection)
                 if (milestones == setOf("ms_w4_arrays_stolen")) assertTrue(prose().contains("Deep-Core Engine still hammers"))
                 actions.filter { it.completedInspection }.forEach {
-                    assertNull(it.actionEvent)
+                    assertEquals("inspect", it.type)
                     assertTrue(it.conditionUnmetMessage!!.contains("secured for the Astra"))
+                    val beforeInspection = s.sessionStore.state.value
+                    compose.runOnIdle { s.exploration.onActionSelected(it) }
+                    dismissNarration(s)
+                    assertEquals(beforeInspection.inventory, s.sessionStore.state.value.inventory)
+                    assertEquals(beforeInspection.playerXp, s.sessionStore.state.value.playerXp)
+                    assertEquals(beforeInspection.completedEvents, s.sessionStore.state.value.completedEvents)
                 }
             }
         }
@@ -158,7 +165,7 @@ class World4NavigationPublicTest {
         val inspection = s.exploration.uiState.value.actions.filterIsInstance<GenericAction>()
             .single { it.name == "ammo crate alpha" }
         assertTrue(inspection.completedInspection)
-        assertNull(inspection.actionEvent)
+        assertEquals("inspect", inspection.type)
         val xp = s.sessionStore.state.value.playerXp
         val inventory = s.sessionStore.state.value.inventory
         compose.runOnIdle { s.exploration.onActionSelected(inspection) }

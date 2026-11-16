@@ -1,6 +1,6 @@
 # Memory Stair interactive sequence
 
-Draft structure for discussion. Scene dialogue remains to be written against the preceding Jed, Orion and Gh0st scenes.
+Current sequence notes, reconciled November 15, 2026. The three portrait conversations are implemented; the cargo-pod correction preserves the existing internal Astra-named action and milestone identifiers.
 
 ## Arrival
 
@@ -16,11 +16,11 @@ Nova has time to answer him. The offered world is attractive because it gives he
 
 A final response refuses the replacement. Let the sound stop before returning to the stair. The door becomes quiet and its interaction becomes a completed recollection.
 
-## Astra wreckage
+## Cargo pod wreckage
 
-The ship appears untouched. A small sound associated with Orion is absent. The conversation reveals what this clean history removes.
+The cargo pod that crashed into Sector 9 appears untouched. Vale offers Nova and Zeke a safe departure. Orion recognizes that they would never reach his stasis pod. The Astra was acquired later, with Orion already awake; it is not the crashed craft in this memory.
 
-Let Orion speak for himself. Nova's final response keeps the real journey and the people it brought together. The image returns to the damaged ship with one sign of repair that demonstrates what the crew has done since.
+Let Orion speak for himself. Nova's final response keeps the real journey and the people it brought together. The recollection returns to the dented cargo pod and the route to Orion. The visible action uses an explicit display alias while retaining the existing internal identifier for save compatibility.
 
 ## Foundry catwalk
 

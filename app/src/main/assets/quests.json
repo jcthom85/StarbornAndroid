@@ -2017,7 +2017,7 @@
   {
     "id": "w5_mq22",
     "title": "Zero G",
-    "summary": "Cross the executive paradise and prove Harmony is a cage, not salvation.",
+    "summary": "Reach the Ring’s mainframe and find out what has happened to the people connected to Harmony.",
     "description": "Read the Ring's luxury systems as machinery: cross the Solarium's false sun, break the surveillance lock, time the zero-gravity service shaft, open the Server Farm, and find Thorne inside the product Vale stole from her.",
     "flavor": "Paradise above. A cage below. Silence everywhere.",
     "giver": "Gh0st",
@@ -2237,8 +2237,8 @@
   {
     "id": "w5_mq24",
     "title": "The Anchor",
-    "summary": "Find Elara, prove she is not infrastructure, and steal the Anchor.",
-    "description": "Enter the Anchor Chamber, reunite Gh0st with Elara, break the logic treating her as a living processor, and take the Anchor before Vale rewrites the root system.",
+    "summary": "Reach Elara and open the cradle keeping the Anchor beside her tank.",
+    "description": "Enter the Anchor Chamber, speak with Elara, and help her release the Anchor before Vale takes control of the remaining locks.",
     "flavor": "The Virtuoso file lists a person as infrastructure. Elara's corrections remain in the margins.",
     "giver": "Gh0st",
     "hub_id": "hub_10_deep_ring",
@@ -2537,7 +2537,7 @@
     "id": "w6_sq26",
     "title": "Jed's Echo",
     "summary": "Speak with Jed's memory at his old workbench.",
-    "description": "Return to the workbench where Nova learned what survival was supposed to protect.",
+    "description": "Follow Jed’s tool marks to the remembered workbench, finish the repair lesson, and carry it through the shift gate.",
     "flavor": "A memory cannot answer, but it can remind.",
     "giver": "Memory of Jed",
     "hub_id": "hub_11_event_horizon",
@@ -2545,7 +2545,7 @@
       {
         "id": "workbench",
         "title": "Old Workbench",
-        "description": "Follow the details Vale cannot fake, then decide what Jed's memory should leave behind.",
+        "description": "Find the hand-cut marks and return to the bench where Jed taught Nova to check her work.",
         "tasks": [
           {
             "id": "find_tool_marks",
@@ -2644,8 +2644,8 @@
   {
     "id": "w6_mq29",
     "title": "The Spire of Thought",
-    "summary": "Climb the memory spiral and carry the unrevised crew to the Center.",
-    "description": "Climb through the scars of every world, refuse Vale's revisions, survive the shadow wave, and break the defenses built from memories he could not edit away.",
+    "summary": "Refuse Vale’s altered memories and reach the Center with the crew.",
+    "description": "Confront the three revisions at Memory Stair, survive the shadow wave, and break the defenses on the way to the Center.",
     "flavor": "The universe keeps every version you almost became.",
     "giver": "Nova",
     "hub_id": "hub_12_singularity",
@@ -2657,11 +2657,11 @@
         "tasks": [
           {
             "id": "climb_stair",
-            "text": "At Memory Stair, reject Jed's door, Astra wreckage and Foundry catwalk, then climb the memory stair."
+            "text": "At Memory Stair, reject Jed's door, cargo pod wreckage and Foundry catwalk, then climb the memory stair."
           },
           {
             "id": "defeat_shadow_wave",
-            "text": "Survive the Source Shadow wave without surrendering the scars."
+            "text": "Defeat the Source Shadow wave."
           }
         ]
       },
@@ -2676,7 +2676,7 @@
           },
           {
             "id": "reach_center",
-            "text": "Carry every unrevised voice to the Center."
+            "text": "Reach the Center with the crew."
           }
         ]
       }

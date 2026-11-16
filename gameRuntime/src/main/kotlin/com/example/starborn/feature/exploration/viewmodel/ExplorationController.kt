@@ -1065,7 +1065,9 @@ class ExplorationController(
         if (restoredHp.isEmpty()) return
         sessionStore.updatePartyVitals(restoredHp)
         emitAudioCommands(audioRouter.commandsForUi("sfx_rest_chime"))
-        val resolvedMessage = message?.takeIf { it.isNotBlank() } ?: computeRestBanter(state)
+        val resolvedMessage = sessionStore.takeRestBanter(
+            _uiState.value.currentRoom?.id ?: state.roomId.orEmpty(), message
+        )
         emitEvent(
             ExplorationEvent.RestRecovered(
                 restoredHp = restoredAmount,
@@ -1075,83 +1077,6 @@ class ExplorationController(
                 title = roomActivityTitle(cooking = false) ?: _uiState.value.currentRoom?.title ?: "A Moment of Shelter"
             )
         )
-    }
-
-    private fun computeRestBanter(state: com.example.starborn.domain.session.GameSessionState): String {
-        val party = state.partyMembers
-        val milestones = state.completedMilestones
-        val room = _uiState.value.currentRoom?.id.orEmpty().lowercase(Locale.getDefault())
-
-        return when {
-            room.contains("astra") -> {
-                when {
-                    "ms_all_arcade_cabinets_restored" in milestones ->
-                        "The crew rests in the common room while the restored cabinets hum softly from the recreation deck. Zeke shares hot tea, Gh0st leans against the bulkhead with a rare smirk, and the Astra truly feels like home."
-                    "ms_arcade_cabinet_01_repaired" in milestones ->
-                        "Nova rests on the common room couch. A restored cabinet hums on the recreation deck while the ship's engines keep a steady rhythm."
-                    else ->
-                        "The crew rests around the central common room table. Warm tea steams from battered tin cups, and for once, the silence feels earned."
-                }
-            }
-            room.contains("source") -> {
-                when {
-                    "orion" in party ->
-                        "Orion sits beside Nova on the crystal floor. “Close your eyes. I’ll tell you if the sound changes.”"
-                    "gh0st" in party ->
-                        "Gh0st checks his scanner. “Nothing moving close to us. I’ll stay up.”"
-                    else ->
-                        "Nova rests against the crystalline wall. The ambient resonance of the Source washes over her tired muscles, restoring focus and resolve."
-                }
-            }
-            room.contains("orbital") || room.contains("zenith") -> {
-                when {
-                    "zeke" in party ->
-                        "Zeke rubs his eyes at the viewport. “I can still taste the slag dust. Try to sleep. I’ll watch the hatch.”"
-                    "orion" in party ->
-                        "Orion rests a hand against the glass. “I can see where the tide turns from here. I used to wait all evening to see that from the shore.”"
-                    else ->
-                        "Nova rests in the quiet observation alcove. The silent expanse of the stars drifts past the reinforced glass."
-                }
-            }
-            room.contains("foundry") -> {
-                when {
-                    "zeke" in party ->
-                        "Zeke unscrews the canteen and passes it to Nova. “Drink. I’ll get another when the pipes cool.”"
-                    "gh0st" in party ->
-                        "Gh0st checks the grate above them. “The exhaust will hide us while it’s running. Get some sleep.”"
-                    else ->
-                        "Nova rests in the warm shadow of the forge heat shields, letting the steady thermal radiation soothe aching joints."
-                }
-            }
-            room.contains("spire") -> {
-                when {
-                    "gh0st" in party ->
-                        "Gh0st props himself against the conduit. “I cleared our badge pings. I’ll wake you before the next sweep.”"
-                    "orion" in party ->
-                        "Orion listens to the traffic above them. “That’s a freight car. The sound carries down the pipes. It took me a while to stop getting up for it.”"
-                    else ->
-                        "Nova rests in the shadowed maintenance niche, sheltered from corporate surveillance drones and neon glare."
-                }
-            }
-            room.contains("sector9") || room.contains("swamp") -> {
-                when {
-                    "zeke" in party ->
-                        "Zeke puts his boots on a dry root. “Keep the seals off the moss. Mine are already starting to peel.”"
-                    "orion" in party ->
-                        "Orion watches the reeds light up. “They used to do that before the tide came in. We have time for a short rest.”"
-                    "gh0st" in party ->
-                        "Gh0st settles against a root. “The mist’s too thick for thermal. I’ll listen. Get some sleep.”"
-                    else ->
-                        "Nova rests on the dry roots above the mist pools. Bioluminescent spores drift past like green embers, steadying her heartbeat."
-                }
-            }
-            "zeke" in party ->
-                "Zeke sets his datapad face down. “I keep thinking I ought to set the shift alarm. Go ahead and sleep, Nova.”"
-            "ms_w1_mq01_cutter_surge" in milestones ->
-                "Nova rests against the bulkhead. The electric ringing in her ears dims to a distant hum, and her pulse steadies."
-            else ->
-                "Nova rests on the steel bunk. The distant vibration of rock drills slows to a rhythmic hum, and her breathing steadies."
-        }
     }
 
     private var menuFeedbackJob: Job? = null

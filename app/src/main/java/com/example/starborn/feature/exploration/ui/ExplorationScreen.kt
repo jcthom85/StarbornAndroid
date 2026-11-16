@@ -4566,6 +4566,7 @@ private fun RestRecoveryOverlay(
         modifier = modifier
     ) {
         val currentNotice = notice ?: return@AnimatedVisibility
+        val detailScroll = remember(currentNotice.id) { androidx.compose.foundation.ScrollState(0) }
         val transition = rememberInfiniteTransition(label = "restRecoveryBreath")
         val breath by transition.animateFloat(
             initialValue = 0.98f,
@@ -4679,11 +4680,10 @@ private fun RestRecoveryOverlay(
 
                         Text(
                             text = currentNotice.detail,
+                            modifier = Modifier.heightIn(max = 220.dp).verticalScroll(detailScroll),
                             color = Color.White.copy(alpha = 0.85f),
                             style = MaterialTheme.typography.bodyLarge.copy(lineHeight = 25.sp),
-                            textAlign = TextAlign.Center,
-                            maxLines = 4,
-                            overflow = TextOverflow.Ellipsis
+                            textAlign = TextAlign.Center
                         )
 
                         Row(

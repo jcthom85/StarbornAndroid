@@ -820,7 +820,7 @@
     "steps": [
       {
         "type": "narration",
-        "text": "The Ascended falls, but Vale's forced network remains active. Five protocol signatures align through the crew's practiced circuit and complete the Key's access pattern.",
+        "text": "Vale falls. Voices still call from the network he leaves behind. The crew holds the circuit open; five protocol signatures meet at the Key.",
         "audio_cue": "sfx_combat_enemy_void_blast",
         "music_cue": "music_w6_boss_final",
         "duration_seconds": 8.5,
@@ -1010,7 +1010,7 @@
       },
       {
         "type": "narration",
-        "text": "At Zeke's diner, Nova remembers Tideglass sand in her boots and Zeke complaining about salt in the filters. Her tuning hand trembles against the photograph.",
+        "text": "Later, at Zeke’s diner, Nova holds a photograph from their first trip back to Tideglass. In it, Gh0st has one hand on Orion’s shoulder.",
         "duration_seconds": 8.8,
         "transition": "fade",
         "image": "images/cinematics/w6_ending_diner_v1.webp",
@@ -1021,7 +1021,7 @@
         "type": "dialogue",
         "speaker": "Zeke",
         "emote": "idle",
-        "text": "It ate through two filters. I’m allowed to complain.",
+        "text": "You caught him like that on our first flight. I thought we’d lost him when the deck tilted.",
         "duration_seconds": 5.1,
         "transition": "cut",
         "image": "images/cinematics/w6_ending_diner_v1.webp",
@@ -1033,7 +1033,7 @@
         "type": "dialogue",
         "speaker": "Gh0st",
         "emote": "cool",
-        "text": "You threw the canteen before I could check the filters. Good aim.",
+        "text": "He was falling. I had a free hand.",
         "duration_seconds": 3.8,
         "transition": "cut",
         "image": "images/cinematics/w6_ending_diner_v1.webp",
@@ -1057,7 +1057,7 @@
         "type": "dialogue",
         "speaker": "Orion",
         "emote": "happy",
-        "text": "Good. Now you can hear the wind.",
+        "text": "Stay a while. There’s a breeze through the window.",
         "duration_seconds": 3.2,
         "transition": "cut",
         "image": "images/cinematics/w6_ending_diner_v1.webp",
@@ -1633,5 +1633,34 @@
     "presentation": "illustrated",
     "backdrop": "black",
     "skippable": true
+  },
+  {
+    "id": "scene_w6_jed_echo_lesson",
+    "title": "At the Bench",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "A repaired lead lies across the bench. Jed’s echo leans close to the new solder joint."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Jed",
+        "text": "Looks sound. How will you check?"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "text": "Power off. Then pull the lead. A joint can look good and still come loose."
+      },
+      {
+        "type": "narration",
+        "text": "Nova checks the switch and tugs the lead. The joint holds. She turns to show him; the place beside her is empty."
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "text": "It holds."
+      }
+    ]
   }
 ]

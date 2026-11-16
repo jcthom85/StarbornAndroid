@@ -215,6 +215,16 @@ class ExplorationViewModelTest {
         // Resting again must not reduce vitality-derived combat health.
         method.invoke(viewModel)
         assertEquals(state.partyMemberHp, sessionStore.state.value.partyMemberHp)
+
+        // Authored rest copy must not permanently bypass companion selection, even at full HP.
+        sessionStore.setRoom("sector9_stream_falls")
+        val restWithMessage = ExplorationViewModel::class.java.getDeclaredMethod("handleRestParty", String::class.java)
+        restWithMessage.isAccessible = true
+        restWithMessage.invoke(viewModel, "Shelter behind the falls.")
+        assertEquals("place:sector9_stream_falls", sessionStore.state.value.lastRestBanterId)
+        restWithMessage.invoke(viewModel, "Shelter behind the falls.")
+        assertEquals("w2:boots", sessionStore.state.value.lastRestBanterId)
+        assertEquals(state.partyMemberHp, sessionStore.state.value.partyMemberHp)
     }
 
     @Test

@@ -1,5 +1,7 @@
 # Starborn story review checkpoints
 
+For the November 15 revisions, use the separate [narrative review pack](08_NARRATIVE_REVISION_REVIEW.md). The slots below describe the earlier installed pack; the revised cargo-pod label requires the updated build.
+
 Open **Load Game** in the emulator’s Starborn **TEST SESSION** build. Slots 22–30 were earned on an automated campaign route that used the normal combat and quest systems. Reload the same slot to replay a scene.
 
 | Slot | Starting room | What to try |
@@ -9,7 +11,7 @@ Open **Load Game** in the emulator’s Starborn **TEST SESSION** build. Slots 22
 | 24 | Titan Dock | Use **escape launch**. Watch Vale revoke Thorne’s authority during **Beyond the Shield**, before the Astra reaches Executive Dock. |
 | 25 | Mainframe Nave | Use **thorne trace**. Listen for what Thorne admits and why the crew acts on her information. |
 | 26 | Throne Room | Use **containment field**. Watch the conversation through the final beat before leaving for the Tear. |
-| 27 | Shared Memory Span | Use **campfire promise**, then go east and use **singularity threshold**. At Memory Stair, try **Jed’s door**, **Astra wreckage**, and **Foundry catwalk**. |
+| 27 | Shared Memory Span | Use **campfire promise**, then go east and use **singularity threshold**. At Memory Stair, try **Jed’s door**, **cargo pod wreckage**, and **Foundry catwalk**. |
 | 28 | The Center | Use **Vale**. Finish the confrontation to unlock the fight. |
 | 29 | The Center | Use **shared tuning focus** and choose **Examine**. Set Heartbeat to **72 BPM**, Neural Pressure to **36%**, and Choir Phase to **270°**, then select **Tune the Chorus**. Let the Final Note and epilogue play through to see what happens to Elara. |
 | 30 | Anchor Chamber | Use **elara** for the reunion, then **anchor relic** for the illustrated Hunter-Killer freeze and tank exchange. Continue toward the Throne Room and the Tear. |

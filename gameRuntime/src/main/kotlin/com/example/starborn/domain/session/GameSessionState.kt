@@ -62,7 +62,9 @@ data class GameSessionState(
     val progressionPrototypeVersion: Int = 0,
     val physicalGearInventory: Boolean = false,
     val purchasedSkillNodes: Map<String, Int> = emptyMap(),
-    val progressionAwardClaims: Set<String> = emptySet()
+    val progressionAwardClaims: Set<String> = emptySet(),
+    val heardRestBanter: Set<String> = emptySet(),
+    val lastRestBanterId: String = ""
 )
 
 data class ActiveMealBuff(
@@ -97,6 +99,8 @@ data class ArcadeCabinetProgress(
 fun GameSessionState.fingerprint(): String {
     val normalizedLocale = Locale.US
     val builder = StringBuilder()
+    heardRestBanter.sorted().forEach { builder.append("REST_HEARD:").append(it).append('|') }
+    builder.append("REST_LAST:").append(lastRestBanterId).append('|')
     builder.append("AP:").append(playerAp).append("|PROGRESSION:").append(progressionPrototypeVersion).append('|')
     purchasedSkillNodes.toSortedMap().forEach { (id, paid) -> builder.append("PURCHASE:").append(id).append('=').append(paid).append('|') }
     progressionAwardClaims.sorted().forEach { builder.append("AP_CLAIM:").append(it).append('|') }

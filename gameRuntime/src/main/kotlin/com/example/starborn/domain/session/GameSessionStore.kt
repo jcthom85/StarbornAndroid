@@ -602,6 +602,16 @@ class GameSessionStore {
         }
     }
 
+    fun takeRestBanter(roomId: String, message: String?): String {
+        var text = ""
+        _state.update { state ->
+            val choice = com.example.starborn.domain.narrative.RestBanter.select(state, roomId, message)
+            text = choice.text
+            state.copy(heardRestBanter = choice.heardIds, lastRestBanterId = choice.id)
+        }
+        return text
+    }
+
     fun markTutorialSeen(id: String) {
         if (id.isBlank()) return
         _state.update { it.copy(tutorialSeen = it.tutorialSeen + id) }

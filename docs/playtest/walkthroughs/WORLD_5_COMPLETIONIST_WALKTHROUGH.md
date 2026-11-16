@@ -1187,7 +1187,7 @@ Interactions: chorus tank, breath meters.
 
 ### Anchor Loom (`deep_anchor_chamber_scale_03`)
 
-An Anchor loom spins gold command-thread around the relic, weaving every Ring permission through Elara's body. The gold spindle jitters each time the crew's signal interrupts Vale's ownership claim.
+An Anchor loom feeds gold command-thread around the relic. Each strand runs back toward Elara’s tank. The gold spindle jerks when the crew interrupts the signal.
 
 Exits: south → Chorus Tank (`deep_anchor_chamber_scale_02`), north → Thaw Gallery (`deep_anchor_chamber_scale_04`).
 
@@ -1243,7 +1243,7 @@ Interactions: observation apse, planet view.
 
 ### Thorne Cell (`deep_throne_room_scale_02`)
 
-Thorne's cell hangs beside the dais, close enough for her to watch Vale turn her product into a religion. The containment seam glows brighter whenever she tries to speak.
+Thorne's cell hangs beside the dais. She keeps one hand against the field; the containment seam brightens when she pushes. The controls outside still carry her seal.
 
 Exits: south → Observation Apse (`deep_throne_room_scale_01`), north → Soloist Dais (`deep_throne_room_scale_03`).
 
@@ -1275,7 +1275,7 @@ Interactions: coup balcony, security crown.
 
 ### Avatar Gate (`deep_throne_room_scale_06`)
 
-An Avatar gate blooms with a compliance halo large enough to frame a boss fight. The halo rotates toward Nova like an accusation, already deciding what shape punishment should take.
+An Avatar gate stands beneath a rotating compliance halo. Each time a gap opens in the hard light, another closes in front of the crew. The narrow passage runs back toward the throne deck.
 
 Exits: south → Coup Balcony (`deep_throne_room_scale_05`), north → Tear Runway (`deep_throne_room_scale_07`).
 
