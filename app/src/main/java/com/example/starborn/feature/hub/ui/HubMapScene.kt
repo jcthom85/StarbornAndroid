@@ -4,17 +4,17 @@ import com.example.starborn.feature.hub.presentation.HubMapLayouts
 import com.example.starborn.feature.hub.presentation.nodeMatchesQuest
 
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -24,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.zIndex
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -38,16 +37,18 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.zIndex
 import com.example.starborn.feature.hub.viewmodel.HubNodeUi
 import com.example.starborn.feature.hub.viewmodel.HubQuestUi
 import kotlin.math.roundToInt
@@ -56,20 +57,29 @@ import kotlin.math.sin
 /** The picture and all ground anchors share this single transform. Labels never move the map. */
 @Composable
 internal fun HubMapScene(
-    hubId: String?, background: Painter, nodes: List<HubNodeUi>, selectedId: String?, trackedQuest: HubQuestUi?,
-    onSelect: (HubNodeUi) -> Unit, onEnter: (HubNodeUi) -> Unit, modifier: Modifier = Modifier,
-    newlyUnlockedNodeId: String? = null
+    hubId: String?,
+    background: Painter,
+    nodes: List<HubNodeUi>,
+    selectedId: String?,
+    trackedQuest: HubQuestUi?,
+    onSelect: (HubNodeUi) -> Unit,
+    onEnter: (HubNodeUi) -> Unit,
+    modifier: Modifier = Modifier,
+    newlyUnlockedNodeId: String? = null,
+    visualTheme: HubVisualTheme = hubVisualTheme(hubId, null)
 ) {
     val layout = HubMapLayouts.all[hubId] ?: return
     BoxWithConstraints(modifier.clipToBounds(), contentAlignment = Alignment.Center) {
         val density = LocalDensity.current
         val intrinsic = background.intrinsicSize
         val aspect = if (intrinsic.width > 0 && intrinsic.height > 0) intrinsic.width / intrinsic.height else 9f / 16f
-        val transform = HubMapTransform.fit(constraints.maxWidth.toFloat(), constraints.maxHeight.toFloat(), aspect)
-        val mapWidth = with(density) { transform.width.toDp() }
-        val viewportWidth = maxWidth
         val viewportWidthPx = constraints.maxWidth.toFloat()
         val viewportHeightPx = constraints.maxHeight.toFloat()
+        val transform = HubMapTransform.fit(viewportWidthPx, viewportHeightPx, aspect)
+        val coverTransform = HubMapTransform.cover(viewportWidthPx, viewportHeightPx, aspect)
+        val mapWidth = with(density) { transform.width.toDp() }
+        val coverWidth = with(density) { coverTransform.width.toDp() }
+        val viewportWidth = maxWidth
 
         val infiniteTransition = rememberInfiniteTransition(label = "hub_map_motion")
         val idlePhase by infiniteTransition.animateFloat(
@@ -92,24 +102,99 @@ internal fun HubMapScene(
         )
 
         Box(Modifier.fillMaxSize().clipToBounds()) {
-            // Draw the same image rectangle used to transform every destination anchor.
-            Image(background, null, contentScale = ContentScale.FillBounds, modifier = Modifier
-                .offset { IntOffset(transform.offsetX.roundToInt(), transform.offsetY.roundToInt()) }
-                .wrapContentSize(Alignment.TopStart, unbounded = true)
-                .requiredSize(mapWidth, with(density) { transform.imageHeight.toDp() }))
+            // Soft ambient cover echo fills any margin left by aspect-fitting the portrait map.
+            Image(
+                painter = background,
+                contentDescription = null,
+                contentScale = ContentScale.FillBounds,
+                alpha = 0.22f,
+                modifier = Modifier
+                    .offset { IntOffset(coverTransform.offsetX.roundToInt(), coverTransform.offsetY.roundToInt()) }
+                    .wrapContentSize(Alignment.TopStart, unbounded = true)
+                    .requiredSize(coverWidth, with(density) { coverTransform.imageHeight.toDp() })
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(visualTheme.backdropColor.copy(alpha = 0.56f))
+            )
 
-            // --- Layer 1: Ground Contact Shadows & Selection Sonar Rings ---
+            // Primary authored map artwork using the same transform as every destination anchor.
+            Image(
+                painter = background,
+                contentDescription = null,
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier
+                    .offset { IntOffset(transform.offsetX.roundToInt(), transform.offsetY.roundToInt()) }
+                    .wrapContentSize(Alignment.TopStart, unbounded = true)
+                    .requiredSize(mapWidth, with(density) { transform.imageHeight.toDp() })
+            )
+
+            // Edge-feather vignette blends the fitted map perimeter into the viewport cleanly.
+            Canvas(Modifier.fillMaxSize()) {
+                val feather = 22.dp.toPx()
+                val fadeBase = visualTheme.backdropColor
+                val fitLeft = transform.offsetX
+                val fitRight = transform.offsetX + transform.width
+                if (fitLeft > 1f) {
+                    drawRect(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(fadeBase.copy(alpha = 0.62f), Color.Transparent),
+                            startX = fitLeft,
+                            endX = fitLeft + feather
+                        ),
+                        topLeft = Offset(fitLeft, 0f),
+                        size = Size(feather.coerceAtMost(size.width - fitLeft), size.height)
+                    )
+                }
+                if (fitRight < size.width - 1f) {
+                    val startX = (fitRight - feather).coerceAtLeast(0f)
+                    drawRect(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(Color.Transparent, fadeBase.copy(alpha = 0.62f)),
+                            startX = startX,
+                            endX = fitRight
+                        ),
+                        topLeft = Offset(startX, 0f),
+                        size = Size((fitRight - startX).coerceAtLeast(0f), size.height)
+                    )
+                }
+                drawRect(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(fadeBase.copy(alpha = 0.58f), Color.Transparent),
+                        startY = 0f,
+                        endY = feather * 1.4f
+                    ),
+                    size = Size(size.width, feather * 1.4f)
+                )
+                drawRect(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(Color.Transparent, fadeBase.copy(alpha = 0.65f)),
+                        startY = (size.height - feather * 1.4f).coerceAtLeast(0f),
+                        endY = size.height
+                    ),
+                    topLeft = Offset(0f, (size.height - feather * 1.4f).coerceAtLeast(0f)),
+                    size = Size(size.width, feather * 1.4f)
+                )
+            }
+
+            // --- Layer 1: Ground Contact Shadows, Selection Aura & Objective Beacons ---
             Canvas(Modifier.fillMaxSize()) {
                 nodes.forEach { node ->
                     val site = (if (node.id == "astra_access") layout.astraDock else layout.sites[node.id]) ?: return@forEach
                     val selected = node.id == selectedId
-                    // Asset-backed node positions come from hub_nodes.json. Synthetic nodes
-                    // keep their authored fallback anchors in HubMapLayouts.
+                    val objective = trackedQuest?.let { nodeMatchesQuest(node, it) } == true
+                    val isNewlyUnlocked = node.id == newlyUnlockedNodeId
                     val usesSyntheticPosition = node.id == "astra_access" || node.id == "astra_disembark"
                     val nodeX = if (usesSyntheticPosition) site.x else node.centerX
                     val nodeY = if (usesSyntheticPosition) site.y else node.centerY
                     val anchorX = transform.x(nodeX)
                     val anchorY = transform.y(nodeY)
+                    val highlightColor = when {
+                        !node.canEnter -> Color(0xFFFFB394)
+                        selected || objective -> Color(0xFFFFD477)
+                        else -> visualTheme.accent
+                    }
 
                     if (site.artworkWidth > 0f) {
                         val imageWidthPx = (minOf(mapWidth * site.artworkWidth, viewportWidth * .36f)).toPx()
@@ -119,7 +204,25 @@ internal fun HubMapScene(
 
                         val floatProgress = if (isFloating) sin(idlePhase + (node.id.hashCode() % 7)) else 0f
                         val shadowScale = if (isFloating) 1f - (floatProgress * 0.08f) else 1f
-                        val shadowAlpha = (if (node.canEnter) 0.52f else 0.28f) * (if (isFloating) 0.9f - (floatProgress * 0.1f) else 1f)
+                        val shadowAlpha = (if (node.canEnter) 0.56f else 0.28f) * (if (isFloating) 0.9f - (floatProgress * 0.1f) else 1f)
+
+                        if (selected) {
+                            val haloRadius = imageWidthPx * 0.62f
+                            val haloCenterY = anchorY - imageWidthPx * 0.34f
+                            drawCircle(
+                                brush = Brush.radialGradient(
+                                    colors = listOf(
+                                        highlightColor.copy(alpha = 0.28f + 0.08f * (1f - selectPulse)),
+                                        visualTheme.accent.copy(alpha = 0.10f),
+                                        Color.Transparent
+                                    ),
+                                    center = Offset(anchorX, haloCenterY),
+                                    radius = haloRadius
+                                ),
+                                center = Offset(anchorX, haloCenterY),
+                                radius = haloRadius
+                            )
+                        }
 
                         // Ground contact shadow
                         drawOval(
@@ -136,36 +239,40 @@ internal fun HubMapScene(
                             size = Size(shadowWidth * shadowScale, shadowHeight * shadowScale)
                         )
 
-                        // Selection Sonar Pulse on Ground
-                        if (selected) {
-                            val pulseRadius = (shadowWidth * 0.5f) + (shadowWidth * 0.35f * selectPulse)
+                        // Selection / Objective / Unlock Ground Rings
+                        if (selected || objective || isNewlyUnlocked) {
+                            val ringColor = if (isNewlyUnlocked) visualTheme.accent else Color(0xFFFFD477)
+                            val pulseRadius = (shadowWidth * 0.50f) + (shadowWidth * 0.36f * selectPulse)
                             val pulseHeight = pulseRadius * 0.28f
-                            val pulseAlpha = (1f - selectPulse).coerceIn(0f, 1f) * 0.6f
+                            val baseAlpha = when {
+                                selected || isNewlyUnlocked -> 0.68f
+                                else -> 0.42f
+                            }
+                            val pulseAlpha = (1f - selectPulse).coerceIn(0f, 1f) * baseAlpha
                             drawOval(
-                                color = Color(0xFFFFD477).copy(alpha = pulseAlpha),
+                                color = ringColor.copy(alpha = pulseAlpha),
                                 topLeft = Offset(anchorX - pulseRadius, anchorY - pulseHeight),
                                 size = Size(pulseRadius * 2f, pulseHeight * 2f),
-                                style = Stroke(width = 1.5.dp.toPx())
+                                style = Stroke(width = 1.6.dp.toPx())
                             )
-                            drawOval(
-                                color = Color(0xFFFFD477).copy(alpha = 0.35f),
-                                topLeft = Offset(anchorX - shadowWidth * 0.52f, anchorY - shadowHeight * 0.55f),
-                                size = Size(shadowWidth * 1.04f, shadowHeight * 1.1f),
-                                style = Stroke(width = 1.dp.toPx())
-                            )
+                            if (selected) {
+                                drawOval(
+                                    color = highlightColor.copy(alpha = 0.48f),
+                                    topLeft = Offset(anchorX - shadowWidth * 0.52f, anchorY - shadowHeight * 0.55f),
+                                    size = Size(shadowWidth * 1.04f, shadowHeight * 1.1f),
+                                    style = Stroke(width = 1.3.dp.toPx())
+                                )
+                            }
                         }
-                    } else {
-                        // Beacon ground ring for pin nodes
-                        if (selected) {
-                            val pinRadius = 14.dp.toPx() + (10.dp.toPx() * selectPulse)
-                            val pulseAlpha = (1f - selectPulse).coerceIn(0f, 1f) * 0.65f
-                            drawCircle(
-                                color = Color(0xFFFFD477).copy(alpha = pulseAlpha),
-                                center = Offset(anchorX, anchorY),
-                                radius = pinRadius,
-                                style = Stroke(width = 1.5.dp.toPx())
-                            )
-                        }
+                    } else if (selected || objective || isNewlyUnlocked) {
+                        val pinRadius = 14.dp.toPx() + (10.dp.toPx() * selectPulse)
+                        val pulseAlpha = (1f - selectPulse).coerceIn(0f, 1f) * if (selected) 0.70f else 0.45f
+                        drawCircle(
+                            color = highlightColor.copy(alpha = pulseAlpha),
+                            center = Offset(anchorX, anchorY),
+                            radius = pinRadius,
+                            style = Stroke(width = 1.6.dp.toPx())
+                        )
                     }
                 }
             }
@@ -183,7 +290,7 @@ internal fun HubMapScene(
                     !node.canEnter -> Color(0xFFFFB394)
                     selected || objective -> Color(0xFFFFD477)
                     node.completed -> Color(0xFF9BDEC0)
-                    else -> Color(0xFFBFEFFF)
+                    else -> visualTheme.accent
                 }
                 val imageSize = minOf(mapWidth * site.artworkWidth, viewportWidth * .36f)
                 val anchorRatio = if (node.id == "astra_access") .79f else .94f
@@ -200,19 +307,26 @@ internal fun HubMapScene(
                     if (node.id == newlyUnlockedNodeId) {
                         reveal.snapTo(0f)
                         kotlinx.coroutines.delay(250)
-                        reveal.animateTo(1f, spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessLow
-                        ))
+                        reveal.animateTo(
+                            1f,
+                            spring(
+                                dampingRatio = Spring.DampingRatioMediumBouncy,
+                                stiffness = Spring.StiffnessLow
+                            )
+                        )
                     } else {
                         reveal.snapTo(1f)
                     }
                 }
                 if (site.labelDx != 0f || site.labelDy != 0f) {
                     Canvas(Modifier.fillMaxSize()) {
-                        drawLine(tint.copy(alpha = .6f * reveal.value.coerceIn(0f, 1f)), Offset(anchorX, anchorY),
+                        val lineAlpha = (if (selected) 0.85f else 0.45f) * reveal.value.coerceIn(0f, 1f)
+                        drawLine(
+                            tint.copy(alpha = lineAlpha),
+                            Offset(anchorX, anchorY),
                             Offset(transform.x(nodeX + site.labelDx), transform.y(nodeY + site.labelDy) + 14.dp.toPx()),
-                            strokeWidth = 1.dp.toPx())
+                            strokeWidth = if (selected) 1.4.dp.toPx() else 1.dp.toPx()
+                        )
                     }
                 }
 
@@ -239,7 +353,7 @@ internal fun HubMapScene(
                     val targetAlpha = when {
                         !node.canEnter -> 0.48f
                         selected -> 1f
-                        selectedId != null -> 0.86f
+                        selectedId != null -> 0.88f
                         else -> 1f
                     }
                     val animatedAlpha by animateFloatAsState(
@@ -288,16 +402,17 @@ internal fun HubMapScene(
 
                     Surface(
                         shape = CircleShape,
-                        color = Color(0xE607141D),
-                        border = BorderStroke(if (selected) 2.dp else 1.dp, tint),
+                        color = Color(0xEB07141D),
+                        border = BorderStroke(if (selected) 2.dp else 1.2.dp, tint),
+                        shadowElevation = if (selected) 8.dp else 2.dp,
                         modifier = Modifier
                             .offset {
                                 IntOffset(
-                                    (anchorX - with(density) { 11.dp.toPx() }).roundToInt(),
-                                    (anchorY - with(density) { 11.dp.toPx() }).roundToInt()
+                                    (anchorX - with(density) { 12.dp.toPx() }).roundToInt(),
+                                    (anchorY - with(density) { 12.dp.toPx() }).roundToInt()
                                 )
                             }
-                            .size(22.dp)
+                            .size(24.dp)
                             .graphicsLayer {
                                 scaleX = pinScale
                                 scaleY = pinScale
@@ -311,16 +426,30 @@ internal fun HubMapScene(
                             }
                     ) {
                         Box(contentAlignment = Alignment.Center) {
-                            if (!node.canEnter || node.completed || objective) Icon(
-                                if (!node.canEnter) Icons.Default.Lock else if (objective) Icons.Default.Star else Icons.Default.CheckCircle, null,
-                                tint = tint, modifier = Modifier.size(13.dp))
-                            else Box(Modifier.size(if (selected) 8.dp else 5.dp).background(tint, CircleShape))
+                            if (!node.canEnter || node.completed || objective) {
+                                Icon(
+                                    imageVector = when {
+                                        !node.canEnter -> Icons.Default.Lock
+                                        objective -> Icons.Default.Star
+                                        else -> Icons.Default.CheckCircle
+                                    },
+                                    contentDescription = null,
+                                    tint = tint,
+                                    modifier = Modifier.size(13.dp)
+                                )
+                            } else {
+                                Box(
+                                    Modifier
+                                        .size(if (selected) 8.dp else 6.dp)
+                                        .background(tint, CircleShape)
+                                )
+                            }
                         }
                     }
                 }
 
-                // --- Layer 3: Independent Grounded Labels (Dynamic Smart-Flipping) ---
-                val labelWidth = minOf(104.dp, mapWidth * .32f)
+                // --- Layer 3: Independent Grounded Labels (Dimensions invariant on selection) ---
+                val labelWidth = minOf(116.dp, mapWidth * .35f)
                 val labelX = (transform.x(nodeX + site.labelDx) - with(density) { labelWidth.toPx() } / 2)
                     .coerceIn(0f, (viewportWidthPx - with(density) { labelWidth.toPx() }).coerceAtLeast(0f))
 
@@ -348,10 +477,17 @@ internal fun HubMapScene(
                     }
                 }.coerceIn(0f, (viewportHeightPx - pillHeightPx).coerceAtLeast(0f))
 
+                val statusIcon = when {
+                    !node.canEnter -> Icons.Default.Lock
+                    objective -> Icons.Default.Star
+                    node.completed -> Icons.Default.CheckCircle
+                    else -> null
+                }
+
                 Box(
                     contentAlignment = Alignment.TopCenter,
                     modifier = Modifier
-                        .zIndex(3f)
+                        .zIndex(if (selected) 4f else 3f)
                         .offset {
                             IntOffset(
                                 labelX.roundToInt(),
@@ -377,24 +513,43 @@ internal fun HubMapScene(
                         }
                 ) {
                     Surface(
-                        shape = RoundedCornerShape(6.dp),
-                        color = Color(0xEF08121B),
-                        border = BorderStroke(1.dp, tint.copy(alpha = if (selected) .85f else .3f)),
+                        shape = RoundedCornerShape(8.dp),
+                        color = if (selected) Color(0xFA0C1924) else Color(0xE607111A),
+                        border = BorderStroke(
+                            width = if (selected) 1.4.dp else 1.dp,
+                            color = tint.copy(alpha = if (selected) 0.92f else if (objective) 0.65f else 0.34f)
+                        ),
+                        shadowElevation = if (selected) 8.dp else 2.dp,
                         modifier = Modifier.onSizeChanged { size ->
                             if (size.height > 0) {
                                 pillHeightPx = size.height
                             }
                         }
                     ) {
-                        Text(
-                            node.title,
-                            color = tint,
-                            fontSize = 10.sp,
-                            lineHeight = 12.sp,
-                            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(horizontal = 5.dp, vertical = 3.dp)
-                        )
+                        Row(
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally)
+                        ) {
+                            if (statusIcon != null) {
+                                Icon(
+                                    imageVector = statusIcon,
+                                    contentDescription = null,
+                                    tint = tint,
+                                    modifier = Modifier.size(11.dp)
+                                )
+                            }
+                            Text(
+                                text = node.title,
+                                color = if (selected) Color.White else tint,
+                                fontSize = 10.5.sp,
+                                lineHeight = 12.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                textAlign = TextAlign.Center,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
                     }
                 }
             }
