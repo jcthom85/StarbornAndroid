@@ -104,12 +104,36 @@ internal fun ModernGearPicker(
                     }
                 }
                 if (onUnequip != null && !equippedId.isNullOrBlank()) {
-                    OutlinedButton(onClick = onUnequip, modifier = Modifier.fillMaxWidth().heightIn(min = if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp)) {
+                    OutlinedButton(
+                        onClick = onUnequip,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp),
+                        shape = RoundedCornerShape(10.dp),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, FieldMenuDesign.subtleBorder),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = FieldMenuDesign.text)
+                    ) {
                         Text("Unequip $slotLabel")
                     }
                 }
-                Button(onClick = { selected?.let { onSelect(it.id) } }, enabled = selected != null && !isEquipped,
-                    modifier = Modifier.fillMaxWidth().heightIn(min = if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp)) {
+                Button(
+                    onClick = { selected?.let { onSelect(it.id) } },
+                    enabled = selected != null && !isEquipped,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp),
+                    shape = RoundedCornerShape(10.dp),
+                    border = androidx.compose.foundation.BorderStroke(
+                        1.5.dp,
+                        if (selected != null && !isEquipped) FieldMenuDesign.gold else FieldMenuDesign.subtleBorder
+                    ),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = FieldMenuDesign.primaryActionFill,
+                        contentColor = FieldMenuDesign.text,
+                        disabledContainerColor = FieldMenuDesign.deepCard,
+                        disabledContentColor = FieldMenuDesign.textMuted
+                    )
+                ) {
                     Text(if (isEquipped) "Already equipped" else "Equip selected item")
                 }
             }

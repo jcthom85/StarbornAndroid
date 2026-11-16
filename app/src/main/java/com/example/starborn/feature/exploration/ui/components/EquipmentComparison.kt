@@ -1,23 +1,36 @@
 package com.example.starborn.feature.exploration.ui.components
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.ui.unit.dp
-import java.util.Locale
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import com.example.starborn.domain.model.Equipment
+import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 import com.example.starborn.feature.exploration.ui.menu.LocalModernFieldMenu
+import java.util.Locale
 
 /** Compares item data, rather than predicting final combat stats or mod effects. */
 @Composable
 internal fun EquipmentComparison(candidate: Equipment?, current: Equipment?, currentName: String?) {
     if (!LocalModernFieldMenu.current || candidate == null) return
     if (current == null) {
-        Text(if (currentName == null) "No item equipped" else "Comparison unavailable for $currentName",
-            color = Color.White.copy(alpha = .65f), style = MaterialTheme.typography.bodySmall)
+        Text(
+            text = if (currentName == null) "No item equipped" else "Comparison unavailable for $currentName",
+            color = FieldMenuDesign.textMuted,
+            style = MaterialTheme.typography.bodySmall
+        )
         return
     }
     fun number(value: Double) = equipmentNumber(value)
@@ -54,18 +67,60 @@ internal fun EquipmentComparison(candidate: Equipment?, current: Equipment?, cur
         candidate.hpBonus?.let { put("HP bonus", it) }
         candidate.statMods?.forEach { (stat, value) -> put(label(stat), value) }
     }
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text("Compared with ${currentName ?: "equipped gear"}",
-            color = Color(0xFFFFC857), style = MaterialTheme.typography.labelMedium)
-        if (changed.isEmpty()) Text("Same listed attributes", color = Color.White.copy(alpha = .7f),
-            style = MaterialTheme.typography.bodySmall)
-        changed.forEach { label ->
-            val oldValue = numericBefore[label]
-            val newValue = numericAfter[label]
-            val difference = if (oldValue != null && newValue != null) newValue - oldValue else null
-            val delta = difference?.let { " (${if (it > 0) "+" else ""}$it)" }.orEmpty()
-            Text("$label: ${before[label] ?: "Not listed"} → ${after[label] ?: "Not listed"}$delta",
-                color = Color.White.copy(alpha = .8f), style = MaterialTheme.typography.bodySmall)
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(10.dp),
+        color = FieldMenuDesign.deepCard,
+        border = BorderStroke(1.dp, FieldMenuDesign.subtleBorder)
+    ) {
+        Column(
+            modifier = Modifier.padding(10.dp),
+            verticalArrangement = Arrangement.spacedBy(5.dp)
+        ) {
+            Text(
+                text = "Compared with ${currentName ?: "equipped gear"}",
+                color = FieldMenuDesign.gold,
+                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
+            )
+            if (changed.isEmpty()) {
+                Text(
+                    text = "Same listed attributes",
+                    color = FieldMenuDesign.textMuted,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            changed.forEach { statName ->
+                val oldValue = numericBefore[statName] ?: 0
+                val newValue = numericAfter[statName] ?: 0
+                val hasNumeric = statName in numericBefore || statName in numericAfter
+                val difference = if (hasNumeric) newValue - oldValue else null
+                val deltaText = difference?.let {
+                    val arrow = if (it > 0) "▲" else if (it < 0) "▼" else ""
+                    " (${if (it > 0) "+" else ""}$it $arrow)".trimEnd()
+                }.orEmpty()
+                val deltaColor = when {
+                    difference != null && difference > 0 -> FieldMenuDesign.mint
+                    difference != null && difference < 0 -> FieldMenuDesign.coral
+                    else -> FieldMenuDesign.cyan
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = statName,
+                        color = FieldMenuDesign.textMuted,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        text = "${before[statName] ?: "None"} → ${after[statName] ?: "None"}$deltaText",
+                        color = deltaColor,
+                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold)
+                    )
+                }
+            }
         }
     }
 }

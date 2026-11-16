@@ -754,27 +754,45 @@ private fun TinkeringRecipeCard(
                 )
             }
             Surface(
-                color = if (highContrastMode) Color(0xFF121A28) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.48f),
+                color = if (highContrastMode) Color(0xFF121A28) else Color(0xFF061018).copy(alpha = 0.85f),
                 shape = RoundedCornerShape(12.dp),
-                tonalElevation = if (highContrastMode) 0.dp else 1.dp,
+                border = BorderStroke(1.dp, Color.White.copy(alpha = 0.14f)),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(3.dp)
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
                         text = "Builds ${recipe.resultDisplayName()}",
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                         color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = recipe.ingredients.joinToString { "${it.label} ${it.available}/${it.required}" },
+                        text = recipe.ingredients.joinToString {
+                            val check = if (it.available >= it.required) "✓" else "✕"
+                            "${it.label} ${it.available}/${it.required} $check"
+                        },
                         style = MaterialTheme.typography.labelSmall,
                         color = bodyColor,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
+                    if (!recipe.canCraft) {
+                        val missing = recipe.ingredients.filter { it.available < it.required }
+                        val reason = when {
+                            !recipe.learned && recipe.requiresSchematic -> "Requires Schematic: Learn blueprint from Inventory first."
+                            missing.isNotEmpty() -> "Missing: " + missing.joinToString(", ") {
+                                "${it.label.removePrefix("Tool: ")} ×${it.required - it.available}"
+                            }
+                            else -> "Check workbench requirements."
+                        }
+                        Text(
+                            text = reason,
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                            color = Color(0xFFFF9E8C)
+                        )
+                    }
                 }
             }
             Row(
@@ -787,7 +805,9 @@ private fun TinkeringRecipeCard(
                         .weight(1f)
                         .heightIn(min = buttonHeight)
                         .semantics { contentDescription = "Auto-Fill ${recipe.name}" },
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(12.dp),
+                    border = BorderStroke(1.dp, Color(0xFF7FE6FF).copy(alpha = 0.55f)),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFF4F7FA))
                 ) {
                     Text("Load")
                 }
@@ -798,9 +818,19 @@ private fun TinkeringRecipeCard(
                         .weight(1f)
                         .heightIn(min = buttonHeight)
                         .semantics { contentDescription = "Craft ${recipe.name}" },
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(12.dp),
+                    border = BorderStroke(
+                        1.5.dp,
+                        if (recipe.canCraft) Color(0xFFFFC857) else Color.White.copy(alpha = 0.18f)
+                    ),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF1B4B5A),
+                        contentColor = Color(0xFFF4F7FA),
+                        disabledContainerColor = Color(0xFF061018),
+                        disabledContentColor = Color.White.copy(alpha = 0.45f)
+                    )
                 ) {
-                    Text("Synthesize")
+                    Text("Synthesize", fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -971,6 +1001,23 @@ private fun TinkeringBenchCard(
                     colors = colors
                 )
             }
+            if (preview != null && !bench.canCraftSelection) {
+                val missing = bench.requirements.filter { it.available < it.required }
+                val blockMessage = when {
+                    preview.requiresSchematic && !preview.learned ->
+                        preview.discoveryHint ?: "Requires Schematic: Learn this blueprint from Inventory first."
+                    missing.isNotEmpty() ->
+                        "Missing: " + missing.joinToString(", ") {
+                            "${it.label.removePrefix("Tool: ")} ×${it.required - it.available}"
+                        }
+                    else -> "Check workbench requirements."
+                }
+                Text(
+                    text = blockMessage,
+                    color = Color(0xFFFF9E8C),
+                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold)
+                )
+            }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -997,10 +1044,19 @@ private fun TinkeringBenchCard(
                         .heightIn(min = buttonHeight)
                         .defaultMinSize(minWidth = 120.dp),
                     shape = RoundedCornerShape(12.dp),
-                    border = if (isCraftHighlighted) BorderStroke(2.dp, Color.White) else null,
+                    border = BorderStroke(
+                        if (isCraftHighlighted) 2.dp else 1.5.dp,
+                        when {
+                            isCraftHighlighted -> Color.White
+                            bench.canCraftSelection -> colors.accent
+                            else -> colors.border.copy(alpha = 0.35f)
+                        }
+                    ),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = colors.accent,
-                        contentColor = Color.Black
+                        containerColor = Color(0xFF1B4B5A),
+                        contentColor = Color(0xFFF4F7FA),
+                        disabledContainerColor = Color(0xFF061018),
+                        disabledContentColor = colors.textSecondary
                     )
                 ) {
                     Text("Synthesize", fontWeight = FontWeight.Bold)
@@ -1310,14 +1366,16 @@ private fun ScrapCard(
                 Text("Scrap", style = MaterialTheme.typography.titleSmall, color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface)
                 val current = choices.firstOrNull { it.id == selectedId }
                 Text(
-                    current?.name ?: "Select a crafted item",
-                    style = MaterialTheme.typography.bodyMedium,
+                    current?.let { "${it.name} (×${it.quantity})" } ?: "Select a crafted item",
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                     color = if (highContrastMode) Color.White else MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    current?.description ?: "Break crafted items back into their parts.",
+                    current?.salvage?.takeIf { it.isNotEmpty() }?.let { "Recover: ${it.joinToString(", ")}" }
+                        ?: current?.description
+                        ?: "Break crafted items back into their parts.",
                     style = MaterialTheme.typography.bodySmall,
-                    color = if (highContrastMode) Color.White.copy(alpha = 0.75f) else MaterialTheme.colorScheme.onSurfaceVariant
+                    color = if (highContrastMode) Color.White.copy(alpha = 0.85f) else Color(0xFF7CE8C8)
                 )
             }
             OutlinedButton(

@@ -115,8 +115,69 @@ fun SkillTreeContent(
 
     if (LocalModernFieldMenu.current && !showClose) {
         Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Text("${overlay.characterName}: Skills", color = FieldMenuDesign.text,
-                style = MaterialTheme.typography.titleSmall)
+            // Top Character & AP Ledger Header Card
+            Surface(
+                color = FieldMenuDesign.panel,
+                shape = RoundedCornerShape(14.dp),
+                border = BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = 0.35f)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            androidx.compose.ui.graphics.Brush.horizontalGradient(
+                                listOf(FieldMenuDesign.primaryActionFill.copy(alpha = 0.35f), Color.Transparent)
+                            )
+                        )
+                        .padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Image(
+                        painter = portraitPainter,
+                        contentDescription = overlay.characterName,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(52.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .border(1.dp, accentColor.copy(alpha = 0.65f), RoundedCornerShape(12.dp))
+                    )
+                    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(
+                            text = "${overlay.characterName}: Skills",
+                            color = FieldMenuDesign.text,
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                        )
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Surface(
+                                shape = RoundedCornerShape(6.dp),
+                                color = if (overlay.availableAp > 0) FieldMenuDesign.gold.copy(alpha = 0.18f) else FieldMenuDesign.elevatedPanel,
+                                border = BorderStroke(
+                                    1.dp,
+                                    if (overlay.availableAp > 0) FieldMenuDesign.gold else FieldMenuDesign.subtleBorder
+                                )
+                            ) {
+                                Text(
+                                    text = "Available: ${overlay.availableAp} AP",
+                                    color = if (overlay.availableAp > 0) FieldMenuDesign.gold else FieldMenuDesign.textMuted,
+                                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                                )
+                            }
+                            Text(
+                                text = "Invested: ${overlay.apInvested} AP",
+                                color = FieldMenuDesign.textMuted,
+                                style = MaterialTheme.typography.labelSmall
+                            )
+                        }
+                    }
+                }
+            }
+
             respecControl()
             overlay.tutorialGuide?.let { guide ->
                 Surface(
@@ -301,25 +362,46 @@ private fun SkillTreeBranchTabs(
             .widthIn(max = 1200.dp)
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         branches.forEachIndexed { index, branch ->
             val selected = index == selectedIndex
+            val unlockedCount = branch.nodes.count { it.status.unlocked }
             Surface(
                 onClick = { onSelect(index) },
-                shape = RoundedCornerShape(18.dp),
+                shape = RoundedCornerShape(12.dp),
                 border = BorderStroke(
-                    1.dp,
-                    if (selected) accentColor else borderColor.copy(alpha = if (LocalModernFieldMenu.current) 0.15f else 0.7f)
+                    if (selected) 1.5.dp else 1.dp,
+                    if (selected) FieldMenuDesign.gold else borderColor.copy(alpha = if (LocalModernFieldMenu.current) 0.25f else 0.7f)
                 ),
-                color = if (selected) accentColor.copy(alpha = 0.15f) else Color.Transparent
+                color = if (selected) FieldMenuDesign.primaryActionFill else FieldMenuDesign.panel
             ) {
-                Text(
-                    text = branch.title,
-                    color = if (selected) Color.White else Color.White.copy(alpha = 0.8f),
-                    style = MaterialTheme.typography.labelLarge,
-                    modifier = Modifier.padding(horizontal = 18.dp, vertical = 10.dp)
-                )
+                Row(
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 9.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Text(
+                        text = branch.title,
+                        color = if (selected) FieldMenuDesign.text else FieldMenuDesign.textMuted,
+                        style = MaterialTheme.typography.labelLarge.copy(
+                            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium
+                        )
+                    )
+                    if (branch.nodes.isNotEmpty()) {
+                        Surface(
+                            shape = RoundedCornerShape(6.dp),
+                            color = if (selected) FieldMenuDesign.gold.copy(alpha = 0.2f) else Color.Black.copy(alpha = 0.25f)
+                        ) {
+                            Text(
+                                text = "$unlockedCount/${branch.nodes.size}",
+                                color = if (selected) FieldMenuDesign.gold else FieldMenuDesign.textMuted,
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -334,26 +416,135 @@ private fun SkillTreeGrid(
     onUnlock: (String) -> Unit
 ) {
     if (LocalModernFieldMenu.current) {
-        Column(Modifier.fillMaxWidth().padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            var previousTier: Int? = null
-            branch.nodes.sortedWith(compareBy({ it.row }, { it.column })).forEach { node ->
-                if (previousTier != node.row) {
-                    Text("Tier ${node.row + 1}", color = FieldMenuDesign.gold, style = MaterialTheme.typography.labelLarge)
-                    previousTier = node.row
+        val groupedByTier = remember(branch.nodes) {
+            branch.nodes.sortedWith(compareBy({ it.row }, { it.column })).groupBy { it.row }
+        }
+        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            groupedByTier.entries.forEachIndexed { tierIdx, (tierRow, tierNodes) ->
+                if (tierIdx > 0) {
+                    // Constellation connector line between tiers
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .width(2.dp)
+                                .height(10.dp)
+                                .background(FieldMenuDesign.cyan.copy(alpha = 0.35f))
+                        )
+                    }
                 }
-                val selected = node.id == selectedNodeId
-                Surface(onClick = { onSelectNode(node) }, modifier = Modifier.semantics { this.selected = selected }, shape = RoundedCornerShape(12.dp),
-                    color = if (selected) FieldMenuDesign.elevatedPanel else FieldMenuDesign.panel,
-                    border = BorderStroke(1.dp, if (selected) FieldMenuDesign.gold else Color.White.copy(alpha = if (LocalFieldMenuHighContrast.current) .65f else .1f))) {
-                    Column(Modifier.fillMaxWidth().heightIn(min = 64.dp).padding(12.dp)) {
-                        Text(node.name, color = FieldMenuDesign.text, style = MaterialTheme.typography.titleSmall)
-                        Text(when {
-                            node.status.unlocked -> "Learned"
-                            node.status.canPurchase -> "Available · ${node.costAp} AP"
-                            else -> "Locked · ${node.costAp} AP"
-                        }, color = if (node.status.canPurchase) FieldMenuDesign.gold else FieldMenuDesign.textMuted,
-                            style = MaterialTheme.typography.bodySmall)
-                        if (selected) SkillTreeNodeDetails(node, accentColor, FieldMenuDesign.border, onUnlock)
+                val tierReqAp = tierNodes.firstOrNull()?.status?.requiredApForTier ?: 0
+                val tierUnlocked = tierNodes.any { it.status.meetsTierRequirement || it.status.unlocked }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Tier ${tierRow + 1}",
+                        color = FieldMenuDesign.gold,
+                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
+                    )
+                    if (tierReqAp > 0 && !tierUnlocked) {
+                        Text(
+                            text = "Requires $tierReqAp AP in tree",
+                            color = FieldMenuDesign.coral,
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                }
+                tierNodes.forEach { node ->
+                    val selected = node.id == selectedNodeId
+                    val categoryLabel = when (node.category) {
+                        com.example.starborn.feature.exploration.viewmodel.SkillNodeCategory.KEYSTONE -> "★ KEYSTONE"
+                        com.example.starborn.feature.exploration.viewmodel.SkillNodeCategory.PERK -> "✦ PERK"
+                        com.example.starborn.feature.exploration.viewmodel.SkillNodeCategory.STAT -> "◈ STAT"
+                    }
+                    val statusLabel = when {
+                        node.status.unlocked -> "✦ Learned"
+                        node.status.canPurchase -> "Available · ${node.costAp} AP"
+                        else -> "Locked · ${node.costAp} AP"
+                    }
+                    val statusColor = when {
+                        node.status.unlocked -> FieldMenuDesign.mint
+                        node.status.canPurchase -> FieldMenuDesign.gold
+                        else -> FieldMenuDesign.textMuted
+                    }
+                    Surface(
+                        onClick = { onSelectNode(node) },
+                        modifier = Modifier.semantics { this.selected = selected },
+                        shape = RoundedCornerShape(12.dp),
+                        color = when {
+                            selected -> FieldMenuDesign.elevatedPanel
+                            node.status.unlocked -> FieldMenuDesign.primaryActionFill.copy(alpha = 0.45f)
+                            else -> FieldMenuDesign.panel
+                        },
+                        border = BorderStroke(
+                            width = if (selected || node.status.canPurchase) 1.5.dp else 1.dp,
+                            color = when {
+                                selected -> FieldMenuDesign.gold
+                                node.status.unlocked -> FieldMenuDesign.mint.copy(alpha = 0.65f)
+                                node.status.canPurchase -> FieldMenuDesign.cyan.copy(alpha = 0.7f)
+                                LocalFieldMenuHighContrast.current -> Color.White.copy(alpha = 0.65f)
+                                else -> FieldMenuDesign.subtleBorder
+                            }
+                        )
+                    ) {
+                        Column(
+                            Modifier
+                                .fillMaxWidth()
+                                .heightIn(min = 64.dp)
+                                .padding(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                                    Text(
+                                        text = categoryLabel,
+                                        color = if (node.category == com.example.starborn.feature.exploration.viewmodel.SkillNodeCategory.KEYSTONE) FieldMenuDesign.gold else FieldMenuDesign.cyan,
+                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                                    )
+                                    Text(
+                                        text = node.name,
+                                        color = FieldMenuDesign.text,
+                                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
+                                    )
+                                }
+                                Surface(
+                                    shape = RoundedCornerShape(8.dp),
+                                    color = statusColor.copy(alpha = 0.14f),
+                                    border = BorderStroke(1.dp, statusColor.copy(alpha = 0.5f))
+                                ) {
+                                    Text(
+                                        text = statusLabel,
+                                        color = statusColor,
+                                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                    )
+                                }
+                            }
+                            if (!selected) {
+                                node.description?.takeIf { it.isNotBlank() }?.let { desc ->
+                                    Text(
+                                        text = desc,
+                                        color = FieldMenuDesign.textMuted,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        maxLines = 1,
+                                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                                    )
+                                }
+                            }
+                            if (selected) {
+                                HorizontalDivider(color = FieldMenuDesign.subtleBorder)
+                                SkillTreeNodeDetails(node, accentColor, FieldMenuDesign.border, onUnlock)
+                            }
+                        }
                     }
                 }
             }
@@ -486,6 +677,7 @@ private fun SkillTreeGridCell(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun SkillTreeNodeDetails(
     node: SkillTreeNodeUi?,
@@ -494,20 +686,113 @@ private fun SkillTreeNodeDetails(
     onUnlock: (String) -> Unit
 ) {
     if (LocalModernFieldMenu.current && node != null) {
-        Column(Modifier.fillMaxWidth().padding(top = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(node.description ?: "Unique ability upgrade.", color = FieldMenuDesign.text,
-                style = MaterialTheme.typography.bodySmall)
+        Column(Modifier.fillMaxWidth().padding(top = 6.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(
+                text = node.description ?: "Unique ability upgrade.",
+                color = FieldMenuDesign.text,
+                style = MaterialTheme.typography.bodySmall
+            )
+            node.activeCombatSkill?.let { active ->
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    if (active.basePower > 0) {
+                        Surface(
+                            shape = RoundedCornerShape(6.dp),
+                            color = FieldMenuDesign.primaryActionFill,
+                            border = BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = 0.45f))
+                        ) {
+                            Text(
+                                text = "Power ${active.basePower}",
+                                color = FieldMenuDesign.cyan,
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
+                            )
+                        }
+                    }
+                    if (active.cooldown > 0) {
+                        Surface(
+                            shape = RoundedCornerShape(6.dp),
+                            color = FieldMenuDesign.deepCard,
+                            border = BorderStroke(1.dp, FieldMenuDesign.gold.copy(alpha = 0.45f))
+                        ) {
+                            Text(
+                                text = "Cooldown ${active.cooldown}T",
+                                color = FieldMenuDesign.gold,
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
+                            )
+                        }
+                    }
+                    active.targeting?.takeIf { it.isNotBlank() }?.let { target ->
+                        Surface(
+                            shape = RoundedCornerShape(6.dp),
+                            color = FieldMenuDesign.deepCard,
+                            border = BorderStroke(1.dp, FieldMenuDesign.subtleBorder)
+                        ) {
+                            Text(
+                                text = "Target: $target",
+                                color = FieldMenuDesign.textMuted,
+                                style = MaterialTheme.typography.labelSmall,
+                                modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
+                            )
+                        }
+                    }
+                    active.statusApplications.forEach { status ->
+                        Surface(
+                            shape = RoundedCornerShape(6.dp),
+                            color = FieldMenuDesign.coral.copy(alpha = 0.14f),
+                            border = BorderStroke(1.dp, FieldMenuDesign.coral.copy(alpha = 0.45f))
+                        ) {
+                            Text(
+                                text = status,
+                                color = FieldMenuDesign.coral,
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
+                            )
+                        }
+                    }
+                }
+            }
             if (!node.status.unlocked) {
-                if (!node.status.meetsTierRequirement) Text(
-                    "Invest ${node.status.requiredApForTier} AP in this tree to unlock this tier.",
-                    color = FieldMenuDesign.gold, style = MaterialTheme.typography.bodySmall)
+                if (!node.status.meetsTierRequirement) {
+                    Text(
+                        text = "Invest ${node.status.requiredApForTier} AP in this tree to unlock this tier.",
+                        color = FieldMenuDesign.gold,
+                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold)
+                    )
+                }
                 val missing = node.requirements.filter { it.id in node.status.unmetRequirements }
-                if (missing.isNotEmpty()) Text("Requires: ${missing.joinToString(", ") { it.label }}",
-                    color = FieldMenuDesign.textMuted, style = MaterialTheme.typography.bodySmall)
-                Button(onClick = { onUnlock(node.id) }, enabled = node.status.canPurchase,
-                    modifier = Modifier.fillMaxWidth().heightIn(min = if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = FieldMenuDesign.gold, contentColor = FieldMenuDesign.shell)) {
-                    Text(if (node.status.canPurchase) "Unlock (${node.costAp} AP)" else "Locked")
+                if (missing.isNotEmpty()) {
+                    Text(
+                        text = "Requires: ${missing.joinToString(", ") { it.label }}",
+                        color = FieldMenuDesign.coral,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+                Button(
+                    onClick = { onUnlock(node.id) },
+                    enabled = node.status.canPurchase,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp),
+                    shape = RoundedCornerShape(10.dp),
+                    border = BorderStroke(
+                        1.5.dp,
+                        if (node.status.canPurchase) FieldMenuDesign.gold else FieldMenuDesign.subtleBorder
+                    ),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = FieldMenuDesign.primaryActionFill,
+                        contentColor = FieldMenuDesign.text,
+                        disabledContainerColor = FieldMenuDesign.deepCard,
+                        disabledContentColor = FieldMenuDesign.textMuted
+                    )
+                ) {
+                    Text(
+                        text = if (node.status.canPurchase) "Unlock (${node.costAp} AP)" else "Locked",
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }

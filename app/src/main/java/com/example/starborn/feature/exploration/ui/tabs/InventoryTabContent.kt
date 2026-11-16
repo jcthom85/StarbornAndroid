@@ -174,22 +174,39 @@ fun InventoryTabContent(
                                 SuppliesFilter.CONSUMABLES -> "Consumables"
                             }
                             Surface(
-                                modifier = Modifier.weight(1f).clip(RoundedCornerShape(12.dp))
-                                    .selectable(selected = selected, role = Role.Tab,
-                                        onClick = { suppliesFilter = filter }),
-                                shape = RoundedCornerShape(12.dp),
-                                color = if (selected) FieldMenuDesign.gold.copy(alpha = 0.12f) else FieldMenuDesign.panel,
-                                border = BorderStroke(1.dp, if (selected) FieldMenuDesign.gold.copy(alpha = 0.6f)
-                                    else Color.White.copy(alpha = 0.08f))
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .selectable(
+                                        selected = selected,
+                                        role = Role.Tab,
+                                        onClick = { suppliesFilter = filter }
+                                    ),
+                                shape = RoundedCornerShape(10.dp),
+                                color = if (selected) FieldMenuDesign.primaryActionFill else FieldMenuDesign.panel,
+                                border = BorderStroke(
+                                    1.dp,
+                                    if (selected) FieldMenuDesign.gold.copy(alpha = 0.7f) else FieldMenuDesign.subtleBorder
+                                )
                             ) {
-                                Column(
-                                    modifier = Modifier.heightIn(min = 64.dp).padding(horizontal = 4.dp, vertical = 10.dp),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                                Row(
+                                    modifier = Modifier
+                                        .heightIn(min = 44.dp)
+                                        .padding(horizontal = 6.dp, vertical = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
                                 ) {
-                                    Icon(icon, contentDescription = null, tint = tint, modifier = Modifier.size(24.dp))
-                                    Text(label, color = tint, style = MaterialTheme.typography.labelSmall,
-                                        textAlign = TextAlign.Center)
+                                    Icon(icon, contentDescription = null, tint = tint, modifier = Modifier.size(16.dp))
+                                    Spacer(Modifier.width(4.dp))
+                                    Text(
+                                        text = label,
+                                        color = if (selected) FieldMenuDesign.text else tint,
+                                        style = MaterialTheme.typography.labelSmall.copy(
+                                            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium
+                                        ),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
                                 }
                             }
                         }
@@ -565,19 +582,27 @@ fun InventoryItemDetailsContent(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
+                    val canUseNow = onUse != null && !item.combatOnly
                     Button(
                         onClick = { onUse?.invoke() },
-                        enabled = onUse != null && !item.combatOnly,
+                        enabled = canUseNow,
                         modifier = Modifier.fillMaxWidth().heightIn(min = if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp),
                         shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(
+                            1.5.dp,
+                            if (canUseNow) FieldMenuDesign.gold else FieldMenuDesign.subtleBorder
+                        ),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = accentColor,
-                            contentColor = Color(0xFF010308),
+                            containerColor = FieldMenuDesign.primaryActionFill,
+                            contentColor = FieldMenuDesign.text,
                             disabledContainerColor = Color.White.copy(alpha = 0.09f),
                             disabledContentColor = Color.White.copy(alpha = 0.38f)
                         )
                     ) {
-                        Text(if (item.combatOnly) "Combat only" else "Use Item")
+                        Text(
+                            text = if (item.combatOnly) "Combat only" else "Use Item",
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }
@@ -823,64 +848,77 @@ internal fun InventoryEquipmentPreview(
                         )
                     }
                 }
+                val useTwoColumns = LocalModernFieldMenu.current && LocalDensity.current.fontScale < 1.3f
+                val slotColumns = if (useTwoColumns) 2 else 1
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    slots.forEach { slot ->
-                        val normalized = slot.lowercase(Locale.getDefault())
-                        val normalizedMemberId = member.id.lowercase(Locale.getDefault())
-                        val scopedKey = "$normalizedMemberId:$normalized"
-                        val equippedId = when (normalized) {
-                            "weapon" -> equippedWeapons[normalizedMemberId].orEmpty()
-                            "armor" -> equippedArmors[normalizedMemberId].orEmpty()
-                            else -> equippedItems[scopedKey].orEmpty()
-                        }
-                        val equippedName = when (normalized) {
-                            "weapon" -> weaponNames[equippedId.lowercase(Locale.getDefault())]
-                                ?: equippedId.ifBlank { "No weapon equipped" }
-                            "armor" -> armorNames[equippedId.lowercase(Locale.getDefault())]
-                                ?: equippedId.ifBlank { "No armor equipped" }
-                            else -> itemNames[equippedId.lowercase(Locale.getDefault())]
-                                ?: equippedId.ifBlank { "Unequipped" }
-                        }
-                        val iconRes = when (normalized) {
-                            "weapon" -> {
-                                val weaponItem = weaponItemById[equippedId.lowercase(Locale.getDefault())]
-                                weaponItem?.let { weaponIconRes(it) }
-                                    ?: weaponTypeIconRes(GearRules.allowedWeaponTypeFor(normalizedMemberId))
+                    slots.chunked(slotColumns).forEach { rowSlots ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            verticalAlignment = Alignment.Top
+                        ) {
+                            rowSlots.forEach { slot ->
+                                val normalized = slot.lowercase(Locale.getDefault())
+                                val normalizedMemberId = member.id.lowercase(Locale.getDefault())
+                                val scopedKey = "$normalizedMemberId:$normalized"
+                                val equippedId = when (normalized) {
+                                    "weapon" -> equippedWeapons[normalizedMemberId].orEmpty()
+                                    "armor" -> equippedArmors[normalizedMemberId].orEmpty()
+                                    else -> equippedItems[scopedKey].orEmpty()
+                                }
+                                val equippedName = when (normalized) {
+                                    "weapon" -> weaponNames[equippedId.lowercase(Locale.getDefault())]
+                                        ?: equippedId.ifBlank { "No weapon equipped" }
+                                    "armor" -> armorNames[equippedId.lowercase(Locale.getDefault())]
+                                        ?: equippedId.ifBlank { "No armor equipped" }
+                                    else -> itemNames[equippedId.lowercase(Locale.getDefault())]
+                                        ?: equippedId.ifBlank { "Unequipped" }
+                                }
+                                val iconRes = when (normalized) {
+                                    "weapon" -> {
+                                        val weaponItem = weaponItemById[equippedId.lowercase(Locale.getDefault())]
+                                        weaponItem?.let { weaponIconRes(it) }
+                                            ?: weaponTypeIconRes(GearRules.allowedWeaponTypeFor(normalizedMemberId))
+                                    }
+                                    "armor" -> {
+                                        val armorItem = armorItemById[equippedId.lowercase(Locale.getDefault())]
+                                        armorItem?.let { armorIconRes(it) } ?: slotIconRes(normalized)
+                                    }
+                                    else -> slotIconRes(normalized)
+                                }
+                                val modSlots = modSlotsForBaseSlot(normalized)
+                                val modNames = modSlots.associateWith { modSlot ->
+                                    val modKey = "$normalizedMemberId:$modSlot"
+                                    val modId = equippedItems[modKey].orEmpty()
+                                    val isUnlocked = GearRules.isModSlotUnlocked(modSlot, completedMilestones)
+                                    if (isUnlocked) {
+                                        itemNames[modId.lowercase(Locale.getDefault())] ?: modId.ifBlank { "Empty" }
+                                    } else {
+                                        "Locked"
+                                    }
+                                }
+                                GearSlotTile(
+                                    isTutorialTarget = isGearTutorialActive && normalizedMemberId == "nova" &&
+                                        normalized == (if (equippedWeapons["nova"].isNullOrBlank()) "weapon" else "armor"),
+                                    slot = normalized,
+                                    equippedName = equippedName,
+                                    modsLocked = modSlots.isNotEmpty() && equippedId.isBlank(),
+                                    modNames = modNames,
+                                    completedMilestones = completedMilestones,
+                                    iconRes = iconRes,
+                                    accentColor = accentColor,
+                                    borderColor = borderColor,
+                                    onSelectSlot = { gearPicker = member.id to normalized },
+                                    onSelectMod = { modSlot ->
+                                        modPicker = member.id to modSlot
+                                    },
+                                    modifier = Modifier.weight(1f)
+                                )
                             }
-                            "armor" -> {
-                                val armorItem = armorItemById[equippedId.lowercase(Locale.getDefault())]
-                                armorItem?.let { armorIconRes(it) } ?: slotIconRes(normalized)
-                            }
-                            else -> slotIconRes(normalized)
-                        }
-                        val modSlots = modSlotsForBaseSlot(normalized)
-                        val modNames = modSlots.associateWith { modSlot ->
-                            val modKey = "$normalizedMemberId:$modSlot"
-                            val modId = equippedItems[modKey].orEmpty()
-                            val isUnlocked = GearRules.isModSlotUnlocked(modSlot, completedMilestones)
-                            if (isUnlocked) {
-                                itemNames[modId.lowercase(Locale.getDefault())] ?: modId.ifBlank { "Empty" }
-                            } else {
-                                "Locked"
+                            if (rowSlots.size < slotColumns) {
+                                Spacer(modifier = Modifier.weight(1f))
                             }
                         }
-                        GearSlotTile(
-                            isTutorialTarget = isGearTutorialActive && normalizedMemberId == "nova" &&
-                                normalized == (if (equippedWeapons["nova"].isNullOrBlank()) "weapon" else "armor"),
-                            slot = normalized,
-                            equippedName = equippedName,
-                            modsLocked = modSlots.isNotEmpty() && equippedId.isBlank(),
-                            modNames = modNames,
-                            completedMilestones = completedMilestones,
-                            iconRes = iconRes,
-                            accentColor = accentColor,
-                            borderColor = borderColor,
-                            onSelectSlot = { gearPicker = member.id to normalized },
-                            onSelectMod = { modSlot ->
-                                modPicker = member.id to modSlot
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        )
                     }
                 }
             }

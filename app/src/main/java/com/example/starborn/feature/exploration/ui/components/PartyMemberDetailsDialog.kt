@@ -18,12 +18,18 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -37,6 +43,32 @@ import com.example.starborn.R
 import com.example.starborn.feature.exploration.viewmodel.CharacterStatValueUi
 import com.example.starborn.feature.exploration.viewmodel.PartyMemberDetailsUi
 import com.example.starborn.ui.background.rememberAssetPainter
+
+private fun statRoleSubtitle(label: String): String = when (label.trim().lowercase()) {
+    "strength", "str" -> "Physical & melee damage scaling"
+    "vitality", "vit" -> "Max HP ceiling & physical resilience"
+    "agility", "agi" -> "Turn speed, ATB fill & evasion"
+    "focus", "foc" -> "Tech/Source power & status potency"
+    "luck", "lck" -> "Critical hit chance & bonus yields"
+    "attack", "atk" -> "Base weapon & strike damage"
+    "defense", "def" -> "Mitigates incoming physical & energy hits"
+    "speed", "spd" -> "Determines combat turn frequency"
+    "accuracy", "acc" -> "Hit reliability (caps at 100%, offsets blind)"
+    "crit", "crit chance", "crit rate" -> "Chance to deal 1.5× critical damage"
+    "evasion", "eva" -> "Chance to dodge incoming enemy attacks"
+    "stability" -> "Resists stagger & Stability Break in combat"
+    "status resistance", "status resist", "resist" -> "Reduces hostile debuff application chance"
+    else -> "Core character combat parameter"
+}
+
+private fun statDetailedBreakdown(label: String, value: String): String = when (label.trim().lowercase()) {
+    "strength", "str" -> "Strength ($value) directly increases basic weapon strikes and physical skill damage."
+    "vitality", "vit" -> "Vitality ($value) raises Maximum HP and reduces damage taken from heavy physical blows."
+    "agility", "agi" -> "Agility ($value) accelerates ATB gauge recovery and improves evasion against single-target attacks."
+    "focus", "foc" -> "Focus ($value) amplifies Source/Tech abilities, healing output, and elemental status application."
+    "luck", "lck" -> "Luck ($value) boosts critical strike probability, clean fishing hook windows, and salvage luck."
+    else -> "$label ($value): ${statRoleSubtitle(label)}. Modified by equipped weapons, armor, mods, learned skills, and active Well-Fed meals."
+}
 
 @Composable
 fun PartyMemberDetailsDialog(
@@ -71,16 +103,197 @@ fun PartyMemberDetailsContent(
     modifier: Modifier = Modifier
 ) {
     if (LocalModernFieldMenu.current && !showClose) {
-        Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(18.dp)) {
-            Text("${details.name} - Level ${details.level}", color = FieldMenuDesign.text,
-                style = MaterialTheme.typography.titleSmall)
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text(details.hpLabel ?: "HP unavailable", color = FieldMenuDesign.textMuted,
-                    style = MaterialTheme.typography.bodySmall)
-                Text(details.xpLabel, color = FieldMenuDesign.textMuted, style = MaterialTheme.typography.bodySmall)
+        var inspectedStat by rememberSaveable(details.id) {
+            mutableStateOf(details.primaryStats.firstOrNull()?.label)
+        }
+        val allStats = remember(details.primaryStats, details.combatStats) {
+            details.primaryStats + details.combatStats
+        }
+        val activeStat = allStats.firstOrNull { it.label == inspectedStat } ?: details.primaryStats.firstOrNull()
+
+        Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            // Vitals & Progression Hero Card
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(14.dp),
+                color = FieldMenuDesign.panel,
+                border = BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = 0.35f))
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            Brush.horizontalGradient(
+                                listOf(FieldMenuDesign.primaryActionFill.copy(alpha = 0.35f), Color.Transparent)
+                            )
+                        )
+                        .padding(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = rememberAssetPainter(details.portraitPath, painterResource(R.drawable.inventory_icon)),
+                        contentDescription = details.name,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(60.dp)
+                            .clip(RoundedCornerShape(14.dp))
+                            .border(1.5.dp, accentColor.copy(alpha = 0.7f), RoundedCornerShape(14.dp))
+                    )
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(5.dp)
+                    ) {
+                        Text(
+                            text = "${details.name} - Level ${details.level}",
+                            color = FieldMenuDesign.text,
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                        )
+                        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                            Text(
+                                text = details.hpLabel ?: "HP unavailable",
+                                color = FieldMenuDesign.mint,
+                                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold)
+                            )
+                            details.hpProgress?.let { hp ->
+                                LinearProgressIndicator(
+                                    progress = { hp.coerceIn(0f, 1f) },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(5.dp)
+                                        .clip(RoundedCornerShape(3.dp)),
+                                    color = if (hp < 0.3f) FieldMenuDesign.coral else FieldMenuDesign.mint,
+                                    trackColor = FieldMenuDesign.shell
+                                )
+                            }
+                        }
+                        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                            Text(
+                                text = details.xpLabel,
+                                color = FieldMenuDesign.textMuted,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                            LinearProgressIndicator(
+                                progress = { details.xpProgress.coerceIn(0f, 1f) },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(4.dp)
+                                    .clip(RoundedCornerShape(2.dp)),
+                                color = FieldMenuDesign.cyan,
+                                trackColor = FieldMenuDesign.shell
+                            )
+                        }
+                    }
+                }
             }
-            ModernStatSection("Base attributes", details.primaryStats, accentColor)
-            ModernStatSection("Base combat stats", details.combatStats, FieldMenuDesign.gold)
+
+            ModernStatSection(
+                title = "Base attributes",
+                subtitle = "Tap any stat to inspect its combat role",
+                stats = details.primaryStats,
+                accent = accentColor,
+                selectedLabel = activeStat?.label,
+                onSelectStat = { inspectedStat = it }
+            )
+
+            ModernStatSection(
+                title = "Base combat stats",
+                subtitle = "Derived offense, defense & resistance telemetry",
+                stats = details.combatStats,
+                accent = FieldMenuDesign.gold,
+                selectedLabel = activeStat?.label,
+                onSelectStat = { inspectedStat = it }
+            )
+
+            if (details.unlockedSkills.isNotEmpty()) {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    color = FieldMenuDesign.panel,
+                    border = BorderStroke(1.dp, FieldMenuDesign.subtleBorder)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "Unlocked Techniques & Skills",
+                            color = FieldMenuDesign.cyan,
+                            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
+                        )
+                        FlowRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            details.unlockedSkills.forEach { skill ->
+                                Surface(
+                                    shape = RoundedCornerShape(8.dp),
+                                    color = FieldMenuDesign.primaryActionFill,
+                                    border = BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = 0.45f))
+                                ) {
+                                    Row(
+                                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Star,
+                                            contentDescription = null,
+                                            tint = FieldMenuDesign.gold,
+                                            modifier = Modifier.size(12.dp)
+                                        )
+                                        Text(
+                                            text = skill,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                                            color = FieldMenuDesign.text
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Selected Stat Inspector Footer
+            activeStat?.let { stat ->
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    color = FieldMenuDesign.elevatedPanel,
+                    border = BorderStroke(1.5.dp, FieldMenuDesign.gold.copy(alpha = 0.7f))
+                ) {
+                    Column(
+                        modifier = Modifier.padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "◈ ${stat.label.uppercase()}",
+                                color = FieldMenuDesign.gold,
+                                style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
+                            )
+                            Text(
+                                text = stat.value,
+                                color = FieldMenuDesign.text,
+                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                            )
+                        }
+                        Text(
+                            text = statDetailedBreakdown(stat.label, stat.value),
+                            color = FieldMenuDesign.textMuted,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                }
+            }
         }
         return
     }
@@ -373,19 +586,96 @@ private fun StatSectionCard(
 }
 
 @Composable
-private fun ModernStatSection(title: String, stats: List<CharacterStatValueUi>, accent: Color) {
+private fun ModernStatSection(
+    title: String,
+    subtitle: String,
+    stats: List<CharacterStatValueUi>,
+    accent: Color,
+    selectedLabel: String?,
+    onSelectStat: (String) -> Unit
+) {
     if (stats.isEmpty()) return
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(title, color = accent, style = MaterialTheme.typography.titleSmall)
-        stats.forEach { stat ->
-            Row(Modifier.fillMaxWidth().padding(vertical = 6.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                Text(stat.label, Modifier.weight(1f), color = FieldMenuDesign.textMuted,
-                    style = MaterialTheme.typography.bodyMedium)
-                Text(stat.value, color = FieldMenuDesign.text, style = MaterialTheme.typography.bodyMedium)
+    val largeFont = LocalDensity.current.fontScale >= 1.3f
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        color = FieldMenuDesign.panel,
+        border = BorderStroke(1.dp, accent.copy(alpha = 0.28f))
+    ) {
+        Column(
+            modifier = Modifier.padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Text(
+                    text = title,
+                    color = accent,
+                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
+                )
+                Text(
+                    text = subtitle,
+                    color = FieldMenuDesign.textMuted,
+                    style = MaterialTheme.typography.labelSmall
+                )
             }
-            HorizontalDivider(color = FieldMenuDesign.border.copy(alpha = .25f))
+            val columns = if (largeFont) 1 else 2
+            stats.chunked(columns).forEach { rowStats ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    rowStats.forEach { stat ->
+                        val selected = stat.label == selectedLabel
+                        Surface(
+                            onClick = { onSelectStat(stat.label) },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(10.dp),
+                            color = if (selected) FieldMenuDesign.elevatedPanel else FieldMenuDesign.deepCard,
+                            border = BorderStroke(
+                                width = if (selected) 1.5.dp else 1.dp,
+                                color = if (selected) FieldMenuDesign.gold else FieldMenuDesign.subtleBorder
+                            )
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 10.dp, vertical = 8.dp),
+                                verticalArrangement = Arrangement.spacedBy(2.dp)
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = stat.label,
+                                        modifier = Modifier.weight(1f),
+                                        color = if (selected) FieldMenuDesign.gold else FieldMenuDesign.text,
+                                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    Text(
+                                        text = stat.value,
+                                        color = FieldMenuDesign.text,
+                                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
+                                    )
+                                }
+                                Text(
+                                    text = statRoleSubtitle(stat.label),
+                                    color = FieldMenuDesign.textMuted,
+                                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        }
+                    }
+                    if (rowStats.size < columns) {
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
+                }
+            }
         }
     }
 }
