@@ -99,12 +99,12 @@ fun SaveLoadDialog(
     ) {
         Surface(
             modifier = Modifier
-.padding(if (modern) 16.dp else 24.dp)
-                .fillMaxWidth(if (modern) 1f else .92f)
-                .fillMaxHeight(0.82f),
+                .padding(horizontal = 10.dp, vertical = 14.dp)
+                .fillMaxWidth()
+                .fillMaxHeight(0.88f),
             color = solidPanel,
-            shape = RoundedCornerShape(28.dp),
-            border = BorderStroke(1.dp, if (highContrast) Color.White else borderColor.copy(alpha = if (modern) .25f else .9f))
+            shape = RoundedCornerShape(22.dp),
+            border = BorderStroke(1.5.dp, if (highContrast) Color.White else accentColor.copy(alpha = 0.55f))
         ) {
             Column(
                 modifier = Modifier
@@ -112,14 +112,14 @@ fun SaveLoadDialog(
                     .background(
                         Brush.verticalGradient(
                             colors = listOf(
-                                accentColor.copy(alpha = 0.2f).compositeOver(solidPanel),
+                                accentColor.copy(alpha = 0.16f).compositeOver(solidPanel),
                                 panelColor.copy(alpha = 0.18f).compositeOver(solidPanel),
                                 Color(0xFF05080D)
                             )
                         )
                     )
-                    .padding(18.dp),
-                verticalArrangement = Arrangement.spacedBy(14.dp)
+                    .padding(horizontal = 14.dp, vertical = 14.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -295,114 +295,176 @@ private fun SaveSlotRow(
         else -> "Slot ${summary.slot}"
     }
     val occupied = summary.state != null && !summary.isEmpty
+    val badgeColor = when {
+        summary.isQuickSave -> Color(0xFFFFC857)
+        summary.isAutosave -> Color(0xFF7CE8C8)
+        occupied -> accent
+        else -> textColor.copy(alpha = 0.45f)
+    }
 
     Surface(
-        tonalElevation = 6.dp,
+        tonalElevation = 4.dp,
         color = if (highContrast) Color.Black else solidSaveSlotCardColor(),
-        shape = RoundedCornerShape(20.dp),
-        border = BorderStroke(1.dp, if (occupied) accent.copy(alpha = 0.36f) else borderColor.copy(alpha = 0.52f)),
+        shape = RoundedCornerShape(16.dp),
+        border = BorderStroke(
+            width = if (occupied) 1.2.dp else 1.dp,
+            color = if (occupied) badgeColor.copy(alpha = 0.48f) else borderColor.copy(alpha = 0.28f)
+        ),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
                     Brush.horizontalGradient(
                         colors = listOf(
-                            if (occupied) accent.copy(alpha = 0.13f).compositeOver(Color(0xFF0A141E)) else Color(0xFF0A141E),
+                            if (occupied) badgeColor.copy(alpha = 0.12f).compositeOver(Color(0xFF0A141E)) else Color(0xFF0A141E),
                             Color(0xFF0A141E),
                             Color(0xFF070B10)
                         )
                     )
                 )
-                .padding(horizontal = 14.dp, vertical = 13.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+                .padding(horizontal = 12.dp, vertical = 11.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            // Left Column: Slot Badge + Title + Subtitle + Party Portraits
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(9.dp)
-                        .clip(CircleShape)
-                        .background(if (occupied) accent else textColor.copy(alpha = 0.24f))
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Surface(
+                        shape = RoundedCornerShape(6.dp),
+                        color = badgeColor.copy(alpha = if (occupied) 0.16f else 0.08f),
+                        border = BorderStroke(1.dp, badgeColor.copy(alpha = if (occupied) 0.6f else 0.28f))
+                    ) {
+                        Text(
+                            text = slotLabel.uppercase(Locale.getDefault()),
+                            color = if (occupied) badgeColor else textColor.copy(alpha = 0.65f),
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                            modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp)
+                        )
+                    }
+                    Text(
+                        text = summary.title,
+                        color = if (occupied) Color.White else textColor.copy(alpha = 0.55f),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            fontWeight = if (occupied) FontWeight.Bold else FontWeight.Medium
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+
                 Text(
-                    text = slotLabel,
-                    color = if (occupied) Color.White else textColor.copy(alpha = 0.72f),
-                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
+                    text = summary.subtitle,
+                    color = textColor.copy(alpha = if (occupied) 0.76f else 0.45f),
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
+
+                if (occupied && summary.partyPortraits.isNotEmpty()) {
+                    SaveSlotPartyStrip(portraits = summary.partyPortraits)
+                }
             }
-            Text(
-                text = summary.title,
-                color = if (occupied) textColor else textColor.copy(alpha = 0.58f),
-                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = if (occupied) FontWeight.SemiBold else FontWeight.Normal),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                text = summary.subtitle,
-                color = textColor.copy(alpha = if (occupied) 0.7f else 0.48f),
-                style = MaterialTheme.typography.bodySmall,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
-            if (occupied && summary.partyPortraits.isNotEmpty()) {
-                SaveSlotPartyStrip(
-                    portraits = summary.partyPortraits
-                )
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+
+            // Right Column: Primary Save/Load Action + Compact Delete Button
+            Column(
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
+                val btnHeight = if (largeTargets) 50.dp else 42.dp
                 if (isSave && !summary.isAutosave) {
                     val isOverwrite = !summary.isEmpty
                     Button(
                         onClick = { onRequestSave(summary.slot, isOverwrite) },
                         enabled = !busy,
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(
+                            1.5.dp,
+                            if (isOverwrite) Color(0xFFFFC857) else accent
+                        ),
                         modifier = Modifier
-                            .widthIn(min = 112.dp).heightIn(min = if (largeTargets) 56.dp else 48.dp)
+                            .widthIn(min = 98.dp)
+                            .heightIn(min = btnHeight)
                             .maestroTag("save-slot-${summary.slot}")
                             .semantics { contentDescription = "Save $slotLabel" },
-                        colors = ButtonDefaults.buttonColors(containerColor = accent, contentColor = Color.Black)
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF1B4B5A),
+                            contentColor = Color(0xFFF4F7FA),
+                            disabledContainerColor = Color(0xFF061018),
+                            disabledContentColor = textColor.copy(alpha = 0.4f)
+                        )
                     ) {
-                        Text(if (summary.isEmpty) actionLabel else "Overwrite")
+                        Text(
+                            text = if (summary.isEmpty) actionLabel else "Overwrite",
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
                 if (!isSave) {
+                    val canLoad = !summary.isEmpty && !busy
                     Button(
                         onClick = { onLoad(summary.slot) },
-                        enabled = !summary.isEmpty && !busy,
+                        enabled = canLoad,
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(
+                            1.5.dp,
+                            if (canLoad) Color(0xFFFFC857) else Color.White.copy(alpha = 0.14f)
+                        ),
                         modifier = Modifier
-                            .widthIn(min = 112.dp).heightIn(min = if (largeTargets) 56.dp else 48.dp)
+                            .widthIn(min = 98.dp)
+                            .heightIn(min = btnHeight)
                             .maestroTag("load-slot-${summary.slot}")
                             .semantics { contentDescription = "Load $slotLabel" },
-                        colors = ButtonDefaults.buttonColors(containerColor = accent, contentColor = Color.Black)
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF1B4B5A),
+                            contentColor = Color(0xFFF4F7FA),
+                            disabledContainerColor = Color(0xFF061018),
+                            disabledContentColor = textColor.copy(alpha = 0.35f)
+                        )
                     ) {
-                        Text(actionLabel)
+                        Text(actionLabel, fontWeight = FontWeight.Bold)
                     }
                 }
+
                 val deleteEnabled = !summary.isEmpty || summary.isQuickSave || summary.isAutosave
-                TextButton(
-                    onClick = {
-                        val actionText = if (summary.isAutosave) "Clear Autosave" else "Delete $slotLabel"
-                        onRequestDelete(summary.slot, actionText)
-                    },
-                    enabled = deleteEnabled && !busy
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Delete,
-                        contentDescription = null,
-                        tint = if (deleteEnabled) accent.copy(alpha = 0.82f) else textColor.copy(alpha = 0.24f),
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Text(
-                        text = if (summary.isAutosave) "Clear" else "Delete",
-                        color = if (deleteEnabled) accent.copy(alpha = 0.82f) else textColor.copy(alpha = 0.24f)
-                    )
+                if (deleteEnabled) {
+                    Surface(
+                        onClick = {
+                            if (!busy) {
+                                val actionText = if (summary.isAutosave) "Clear Autosave" else "Delete $slotLabel"
+                                onRequestDelete(summary.slot, actionText)
+                            }
+                        },
+                        shape = RoundedCornerShape(8.dp),
+                        color = Color(0xFF1A1216),
+                        border = BorderStroke(1.dp, Color(0xFFFF9E8C).copy(alpha = 0.45f))
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.Delete,
+                                contentDescription = null,
+                                tint = Color(0xFFFF9E8C),
+                                modifier = Modifier.size(13.dp)
+                            )
+                            Text(
+                                text = if (summary.isAutosave) "Clear" else "Delete",
+                                color = Color(0xFFFF9E8C),
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -416,18 +478,17 @@ private fun SaveSlotPartyStrip(
     portraits: List<String>
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 2.dp),
-        horizontalArrangement = Arrangement.spacedBy(7.dp),
+        modifier = Modifier.padding(top = 2.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         portraits.take(MAX_SAVE_SLOT_PORTRAITS).forEach { portrait ->
             val painter = rememberAssetPainter(portrait, painterResource(R.drawable.main_menu_background))
             Box(
                 modifier = Modifier
-                    .size(38.dp)
-                    .clip(RoundedCornerShape(11.dp))
+                    .size(30.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .border(1.dp, Color.White.copy(alpha = 0.22f), RoundedCornerShape(8.dp))
             ) {
                 Image(
                     painter = painter,

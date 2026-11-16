@@ -743,43 +743,82 @@ private fun TitleSettingsDialog(
     onToggleHapticsDisabled: (Boolean) -> Unit = {},
     onDismiss: () -> Unit
 ) {
-    AlertDialog(
+    androidx.compose.ui.window.Dialog(
         onDismissRequest = onDismiss,
-        title = { Text("Settings", fontWeight = FontWeight.Black) },
-        text = {
-            Box(
+        properties = androidx.compose.ui.window.DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        androidx.compose.material3.Surface(
+            modifier = Modifier
+                .fillMaxWidth(0.95f)
+                .heightIn(max = 680.dp),
+            shape = RoundedCornerShape(20.dp),
+            color = Color(0xFF061018),
+            border = BorderStroke(1.5.dp, accentColor.copy(alpha = 0.55f))
+        ) {
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 520.dp)
-                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                SettingsTabContent(
-                    settings = settings,
-                    accentColor = accentColor,
-                    borderColor = borderColor,
-                    showSaveData = false,
-                    onMusicVolumeChange = onMusicVolumeChange,
-                    onSfxVolumeChange = onSfxVolumeChange,
-                    onVoiceVolumeChange = onVoiceVolumeChange,
-                    onToggleTutorials = onToggleTutorials,
-                    onToggleVignette = onToggleVignette,
-                    onToggleHighContrast = onToggleHighContrast,
-                    onToggleLargeTouchTargets = onToggleLargeTouchTargets,
-                    onToggleScreenshakeDisabled = onToggleScreenshakeDisabled,
-                    onToggleFlashesDisabled = onToggleFlashesDisabled,
-                    onToggleHapticsDisabled = onToggleHapticsDisabled,
-                    onQuickSave = {},
-                    onSaveGame = {},
-                    onLoadGame = {}
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            text = "SYSTEM CONFIGURATION",
+                            color = accentColor,
+                            style = androidx.compose.material3.MaterialTheme.typography.labelSmall.copy(
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 0.9.sp
+                            )
+                        )
+                        Text(
+                            text = "Settings",
+                            color = TitleText,
+                            style = androidx.compose.material3.MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                        )
+                    }
+                    OutlinedButton(
+                        onClick = onDismiss,
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.55f))
+                    ) {
+                        Text("Close", color = TitleText, fontWeight = FontWeight.Bold)
+                    }
+                }
+                HorizontalDivider(color = Color.White.copy(alpha = 0.14f))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f, fill = false)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    SettingsTabContent(
+                        settings = settings,
+                        accentColor = accentColor,
+                        borderColor = borderColor,
+                        showSaveData = false,
+                        onMusicVolumeChange = onMusicVolumeChange,
+                        onSfxVolumeChange = onSfxVolumeChange,
+                        onVoiceVolumeChange = onVoiceVolumeChange,
+                        onToggleTutorials = onToggleTutorials,
+                        onToggleVignette = onToggleVignette,
+                        onToggleHighContrast = onToggleHighContrast,
+                        onToggleLargeTouchTargets = onToggleLargeTouchTargets,
+                        onToggleScreenshakeDisabled = onToggleScreenshakeDisabled,
+                        onToggleFlashesDisabled = onToggleFlashesDisabled,
+                        onToggleHapticsDisabled = onToggleHapticsDisabled,
+                        onQuickSave = {},
+                        onSaveGame = {},
+                        onLoadGame = {}
+                    )
+                }
             }
-        },
-        confirmButton = {},
-        dismissButton = { OutlinedButton(onClick = onDismiss) { Text("Close") } },
-        containerColor = TitlePanel,
-        titleContentColor = TitleText,
-        textContentColor = TitleMutedText
-    )
+        }
+    }
 }
 
 @Composable
