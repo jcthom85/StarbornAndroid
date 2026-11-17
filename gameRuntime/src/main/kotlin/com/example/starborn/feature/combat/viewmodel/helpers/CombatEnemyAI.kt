@@ -115,6 +115,7 @@ class CombatEnemyAI(
         val opponents = resolveOpponentIds(state, attackerState)
         return when (targeting) {
             SkillTargeting.SELF -> listOf(listOf(attackerId))
+            SkillTargeting.SINGLE_ALLY -> allies.map { listOf(it) }
             SkillTargeting.ALL_ALLIES -> if (allies.isNotEmpty()) listOf(allies) else listOf(listOf(attackerId))
             SkillTargeting.ALL_ENEMIES -> if (opponents.isNotEmpty()) listOf(opponents) else emptyList()
             SkillTargeting.SINGLE_ENEMY -> opponents.map { listOf(it) }

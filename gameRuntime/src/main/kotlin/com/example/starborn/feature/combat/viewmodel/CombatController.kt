@@ -3616,6 +3616,8 @@ class CombatController(
         val attackerSide = attackerState?.combatant?.side ?: CombatSide.PLAYER
         return when (targeting) {
             SkillTargeting.SELF -> listOf(attackerId)
+            // Interactive callers choose the ally; direct callers retain a safe self fallback.
+            SkillTargeting.SINGLE_ALLY -> listOf(attackerId)
             SkillTargeting.ALL_ALLIES -> {
                 val allies = state.turnOrder.asSequence()
                     .mapNotNull { state.combatants[it.combatantId] }
@@ -3646,6 +3648,7 @@ class CombatController(
     }
 
     fun skillTargetScopeLabel(skill: Skill): String = when (determineSkillTargeting(skill)) {
+        SkillTargeting.SINGLE_ALLY -> "One ally"
         SkillTargeting.SINGLE_ENEMY -> "One enemy"
         SkillTargeting.ALL_ENEMIES -> "All enemies"
         SkillTargeting.ALL_ALLIES -> "All allies"
@@ -3654,6 +3657,7 @@ class CombatController(
 
     fun targetRequirementFor(skill: Skill): TargetRequirement {
         return when (determineSkillTargeting(skill)) {
+            SkillTargeting.SINGLE_ALLY -> TargetRequirement.ALLY
             SkillTargeting.SINGLE_ENEMY -> TargetRequirement.ENEMY
             SkillTargeting.ALL_ALLIES -> TargetRequirement.NONE
             SkillTargeting.ALL_ENEMIES -> TargetRequirement.NONE
@@ -3667,6 +3671,7 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
             "all_allies" -> return SkillTargeting.ALL_ALLIES
             "all_enemies" -> return SkillTargeting.ALL_ENEMIES
             "single_enemy" -> return SkillTargeting.SINGLE_ENEMY
+            "single_ally" -> return SkillTargeting.SINGLE_ALLY
         }
         // Positive healing power is not damage; these authored repairs target
         // their caster even though the generic power-based fallback does not.
@@ -4099,6 +4104,7 @@ enum class TargetRequirement {
 
 enum class SkillTargeting {
     SELF,
+    SINGLE_ALLY,
     SINGLE_ENEMY,
     ALL_ENEMIES,
     ALL_ALLIES

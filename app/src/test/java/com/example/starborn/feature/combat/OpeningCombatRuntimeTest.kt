@@ -637,6 +637,123 @@ class OpeningCombatRuntimeTest {
         }
     }
 
+    @Test fun `production ally skills offer ally selection and affect only the chosen living ally`() {
+        val crew = com.example.starborn.domain.leveling.CrewBuildPrototype
+        for ((caster, skillId) in listOf("zeke" to crew.COVER_SKILL,
+            "orion" to crew.TREATMENT_SKILL, "orion" to crew.PATCH_SKILL)) {
+            val session = world4Session().apply {
+                restore(state.value.copy(progressionPrototypeVersion = crew.VERSION, playerAp = 3))
+                if (caster == "zeke") assertTrue(purchasePrototypeNode(crew.COVER))
+                if (skillId == crew.TREATMENT_SKILL) {
+                    assertTrue(purchasePrototypeNode(crew.FIELD_RESILIENCE))
+                    assertTrue(purchasePrototypeNode(crew.FIELD_TREATMENT))
+                }
+            }
+            val vm = createCombat(session, random = SeededCombatRandom(9))
+            try {
+                val skill = vm.skillsForPlayer(caster).single { it.id == skillId }
+                assertEquals(skillId, com.example.starborn.feature.combat.viewmodel.TargetRequirement.ALLY,
+                    vm.targetRequirementFor(skill))
+                assertEquals("One ally", vm.skillTargetScopeLabel(skill))
+                val field = CombatViewModel::class.java.getDeclaredField("_state").apply { isAccessible = true }
+                @Suppress("UNCHECKED_CAST")
+                val flow = field.get(vm) as MutableStateFlow<CombatState?>
+                val initial = requireNotNull(flow.value)
+                flow.value = initial.copy(combatants = initial.combatants.mapValues { (_, actor) ->
+                    if (actor.combatant.side == CombatSide.PLAYER) actor.copy(hp = actor.combatant.stats.maxHp / 2) else actor
+                })
+                var used = false
+                for (tick in 0 until 240) {
+                    dispatcher.scheduler.advanceTimeBy(250)
+                    dispatcher.scheduler.runCurrent()
+                    if (vm.lungeActorId.value != null) vm.onLungeFinished(vm.lungeToken.value)
+                    if (vm.missLungeActorId.value != null) vm.onMissLungeFinished(vm.missLungeToken.value)
+                    vm.selectReadyPlayer(caster)
+                    if (vm.awaitingAction.value != caster) continue
+                    val before = requireNotNull(vm.combatState)
+                    assertTrue(vm.canUseSkill(caster, skill))
+                    vm.useSkill(skill, listOf("nova"))
+                    val after = requireNotNull(vm.combatState)
+                    val nova = after.combatants.getValue("nova")
+                    if (skillId != crew.TREATMENT_SKILL) assertTrue(nova.statusEffects.any { it.id == "shield" })
+                    if (skillId != crew.COVER_SKILL) assertTrue(nova.hp > before.combatants.getValue("nova").hp)
+                    for (id in listOf("zeke", "orion", "gh0st", "faulted_loader")) {
+                        assertEquals("$skillId must not heal $id", before.combatants.getValue(id).hp, after.combatants.getValue(id).hp)
+                        assertTrue("$skillId must not shield $id", after.combatants.getValue(id).statusEffects.none { it.id == "shield" })
+                    }
+                    assertTrue(after.combatants.getValue(caster).activeCooldowns.getOrDefault(skillId, 0) > 0)
+                    used = true
+                    break
+                }
+                assertTrue("$caster must receive an ATB action", used)
+            } finally { vm.viewModelScope.cancel(); dispatcher.scheduler.runCurrent() }
+        }
+    }
+
+    @Test fun `export production player choices for the current design review`() {
+        val crew = com.example.starborn.domain.leveling.CrewBuildPrototype
+        // Catalog inspection fixture, deliberately NOT an earned campaign loadout.
+        val session = world4Session().apply {
+            restore(state.value.copy(progressionPrototypeVersion = crew.VERSION,
+                purchasedSkillNodes = crew.nodes.mapValues { it.value.costAp }))
+        }
+        val vm = createCombat(session, random = SeededCombatRandom(9))
+        try {
+            val skills = assets.loadSkills(crew.VERSION).filter { it.character in session.state.value.partyMembers }
+                .map { crew.tune(it, session.state.value) }
+            assertEquals(skills.size, skills.map { it.id }.distinct().size)
+            val registry = StatusRegistry(assets.loadStatuses())
+            val probeEngine = CombatEngine(statusRegistry = registry)
+            val probeStats = StatBlock(maxHp = 1000, strength = 20, vitality = 10,
+                agility = 20, focus = 20, luck = 10, speed = 10, stability = 100)
+            val party = session.state.value.partyMembers.map { id ->
+                Combatant(id, id, CombatSide.PLAYER, probeStats, talents = crew.ownedTalents(session.state.value, id))
+            }
+            val initial = probeEngine.beginEncounter(CombatSetup(party,
+                listOf(Combatant("probe_enemy", "Probe", CombatSide.ENEMY, probeStats))))
+            val probe = initial.copy(combatants = initial.combatants.mapValues { (_, actor) -> actor.copy(hp = 500) })
+            val byId = skills.associateBy { it.id }
+            val effects = skills.filter { it.type != "passive" }.map { skill ->
+                val targets = when (vm.skillTargetScopeLabel(skill)) {
+                    "All allies" -> party.map { it.id }
+                    "One ally" -> listOf(party.first { it.id != skill.character }.id)
+                    "Self" -> listOf(skill.character)
+                    else -> listOf("probe_enemy")
+                }
+                val processor = CombatActionProcessor(probeEngine, registry, byId::get,
+                    forcePhysicalHit = { _, _ -> true }, random = SeededCombatRandom(9),
+                    explicitStatusSkillIds = byId.keys, prototypeMode = true)
+                val result = processor.execute(probe, CombatAction.SkillUse(skill.character, skill.id, targets)) { CombatReward() }
+                linkedMapOf("id" to skill.id, "requestedTargets" to targets,
+                    "hpDelta" to result.combatants.mapValues { (id, actor) -> actor.hp - probe.combatants.getValue(id).hp },
+                    "statuses" to result.combatants.mapValues { (_, actor) -> actor.statusEffects.map { it.id } })
+            }
+            val report = linkedMapOf<String, Any>(
+                "scope" to "Production catalog and shared controller targeting; all purchases supplied for inspection, not earned-route evidence",
+                "isolatedEffects" to effects,
+                "skills" to skills.map { skill -> linkedMapOf(
+                    "id" to skill.id, "name" to skill.name, "owner" to skill.character,
+                    "type" to skill.type, "description" to skill.description,
+                    "powerWithAllTalents" to skill.basePower, "cooldown" to skill.cooldown,
+                    "scaling" to skill.scaling, "tags" to skill.combatTags,
+                    "statuses" to skill.statusApplications, "declaredTargeting" to skill.targeting,
+                    "displayedScope" to vm.skillTargetScopeLabel(skill),
+                    "targetRequirement" to vm.targetRequirementFor(skill).name
+                ) },
+                "trees" to crew.trees.map { tree -> linkedMapOf(
+                    "owner" to tree.character, "branches" to tree.branches.mapValues { (_, nodes) ->
+                        nodes.map { node -> linkedMapOf("id" to node.id, "name" to node.name,
+                            "cost" to node.costAp, "requirements" to node.requires,
+                            "description" to node.description) }
+                    }
+                ) }
+            )
+            val output = java.io.File("build/reports/player-choices/current-runtime.json")
+            output.parentFile.mkdirs()
+            output.writeText(MoshiProvider.instance.adapter(Map::class.java).indent("  ").toJson(report))
+        } finally { vm.viewModelScope.cancel(); dispatcher.scheduler.runCurrent() }
+    }
+
     private fun earnWorkshopLoftReward(): GameSessionState {
         // Start inside the workshop after the loader gate, not before that battle.
         val rooms = reader.readList<com.example.starborn.domain.model.Room>("rooms.json").associateBy { it.id }

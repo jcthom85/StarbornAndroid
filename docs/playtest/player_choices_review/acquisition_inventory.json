@@ -1,0 +1,1257 @@
+[
+  {
+    "id": "gh0st_headshot",
+    "name": "Headshot",
+    "owner": "gh0st",
+    "type": "active",
+    "description": "A precise physical shot. Power 95, Strength scaling, cooldown 2. Does not bypass armor.",
+    "powerWithAllTalents": 95,
+    "cooldown": 2,
+    "scaling": "atk",
+    "tags": [
+      "dmg",
+      "pierce"
+    ],
+    "statuses": [],
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [
+      {
+        "file": "characters.json",
+        "record": "gh0st",
+        "path": "/3/skills/0"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "characters.json / gh0st"
+  },
+  {
+    "id": "nova_smoke_bomb",
+    "name": "Smoke Bomb",
+    "owner": "nova",
+    "type": "active",
+    "description": "A dense smoke cloud raises Nova\u2019s Evasion by 15 for 2 turns.",
+    "powerWithAllTalents": 0,
+    "cooldown": 3,
+    "tags": [
+      "support"
+    ],
+    "statuses": [
+      "shield"
+    ],
+    "displayedScope": "Self",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [
+      {
+        "file": "progression.json",
+        "record": "",
+        "path": "/level_up_skills/nova/6"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "progression.json / /level_up_skills/nova/6"
+  },
+  {
+    "id": "nova_arc_tether",
+    "name": "Arc Tether",
+    "owner": "nova",
+    "type": "active",
+    "description": "Ground an enemy with Nova\u2019s high-voltage line. Deals Shock damage and can inflict Short, which costs the target a turn.",
+    "powerWithAllTalents": 80,
+    "cooldown": 2,
+    "scaling": "agility",
+    "tags": [
+      "shock"
+    ],
+    "statuses": [
+      "shock"
+    ],
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [
+      {
+        "file": "characters.json",
+        "record": "nova",
+        "path": "/0/skills/0"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "characters.json / nova"
+  },
+  {
+    "id": "nova_cryo_vent",
+    "name": "Cryo Vent",
+    "owner": "nova",
+    "type": "active",
+    "description": "Purges pressurized coolant through the cutter shroud, freezing armor plates and applying Brittle for 2 turns. Physical attacks deal +50% damage to Brittle targets.",
+    "powerWithAllTalents": 65,
+    "cooldown": 3,
+    "scaling": "agility",
+    "tags": [
+      "freeze",
+      "setup"
+    ],
+    "statuses": [
+      "brittle"
+    ],
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [
+      {
+        "file": "events.json",
+        "record": "w1_mq01_cryo_inductor_repaired",
+        "path": "/41/actions/3/skill_id"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "events.json / w1_mq01_cryo_inductor_repaired"
+  },
+  {
+    "id": "nova_plasma_burst",
+    "name": "Plasma Burst",
+    "owner": "nova",
+    "type": "active",
+    "description": "Overdrives the cutter nozzle to hose the enemy formation in superheated gas, triggering Meltdown.",
+    "powerWithAllTalents": 90,
+    "cooldown": 3,
+    "scaling": "agility",
+    "tags": [
+      "burn",
+      "aoe"
+    ],
+    "statuses": [
+      "meltdown"
+    ],
+    "displayedScope": "All enemies",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [
+      {
+        "file": "progression.json",
+        "record": "",
+        "path": "/level_up_skills/nova/9"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "progression.json / /level_up_skills/nova/9"
+  },
+  {
+    "id": "nova_rend_round",
+    "name": "Rend Round",
+    "owner": "nova",
+    "type": "active",
+    "description": "A barbed flechette round calibrated to bite deep into armor seams. Deals massive bonus damage and Bleed against staggered targets.",
+    "powerWithAllTalents": 110,
+    "cooldown": 2,
+    "scaling": "agility",
+    "tags": [
+      "dmg"
+    ],
+    "statuses": [
+      "bleed"
+    ],
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [
+      {
+        "file": "progression.json",
+        "record": "",
+        "path": "/level_up_skills/nova/12"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "progression.json / /level_up_skills/nova/12"
+  },
+  {
+    "id": "zeke_shatter_blow",
+    "name": "Shatter Blow",
+    "owner": "zeke",
+    "type": "active",
+    "description": "A heavy piston strike that deals Physical damage and applies Discord. The target deals 25% less damage for 2 of its turns.",
+    "powerWithAllTalents": 90,
+    "cooldown": 2,
+    "scaling": "strength",
+    "tags": [
+      "dmg"
+    ],
+    "statuses": [
+      "weak"
+    ],
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [
+      {
+        "file": "characters.json",
+        "record": "zeke",
+        "path": "/1/skills/0"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "characters.json / zeke"
+  },
+  {
+    "id": "zeke_bulwark_stance",
+    "name": "Bulwark Stance",
+    "owner": "zeke",
+    "type": "active",
+    "description": "Plants magnetic boots and locks reinforced forearm plates into place, granting Guard and Braced.",
+    "powerWithAllTalents": 0,
+    "cooldown": 3,
+    "scaling": "strength",
+    "tags": [
+      "support"
+    ],
+    "statuses": [
+      "guard",
+      "braced"
+    ],
+    "displayedScope": "Self",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [
+      {
+        "file": "progression.json",
+        "record": "",
+        "path": "/level_up_skills/zeke/6"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "progression.json / /level_up_skills/zeke/6"
+  },
+  {
+    "id": "zeke_overload_fists",
+    "name": "Overload Fists",
+    "owner": "zeke",
+    "type": "active",
+    "description": "Shorts maintenance capacitors through his gauntlets, delivering a concussive jolt that shocks the target.",
+    "powerWithAllTalents": 120,
+    "cooldown": 2,
+    "scaling": "strength",
+    "tags": [
+      "shock"
+    ],
+    "statuses": [
+      "shock"
+    ],
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [
+      {
+        "file": "progression.json",
+        "record": "",
+        "path": "/level_up_skills/zeke/9"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "progression.json / /level_up_skills/zeke/9"
+  },
+  {
+    "id": "zeke_quake_slam",
+    "name": "Quake Slam",
+    "owner": "zeke",
+    "type": "active",
+    "description": "Slams the deck with pneumatic force. Damages all enemies and applies Discord. Deals 65% more damage to targets that are Stunned or Staggered.",
+    "powerWithAllTalents": 190,
+    "cooldown": 3,
+    "scaling": "strength",
+    "tags": [
+      "aoe"
+    ],
+    "statuses": [
+      "weak"
+    ],
+    "displayedScope": "All enemies",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [
+      {
+        "file": "progression.json",
+        "record": "",
+        "path": "/level_up_skills/zeke/12"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "progression.json / /level_up_skills/zeke/12"
+  },
+  {
+    "id": "orion_prism_lance",
+    "name": "Prism Lance",
+    "owner": "orion",
+    "type": "active",
+    "description": "Focus harmonic light through a crystal. Acid damage, power 85, Focus scaling, cooldown 2.",
+    "powerWithAllTalents": 85,
+    "cooldown": 2,
+    "scaling": "focus",
+    "tags": [
+      "acid"
+    ],
+    "statuses": [],
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [
+      {
+        "file": "characters.json",
+        "record": "orion",
+        "path": "/2/skills/0"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "characters.json / orion"
+  },
+  {
+    "id": "orion_nano_repair",
+    "name": "Nano Repair",
+    "owner": "orion",
+    "type": "active",
+    "description": "Deploys an aerosol of medical nanites that knit flesh and seal torn suits over time.",
+    "powerWithAllTalents": 0,
+    "cooldown": 3,
+    "scaling": "focus",
+    "tags": [
+      "support"
+    ],
+    "statuses": [
+      "regen"
+    ],
+    "displayedScope": "Self",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [
+      {
+        "file": "progression.json",
+        "record": "",
+        "path": "/level_up_skills/orion/6"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "progression.json / /level_up_skills/orion/6"
+  },
+  {
+    "id": "orion_disruption_pulse",
+    "name": "Disruption Pulse",
+    "owner": "orion",
+    "type": "active",
+    "description": "An inverted resonance wave applies Discord to all enemies, reducing their outgoing damage.",
+    "powerWithAllTalents": 0,
+    "cooldown": 3,
+    "scaling": "focus",
+    "tags": [
+      "aoe"
+    ],
+    "statuses": [
+      "weak"
+    ],
+    "displayedScope": "All enemies",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [
+      {
+        "file": "progression.json",
+        "record": "",
+        "path": "/level_up_skills/orion/9"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "progression.json / /level_up_skills/orion/9"
+  },
+  {
+    "id": "orion_stasis_field",
+    "name": "Stasis Field",
+    "owner": "orion",
+    "type": "active",
+    "description": "Generates a localized cryogenic dampening sphere that flash-freezes the opposing vanguard.",
+    "powerWithAllTalents": 80,
+    "cooldown": 4,
+    "scaling": "focus",
+    "tags": [
+      "freeze",
+      "aoe"
+    ],
+    "statuses": [
+      "freeze"
+    ],
+    "displayedScope": "All enemies",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [
+      {
+        "file": "progression.json",
+        "record": "",
+        "path": "/level_up_skills/orion/12"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "progression.json / /level_up_skills/orion/12"
+  },
+  {
+    "id": "gh0st_venom_edge",
+    "name": "Venom Edge",
+    "owner": "gh0st",
+    "type": "active",
+    "description": "Coats a vibroblade in caustic slag runoff, carving open armor seams and leaving lingering Erosion.",
+    "powerWithAllTalents": 110,
+    "cooldown": 2,
+    "scaling": "agility",
+    "tags": [
+      "acid"
+    ],
+    "statuses": [
+      "erosion"
+    ],
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [
+      {
+        "file": "progression.json",
+        "record": "",
+        "path": "/level_up_skills/gh0st/6"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "progression.json / /level_up_skills/gh0st/6"
+  },
+  {
+    "id": "gh0st_system_crash",
+    "name": "System Crash",
+    "owner": "gh0st",
+    "type": "active",
+    "description": "Injects an overload virus into target kinetic systems, shutting down their response loop with Stun.",
+    "powerWithAllTalents": 100,
+    "cooldown": 3,
+    "scaling": "agility",
+    "tags": [
+      "source"
+    ],
+    "statuses": [
+      "stun"
+    ],
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [
+      {
+        "file": "progression.json",
+        "record": "",
+        "path": "/level_up_skills/gh0st/9"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "progression.json / /level_up_skills/gh0st/9"
+  },
+  {
+    "id": "gh0st_shadow_flurry",
+    "name": "Shadow Flurry",
+    "owner": "gh0st",
+    "type": "active",
+    "description": "Steps through blind spots in a blur of blade strikes, leaving the entire enemy squad Bleeding.",
+    "powerWithAllTalents": 90,
+    "cooldown": 3,
+    "scaling": "agility",
+    "tags": [
+      "aoe"
+    ],
+    "statuses": [
+      "bleed"
+    ],
+    "displayedScope": "All enemies",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [
+      {
+        "file": "progression.json",
+        "record": "",
+        "path": "/level_up_skills/gh0st/12"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "progression.json / /level_up_skills/gh0st/12"
+  },
+  {
+    "id": "nova_blast_wave",
+    "name": "Blast Wave",
+    "owner": "nova",
+    "type": "source_art",
+    "description": "Unleashes a concussive pulse of raw Source kinetic energy, shattering Guard across all enemies and inflicting Stun.",
+    "powerWithAllTalents": 115,
+    "cooldown": 4,
+    "scaling": "agility",
+    "tags": [
+      "force",
+      "aoe",
+      "guard_break"
+    ],
+    "statuses": [
+      "stun"
+    ],
+    "displayedScope": "All enemies",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [
+      {
+        "file": "events.json",
+        "record": "w1_mq03_touch_relic",
+        "path": "/83/actions/1/on_complete/8/skill_id"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "events.json / w1_mq03_touch_relic"
+  },
+  {
+    "id": "zeke_signal_jammer",
+    "name": "Signal Jammer",
+    "owner": "zeke",
+    "type": "source_art",
+    "description": "Floods tactical frequencies with screeching white noise, silencing automated systems and confusing organic targets.",
+    "powerWithAllTalents": 80,
+    "cooldown": 5,
+    "scaling": "focus",
+    "tags": [
+      "tech",
+      "aoe"
+    ],
+    "statuses": [
+      "silence",
+      "confuse"
+    ],
+    "displayedScope": "All enemies",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [],
+    "codeAcquisition": null,
+    "acquisitionSummary": "No fresh-campaign grant found in inspected catalogs/code; legacy or ungranted record"
+  },
+  {
+    "id": "nova_hydraulic_kick",
+    "name": "Hydraulic Kick",
+    "owner": "nova",
+    "type": "active",
+    "description": "Drive a powered work boot into the target. Strips Guard and shields before dealing damage, then applies Discord to reduce the target\u2019s damage.",
+    "powerWithAllTalents": 90,
+    "cooldown": 2,
+    "scaling": "agility",
+    "tags": [
+      "dmg",
+      "guard_break"
+    ],
+    "statuses": [
+      "weak"
+    ],
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [
+      {
+        "file": "events.json",
+        "record": "w1_sq03_move_cargo",
+        "path": "/59/actions/3/skill_id"
+      },
+      {
+        "file": "events.json",
+        "record": "w1_sq03_training_victory",
+        "path": "/60/actions/1/skill_id"
+      },
+      {
+        "file": "events.json",
+        "record": "w1_sq03_workshop_training_victory",
+        "path": "/472/actions/1/skill_id"
+      },
+      {
+        "file": "events.json",
+        "record": "w1_sq03_register_prior_drill",
+        "path": "/473/actions/1/skill_id"
+      },
+      {
+        "file": "events.json",
+        "record": "w1_sq03_recover_prior_drill",
+        "path": "/474/actions/1/skill_id"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "events.json / w1_sq03_move_cargo; events.json / w1_sq03_training_victory; events.json / w1_sq03_workshop_training_victory; events.json / w1_sq03_register_prior_drill; events.json / w1_sq03_recover_prior_drill"
+  },
+  {
+    "id": "nova_pulse_grenade",
+    "name": "Pulse Grenade",
+    "owner": "nova",
+    "type": "active",
+    "description": "Throw an excavation charge for Physical damage to all enemies. Staggered targets skip their next turn.",
+    "powerWithAllTalents": 85,
+    "cooldown": 3,
+    "scaling": "agility",
+    "tags": [
+      "aoe",
+      "physical"
+    ],
+    "statuses": [
+      "stagger"
+    ],
+    "displayedScope": "All enemies",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [],
+    "codeAcquisition": null,
+    "acquisitionSummary": "No fresh-campaign grant found in inspected catalogs/code; legacy or ungranted record"
+  },
+  {
+    "id": "scrap_shot",
+    "name": "Scrap Shot",
+    "owner": "nova",
+    "type": "active",
+    "description": "Fires a rapid spray of jagged slag debris from the cutter muzzle. Fast and dependable, but lacks armor penetration.",
+    "powerWithAllTalents": 70,
+    "cooldown": 0,
+    "scaling": "agility",
+    "tags": [
+      "dmg"
+    ],
+    "statuses": [],
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [],
+    "codeAcquisition": null,
+    "acquisitionSummary": "No fresh-campaign grant found in inspected catalogs/code; legacy or ungranted record"
+  },
+  {
+    "id": "nova_cheap_shot",
+    "name": "Cheap Shot",
+    "owner": "nova",
+    "type": "active",
+    "description": "Kicks a blinding flurry of metal filings into the target's optics, applying Discord to cut their outgoing damage.",
+    "powerWithAllTalents": 0,
+    "cooldown": 0,
+    "scaling": "agility",
+    "tags": [
+      "debuff"
+    ],
+    "statuses": [
+      "weak"
+    ],
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [],
+    "codeAcquisition": null,
+    "acquisitionSummary": "No fresh-campaign grant found in inspected catalogs/code; legacy or ungranted record"
+  },
+  {
+    "id": "zeke_synergy_pitch",
+    "name": "Synergy Pitch",
+    "owner": "zeke",
+    "type": "active",
+    "description": "Hurls a deployable hard-light emitter, anchoring an auxiliary kinetic Barrier around a frontline ally.",
+    "powerWithAllTalents": 0,
+    "cooldown": 0,
+    "scaling": "strength",
+    "tags": [
+      "support"
+    ],
+    "statuses": [
+      "shield"
+    ],
+    "displayedScope": "Self",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [],
+    "codeAcquisition": null,
+    "acquisitionSummary": "No fresh-campaign grant found in inspected catalogs/code; legacy or ungranted record"
+  },
+  {
+    "id": "orion_stasis_stitch",
+    "name": "Field Patch",
+    "owner": "orion",
+    "type": "heal",
+    "description": "Treat one living ally: 18 base healing scaled by Focus, plus Shield for 1 turn. No resurrection.",
+    "powerWithAllTalents": 18,
+    "cooldown": 3,
+    "scaling": "focus",
+    "tags": [
+      "heal"
+    ],
+    "statuses": [],
+    "declaredTargeting": "single_ally",
+    "displayedScope": "One ally",
+    "targetRequirement": "ALLY",
+    "acquisitionReferences": [],
+    "codeAcquisition": "CrewBuildPrototype.coreSkills: granted when Orion is in the production party",
+    "acquisitionSummary": "CrewBuildPrototype.coreSkills: granted when Orion is in the production party"
+  },
+  {
+    "id": "gh0st_target_lock",
+    "name": "Target Lock",
+    "owner": "gh0st",
+    "type": "active",
+    "description": "Applies Marked to one enemy. Attacks that hit it while Marked deal critical damage.",
+    "powerWithAllTalents": 0,
+    "cooldown": 0,
+    "scaling": "agility",
+    "tags": [
+      "debuff",
+      "support"
+    ],
+    "statuses": [
+      "target_lock"
+    ],
+    "displayedScope": "Self",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [],
+    "codeAcquisition": null,
+    "acquisitionSummary": "No fresh-campaign grant found in inspected catalogs/code; legacy or ungranted record"
+  },
+  {
+    "id": "slide_kick",
+    "name": "Slide Kick",
+    "owner": "nova",
+    "type": "active",
+    "description": "Drops low across the metal grating to sweep the target's legs or treads, shattering Guard and causing Stagger.",
+    "powerWithAllTalents": 80,
+    "cooldown": 2,
+    "scaling": "agility",
+    "tags": [
+      "dmg",
+      "stagger",
+      "guard_break"
+    ],
+    "statuses": [
+      "stagger"
+    ],
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [],
+    "codeAcquisition": null,
+    "acquisitionSummary": "No fresh-campaign grant found in inspected catalogs/code; legacy or ungranted record"
+  },
+  {
+    "id": "gh0st_intercept",
+    "name": "Intercept",
+    "owner": "gh0st",
+    "type": "active",
+    "description": "Gh0st braces himself with Guard: halves incoming damage and prevents stagger for 1 turn.",
+    "powerWithAllTalents": 0,
+    "cooldown": 2,
+    "scaling": "defense",
+    "tags": [
+      "defend",
+      "support"
+    ],
+    "statuses": [
+      "guard"
+    ],
+    "displayedScope": "Self",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [
+      {
+        "file": "events.json",
+        "record": "w3_sq12_expose_transfer",
+        "path": "/279/actions/1/skill_id"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "events.json / w3_sq12_expose_transfer"
+  },
+  {
+    "id": "source_art_scan",
+    "name": "Scan",
+    "owner": "nova",
+    "type": "active",
+    "description": "Use the Lens to reveal hidden routes and expose enemy harmonic weaknesses.",
+    "powerWithAllTalents": 0,
+    "cooldown": 2,
+    "scaling": "focus",
+    "tags": [
+      "support",
+      "debuff"
+    ],
+    "statuses": [
+      "weak"
+    ],
+    "displayedScope": "Self",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [
+      {
+        "file": "events.json",
+        "record": "w3_mq14_take_lens",
+        "path": "/163/actions/2/skill_id"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "events.json / w3_mq14_take_lens"
+  },
+  {
+    "id": "gh0st_phase_counter",
+    "name": "Phase Counter",
+    "owner": "gh0st",
+    "type": "active",
+    "description": "Gh0st strikes with the opening his override key gives him, dealing damage and applying Discord to one enemy.",
+    "powerWithAllTalents": 110,
+    "cooldown": 3,
+    "scaling": "atk",
+    "tags": [
+      "counter",
+      "debuff"
+    ],
+    "statuses": [
+      "weak"
+    ],
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [
+      {
+        "file": "events.json",
+        "record": "w4_mq17_regroup_springs",
+        "path": "/185/actions/3/skill_id"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "events.json / w4_mq17_regroup_springs"
+  },
+  {
+    "id": "source_art_construct",
+    "name": "Construct",
+    "owner": "nova",
+    "type": "active",
+    "description": "Use the Anvil to shape Source intent into a temporary barrier or strike.",
+    "powerWithAllTalents": 130,
+    "cooldown": 3,
+    "scaling": "focus",
+    "tags": [
+      "support",
+      "dmg"
+    ],
+    "statuses": [
+      "guard"
+    ],
+    "displayedScope": "All allies",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [
+      {
+        "file": "events.json",
+        "record": "w4_mq19_take_anvil",
+        "path": "/201/actions/3/skill_id"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "events.json / w4_mq19_take_anvil"
+  },
+  {
+    "id": "gh0st_harden",
+    "name": "Harden",
+    "owner": "gh0st",
+    "type": "active",
+    "description": "Gh0st hardens his stance with Phantom combat data, gaining Guard, Shield, and Braced stability.",
+    "powerWithAllTalents": 0,
+    "cooldown": 3,
+    "scaling": "defense",
+    "tags": [
+      "defend",
+      "buff"
+    ],
+    "statuses": [
+      "guard",
+      "shield",
+      "braced"
+    ],
+    "displayedScope": "Self",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [
+      {
+        "file": "events.json",
+        "record": "w4_sq19_release_units",
+        "path": "/291/actions/1/skill_id"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "events.json / w4_sq19_release_units"
+  },
+  {
+    "id": "corporate_insight",
+    "name": "Corporate Insight",
+    "owner": "nova",
+    "type": "passive",
+    "description": "While Nova is above half HP, grants +10 percentage points of accuracy and critical chance.",
+    "powerWithAllTalents": 0,
+    "cooldown": 0,
+    "scaling": "luck",
+    "tags": [
+      "buff"
+    ],
+    "statuses": [],
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [
+      {
+        "file": "events.json",
+        "record": "w5_sq21_publish_logs",
+        "path": "/295/actions/1/skill_id"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "events.json / w5_sq21_publish_logs"
+  },
+  {
+    "id": "orion_sunbeam",
+    "name": "Sunbeam",
+    "owner": "orion",
+    "type": "active",
+    "description": "Orion focuses stored solar energy into a burning Source beam.",
+    "powerWithAllTalents": 145,
+    "cooldown": 3,
+    "scaling": "focus",
+    "tags": [
+      "dmg"
+    ],
+    "statuses": [
+      "burn"
+    ],
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [
+      {
+        "file": "events.json",
+        "record": "w5_sq22_restore_gardens",
+        "path": "/296/actions/1/skill_id"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "events.json / w5_sq22_restore_gardens"
+  },
+  {
+    "id": "source_art_stasis",
+    "name": "Stasis",
+    "owner": "nova",
+    "type": "source_art",
+    "description": "Use the Anchor to freeze a target in a fixed moment, stopping even self-repairing machines.",
+    "powerWithAllTalents": 70,
+    "cooldown": 4,
+    "scaling": "focus",
+    "tags": [
+      "freeze",
+      "control"
+    ],
+    "statuses": [
+      "freeze",
+      "stun"
+    ],
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [
+      {
+        "file": "events.json",
+        "record": "w5_mq24_take_anchor",
+        "path": "/230/actions/0/on_complete/3/skill_id"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "events.json / w5_mq24_take_anchor"
+  },
+  {
+    "id": "data_shield",
+    "name": "Data Shield",
+    "owner": "zeke",
+    "type": "passive",
+    "description": "While Zeke is alive, protects the party from hostile Silence, Jammed, and Short Circuit statuses.",
+    "powerWithAllTalents": 0,
+    "cooldown": 0,
+    "scaling": "focus",
+    "tags": [
+      "support",
+      "buff"
+    ],
+    "statuses": [],
+    "displayedScope": "Self",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [
+      {
+        "file": "events.json",
+        "record": "w5_sq24_restore_guardian",
+        "path": "/299/actions/1/skill_id"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "events.json / w5_sq24_restore_guardian"
+  },
+  {
+    "id": "nova_legacy",
+    "name": "Legacy",
+    "owner": "nova",
+    "type": "passive",
+    "description": "While Nova is below half HP, grants +15 percentage points of accuracy and critical chance.",
+    "powerWithAllTalents": 0,
+    "cooldown": 0,
+    "scaling": "luck",
+    "tags": [
+      "buff"
+    ],
+    "statuses": [],
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [
+      {
+        "file": "events.json",
+        "record": "w6_sq26_carry_legacy",
+        "path": "/254/actions/1/skill_id"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "events.json / w6_sq26_carry_legacy"
+  },
+  {
+    "id": "zeke_unshackled",
+    "name": "Unshackled",
+    "owner": "zeke",
+    "type": "passive",
+    "description": "Grants Zeke +3 Agility and +2 Speed.",
+    "powerWithAllTalents": 0,
+    "cooldown": 0,
+    "scaling": "agility",
+    "tags": [
+      "buff"
+    ],
+    "statuses": [],
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [
+      {
+        "file": "events.json",
+        "record": "w6_sq27_leave_review",
+        "path": "/257/actions/1/skill_id"
+      },
+      {
+        "file": "events.json",
+        "record": "w6_sq27_free_workers",
+        "path": "/353/actions/1/skill_id"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "events.json / w6_sq27_leave_review; events.json / w6_sq27_free_workers"
+  },
+  {
+    "id": "gh0st_source_balance",
+    "name": "Source Balance",
+    "owner": "gh0st",
+    "type": "passive",
+    "description": "Grants Gh0st +5 flat damage reduction and 25% Source resistance.",
+    "powerWithAllTalents": 0,
+    "cooldown": 0,
+    "scaling": "defense",
+    "tags": [
+      "defend",
+      "buff"
+    ],
+    "statuses": [],
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [
+      {
+        "file": "events.json",
+        "record": "w6_sq28_preserve_song",
+        "path": "/260/actions/1/skill_id"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "events.json / w6_sq28_preserve_song"
+  },
+  {
+    "id": "orion_ancestral_grace",
+    "name": "Ancestral Grace",
+    "owner": "orion",
+    "type": "passive",
+    "description": "Orion begins each battle with Regen for three turns.",
+    "powerWithAllTalents": 0,
+    "cooldown": 0,
+    "scaling": "focus",
+    "tags": [
+      "heal",
+      "buff"
+    ],
+    "statuses": [
+      "regen"
+    ],
+    "displayedScope": "Self",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [
+      {
+        "file": "events.json",
+        "record": "w6_sq29_carry_chorus",
+        "path": "/274/actions/1/skill_id"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "events.json / w6_sq29_carry_chorus"
+  },
+  {
+    "id": "source_art_tune_world",
+    "name": "Tune World",
+    "owner": "nova",
+    "type": "source_art",
+    "description": "Open the Starborn circuit and rewrite one catastrophic resonance through collective intent.",
+    "powerWithAllTalents": 300,
+    "cooldown": 6,
+    "scaling": "focus",
+    "tags": [
+      "source",
+      "aoe",
+      "support"
+    ],
+    "statuses": [
+      "stun"
+    ],
+    "displayedScope": "All enemies",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [
+      {
+        "file": "events.json",
+        "record": "w6_mq30_tune_world",
+        "path": "/271/actions/2/skill_id"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "events.json / w6_mq30_tune_world"
+  },
+  {
+    "id": "zeke_guardian_covenant",
+    "name": "Guardian Covenant",
+    "owner": "zeke",
+    "type": "support",
+    "description": "Apply Shield and Braced across the party through the recovered guardian bus.",
+    "powerWithAllTalents": 0,
+    "cooldown": 4,
+    "scaling": "focus",
+    "tags": [
+      "support",
+      "buff"
+    ],
+    "statuses": [
+      "shield",
+      "braced"
+    ],
+    "displayedScope": "Self",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [
+      {
+        "file": "events.json",
+        "record": "w5_sq24_bind_guardian",
+        "path": "/352/actions/1/skill_id"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "events.json / w5_sq24_bind_guardian"
+  },
+  {
+    "id": "nova_link",
+    "name": "Link",
+    "owner": "nova",
+    "type": "support",
+    "description": "Restore party HP and apply Regen through the Bridge ground. Does not share damage.",
+    "powerWithAllTalents": 90,
+    "cooldown": 4,
+    "scaling": "focus",
+    "tags": [
+      "source",
+      "heal",
+      "support",
+      "aoe"
+    ],
+    "statuses": [
+      "regen"
+    ],
+    "declaredTargeting": "all_allies",
+    "displayedScope": "All allies",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [
+      {
+        "file": "events.json",
+        "record": "w2_mq04_anchor_drill",
+        "path": "/121/actions/0/on_complete/3/skill_id"
+      }
+    ],
+    "codeAcquisition": null,
+    "acquisitionSummary": "events.json / w2_mq04_anchor_drill"
+  },
+  {
+    "id": "nova_breaker_bolt",
+    "name": "Breaker Bolt",
+    "owner": "nova",
+    "type": "active",
+    "description": "A focused physical shot dealing 50% more stability damage, without a status effect.",
+    "powerWithAllTalents": 100,
+    "cooldown": 3,
+    "scaling": "agility",
+    "tags": [
+      "physical"
+    ],
+    "statuses": [],
+    "declaredTargeting": "single_enemy",
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [],
+    "codeAcquisition": "Saboteur: Grounded Wire \u2192 Controlled Vent \u2192 Breaker Bolt (6 AP)",
+    "acquisitionSummary": "Saboteur: Grounded Wire \u2192 Controlled Vent \u2192 Breaker Bolt (6 AP)"
+  },
+  {
+    "id": "nova_scatter_charge",
+    "name": "Scatter Charge",
+    "owner": "nova",
+    "type": "active",
+    "description": "Scatter a low-powered physical charge across the enemy formation.",
+    "powerWithAllTalents": 60,
+    "cooldown": 2,
+    "scaling": "agility",
+    "tags": [
+      "physical",
+      "aoe"
+    ],
+    "statuses": [],
+    "declaredTargeting": "all_enemies",
+    "displayedScope": "All enemies",
+    "targetRequirement": "NONE",
+    "acquisitionReferences": [],
+    "codeAcquisition": "Improviser: Quiet Steps \u2192 Scatter Charge (3 AP)",
+    "acquisitionSummary": "Improviser: Quiet Steps \u2192 Scatter Charge (3 AP)"
+  },
+  {
+    "id": "zeke_cover",
+    "name": "Cover",
+    "owner": "zeke",
+    "type": "support",
+    "description": "Shield one living ally for 2 turns.",
+    "powerWithAllTalents": 0,
+    "cooldown": 3,
+    "tags": [
+      "support"
+    ],
+    "statuses": [],
+    "declaredTargeting": "single_ally",
+    "displayedScope": "One ally",
+    "targetRequirement": "ALLY",
+    "acquisitionReferences": [],
+    "codeAcquisition": "Protector: Cover (1 AP)",
+    "acquisitionSummary": "Protector: Cover (1 AP)"
+  },
+  {
+    "id": "orion_field_treatment",
+    "name": "Field Treatment",
+    "owner": "orion",
+    "type": "heal",
+    "description": "Restore 20% of one living ally maximum HP; no Focus multiplier.",
+    "powerWithAllTalents": 0,
+    "cooldown": 4,
+    "tags": [
+      "heal"
+    ],
+    "statuses": [],
+    "declaredTargeting": "single_ally",
+    "displayedScope": "One ally",
+    "targetRequirement": "ALLY",
+    "acquisitionReferences": [],
+    "codeAcquisition": "Field Medic: Field Resilience \u2192 Field Treatment (3 AP)",
+    "acquisitionSummary": "Field Medic: Field Resilience \u2192 Field Treatment (3 AP)"
+  },
+  {
+    "id": "gh0st_disarm",
+    "name": "Disarm",
+    "owner": "gh0st",
+    "type": "active",
+    "description": "Physical shot applying Weak for 2 turns.",
+    "powerWithAllTalents": 60,
+    "cooldown": 3,
+    "scaling": "agility",
+    "tags": [
+      "physical"
+    ],
+    "statuses": [
+      "weak"
+    ],
+    "declaredTargeting": "single_enemy",
+    "displayedScope": "One enemy",
+    "targetRequirement": "ENEMY",
+    "acquisitionReferences": [],
+    "codeAcquisition": "Tactical: Quick Position \u2192 Surgical Strike \u2192 Disarm (6 AP)",
+    "acquisitionSummary": "Tactical: Quick Position \u2192 Surgical Strike \u2192 Disarm (6 AP)"
+  }
+]

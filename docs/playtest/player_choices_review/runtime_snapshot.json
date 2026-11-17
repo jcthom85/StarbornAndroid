@@ -1,0 +1,2188 @@
+{
+  "scope": "Production catalog and shared controller targeting; all purchases supplied for inspection, not earned-route evidence",
+  "isolatedEffects": [
+    {
+      "id": "gh0st_headshot",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -92
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": []
+      }
+    },
+    {
+      "id": "nova_smoke_bomb",
+      "requestedTargets": [
+        "nova"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": 0
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": []
+      }
+    },
+    {
+      "id": "nova_arc_tether",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -38
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "short"
+        ]
+      }
+    },
+    {
+      "id": "nova_cryo_vent",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -31
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "brittle"
+        ]
+      }
+    },
+    {
+      "id": "nova_plasma_burst",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -43
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "meltdown"
+        ]
+      }
+    },
+    {
+      "id": "nova_rend_round",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -53
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "bleed"
+        ]
+      }
+    },
+    {
+      "id": "zeke_shatter_blow",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -43
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "weak",
+          "crew_opening"
+        ]
+      }
+    },
+    {
+      "id": "zeke_bulwark_stance",
+      "requestedTargets": [
+        "zeke"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": 0
+      },
+      "statuses": {
+        "nova": [
+          "guard",
+          "braced"
+        ],
+        "zeke": [
+          "guard",
+          "braced"
+        ],
+        "orion": [
+          "guard",
+          "braced"
+        ],
+        "gh0st": [
+          "guard",
+          "braced"
+        ],
+        "probe_enemy": []
+      }
+    },
+    {
+      "id": "zeke_overload_fists",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -58
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "short"
+        ]
+      }
+    },
+    {
+      "id": "zeke_quake_slam",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -91
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "weak"
+        ]
+      }
+    },
+    {
+      "id": "orion_prism_lance",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -41
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "weak"
+        ]
+      }
+    },
+    {
+      "id": "orion_nano_repair",
+      "requestedTargets": [
+        "orion"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": 0
+      },
+      "statuses": {
+        "nova": [
+          "regen"
+        ],
+        "zeke": [
+          "regen"
+        ],
+        "orion": [
+          "regen"
+        ],
+        "gh0st": [
+          "regen"
+        ],
+        "probe_enemy": []
+      }
+    },
+    {
+      "id": "orion_disruption_pulse",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": 0
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "weak"
+        ]
+      }
+    },
+    {
+      "id": "orion_stasis_field",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -38
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "freeze"
+        ]
+      }
+    },
+    {
+      "id": "gh0st_venom_edge",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -53
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "erosion"
+        ]
+      }
+    },
+    {
+      "id": "gh0st_system_crash",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -48
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "stun"
+        ]
+      }
+    },
+    {
+      "id": "gh0st_shadow_flurry",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -43
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "bleed"
+        ]
+      }
+    },
+    {
+      "id": "nova_blast_wave",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -55
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "stun"
+        ]
+      }
+    },
+    {
+      "id": "zeke_signal_jammer",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -38
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "silence",
+          "confuse"
+        ]
+      }
+    },
+    {
+      "id": "nova_hydraulic_kick",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -43
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "weak"
+        ]
+      }
+    },
+    {
+      "id": "nova_pulse_grenade",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -41
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "stagger"
+        ]
+      }
+    },
+    {
+      "id": "scrap_shot",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -34
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": []
+      }
+    },
+    {
+      "id": "nova_cheap_shot",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": 0
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "weak"
+        ]
+      }
+    },
+    {
+      "id": "zeke_synergy_pitch",
+      "requestedTargets": [
+        "zeke"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": 0
+      },
+      "statuses": {
+        "nova": [
+          "shield"
+        ],
+        "zeke": [
+          "shield"
+        ],
+        "orion": [
+          "shield"
+        ],
+        "gh0st": [
+          "shield"
+        ],
+        "probe_enemy": []
+      }
+    },
+    {
+      "id": "orion_stasis_stitch",
+      "requestedTargets": [
+        "nova"
+      ],
+      "hpDelta": {
+        "nova": 22,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": 0
+      },
+      "statuses": {
+        "nova": [
+          "shield"
+        ],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": []
+      }
+    },
+    {
+      "id": "gh0st_target_lock",
+      "requestedTargets": [
+        "gh0st"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": 0
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [
+          "marked"
+        ],
+        "probe_enemy": []
+      }
+    },
+    {
+      "id": "slide_kick",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -38
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "stagger"
+        ]
+      }
+    },
+    {
+      "id": "gh0st_intercept",
+      "requestedTargets": [
+        "gh0st"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": 0
+      },
+      "statuses": {
+        "nova": [
+          "guard"
+        ],
+        "zeke": [
+          "guard"
+        ],
+        "orion": [
+          "guard"
+        ],
+        "gh0st": [
+          "guard"
+        ],
+        "probe_enemy": []
+      }
+    },
+    {
+      "id": "source_art_scan",
+      "requestedTargets": [
+        "nova"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": 0
+      },
+      "statuses": {
+        "nova": [
+          "weak"
+        ],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": []
+      }
+    },
+    {
+      "id": "gh0st_phase_counter",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -53
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "weak"
+        ]
+      }
+    },
+    {
+      "id": "source_art_construct",
+      "requestedTargets": [
+        "nova",
+        "zeke",
+        "orion",
+        "gh0st"
+      ],
+      "hpDelta": {
+        "nova": 156,
+        "zeke": 156,
+        "orion": 156,
+        "gh0st": 156,
+        "probe_enemy": 0
+      },
+      "statuses": {
+        "nova": [
+          "guard"
+        ],
+        "zeke": [
+          "guard"
+        ],
+        "orion": [
+          "guard"
+        ],
+        "gh0st": [
+          "guard"
+        ],
+        "probe_enemy": []
+      }
+    },
+    {
+      "id": "gh0st_harden",
+      "requestedTargets": [
+        "gh0st"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": 0
+      },
+      "statuses": {
+        "nova": [
+          "guard",
+          "shield",
+          "braced"
+        ],
+        "zeke": [
+          "guard",
+          "shield",
+          "braced"
+        ],
+        "orion": [
+          "guard",
+          "shield",
+          "braced"
+        ],
+        "gh0st": [
+          "guard",
+          "shield",
+          "braced"
+        ],
+        "probe_enemy": []
+      }
+    },
+    {
+      "id": "orion_sunbeam",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -70
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "meltdown"
+        ]
+      }
+    },
+    {
+      "id": "source_art_stasis",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -34
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "freeze",
+          "stun"
+        ]
+      }
+    },
+    {
+      "id": "source_art_tune_world",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": 0
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "stun"
+        ]
+      }
+    },
+    {
+      "id": "zeke_guardian_covenant",
+      "requestedTargets": [
+        "zeke"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": 0
+      },
+      "statuses": {
+        "nova": [
+          "shield",
+          "braced"
+        ],
+        "zeke": [
+          "shield",
+          "braced"
+        ],
+        "orion": [
+          "shield",
+          "braced"
+        ],
+        "gh0st": [
+          "shield",
+          "braced"
+        ],
+        "probe_enemy": []
+      }
+    },
+    {
+      "id": "nova_link",
+      "requestedTargets": [
+        "nova",
+        "zeke",
+        "orion",
+        "gh0st"
+      ],
+      "hpDelta": {
+        "nova": 108,
+        "zeke": 108,
+        "orion": 108,
+        "gh0st": 108,
+        "probe_enemy": 0
+      },
+      "statuses": {
+        "nova": [
+          "regen"
+        ],
+        "zeke": [
+          "regen"
+        ],
+        "orion": [
+          "regen"
+        ],
+        "gh0st": [
+          "regen"
+        ],
+        "probe_enemy": []
+      }
+    },
+    {
+      "id": "nova_breaker_bolt",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -48
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": []
+      }
+    },
+    {
+      "id": "nova_scatter_charge",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -29
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": []
+      }
+    },
+    {
+      "id": "zeke_cover",
+      "requestedTargets": [
+        "nova"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": 0
+      },
+      "statuses": {
+        "nova": [
+          "shield"
+        ],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": []
+      }
+    },
+    {
+      "id": "orion_field_treatment",
+      "requestedTargets": [
+        "nova"
+      ],
+      "hpDelta": {
+        "nova": 200,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": 0
+      },
+      "statuses": {
+        "nova": [
+          "crew_aftercare"
+        ],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": []
+      }
+    },
+    {
+      "id": "gh0st_disarm",
+      "requestedTargets": [
+        "probe_enemy"
+      ],
+      "hpDelta": {
+        "nova": 0,
+        "zeke": 0,
+        "orion": 0,
+        "gh0st": 0,
+        "probe_enemy": -29
+      },
+      "statuses": {
+        "nova": [],
+        "zeke": [],
+        "orion": [],
+        "gh0st": [],
+        "probe_enemy": [
+          "weak"
+        ]
+      }
+    }
+  ],
+  "skills": [
+    {
+      "id": "gh0st_headshot",
+      "name": "Headshot",
+      "owner": "gh0st",
+      "type": "active",
+      "description": "A precise physical shot. Power 95, Strength scaling, cooldown 2. Does not bypass armor.",
+      "powerWithAllTalents": 95,
+      "cooldown": 2,
+      "scaling": "atk",
+      "tags": [
+        "dmg",
+        "pierce"
+      ],
+      "statuses": [],
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "nova_smoke_bomb",
+      "name": "Smoke Bomb",
+      "owner": "nova",
+      "type": "active",
+      "description": "A dense smoke cloud raises Nova’s Evasion by 15 for 2 turns.",
+      "powerWithAllTalents": 0,
+      "cooldown": 3,
+      "tags": [
+        "support"
+      ],
+      "statuses": [
+        "shield"
+      ],
+      "displayedScope": "Self",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "nova_arc_tether",
+      "name": "Arc Tether",
+      "owner": "nova",
+      "type": "active",
+      "description": "Ground an enemy with Nova’s high-voltage line. Deals Shock damage and can inflict Short, which costs the target a turn.",
+      "powerWithAllTalents": 80,
+      "cooldown": 2,
+      "scaling": "agility",
+      "tags": [
+        "shock"
+      ],
+      "statuses": [
+        "shock"
+      ],
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "nova_cryo_vent",
+      "name": "Cryo Vent",
+      "owner": "nova",
+      "type": "active",
+      "description": "Purges pressurized coolant through the cutter shroud, freezing armor plates and applying Brittle for 2 turns. Physical attacks deal +50% damage to Brittle targets.",
+      "powerWithAllTalents": 65,
+      "cooldown": 3,
+      "scaling": "agility",
+      "tags": [
+        "freeze",
+        "setup"
+      ],
+      "statuses": [
+        "brittle"
+      ],
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "nova_plasma_burst",
+      "name": "Plasma Burst",
+      "owner": "nova",
+      "type": "active",
+      "description": "Overdrives the cutter nozzle to hose the enemy formation in superheated gas, triggering Meltdown.",
+      "powerWithAllTalents": 90,
+      "cooldown": 3,
+      "scaling": "agility",
+      "tags": [
+        "burn",
+        "aoe"
+      ],
+      "statuses": [
+        "meltdown"
+      ],
+      "displayedScope": "All enemies",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "nova_rend_round",
+      "name": "Rend Round",
+      "owner": "nova",
+      "type": "active",
+      "description": "A barbed flechette round calibrated to bite deep into armor seams. Deals massive bonus damage and Bleed against staggered targets.",
+      "powerWithAllTalents": 110,
+      "cooldown": 2,
+      "scaling": "agility",
+      "tags": [
+        "dmg"
+      ],
+      "statuses": [
+        "bleed"
+      ],
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "zeke_shatter_blow",
+      "name": "Shatter Blow",
+      "owner": "zeke",
+      "type": "active",
+      "description": "A heavy piston strike that deals Physical damage and applies Discord. The target deals 25% less damage for 2 of its turns.",
+      "powerWithAllTalents": 90,
+      "cooldown": 2,
+      "scaling": "strength",
+      "tags": [
+        "dmg"
+      ],
+      "statuses": [
+        "weak"
+      ],
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "zeke_bulwark_stance",
+      "name": "Bulwark Stance",
+      "owner": "zeke",
+      "type": "active",
+      "description": "Plants magnetic boots and locks reinforced forearm plates into place, granting Guard and Braced.",
+      "powerWithAllTalents": 0,
+      "cooldown": 3,
+      "scaling": "strength",
+      "tags": [
+        "support"
+      ],
+      "statuses": [
+        "guard",
+        "braced"
+      ],
+      "displayedScope": "Self",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "zeke_overload_fists",
+      "name": "Overload Fists",
+      "owner": "zeke",
+      "type": "active",
+      "description": "Shorts maintenance capacitors through his gauntlets, delivering a concussive jolt that shocks the target.",
+      "powerWithAllTalents": 120,
+      "cooldown": 2,
+      "scaling": "strength",
+      "tags": [
+        "shock"
+      ],
+      "statuses": [
+        "shock"
+      ],
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "zeke_quake_slam",
+      "name": "Quake Slam",
+      "owner": "zeke",
+      "type": "active",
+      "description": "Slams the deck with pneumatic force. Damages all enemies and applies Discord. Deals 65% more damage to targets that are Stunned or Staggered.",
+      "powerWithAllTalents": 190,
+      "cooldown": 3,
+      "scaling": "strength",
+      "tags": [
+        "aoe"
+      ],
+      "statuses": [
+        "weak"
+      ],
+      "displayedScope": "All enemies",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "orion_prism_lance",
+      "name": "Prism Lance",
+      "owner": "orion",
+      "type": "active",
+      "description": "Focus harmonic light through a crystal. Acid damage, power 85, Focus scaling, cooldown 2.",
+      "powerWithAllTalents": 85,
+      "cooldown": 2,
+      "scaling": "focus",
+      "tags": [
+        "acid"
+      ],
+      "statuses": [],
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "orion_nano_repair",
+      "name": "Nano Repair",
+      "owner": "orion",
+      "type": "active",
+      "description": "Deploys an aerosol of medical nanites that knit flesh and seal torn suits over time.",
+      "powerWithAllTalents": 0,
+      "cooldown": 3,
+      "scaling": "focus",
+      "tags": [
+        "support"
+      ],
+      "statuses": [
+        "regen"
+      ],
+      "displayedScope": "Self",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "orion_disruption_pulse",
+      "name": "Disruption Pulse",
+      "owner": "orion",
+      "type": "active",
+      "description": "An inverted resonance wave applies Discord to all enemies, reducing their outgoing damage.",
+      "powerWithAllTalents": 0,
+      "cooldown": 3,
+      "scaling": "focus",
+      "tags": [
+        "aoe"
+      ],
+      "statuses": [
+        "weak"
+      ],
+      "displayedScope": "All enemies",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "orion_stasis_field",
+      "name": "Stasis Field",
+      "owner": "orion",
+      "type": "active",
+      "description": "Generates a localized cryogenic dampening sphere that flash-freezes the opposing vanguard.",
+      "powerWithAllTalents": 80,
+      "cooldown": 4,
+      "scaling": "focus",
+      "tags": [
+        "freeze",
+        "aoe"
+      ],
+      "statuses": [
+        "freeze"
+      ],
+      "displayedScope": "All enemies",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "gh0st_venom_edge",
+      "name": "Venom Edge",
+      "owner": "gh0st",
+      "type": "active",
+      "description": "Coats a vibroblade in caustic slag runoff, carving open armor seams and leaving lingering Erosion.",
+      "powerWithAllTalents": 110,
+      "cooldown": 2,
+      "scaling": "agility",
+      "tags": [
+        "acid"
+      ],
+      "statuses": [
+        "erosion"
+      ],
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "gh0st_system_crash",
+      "name": "System Crash",
+      "owner": "gh0st",
+      "type": "active",
+      "description": "Injects an overload virus into target kinetic systems, shutting down their response loop with Stun.",
+      "powerWithAllTalents": 100,
+      "cooldown": 3,
+      "scaling": "agility",
+      "tags": [
+        "source"
+      ],
+      "statuses": [
+        "stun"
+      ],
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "gh0st_shadow_flurry",
+      "name": "Shadow Flurry",
+      "owner": "gh0st",
+      "type": "active",
+      "description": "Steps through blind spots in a blur of blade strikes, leaving the entire enemy squad Bleeding.",
+      "powerWithAllTalents": 90,
+      "cooldown": 3,
+      "scaling": "agility",
+      "tags": [
+        "aoe"
+      ],
+      "statuses": [
+        "bleed"
+      ],
+      "displayedScope": "All enemies",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "nova_blast_wave",
+      "name": "Blast Wave",
+      "owner": "nova",
+      "type": "source_art",
+      "description": "Unleashes a concussive pulse of raw Source kinetic energy, shattering Guard across all enemies and inflicting Stun.",
+      "powerWithAllTalents": 115,
+      "cooldown": 4,
+      "scaling": "agility",
+      "tags": [
+        "force",
+        "aoe",
+        "guard_break"
+      ],
+      "statuses": [
+        "stun"
+      ],
+      "displayedScope": "All enemies",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "zeke_signal_jammer",
+      "name": "Signal Jammer",
+      "owner": "zeke",
+      "type": "source_art",
+      "description": "Floods tactical frequencies with screeching white noise, silencing automated systems and confusing organic targets.",
+      "powerWithAllTalents": 80,
+      "cooldown": 5,
+      "scaling": "focus",
+      "tags": [
+        "tech",
+        "aoe"
+      ],
+      "statuses": [
+        "silence",
+        "confuse"
+      ],
+      "displayedScope": "All enemies",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "nova_hydraulic_kick",
+      "name": "Hydraulic Kick",
+      "owner": "nova",
+      "type": "active",
+      "description": "Drive a powered work boot into the target. Strips Guard and shields before dealing damage, then applies Discord to reduce the target’s damage.",
+      "powerWithAllTalents": 90,
+      "cooldown": 2,
+      "scaling": "agility",
+      "tags": [
+        "dmg",
+        "guard_break"
+      ],
+      "statuses": [
+        "weak"
+      ],
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "nova_pulse_grenade",
+      "name": "Pulse Grenade",
+      "owner": "nova",
+      "type": "active",
+      "description": "Throw an excavation charge for Physical damage to all enemies. Staggered targets skip their next turn.",
+      "powerWithAllTalents": 85,
+      "cooldown": 3,
+      "scaling": "agility",
+      "tags": [
+        "aoe",
+        "physical"
+      ],
+      "statuses": [
+        "stagger"
+      ],
+      "displayedScope": "All enemies",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "scrap_shot",
+      "name": "Scrap Shot",
+      "owner": "nova",
+      "type": "active",
+      "description": "Fires a rapid spray of jagged slag debris from the cutter muzzle. Fast and dependable, but lacks armor penetration.",
+      "powerWithAllTalents": 70,
+      "cooldown": 0,
+      "scaling": "agility",
+      "tags": [
+        "dmg"
+      ],
+      "statuses": [],
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "nova_cheap_shot",
+      "name": "Cheap Shot",
+      "owner": "nova",
+      "type": "active",
+      "description": "Kicks a blinding flurry of metal filings into the target's optics, applying Discord to cut their outgoing damage.",
+      "powerWithAllTalents": 0,
+      "cooldown": 0,
+      "scaling": "agility",
+      "tags": [
+        "debuff"
+      ],
+      "statuses": [
+        "weak"
+      ],
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "zeke_synergy_pitch",
+      "name": "Synergy Pitch",
+      "owner": "zeke",
+      "type": "active",
+      "description": "Hurls a deployable hard-light emitter, anchoring an auxiliary kinetic Barrier around a frontline ally.",
+      "powerWithAllTalents": 0,
+      "cooldown": 0,
+      "scaling": "strength",
+      "tags": [
+        "support"
+      ],
+      "statuses": [
+        "shield"
+      ],
+      "displayedScope": "Self",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "orion_stasis_stitch",
+      "name": "Field Patch",
+      "owner": "orion",
+      "type": "heal",
+      "description": "Treat one living ally: 18 base healing scaled by Focus, plus Shield for 1 turn. No resurrection.",
+      "powerWithAllTalents": 18,
+      "cooldown": 3,
+      "scaling": "focus",
+      "tags": [
+        "heal"
+      ],
+      "statuses": [],
+      "declaredTargeting": "single_ally",
+      "displayedScope": "One ally",
+      "targetRequirement": "ALLY"
+    },
+    {
+      "id": "gh0st_target_lock",
+      "name": "Target Lock",
+      "owner": "gh0st",
+      "type": "active",
+      "description": "Applies Marked to one enemy. Attacks that hit it while Marked deal critical damage.",
+      "powerWithAllTalents": 0,
+      "cooldown": 0,
+      "scaling": "agility",
+      "tags": [
+        "debuff",
+        "support"
+      ],
+      "statuses": [
+        "target_lock"
+      ],
+      "displayedScope": "Self",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "slide_kick",
+      "name": "Slide Kick",
+      "owner": "nova",
+      "type": "active",
+      "description": "Drops low across the metal grating to sweep the target's legs or treads, shattering Guard and causing Stagger.",
+      "powerWithAllTalents": 80,
+      "cooldown": 2,
+      "scaling": "agility",
+      "tags": [
+        "dmg",
+        "stagger",
+        "guard_break"
+      ],
+      "statuses": [
+        "stagger"
+      ],
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "gh0st_intercept",
+      "name": "Intercept",
+      "owner": "gh0st",
+      "type": "active",
+      "description": "Gh0st braces himself with Guard: halves incoming damage and prevents stagger for 1 turn.",
+      "powerWithAllTalents": 0,
+      "cooldown": 2,
+      "scaling": "defense",
+      "tags": [
+        "defend",
+        "support"
+      ],
+      "statuses": [
+        "guard"
+      ],
+      "displayedScope": "Self",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "source_art_scan",
+      "name": "Scan",
+      "owner": "nova",
+      "type": "active",
+      "description": "Use the Lens to reveal hidden routes and expose enemy harmonic weaknesses.",
+      "powerWithAllTalents": 0,
+      "cooldown": 2,
+      "scaling": "focus",
+      "tags": [
+        "support",
+        "debuff"
+      ],
+      "statuses": [
+        "weak"
+      ],
+      "displayedScope": "Self",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "gh0st_phase_counter",
+      "name": "Phase Counter",
+      "owner": "gh0st",
+      "type": "active",
+      "description": "Gh0st strikes with the opening his override key gives him, dealing damage and applying Discord to one enemy.",
+      "powerWithAllTalents": 110,
+      "cooldown": 3,
+      "scaling": "atk",
+      "tags": [
+        "counter",
+        "debuff"
+      ],
+      "statuses": [
+        "weak"
+      ],
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "source_art_construct",
+      "name": "Construct",
+      "owner": "nova",
+      "type": "active",
+      "description": "Use the Anvil to shape Source intent into a temporary barrier or strike.",
+      "powerWithAllTalents": 130,
+      "cooldown": 3,
+      "scaling": "focus",
+      "tags": [
+        "support",
+        "dmg"
+      ],
+      "statuses": [
+        "guard"
+      ],
+      "displayedScope": "All allies",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "gh0st_harden",
+      "name": "Harden",
+      "owner": "gh0st",
+      "type": "active",
+      "description": "Gh0st hardens his stance with Phantom combat data, gaining Guard, Shield, and Braced stability.",
+      "powerWithAllTalents": 0,
+      "cooldown": 3,
+      "scaling": "defense",
+      "tags": [
+        "defend",
+        "buff"
+      ],
+      "statuses": [
+        "guard",
+        "shield",
+        "braced"
+      ],
+      "displayedScope": "Self",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "corporate_insight",
+      "name": "Corporate Insight",
+      "owner": "nova",
+      "type": "passive",
+      "description": "While Nova is above half HP, grants +10 percentage points of accuracy and critical chance.",
+      "powerWithAllTalents": 0,
+      "cooldown": 0,
+      "scaling": "luck",
+      "tags": [
+        "buff"
+      ],
+      "statuses": [],
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "orion_sunbeam",
+      "name": "Sunbeam",
+      "owner": "orion",
+      "type": "active",
+      "description": "Orion focuses stored solar energy into a burning Source beam.",
+      "powerWithAllTalents": 145,
+      "cooldown": 3,
+      "scaling": "focus",
+      "tags": [
+        "dmg"
+      ],
+      "statuses": [
+        "burn"
+      ],
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "source_art_stasis",
+      "name": "Stasis",
+      "owner": "nova",
+      "type": "source_art",
+      "description": "Use the Anchor to freeze a target in a fixed moment, stopping even self-repairing machines.",
+      "powerWithAllTalents": 70,
+      "cooldown": 4,
+      "scaling": "focus",
+      "tags": [
+        "freeze",
+        "control"
+      ],
+      "statuses": [
+        "freeze",
+        "stun"
+      ],
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "data_shield",
+      "name": "Data Shield",
+      "owner": "zeke",
+      "type": "passive",
+      "description": "While Zeke is alive, protects the party from hostile Silence, Jammed, and Short Circuit statuses.",
+      "powerWithAllTalents": 0,
+      "cooldown": 0,
+      "scaling": "focus",
+      "tags": [
+        "support",
+        "buff"
+      ],
+      "statuses": [],
+      "displayedScope": "Self",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "nova_legacy",
+      "name": "Legacy",
+      "owner": "nova",
+      "type": "passive",
+      "description": "While Nova is below half HP, grants +15 percentage points of accuracy and critical chance.",
+      "powerWithAllTalents": 0,
+      "cooldown": 0,
+      "scaling": "luck",
+      "tags": [
+        "buff"
+      ],
+      "statuses": [],
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "zeke_unshackled",
+      "name": "Unshackled",
+      "owner": "zeke",
+      "type": "passive",
+      "description": "Grants Zeke +3 Agility and +2 Speed.",
+      "powerWithAllTalents": 0,
+      "cooldown": 0,
+      "scaling": "agility",
+      "tags": [
+        "buff"
+      ],
+      "statuses": [],
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "gh0st_source_balance",
+      "name": "Source Balance",
+      "owner": "gh0st",
+      "type": "passive",
+      "description": "Grants Gh0st +5 flat damage reduction and 25% Source resistance.",
+      "powerWithAllTalents": 0,
+      "cooldown": 0,
+      "scaling": "defense",
+      "tags": [
+        "defend",
+        "buff"
+      ],
+      "statuses": [],
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "orion_ancestral_grace",
+      "name": "Ancestral Grace",
+      "owner": "orion",
+      "type": "passive",
+      "description": "Orion begins each battle with Regen for three turns.",
+      "powerWithAllTalents": 0,
+      "cooldown": 0,
+      "scaling": "focus",
+      "tags": [
+        "heal",
+        "buff"
+      ],
+      "statuses": [
+        "regen"
+      ],
+      "displayedScope": "Self",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "source_art_tune_world",
+      "name": "Tune World",
+      "owner": "nova",
+      "type": "source_art",
+      "description": "Open the Starborn circuit and rewrite one catastrophic resonance through collective intent.",
+      "powerWithAllTalents": 300,
+      "cooldown": 6,
+      "scaling": "focus",
+      "tags": [
+        "source",
+        "aoe",
+        "support"
+      ],
+      "statuses": [
+        "stun"
+      ],
+      "displayedScope": "All enemies",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "zeke_guardian_covenant",
+      "name": "Guardian Covenant",
+      "owner": "zeke",
+      "type": "support",
+      "description": "Apply Shield and Braced across the party through the recovered guardian bus.",
+      "powerWithAllTalents": 0,
+      "cooldown": 4,
+      "scaling": "focus",
+      "tags": [
+        "support",
+        "buff"
+      ],
+      "statuses": [
+        "shield",
+        "braced"
+      ],
+      "displayedScope": "Self",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "nova_link",
+      "name": "Link",
+      "owner": "nova",
+      "type": "support",
+      "description": "Restore party HP and apply Regen through the Bridge ground. Does not share damage.",
+      "powerWithAllTalents": 90,
+      "cooldown": 4,
+      "scaling": "focus",
+      "tags": [
+        "source",
+        "heal",
+        "support",
+        "aoe"
+      ],
+      "statuses": [
+        "regen"
+      ],
+      "declaredTargeting": "all_allies",
+      "displayedScope": "All allies",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "nova_breaker_bolt",
+      "name": "Breaker Bolt",
+      "owner": "nova",
+      "type": "active",
+      "description": "A focused physical shot dealing 50% more stability damage, without a status effect.",
+      "powerWithAllTalents": 100,
+      "cooldown": 3,
+      "scaling": "agility",
+      "tags": [
+        "physical"
+      ],
+      "statuses": [],
+      "declaredTargeting": "single_enemy",
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    },
+    {
+      "id": "nova_scatter_charge",
+      "name": "Scatter Charge",
+      "owner": "nova",
+      "type": "active",
+      "description": "Scatter a low-powered physical charge across the enemy formation.",
+      "powerWithAllTalents": 60,
+      "cooldown": 2,
+      "scaling": "agility",
+      "tags": [
+        "physical",
+        "aoe"
+      ],
+      "statuses": [],
+      "declaredTargeting": "all_enemies",
+      "displayedScope": "All enemies",
+      "targetRequirement": "NONE"
+    },
+    {
+      "id": "zeke_cover",
+      "name": "Cover",
+      "owner": "zeke",
+      "type": "support",
+      "description": "Shield one living ally for 2 turns.",
+      "powerWithAllTalents": 0,
+      "cooldown": 3,
+      "tags": [
+        "support"
+      ],
+      "statuses": [],
+      "declaredTargeting": "single_ally",
+      "displayedScope": "One ally",
+      "targetRequirement": "ALLY"
+    },
+    {
+      "id": "orion_field_treatment",
+      "name": "Field Treatment",
+      "owner": "orion",
+      "type": "heal",
+      "description": "Restore 20% of one living ally maximum HP; no Focus multiplier.",
+      "powerWithAllTalents": 0,
+      "cooldown": 4,
+      "tags": [
+        "heal"
+      ],
+      "statuses": [],
+      "declaredTargeting": "single_ally",
+      "displayedScope": "One ally",
+      "targetRequirement": "ALLY"
+    },
+    {
+      "id": "gh0st_disarm",
+      "name": "Disarm",
+      "owner": "gh0st",
+      "type": "active",
+      "description": "Physical shot applying Weak for 2 turns.",
+      "powerWithAllTalents": 60,
+      "cooldown": 3,
+      "scaling": "agility",
+      "tags": [
+        "physical"
+      ],
+      "statuses": [
+        "weak"
+      ],
+      "declaredTargeting": "single_enemy",
+      "displayedScope": "One enemy",
+      "targetRequirement": "ENEMY"
+    }
+  ],
+  "trees": [
+    {
+      "owner": "nova",
+      "branches": {
+        "Saboteur": [
+          {
+            "id": "nova_grounded_wire_v2",
+            "name": "Grounded Wire",
+            "cost": 1,
+            "requirements": [],
+            "description": "Arc Tether deals 20% more stability damage. HP damage and Shock are unchanged."
+          },
+          {
+            "id": "nova_controlled_vent_v2",
+            "name": "Controlled Vent",
+            "cost": 2,
+            "requirements": [
+              "nova_grounded_wire_v2"
+            ],
+            "description": "Cryo Vent power rises from 55 to 65. It applies Brittle for 2 turns, without freezing the target."
+          },
+          {
+            "id": "nova_breaker_bolt_v2",
+            "name": "Breaker Bolt",
+            "cost": 3,
+            "requirements": [
+              "nova_controlled_vent_v2"
+            ],
+            "description": "Physical shot at one enemy: 100 power, Agility scaling, cooldown 3. Deals 50% more stability damage; applies no status."
+          },
+          {
+            "id": "nova_exposed_seam_v2",
+            "name": "Exposed Seam",
+            "cost": 4,
+            "requirements": [
+              "nova_breaker_bolt_v2",
+              "ms_w4_mq20_complete"
+            ],
+            "description": "Direct hits deal 15% more HP damage against Weak or Brittle targets. Having both does not double the bonus."
+          }
+        ],
+        "Improviser": [
+          {
+            "id": "nova_quiet_steps_v2",
+            "name": "Quiet Steps",
+            "cost": 1,
+            "requirements": [],
+            "description": "Permanent +1 Speed."
+          },
+          {
+            "id": "nova_scatter_charge_v2",
+            "name": "Scatter Charge",
+            "cost": 2,
+            "requirements": [
+              "nova_quiet_steps_v2"
+            ],
+            "description": "Physical damage to all enemies: 60 power, Agility scaling, cooldown 2. Applies no status."
+          },
+          {
+            "id": "nova_hot_start_v2",
+            "name": "Hot Start",
+            "cost": 3,
+            "requirements": [
+              "nova_scatter_charge_v2"
+            ],
+            "description": "Direct hits deal 15% more HP damage against targets above 75% HP."
+          },
+          {
+            "id": "nova_keep_moving_v2",
+            "name": "Keep Moving",
+            "cost": 4,
+            "requirements": [
+              "nova_hot_start_v2",
+              "ms_w4_mq20_complete"
+            ],
+            "description": "A direct-action kill grants Nova Shield for 1 personal turn. Once per action, at most twice per battle."
+          }
+        ]
+      }
+    },
+    {
+      "owner": "zeke",
+      "branches": {
+        "Protector": [
+          {
+            "id": "zeke_cover_v2",
+            "name": "Cover",
+            "cost": 1,
+            "requirements": [],
+            "description": "New active: one living ally, including Zeke; cooldown 3 personal turns; applies Shield for 2 target turns (25% less incoming damage under the reviewed Shield rule); no heal, damage or interception."
+          },
+          {
+            "id": "zeke_reinforced_harness_v2",
+            "name": "Reinforced Harness",
+            "cost": 2,
+            "requirements": [
+              "zeke_cover_v2"
+            ],
+            "description": "Permanent +1 Vitality. Derived maximum HP and defense change through their shared formulas; no duplicate flat HP bonus."
+          },
+          {
+            "id": "zeke_steady_cover_v2",
+            "name": "Steady Cover",
+            "cost": 3,
+            "requirements": [
+              "zeke_reinforced_harness_v2"
+            ],
+            "description": "Cover additionally restores 20 stability to its target, capped at that target current maximum. Does not heal HP, remove an existing skip effect or grant a turn."
+          },
+          {
+            "id": "zeke_last_line_v2",
+            "name": "Last Line",
+            "cost": 4,
+            "requirements": [
+              "zeke_steady_cover_v2",
+              "ms_w4_mq20_complete"
+            ],
+            "description": "Once per battle, Zeke may cast Cover while it is on cooldown if the selected living ally is below 30% HP at commitment. Spend a normal ATB action, apply ordinary Cover and Steady Cover if learned, and restart Cover's full 3-turn cooldown. Consume the emergency charge only for a valid cast that bypassed an active cooldown. No extra Guard, stronger Shield, heal, free action or stacked Shield copy."
+          }
+        ],
+        "Disruptor": [
+          {
+            "id": "zeke_training_session_v2",
+            "name": "Training Session",
+            "cost": 1,
+            "requirements": [],
+            "description": "Permanent +1 Strength; derived Attack changes through the shared formula."
+          },
+          {
+            "id": "zeke_fault_line_v2",
+            "name": "Fault Line",
+            "cost": 2,
+            "requirements": [
+              "zeke_training_session_v2"
+            ],
+            "description": "Shatter Blow deals 20% more stability damage. Its HP damage, Weak duration and cooldown are unchanged."
+          },
+          {
+            "id": "zeke_opening_v2",
+            "name": "Opening",
+            "cost": 3,
+            "requirements": [
+              "zeke_fault_line_v2"
+            ],
+            "description": "When Shatter Blow successfully applies Weak, also mark that enemy for 2 target turns. The next direct damaging action from another crew member consumes the mark for +10% HP damage against that enemy. One mark per target; reapplication refreshes but does not stack; damage-over-time and Zeke own actions do not consume it."
+          },
+          {
+            "id": "zeke_controlled_demolition_v2",
+            "name": "Controlled Demolition",
+            "cost": 4,
+            "requirements": [
+              "zeke_opening_v2",
+              "ms_w4_mq20_complete"
+            ],
+            "description": "Zeke physical direct hits against an enemy with Weak deal 15% more stability damage. No HP damage bonus, immunity bypass or extra skipped turn."
+          }
+        ]
+      }
+    },
+    {
+      "owner": "orion",
+      "branches": {
+        "Field Medic": [
+          {
+            "id": "orion_field_resilience_v2",
+            "name": "Field Resilience",
+            "cost": 1,
+            "requirements": [],
+            "description": "Permanent +1 Vitality; maximum HP and defense use the shared formulas."
+          },
+          {
+            "id": "orion_field_treatment_v2",
+            "name": "Field Treatment",
+            "cost": 2,
+            "requirements": [
+              "orion_field_resilience_v2"
+            ],
+            "description": "New active: one living ally; cooldown 4 personal turns; restore 20% of target derived maximum HP, rounded down with minimum 1 and capped at missing HP. No Focus multiplier, resurrection or baseline recovery-over-time effect."
+          },
+          {
+            "id": "orion_triage_v2",
+            "name": "Triage",
+            "cost": 3,
+            "requirements": [
+              "orion_field_treatment_v2"
+            ],
+            "description": "Field Treatment restores an additional 5% of target maximum HP when the target is below 35% HP before the cast, for 25% total. Calculate the combined amount once, round down once, and emit one direct-heal event per target."
+          },
+          {
+            "id": "orion_aftercare_v2",
+            "name": "Aftercare",
+            "cost": 4,
+            "requirements": [
+              "orion_triage_v2",
+              "ms_w4_mq20_complete"
+            ],
+            "description": "Field Treatment additionally applies Aftercare for 2 target turns: each turn-end restores floor(cast-time target maximum HP / 20), minimum 1, capped at missing HP. Aftercare and Regen share one recovery-over-time slot. Existing Regen has priority and retains its potency and remaining duration; this cast neither extends it nor queues Aftercare. Recasting Aftercare refreshes its own duration to 2 without stacking ticks; a later Regen replaces it. No resurrection, Focus multiplier or post-battle ticking."
+          }
+        ],
+        "Controller": [
+          {
+            "id": "orion_clear_focus_v2",
+            "name": "Clear Focus",
+            "cost": 1,
+            "requirements": [],
+            "description": "Permanent +1 Focus, using the shared potency/accuracy/critical/resistance formulas exactly once."
+          },
+          {
+            "id": "orion_prism_lens_v2",
+            "name": "Prism Lens",
+            "cost": 2,
+            "requirements": [
+              "orion_clear_focus_v2"
+            ],
+            "description": "Prism Lance deals 20% more stability damage. Its HP damage, element and cooldown are unchanged."
+          },
+          {
+            "id": "orion_safe_exposure_v2",
+            "name": "Safe Exposure",
+            "cost": 3,
+            "requirements": [
+              "orion_prism_lens_v2"
+            ],
+            "description": "Prism Lance applies Weak for 1 target turn only if the target did not have Weak before the action and is not immune. An existing Weak is neither extended nor replaced by this talent."
+          },
+          {
+            "id": "orion_steady_field_v2",
+            "name": "Steady Field",
+            "cost": 4,
+            "requirements": [
+              "orion_safe_exposure_v2",
+              "ms_w4_mq20_complete"
+            ],
+            "description": "Weak newly applied by Orion lasts 1 additional target turn, capped at 3. Does not change potency, extend existing effects retroactively, affect Frozen/Stun/Stagger or bypass immunity."
+          }
+        ]
+      }
+    },
+    {
+      "owner": "gh0st",
+      "branches": {
+        "Precision": [
+          {
+            "id": "gh0st_scope_v2",
+            "name": "Scope",
+            "cost": 1,
+            "requirements": [],
+            "description": "Headshot deals 10% more HP damage against a target at or above 75% HP when the hit is evaluated."
+          },
+          {
+            "id": "gh0st_steady_aim_v2",
+            "name": "Steady Aim",
+            "cost": 2,
+            "requirements": [
+              "gh0st_scope_v2"
+            ],
+            "description": "Headshot gains 5 percentage points of critical chance, subject to the normal critical cap. No other action gains this bonus."
+          },
+          {
+            "id": "gh0st_execute_v2",
+            "name": "Execute",
+            "cost": 3,
+            "requirements": [
+              "gh0st_steady_aim_v2"
+            ],
+            "description": "Gh0st single-target direct damaging skills deal 15% more HP damage to targets at or below 30% HP before the hit. No instant kill, boss exemption or damage-over-time bonus."
+          },
+          {
+            "id": "gh0st_cool_head_v2",
+            "name": "Cool Head",
+            "cost": 4,
+            "requirements": [
+              "gh0st_execute_v2",
+              "ms_w4_mq20_complete"
+            ],
+            "description": "Landing a basic attack gives Gh0st one steady-shot charge. His next valid Headshot consumes it for +15% direct HP damage, even if that Headshot misses. Charges do not stack and expire at battle end; invalid or canceled actions consume none. Headshot keeps base cooldown 2, with no talent cooldown refund, ATB grant or critical-hit recharge. The shared +25% talent-damage cap includes Scope and Execute."
+          }
+        ],
+        "Tactical": [
+          {
+            "id": "gh0st_quick_position_v2",
+            "name": "Quick Position",
+            "cost": 1,
+            "requirements": [],
+            "description": "Permanent +1 Agility; Speed/evasion use their shared formulas. No immediate ATB grant."
+          },
+          {
+            "id": "gh0st_surgical_strike_v2",
+            "name": "Surgical Strike",
+            "cost": 2,
+            "requirements": [
+              "gh0st_quick_position_v2"
+            ],
+            "description": "Gh0st basic attack deals 20% more stability damage, with no HP damage or extra status bonus."
+          },
+          {
+            "id": "gh0st_disarm_v2",
+            "name": "Disarm",
+            "cost": 3,
+            "requirements": [
+              "gh0st_surgical_strike_v2"
+            ],
+            "description": "New active: one enemy; physical; base power 60; agility scaling; cooldown 3 personal turns; applies Weak for 2 target turns, respecting immunity. No Stun, silence or instant kill."
+          },
+          {
+            "id": "gh0st_recenter_v2",
+            "name": "Recenter",
+            "cost": 4,
+            "requirements": [
+              "gh0st_disarm_v2",
+              "ms_w4_mq20_complete"
+            ],
+            "description": "Once per battle, prevent a scheduled-turn skip caused by Stun or Stagger on Gh0st, removing those two effects from him. Frozen and other unhandled skip effects remain; if any would still skip this turn, do not activate or consume Recenter. Other statuses remain; no bonus action, counterattack, damage or team-wide immunity."
+          }
+        ]
+      }
+    }
+  ]
+}

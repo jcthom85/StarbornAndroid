@@ -1,0 +1,40 @@
+{
+  "date": "2026-11-17",
+  "scope": "Focused host checks, no device playtest or full campaign run",
+  "suites": [
+    {
+      "name": "com.example.starborn.domain.combat.NovaTalentCombatTest",
+      "tests": "9",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.example.starborn.feature.combat.EnemySupportDecisionTest",
+      "tests": "13",
+      "failures": "2",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.example.starborn.feature.combat.OpeningCombatRuntimeTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "com.example.starborn.domain.combat.CrewTalentCombatTest",
+      "tests": "13",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0"
+    }
+  ],
+  "baselineApTestFailure": "Existing boss-only AP assertion rejects current Boardroom Bailiff elite reward (4 AP). Required-route arithmetic passed.",
+  "allySelectionReproduction": "Before repair: zeke_cover expected ALLY but was NONE",
+  "notes": [
+    "EnemySupportDecisionTest has two unresolved expectations against current authored Avatar/finale definitions; see README.",
+    "Runtime probes supply equal artificial stats and all purchased talents. They establish effects, not game balance."
+  ]
+}

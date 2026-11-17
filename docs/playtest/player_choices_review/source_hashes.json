@@ -1,0 +1,17 @@
+{
+  "app/src/main/assets/characters.json": "f0eb93eeb29b032bd141df33ab930156d4eecdf79ea4ce5cd75860cef25f00f7",
+  "app/src/main/assets/events.json": "bd1989b9173e89ca914ffcc4440006ebc7063a93c472f9f61cc31d4c21ce5a10",
+  "app/src/main/assets/dialogue.json": "610ccf126d6686b76718fd36f0b511a56b9b9af32b115b43819bab17d0ca0804",
+  "app/src/main/assets/progression.json": "8be386cfcb42105556a3b2b9cd5f0f87a09cf8cbe0ba09f41c54c6ca901c6f5f",
+  "app/src/main/assets/quests.json": "c02fc3e57a1d6c58d9ec57e7ff6ff2fa0058530c43672ebb05e374c4ab52fd4b",
+  "app/src/main/assets/skills.json": "92361ef8315c1cb3f00f4d4ade1974ccf4cc60fee39dbe9aef3ae3bf0e096986",
+  "app/src/main/assets/enemies.json": "116fca8f1b84c0f74d22656f7f4e32744caf6802038f1295a92514b6a4e64373",
+  "app/src/main/assets/statuses.json": "b394878c8b6b63a2dad3e4ed0a072b9cab9cb49e8cb1f050e9d47f5d1e74f66e",
+  "app/src/main/assets/items.json": "c9a1787cd89d1777cd46a9ba57c09b61d12a8c89b8a280784a6f5e2321f110d3",
+  "gameRuntime/src/main/kotlin/com/example/starborn/domain/leveling/CrewBuildPrototype.kt": "0317241019280960bfb49b2b229151691be8752e4a263368df838ddf3a01eebc",
+  "gameRuntime/src/main/kotlin/com/example/starborn/domain/leveling/NovaBuildPrototype.kt": "1ab2e41ff0f2e4830482d6a5a79030070923377dc99b453c576d5791435a8e0f",
+  "gameRuntime/src/main/kotlin/com/example/starborn/domain/combat/TalentEffects.kt": "b2dfe9ce8046e13d2a45646e4f9c52d9656a33e4d002056d526863ad1970d787",
+  "gameRuntime/src/main/kotlin/com/example/starborn/domain/combat/CombatActionProcessor.kt": "ffef2e63b4bc070c4b7c9347c04618bb8afa99b5be379e9a3eb104e92bd3609d",
+  "gameRuntime/src/main/kotlin/com/example/starborn/feature/combat/viewmodel/CombatController.kt": "0eb2c75b07303c07d190fbdd03a65839e5ad3cb5391b34c8c5156158b8246ec2",
+  "gameRuntime/src/main/kotlin/com/example/starborn/feature/combat/viewmodel/helpers/CombatEnemyAI.kt": "6fa791a86b869e2309943c795cc0711a6325f0f47ca5c423a647ddb3494bb49c"
+}
