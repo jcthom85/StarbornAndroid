@@ -1265,8 +1265,12 @@ class CombatActionProcessor(
         val enemyTargets = explicitTargets.ifEmpty {
             actionTargets(state, attackerState, emptyList(), Targeting.ENEMY)
         }
-        val allyTargets = actionTargets(state, attackerState, emptyList(), Targeting.ALLY)
         val selfTarget = listOf(attackerId)
+        val allyTargets = if (skill.targeting.equals("self", ignoreCase = true)) {
+            selfTarget
+        } else {
+            actionTargets(state, attackerState, emptyList(), Targeting.ALLY)
+        }
 
         return definitions.values.map { definition ->
             val targeting = definition.target.toStatusTargeting()

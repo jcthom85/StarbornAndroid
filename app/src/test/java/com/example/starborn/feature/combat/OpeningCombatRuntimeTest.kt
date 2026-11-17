@@ -572,10 +572,23 @@ class OpeningCombatRuntimeTest {
         } } }
     }
 
-    @Test fun `authored group support reaches living party members without helping enemies or reviving allies`() {
-        for ((skillId, caster, statusId) in listOf(
-            Triple("zeke_guardian_covenant", "zeke", "shield"),
-            Triple("nova_link", "nova", "regen"))) {
+    @Test fun `authored support respects self and party targeting without helping enemies or reviving allies`() {
+        val selfSkills = listOf(
+            Triple("zeke_bulwark_stance", "zeke", listOf("guard", "braced")),
+            Triple("gh0st_intercept", "gh0st", listOf("guard")),
+            Triple("gh0st_harden", "gh0st", listOf("guard", "shield", "braced"))
+        )
+        val partySkills = listOf(
+            Triple("zeke_guardian_covenant", "zeke", listOf("shield", "braced")),
+            Triple("orion_nano_repair", "orion", listOf("regen")),
+            Triple("nova_link", "nova", listOf("regen")),
+            Triple("source_art_construct", "nova", listOf("guard"))
+        )
+        for ((skillId, caster, statusIds) in selfSkills + partySkills) {
+            val selfOnly = selfSkills.any { it.first == skillId }
+            val knockedOut = if (caster == "gh0st") "orion" else "gh0st"
+            val recipients = if (selfOnly) setOf(caster) else setOf("nova", "zeke", "orion", "gh0st") - knockedOut
+            val healsImmediately = skillId in setOf("nova_link", "source_art_construct")
             // Isolated targeting scenario: these optional unlocks are supplied,
             // not claimed as earned by the level-nine checkpoint.
             val session = world4Session().apply { unlockSkill(skillId) }
@@ -587,12 +600,13 @@ class OpeningCombatRuntimeTest {
                 val initial = requireNotNull(flow.value)
                 flow.value = initial.copy(combatants = initial.combatants.mapValues { (id, actor) ->
                     when {
-                        id == "gh0st" -> actor.copy(hp = 0)
+                        id == knockedOut -> actor.copy(hp = 0)
                         actor.combatant.side == CombatSide.PLAYER -> actor.copy(hp = actor.combatant.stats.maxHp / 2)
                         else -> actor.copy(hp = actor.combatant.stats.maxHp / 2)
                     }
                 })
                 val skill = vm.skillsForPlayer(caster).single { it.id == skillId }
+                assertEquals(skillId, if (selfOnly) "Self" else "All allies", vm.skillTargetScopeLabel(skill))
                 if (skillId == "nova_link") {
                     val resolver = CombatViewModel::class.java.getDeclaredMethod("determineSkillTargeting", skill.javaClass)
                         .apply { isAccessible = true }
@@ -614,20 +628,19 @@ class OpeningCombatRuntimeTest {
                     assertTrue(vm.canUseSkill(caster, skill))
                     vm.useSkill(skill) // No explicit targets: exercise production resolution.
                     val after = requireNotNull(vm.combatState)
-                    for (id in listOf("nova", "zeke", "orion")) {
-                        assertTrue("$skillId must apply $statusId to $id", after.combatants.getValue(id).statusEffects.any { it.id == statusId })
-                        if (skillId == "nova_link") {
-                            // Link heals immediately; its separate Regen starts on the recipient's next turn.
-                            assertTrue(after.combatants.getValue(id).hp > before.combatants.getValue(id).hp)
-                        }
+                    for (statusId in statusIds) {
+                        val statusRecipients = after.log.drop(before.log.size)
+                            .filterIsInstance<CombatLogEntry.StatusApplied>()
+                            .filter { it.statusId == statusId }
+                            .map { it.targetId }.toSet()
+                        assertEquals("$skillId $statusId recipients", recipients, statusRecipients)
                     }
-                    assertEquals(0, after.combatants.getValue("gh0st").hp)
-                    assertTrue(after.combatants.getValue("gh0st").statusEffects.none { it.id == statusId })
+                    assertEquals(0, after.combatants.getValue(knockedOut).hp)
                     val enemy = after.combatants.getValue("faulted_loader")
                     assertEquals(before.combatants.getValue("faulted_loader").hp, enemy.hp)
-                    assertTrue(after.log.drop(before.log.size).filterIsInstance<CombatLogEntry.Heal>()
-                        .none { it.targetId == "faulted_loader" })
-                    assertTrue(enemy.statusEffects.none { it.id == statusId })
+                    val healRecipients = after.log.drop(before.log.size).filterIsInstance<CombatLogEntry.Heal>()
+                        .map { it.targetId }.toSet()
+                    assertEquals("$skillId heal recipients", if (healsImmediately) recipients else emptySet(), healRecipients)
                     assertTrue(after.combatants.getValue(caster).activeCooldowns.getOrDefault(skillId, 0) > 0)
                     used = true
                     break
@@ -635,6 +648,35 @@ class OpeningCombatRuntimeTest {
                 assertTrue("$caster must receive an ATB action", used)
             } finally { vm.viewModelScope.cancel(); dispatcher.scheduler.runCurrent() }
         }
+    }
+
+    @Test fun `Scan targets one enemy and records its weakness without applying Discord to Nova`() {
+        val session = world4Session().apply {
+            restore(state.value.copy(progressionPrototypeVersion = com.example.starborn.domain.leveling.CrewBuildPrototype.VERSION))
+            unlockSkill("source_art_scan")
+        }
+        val vm = createCombat(session, listOf("slag_golem", "faulted_loader"), SeededCombatRandom(9))
+        try {
+            val scan = vm.skillsForPlayer("nova").single { it.id == "source_art_scan" }
+            assertEquals(com.example.starborn.feature.combat.viewmodel.TargetRequirement.ENEMY, vm.targetRequirementFor(scan))
+            assertEquals("One enemy", vm.skillTargetScopeLabel(scan))
+            for (tick in 0 until 240) {
+                dispatcher.scheduler.advanceTimeBy(250)
+                dispatcher.scheduler.runCurrent()
+                if (vm.lungeActorId.value != null) vm.onLungeFinished(vm.lungeToken.value)
+                if (vm.missLungeActorId.value != null) vm.onMissLungeFinished(vm.missLungeToken.value)
+                vm.selectReadyPlayer("nova")
+                if (vm.awaitingAction.value != "nova") continue
+                vm.useSkill(scan, listOf("faulted_loader"))
+                val after = requireNotNull(vm.combatState)
+                assertEquals(setOf("faulted_loader"), after.combatants.filterValues { actor ->
+                    actor.statusEffects.any { it.id == "weak" }
+                }.keys)
+                assertTrue("shock" in vm.weaknessKnowledge.value.knownEnemyWeaknesses["faulted_loader"].orEmpty())
+                return
+            }
+            fail("Nova must receive an ATB action")
+        } finally { vm.viewModelScope.cancel(); dispatcher.scheduler.runCurrent() }
     }
 
     @Test fun `production ally skills offer ally selection and affect only the chosen living ally`() {

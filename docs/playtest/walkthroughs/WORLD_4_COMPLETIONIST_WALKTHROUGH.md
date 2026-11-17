@@ -516,7 +516,7 @@ The locker holds **Pure Iron**, **Ballistic Weave**, and a **Circuit Board**. In
 
 213. At **Titan Dock**, use **commander rylos**. Finish the confrontation so the actual showdown is credited. Merely entering Titan Dock is not that conversation.
 
-214. Defeat the **Titan Walker**. Its **Missile Battery**, **Cutting Arm**, **Anchor Cannon** and **Shield Projector** can each be targeted. Destroy a charging system to cancel its attack, or focus the chassis to end the fight. Use its exposed vents after heavy attacks. Check **Meltdown → defeat Titan Walker** when the chassis falls, then let victory feedback finish.
+214. Defeat the **Titan Walker**. Tap the attack warning to select its source. The **Missile Battery**, **Cutting Arm**, **Anchor Cannon** and **Shield Projector** can each be targeted. Try Nova's **Arc Tether** on a charging system to pressure its stability. Breaking or destroying that system cancels its attack. Guard the threatened crew member if you cannot stop the attack in time, or focus the chassis when you can finish it. Check **Meltdown → defeat Titan Walker** when the chassis falls, then let victory feedback finish.
 
 215. From **Titan Dock**, go **north** to **Escape Catwalk** (`foundry_escape_catwalk`).
 

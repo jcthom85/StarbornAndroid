@@ -52,12 +52,21 @@ class CrewProgressionPacingTest {
         assertEquals(80, Crew.nodes.values.sumOf { it.costAp })
     }
 
-    @Test fun remainingSideQuestAwardsAddTenApWithoutTurningRepeatableCombatIntoApFarming() {
+    @Test fun optionalQuestAwardsAddTenApOnce() {
         val store = GameSessionStore().apply { restore(GameBootstrap.newGame(assets.loadCharacters(), emptyList())) }
         val sideQuests = listOf("w2_sq01", "w3_sq12", "w4_sq19", "w5_sq22", "w6_sq26")
         sideQuests.forEach { store.completeQuest(it); store.completeQuest(it) }
         assertEquals(10, store.state.value.playerAp)
         assertEquals(sideQuests.toSet(), store.state.value.progressionAwardClaims)
-        assertTrue(assets.loadEnemies().filter { (it.apReward ?: 0) > 0 }.all { it.tier == "boss" })
+    }
+
+    @Test fun combatApBudgetIncludesTheOptionalBoardroomBailiffAndFinale() {
+        assertEquals(
+            mapOf("administrator_boss" to 2, "titan_walker_boss" to 3, "compliance_avatar" to 4,
+                "boardroom_bailiff" to 4, "ascended_vale" to 5, "ascended_god" to 8),
+            assets.loadEnemies().mapNotNull { enemy ->
+                enemy.apReward?.takeIf { it > 0 }?.let { enemy.id to it }
+            }.toMap()
+        )
     }
 }

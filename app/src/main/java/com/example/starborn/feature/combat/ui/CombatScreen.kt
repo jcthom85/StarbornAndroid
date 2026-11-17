@@ -1184,7 +1184,7 @@ fun CombatScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Box(Modifier.weight(1f)) {
-                            if (!commandPaletteVisible && !targetMode) {
+                            if (!hasPrep && !commandPaletteVisible && !targetMode) {
                                 CombatImpactBanner(
                                     message = if (showCombatActionText) combatBanner else null,
                                     hasInstruction = false,

@@ -364,7 +364,7 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 162. From **Mainframe Nave**, go **east** to **Firewall Alpha** (`deep_firewall_alpha`).
 
-163. At **Firewall Alpha**, use **firewall node alpha**. Drop Alpha after mapping the maze.
+163. At **Firewall Alpha**, use **firewall node alpha** after mapping the maze. The Screener and Turret fight is optional. If you engage, use the warning to find which unit is preparing its move. Hitting the charging Turret can interrupt its beam.
 
 164. From **Firewall Alpha**, go **east** to **Firewall Beta** (`deep_firewall_beta`).
 
@@ -452,7 +452,7 @@ The Firewall Construct drops **Quake Knuckles** for Zeke. Their basic attack hit
 
 202. From **Soloist Dais**, go **north** to **Boardroom Grave** (`deep_throne_room_scale_04`).
 
-203. At **Boardroom Grave**, inspect **empty chairs**, **casualty projection**. These are local details; do not expect a quest reward from every inspection. For the optional combat, defeat the **Boardroom Bailiff**: guard its announced verdict and attack during recovery. It grants three Power Cells but does not credit the main Avatar objective. A save with this room's older Avatar already defeated keeps the encounter cleared.
+203. At **Boardroom Grave**, inspect **empty chairs** and **casualty projection**. For the optional combat, defeat the **Boardroom Bailiff**. Guard its announced verdict and attack during recovery. Victory awards three Power Cells and 4 AP, with no credit toward the main Avatar objective. A save with this room's older Avatar already defeated keeps the encounter cleared.
 
 204. From **Boardroom Grave**, go **north** to **Coup Balcony** (`deep_throne_room_scale_05`).
 

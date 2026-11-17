@@ -100,9 +100,11 @@ Acceptance: a normal route remains viable without grinding; each crew member has
 
 ## Controlled probe results
 
+The runtime snapshot records the baseline before the Scan correction.
+
 These observations use real runtime code with all talents supplied, equal artificial stats (1,000 maximum HP, 500 current HP, 20 Focus) and one test enemy. They demonstrate effect/target behavior, not campaign strength or earned availability.
 
-- **Scan:** displayed Self; applies Discord to Nova herself. This is the first remaining targeting defect to repair.
+- **Scan:** the baseline displayed Self and applied Discord to Nova. The correction declares a single enemy target and describes the combat effect.
 - **Construct:** displayed All allies; restores 156 HP to each crew member and applies party Guard. There is no offensive choice in this observed action.
 - **Intercept/Bulwark Stance/Harden:** the displayed scope is Self, but friendly statuses spread across the living party.
 - **Nano Repair:** displayed Self; applies party Regen.
@@ -121,7 +123,113 @@ Portrait work was committed/pushed first as `8965f879`. This follow-up changes o
 - Two enemy-support expectations remain unresolved against current authored boss data: Avatar expects the old `missile_barrage → avatar_recalibration` recovery map, and the finale expects a `gathering_silence` opening rather than the currently selected `source_great_silence`. The first directly checks unchanged enemy data; neither test was weakened to make the run green. Review them with the authored encounter contracts before changing behavior.
 - No full suite, fresh campaign run, phone UI check or desktop UI playtest was performed in this pass. Android/shared production code compiled as part of the host run. Both interfaces already consume the shared ally-selection request.
 
-Resume with **Scan's self-targeting and the explicit self/party support contracts**, preserving intended party abilities. Then resolve passive wording/behavior and AP-budget evidence before numerical balance experiments. This is a completed baseline review and one verified repair; the remaining balance/design pass is open.
+The Scan follow-up passed three focused controller tests. With two enemies present, Scan applied Discord only to the selected enemy and recorded its Shock weakness. The tests also verified that single-ally selection and existing party support still work.
+
+## Support ability follow-up
+
+- Bulwark Stance, Intercept and Harden now apply their defensive effects only to the caster, as their descriptions indicate. This removes accidental party-wide Guard and makes the opportunity cost of those actions worth testing in the next balance pass.
+- Nano Repair grants Regen to all living allies. Guardian Covenant grants Shield and Braced to all living allies. Their target labels now match their existing effects.
+- Construct's description and target label now reflect its existing combat behavior. It restores HP and grants Guard to all living allies.
+
+Corporate Insight and Legacy now describe the direct damage and basic attack critical chance bonuses they already grant at their respective HP thresholds.
+
+Three focused controller tests passed. They checked all seven self and party support abilities, Scan, and purchased single-ally support. The baseline findings and runtime exports above capture the behavior before these corrections. Next, reconcile the AP budget and compare protection, healing and setup with earned builds.
+
+## AP and earned combat follow-up
+
+The required route budgets remain **8 / 16 / 26 / 36 / 44 / 50 AP** at the six checkpoints before finale rewards. The five optional quest awards add 10 AP and the Boardroom Bailiff adds 4 AP, for up to **64 AP before the finale**. Ascended Vale and Ascended God pay another 5 and 8 AP respectively, for **77 AP after both victories** against 80 AP in the trees. The reward contract now checks the exact six combat AP sources. The earned Ring completionist route verified the Bailiff's 4 AP, immediate save and reload, and continued absence on revisiting Boardroom Grave after a rest.
+
+The World 2 comparison used existing campaign-earned main and completionist arrivals, seeds 17, 41 and 73, and the current Beast encounter. Both arrivals produced identical metrics for these policies. The main arrival was level 5 with 10 AP available, and the completionist arrival was level 6 with 12. Each policy used emergency restoration below 45% HP when available.
+
+| Beast policy | Wins across both routes | Mean crew actions | Mean incoming HP damage | Mean consumables used |
+| --- | ---: | ---: | ---: | ---: |
+| Basic attacks | 6/6 | 45.3 | 215.7 | 2.0 |
+| Guard when marked, otherwise basic attacks | 6/6 | 54.0 | 133.3 | 0.3 |
+| Field Patch and timed Shatter Blow, otherwise basic attacks | 6/6 | 38.7 | 147.0 | 0.0 |
+
+Guard reduced incoming damage and took more actions. The combined crew support policy cut actions and eliminated consumable use in all six runs. It used Field Patch 3–4 times per run and Shatter Blow 2–4 times. Shatter Blow also deals damage, so the combined result cannot isolate Discord or Field Patch. All policies won. Keep both abilities and test their separate contributions against later enemies before adjusting power.
+
+The Warden's reactive tether strategy won in all three seeds with no recorded incoming damage and averaged 10.3 crew actions versus 19.0 for direct attacks. Both Canopy target orders won in all three seeds. These are tests of deterministic action policies. They help identify useful decisions and leave open how clearly the game teaches those decisions.
+
+The earned Foundry completionist route and both Source finale variants also passed with no assisted actions.
+
+## Titan and Silence comparisons
+
+Replayed each boss from an earned checkpoint with three seeds (17, 41, 73) and four policies. Each replay restored the same combat inputs, including HP, items, gear and unlocks. The Silence checkpoint carries forward the actual state after Vale. The baseline already uses skills and emergency healing. Each variant adds one priority to that strategy: Guard when marked, Orion's Field Patch below 80% HP, or an available interrupt tool aimed at the source of an enemy preparation. All 24 replays won with zero consumables spent and zero knockouts.
+
+| Added priority | Titan mean actions / incoming damage | Silence mean actions / incoming damage |
+| --- | ---: | ---: |
+| Baseline | 68.7 / 38.3 | 44.7 / 48.3 |
+| Guard when marked | 78.0 / 28.7 | 48.3 / 23.7 |
+| Earlier Field Patch | 72.7 / 38.3 | 44.3 / 49.3 |
+| Interrupt the preparation | 69.3 / 4.7 | 45.3 / 7.3 |
+
+Prioritizing interruption gave the biggest damage reduction with little change in action count. Keep that choice and check whether players can identify the source and the moves available to stop it. Guard reduced average damage but sometimes prolonged exposure enough to take more damage than baseline on the same seed. It belongs as a fallback when interruption is unavailable. Earlier Field Patch recovered HP in several runs but did not prevent a knockout or save an item in this sample. The tested route already handled both bosses comfortably, so these runs give no reason to buff Field Patch or raise skill costs. They also leave open how these choices perform for players with weaker gear or different unlocks.
+
+The focused route test passed and writes the per-seed outcomes and action counts to `app/build/reports/player-choices/earned-boss-choices.txt`. The next player choices review can compare unlock timing and equipment across the six worlds using these results as a reference.
+
+## Unlock timing and equipment on earned routes
+
+Two fresh campaigns using production crew rules reached the credits without combat assistance. The main route recorded 26 encounter entries and the side-content route recorded 38. The scripts followed public quest and combat actions and only used gear, AP and supplies available on those routes. They model two specific play styles. For example, both scripts left Nova's Mining Pistol equipped even after earning the Laser Blaster. Owned gear and equipped gear are recorded separately.
+
+| Before encounter | Main route level / unspent AP | Side-content route level / unspent AP | Options already available |
+| --- | ---: | ---: | --- |
+| W1 Iron Warden | 4 / 6 | 4 / 6 | Arc Tether, Cryo Vent and Hydraulic Kick. Both can afford the 6 AP path to Breaker Bolt. |
+| W2 Source Beast | 5 / 10 | 6 / 12 | Orion has Field Patch and Zeke has Shatter Blow. Both own the Laser Blaster. The side route also equipped Brawler Rig and owns Ion Poppers and Stability Gyro. |
+| W3 Administrator | 7 / 22 | 8 / 26 | Both have four crew members, Link and Scan. Side content added Intercept, Splitter Edge, Rapid Capacitor and several equipped accessories or mods. |
+| W4 Titan | 8 / 33 | 10 / 39 | Both have Arc Tether, Hydraulic Kick and Construct. System Crash is present only on the side route. Both own a Heat Liner. The side route also has Driftweave Cloak and Crucible Forge-Plate. |
+| W5 Avatar | 10 / 18 | 12 / 26 | Both have System Crash and Stasis, and entered with 22 AP already spent. Both own Quake Knuckles and have Heat Liner on Orion. |
+| W6 Silence | 12 / 23 | 12 / 33 | Both have purchased Breaker Bolt and Exposed Seam, with 32 AP spent overall. Both own Sunder Seeds. The side route also has Starborn Mod equipped. |
+
+The main route has a usable interruption option from World 1. System Crash arrived at the Orbital Fighter on the main route and at Magma Drone on the side route. Keep its level 9 unlock so the extra combat can earn an earlier tactical option. Prioritize making Titan's interrupt source and Arc Tether's role clear. Breaker Bolt costs 6 AP along its path with no world milestone prerequisite. The test script chose to buy it in World 6, although both routes could afford it by the Warden. Capstones were closed at Titan and open at Avatar, with World 5 and World 6 left to use them. These runs establish that the timing gives room to use them. They only purchased Exposed Seam among the capstones, so the other capstones still need individual value comparisons.
+
+The older equipment audit's crafting gap is partly addressed. Tinkering now offers two armor recipes in addition to mods. The side route crafted and equipped Brawler Rig and Driftweave Cloak. Ingredient checks at the sampled pre-boss inventories found Armor Plating Mk I available across both routes and Thermite Core on the side route from Titan onward. These checks measure materials on hand after earlier spending and do not count potential shop purchases or additional detours. The main route mostly used starter weapons and only equipped Heat Liner among the major gear rewards. The clearest equipment opportunity is helping players identify useful upgrades they already own, especially the Laser Blaster and later armor, before adding another tier.
+
+The main route reached the finale with Sunder Seeds as its first recorded owned snack. The side route carried Ion Poppers from the Beast checkpoint. Starbar Crunch is already an authored room pickup, but neither route collected it. Treat snack discovery as the first issue. The early snack comparison found that opening with Ion Poppers' Accuracy action could erase the time saved by the equipped upgrade. For further comparisons, activate snacks in response to an actual threat or unmet hit requirement and count the turn spent. Do not assume every owned snack needs to be an attractive opener.
+
+The route trace writes `app/build/reports/player-choices/earned-progression.json`. The physical-copy and legacy migration check passed, along with crafting and snack contract tests.
+
+## Earned gear comparison
+
+Replayed the Beast, Titan, Avatar and Silence from the main route with seeds 17, 41 and 73. The paired runs used the same skills, combat decisions, inventory and saved HP. The upgrade run equipped only items the crew already owned, through the normal equipment controls. This means Laser Blaster for the Beast, Laser Blaster and Orion's Heat Liner for Titan, and Laser Blaster and Quake Knuckles for Avatar and Silence. The Avatar and Silence baseline already wore Heat Liner. Armor can change maximum HP and move the same saved HP across a healing threshold.
+
+| Fight | Mean actions, baseline / upgraded | Mean incoming damage, baseline / upgraded | Items used across 3 runs, baseline / upgraded |
+| --- | ---: | ---: | ---: |
+| Beast | 24.0 / 22.0 | 0.0 / 0.0 | 0 / 0 |
+| Titan | 68.7 / 73.3 | 38.3 / 51.7 | 0 / 3 |
+| Avatar | 32.0 / 32.3 | 48.0 / 25.0 | 0 / 1 |
+| Silence | 44.7 / 44.3 | 48.3 / 48.3 | 0 / 0 |
+
+All 24 replays won with zero knockouts. Laser Blaster earned its keep against the Beast and the Avatar upgrade pair reduced damage, but the later results varied. Titan changed two pieces together, so the extra actions and item use do not establish that either piece is worse by itself. These are results for one strategy and one route. Keep the current gear values. In the encounter pass, prioritize clearer interrupt cues and pressure that creates a reason to adjust gear or tactics. Per-seed results are in `app/build/reports/player-choices/earned-gear.txt`.
+
+Starbar Crunch moved from Pod Row's floor to the shift ration tin at Ration Sink. The opening route tests verified the new pickup and equip flow on both loader branches, including ownership and the opened tin after save and reload.
+
+## Phase 2 kickoff: combat challenges
+
+Titan and Silence already marked the threatened crew portraits, highlighted the charging component and let players select it from the persistent warning. The visible warning only named the attack and who it threatened. It now names the source and presents targeting it as an action when one attack is preparing. Multiple warnings retain the compact layout. Android gives the warning priority over transient combat messages in the same fixed space, and desktop reserves enough space for both lines.
+
+The tactical distinction is between stopping this attack and removing future attacks. A Break on the charging component cancels the current preparation. Destroying it also denies future attacks from that component. Titan has four such systems, while Silence's Voice and Memory Anchors only power their specific commands. Great Silence comes from the body. The World 4 and World 6 walkthroughs now explain how to select the source and when Guard is the fallback.
+
+The 24 earned boss replays above establish the payoff for prioritizing interruption. They do not measure how often players notice the new cue or prove that eliminating every component beats focusing the body. The broader encounter pass should check how often other worlds teach and reuse these choices, and compare where optional fights give a meaningful reward.
+
+Verification passed for both boss runtime checks and all three focused Android emulator tests. These covered Titan's source selection at normal and large text sizes, Silence's anchor selection and warning removal, and two incoming warnings in the existing message space. Desktop compiled.
+
+### Six-world encounter review
+
+I compared authored room formations with the fights the two fresh routes actually entered. The counts below cover non-debug, room-listed formations grouped by their world background. Scripted spawns and moving patrols can add encounters outside that count. Route counts are observed entries and can include those spawns or patrols. The side-content route is separate from the Ring combat sweep, which visits more of World 5.
+
+| World | Room formations / unique compositions | Main / side-route entries | Tactics and optional payoff |
+| --- | ---: | ---: | --- |
+| 1 · The Pit | 10 / 10 | 6 / 7 | The Loader gives Nova an early elemental target. The Bulwark certifies Hydraulic Kick's Guard Break, and the Warden gives Arc Tether a timing payoff. Preserve the transition between those lessons. The Warden's Laser Blaster is the first major gear payoff. |
+| 2 · Sector 9 | 10 / 9 | 3 / 4 | Canopy teaches choosing between support and damage threats. Both opening targets won in three seeds. The pair pays Stability Gyro, and Hound Nest pays Ion Poppers and Beast Meat with a guarded supply pack behind it. The Beast lets Field Patch and Shatter Blow matter without requiring the optional fights. |
+| 3 · Spire | 8 / 8 | 3 / 9 | Single and paired Crawlers build into rooftop pressure. Optional Relay squads give an earlier chance to interrupt support before the Administrator. Service Dumbwaiter has a distinctive Gh0st weapon plus a Circuit Board, and Fuel Bridge supplies Wiring. Leave the exit between rooftop fights available. |
+| 4 · Foundry | 24 / 22 | 2 / 6 | Slag River teaches a marked attack followed by recovery. Welder repair and coolant squads let players practice interrupting support before Titan. Coolant Spillway's iron has a specific arcade repair use, and the Crucible pays Forge-Plate. This world has the biggest gap between authored fights and the two routes' participation. Check what motivates a player to enter a third Foundry fight on a blind run before adding harder gates. |
+| 5 · Ring | 25 / 24 | 5 / 5 | The dock teaches alternating preparations, Gamma tests elemental response, and the Avatar applies the linked-source lesson. Surveillance Pit and Firewall Alpha repeat the same Screener/Turret composition. The optional sweep cleared both without spending items or taking a knockout in the tested seed. Alpha's fight can stay optional alongside the required node work. The Bailiff remains a stronger optional incentive at 4 AP and three Power Cells. |
+| 6 · Source | 15 / 15 | 7 / 7 | Rescues teach distinct responses, then the arena combines support and disruption before the linked finale. The counts stay equal because the optional quest route can bypass the branch fights. Some nightmare enemies have no item drops, and the Memory Leak and Nightmare Guard also appear separately before the required pair. Gauge whether the rematches feel like foreshadowing or repetition in a blind run. The required pair pays Sunder Seeds for the finale. |
+
+The review found limited identical formation repetition. The more likely issue is repetition of the same response across different groups, particularly in the Foundry and Ring. Keep the authorship and current difficulty values for now. The recommended playtest targets are the Foundry's first optional repair fight, whether Ring players choose to clear both Screener/Turret fights, and whether Source players understand the rematches. Clearing an automated route establishes viability for that build and strategy. It cannot tell us how often players notice the optional fights or what they find repetitive.
+
+The reward clues now appear in existing room interactions. The Hound Nest pack shows wiring and weave through a tear, the Service Dumbwaiter tray reveals the guard's blade and drone's circuit board, the Coolant Spillway steam reveals the iron, and Boardroom Grave's chairs point to the charging cells. The Spire and Ring walkthroughs now identify the matching gear or AP payouts and give an interrupt cue for Firewall Alpha. No reward amounts or combat gates changed.
 
 ## Phase 3: puzzles and exploration
 

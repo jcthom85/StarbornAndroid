@@ -354,7 +354,7 @@ The Nightmare Guard drops **Sunder Seeds** in Memory Defense Arena. Equip them f
 
 157. At **The Center**, use **Vale**. Finish Vale’s full confrontation and Nova’s answer. Confirm **Confront Vale** credited before fighting; arrival alone is insufficient.
 
-158. At **The Center**, defeat **Ascended: Soloist** (`ascended_vale`). Confirm **Defeat Vale** credited before attempting the second form. Save at The Center after the transformation. HP, knockouts and supplies carry forward. Defeat **Ascended: Silence** here, then confirm the second-form objective. Its Voice Anchor prepares targeted Silence, and its Memory Anchor prepares a party pulse. Breaking an anchor cancels its attack. You can also target the body directly. Guard when **Great Silence** is announced and use the opening that follows.
+158. At **The Center**, defeat **Ascended: Soloist** (`ascended_vale`). Confirm **Defeat Vale** credited before attempting the second form. Save at The Center after the transformation. HP, knockouts and supplies carry forward. Defeat **Ascended: Silence** here, then confirm the second-form objective. Its Voice Anchor prepares targeted Silence, and its Memory Anchor prepares a party pulse. Tap the warning to select the charging anchor. **Breaker Bolt**, if learned, pressures its stability. Breaking or destroying it cancels the attack. **Great Silence** comes from the body. If you cannot interrupt it in time, Guard and use the opening that follows.
 
 159. From **The Center**, go **north** to **White Shore** (`source_center_node_scale_01`).
 

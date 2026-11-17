@@ -686,7 +686,8 @@
     "name": "Bulwark Stance",
     "character": "zeke",
     "type": "active",
-    "description": "Plants magnetic boots and locks reinforced forearm plates into place, granting Guard and Braced.",
+    "description": "Zeke locks his boots and forearm plates in place, granting himself Guard and Braced.",
+    "targeting": "self",
     "combat_tags": [
       "support"
     ],
@@ -752,7 +753,8 @@
     "name": "Nano Repair",
     "character": "orion",
     "type": "active",
-    "description": "Deploys an aerosol of medical nanites that knit flesh and seal torn suits over time.",
+    "description": "Deploys medical nanites that grant Regen to all living allies.",
+    "targeting": "all_allies",
     "combat_tags": [
       "support"
     ],
@@ -1263,6 +1265,7 @@
     "character": "gh0st",
     "type": "active",
     "description": "Gh0st braces himself with Guard: halves incoming damage and prevents stagger for 1 turn.",
+    "targeting": "self",
     "combat_tags": [
       "defend",
       "support"
@@ -1279,7 +1282,8 @@
     "name": "Scan",
     "character": "nova",
     "type": "active",
-    "description": "Use the Lens to reveal hidden routes and expose enemy harmonic weaknesses.",
+    "description": "Use the Lens to reveal one enemy's elemental weaknesses and apply Discord for 2 turns, reducing its outgoing damage by 25%.",
+    "targeting": "single_enemy",
     "combat_tags": [
       "support",
       "debuff"
@@ -1313,10 +1317,11 @@
     "name": "Construct",
     "character": "nova",
     "type": "active",
-    "description": "Use the Anvil to shape Source intent into a temporary barrier or strike.",
+    "description": "Use the Anvil to restore HP and grant Guard to all living allies.",
+    "targeting": "all_allies",
     "combat_tags": [
       "support",
-      "dmg"
+      "heal"
     ],
     "base_power": 130,
     "scaling": "focus",
@@ -1331,6 +1336,7 @@
     "character": "gh0st",
     "type": "active",
     "description": "Gh0st hardens his stance with Phantom combat data, gaining Guard, Shield, and Braced stability.",
+    "targeting": "self",
     "combat_tags": [
       "defend",
       "buff"
@@ -1349,7 +1355,7 @@
     "name": "Corporate Insight",
     "character": "nova",
     "type": "passive",
-    "description": "While Nova is above half HP, grants +10 percentage points of accuracy and critical chance.",
+    "description": "Above half HP, Nova deals 10% more direct damage and gains 10 percentage points of critical chance on basic attacks.",
     "combat_tags": [
       "buff"
     ],
@@ -1415,7 +1421,7 @@
     "name": "Legacy",
     "character": "nova",
     "type": "passive",
-    "description": "While Nova is below half HP, grants +15 percentage points of accuracy and critical chance.",
+    "description": "Below half HP, Nova deals 15% more direct damage and gains 15 percentage points of critical chance on basic attacks.",
     "combat_tags": [
       "buff"
     ],
@@ -1609,6 +1615,7 @@
     "character": "zeke",
     "type": "support",
     "description": "Apply Shield and Braced across the party through the recovered guardian bus.",
+    "targeting": "all_allies",
     "combat_tags": [
       "support",
       "buff"

@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.starborn.di.AppServices
+import com.example.starborn.domain.combat.EnemyPreparation
 import com.example.starborn.feature.combat.ui.CombatScreen
 import com.example.starborn.feature.combat.viewmodel.*
 import com.example.starborn.ui.theme.StarbornTheme
@@ -67,9 +68,25 @@ class AuthoredEncounterPresentationTest {
             val before = compose.onNodeWithTag("combat-enemies").fetchSemanticsNode().boundsInRoot
             compose.runOnIdle {
                 val current = requireNotNull(state.value)
-                val anchor = current.combatants.getValue("silence_voice_anchor")
-                state.value = current.copy(combatants = current.combatants + ("silence_voice_anchor" to anchor.copy(hp = 0)))
+                val preparation = EnemyPreparation("ascended_god", "silence_voice_anchor",
+                    "source_voice_command", listOf("nova"), "Voice Anchor closing")
+                state.value = current.copy(authored = current.authored.copy(
+                    preparations = mapOf(preparation.actorId to preparation)))
             }
+            val voiceAnchor = requireNotNull(vm.combatState).combatants.getValue("silence_voice_anchor").combatant.name
+            compose.onNodeWithText("Stop the source: $voiceAnchor", useUnmergedTree = true).assertIsDisplayed()
+            compose.onNodeWithTag("combat-preparation-ascended_god").performClick()
+            compose.runOnIdle { assertEquals(setOf("silence_voice_anchor"), vm.selectedEnemies.value) }
+            assertEquals(before, compose.onNodeWithTag("combat-enemies").fetchSemanticsNode().boundsInRoot)
+            compose.runOnIdle {
+                val current = requireNotNull(state.value)
+                val anchor = current.combatants.getValue("silence_voice_anchor")
+                val disabled = current.copy(combatants = current.combatants + ("silence_voice_anchor" to anchor.copy(hp = 0)))
+                state.value = com.example.starborn.domain.combat.AuthoredEncounterRules.reconcile(
+                    disabled, vm.enemies.associateBy { it.id },
+                    com.example.starborn.domain.combat.StatusRegistry(services.worldDataSource.loadStatuses()))
+            }
+            compose.onNodeWithTag("combat-preparation-ascended_god").assertDoesNotExist()
             compose.onNodeWithTag("combat-linked-target-silence_voice_anchor").assertIsNotEnabled()
             compose.onNodeWithTag("combat-linked-target-silence_memory_anchor").assertIsEnabled()
             assertEquals(before, compose.onNodeWithTag("combat-enemies").fetchSemanticsNode().boundsInRoot)
@@ -268,6 +285,12 @@ class AuthoredEncounterPresentationTest {
                 compose.runOnIdle { height=screenHeight;fontScale=scale };compose.waitForIdle()
                 val warning = compose.onNodeWithTag("combat-preparation-titan_walker_boss")
                 if (screenHeight >= 640) warning.assertIsDisplayed() else warning.assertExists()
+                val battery = requireNotNull(vm.combatState).combatants.getValue("titan_missile_battery").combatant.name
+                val sourceHint = compose.onNodeWithText("Stop the source: $battery", useUnmergedTree = true)
+                if (screenHeight >= 640) sourceHint.assertIsDisplayed() else sourceHint.assertExists()
+                if (screenHeight < 640) warning.performScrollTo()
+                warning.performClick()
+                compose.runOnIdle { assertTrue("Warning selects the component", "titan_missile_battery" in vm.selectedEnemies.value) }
                 if (screenHeight < 640) compose.onNodeWithTag("combat-linked-target-titan_missile_battery").performScrollTo()
                 compose.onNodeWithTag("combat-linked-target-titan_missile_battery")
                     .assert(SemanticsMatcher.expectValue(androidx.compose.ui.semantics.SemanticsProperties.StateDescription,

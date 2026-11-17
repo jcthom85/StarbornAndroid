@@ -29,6 +29,7 @@ import com.example.starborn.domain.audio.VoiceoverController
 import com.example.starborn.domain.cinematic.CinematicCoordinator
 import com.example.starborn.domain.cinematic.CinematicService
 import com.example.starborn.domain.combat.CombatEngine
+import com.example.starborn.domain.combat.CombatLogEntry
 import com.example.starborn.domain.combat.EncounterCoordinator
 import com.example.starborn.domain.combat.SeededCombatRandom
 import com.example.starborn.domain.combat.StatusRegistry
@@ -121,6 +122,11 @@ class LegalRouteCampaignRunnerTest {
     private val prototypeSkillsUsed = mutableSetOf<String>()
     private val world3RewardObservations = mutableListOf<String>()
     private var recordSystemsAudit = false
+    private var compareEarnedBossChoices = false
+    private var compareEarnedGear = false
+    private var progressionRoute: String? = null
+    private val progressionRows = mutableListOf<Map<String, Any?>>()
+    private enum class BossChoice { BASELINE, GUARD, FIELD_PATCH, INTERRUPT }
     private var useProductionCrewRules = false
     private var playerCheckpointCombatAssist = false
 
@@ -135,6 +141,10 @@ class LegalRouteCampaignRunnerTest {
         assistance.clear()
         prototypeSkillsUsed.clear()
         recordSystemsAudit = false
+        compareEarnedBossChoices = false
+        compareEarnedGear = false
+        progressionRoute = null
+        progressionRows.clear()
         Dispatchers.setMain(testDispatcher)
         testScope = CoroutineScope(SupervisorJob() + testDispatcher)
         saveDir = File(System.getProperty("java.io.tmpdir"), "starborn-legal-runner-${System.nanoTime()}").apply { mkdirs() }
@@ -341,7 +351,7 @@ class LegalRouteCampaignRunnerTest {
             assertEquals(2, h.sessionStore.state.value.playerAp)
             assertEquals(1, h.inventoryService.snapshot()["starbar_crunch"])
             assertEquals("starbar_crunch", h.sessionStore.state.value.equippedItems["nova:snack"])
-            assertEquals(emptyMap<String, Int>(), h.sessionStore.state.value.roomGroundItems["pit_L2_corridor"])
+            assertEquals(true, h.sessionStore.state.value.roomStates["pit_kitchen"]?.get("shift_ration_tin_opened"))
             val branch = if (inspectLoader) "read-strip" else "fight-first"
             File("build/reports/world1-opening/$branch.txt").apply {
                 requireNotNull(parentFile).mkdirs()
@@ -965,6 +975,83 @@ class LegalRouteCampaignRunnerTest {
             File("build/reports/world6-authored/earned-routes.txt").apply {
                 parentFile!!.mkdirs()
                 writeText(publicCombats.joinToString("\n"))
+            }
+        } finally { harness.close() }
+    }
+
+    @Test
+    fun earnedRoutesTraceUnlocksAndEquipmentBeforeCombat() {
+        useProductionCrewRules = true
+        for (optional in listOf(false, true)) {
+            progressionRoute = if (optional) "optional" else "main"
+            val harness = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
+            try {
+                val agent = LegalCampaignAgent(harness)
+                agent.playWorld1(completionist = optional)
+                agent.playWorld2(completionist = optional, defeatOptionalPairs = optional)
+                agent.playWorld3(completionist = optional)
+                agent.playWorld4(completionist = optional)
+                agent.playWorld5(completionist = optional)
+                agent.playWorld6(completionist = optional)
+                assertTrue("Route reaches credits", "ms_credits_seen" in harness.sessionStore.state.value.completedMilestones)
+            } finally { harness.close() }
+        }
+        assertTrue(assistance.isEmpty())
+        for (route in listOf("main", "optional")) {
+            assertEquals((1..6).map { "world_$it" }.toSet(),
+                progressionRows.filter { it["route"] == route }.map { it["world"] }.toSet())
+        }
+        File("build/reports/player-choices/earned-progression.json").apply {
+            parentFile!!.mkdirs()
+            writeText(moshi.adapter(List::class.java).indent("  ").toJson(progressionRows))
+        }
+    }
+
+    @Test
+    fun earnedGearChangesCombatFromIdenticalCheckpoints() {
+        useProductionCrewRules = true
+        compareEarnedGear = true
+        val harness = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
+        try {
+            val agent = LegalCampaignAgent(harness)
+            agent.playWorld1()
+            agent.playWorld2()
+            agent.playWorld3()
+            agent.playWorld4()
+            agent.playWorld5()
+            agent.playWorld6()
+            assertTrue(assistance.isEmpty())
+            val rows = publicCombats.filter { it.startsWith("GEAR ") }
+            assertEquals(24, rows.size)
+            File("build/reports/player-choices/earned-gear.txt").apply {
+                parentFile!!.mkdirs()
+                writeText(rows.joinToString("\n", postfix = "\n"))
+            }
+        } finally { harness.close() }
+    }
+
+    @Test
+    fun earnedTitanAndSilenceCompareCombatChoicesFromIdenticalSaves() {
+        useProductionCrewRules = true
+        compareEarnedBossChoices = true
+        val source = WorldAssetDataSource(AssetJsonReader(DesktopAssetProvider(
+            listOf(assets, File(root, "app/src/debug/assets"))), moshi))
+        val harness = ProductionCampaignHarness(saveDir, testDispatcher, testScope,
+            initialState = requireNotNull(source.loadWorld1Checkpoint("w1_mq05")))
+        try {
+            val agent = LegalCampaignAgent(harness)
+            agent.finishWorld1Launch()
+            agent.playWorld2()
+            agent.playWorld3()
+            agent.playWorld4()
+            agent.playWorld5()
+            agent.playWorld6()
+            assertTrue(assistance.isEmpty())
+            val rows = publicCombats.filter { it.startsWith("CHOICE ") }
+            assertEquals(24, rows.size)
+            File("build/reports/player-choices/earned-boss-choices.txt").apply {
+                parentFile!!.mkdirs()
+                writeText(rows.joinToString("\n", postfix = "\n"))
             }
         } finally { harness.close() }
     }
@@ -1786,10 +1873,10 @@ class LegalRouteCampaignRunnerTest {
 
             if (collectSnack) {
                 navigateLegalPath("pit_L2_corridor")
-                assertEquals(1, harness.explorationVm.uiState.value.groundItems["starbar_crunch"])
-                harness.explorationVm.collectGroundItem("starbar_crunch")
-                harness.settle()
                 assertFalse("starbar_crunch" in harness.explorationVm.uiState.value.groundItems)
+                navigateLegalPath("pit_kitchen")
+                performAction("shift ration tin")
+                assertEquals(1, harness.inventoryService.snapshot()["starbar_crunch"])
                 harness.explorationVm.equipInventoryItem("snack", "starbar_crunch", "nova")
                 harness.settle()
                 harness.explorationVm.dismissNarration()
@@ -2034,6 +2121,7 @@ class LegalRouteCampaignRunnerTest {
                 parentFile!!.mkdirs(); writeText(moshi.adapter(GameSessionState::class.java).toJson(harness.sessionStore.state.value))
             }
             performAction("w2_mq04_beast_ambush")
+            if (compareEarnedGear) harness.compareBossGear("the_beast", pending = true)
             harness.playPublicEncounter("the_beast", pending = true)
             assertTrue("Recruited Gh0st visible for later Stolen Tech offer",
                 "gh0st" in harness.explorationVm.uiState.value.npcs)
@@ -2710,6 +2798,8 @@ class LegalRouteCampaignRunnerTest {
                 harness.settle()
             }
             if (exportProgressionSaves) harness.exportProgressionSave(3, "titan_walker_boss")
+            if (compareEarnedBossChoices) harness.compareBossChoices("titan_walker_boss")
+            if (compareEarnedGear) harness.compareBossGear("titan_walker_boss")
             harness.playPublicEncounter("titan_walker_boss")
             assertTrue("Real Titan victory must advance the quest", "ms_w4_titan_defeated" in harness.sessionStore.state.value.completedMilestones)
             if (exportReviewSaves) {
@@ -2868,6 +2958,7 @@ class LegalRouteCampaignRunnerTest {
             assertEquals("The breach must wait for the Avatar victory", "deep_tear", harness.sessionStore.state.value.roomId)
             assertFalse("Uncleared breach must not unlock World 6", "ms_w6_access_unlocked" in harness.sessionStore.state.value.completedMilestones)
             if (exportProgressionSaves) harness.exportProgressionSave(6, "compliance_avatar")
+            if (compareEarnedGear) harness.compareBossGear("compliance_avatar")
             harness.playPublicEncounter("compliance_avatar", seed = avatarSeed, preferChassis = avatarBodyFirst)
             if (sweepOptionalCombat) {
                 val ringRooms = harness.rooms.filter { it.backgroundImage.contains("/world_5/") && it.enemies.isNotEmpty() }
@@ -2875,10 +2966,21 @@ class LegalRouteCampaignRunnerTest {
                     navigateLegalPath(room.id)
                     while (true) {
                         val remaining = harness.explorationVm.uiState.value.enemies.firstOrNull { it != "hk_droid" } ?: break
+                        val beforeAp = harness.sessionStore.state.value.playerAp
                         harness.playPublicEncounter(remaining, seed = 41)
+                        if (remaining == "boardroom_bailiff") {
+                            val cleared = harness.saveSlot(9)
+                            assertEquals("Bailiff awards 4 AP", beforeAp + 4, cleared.playerAp)
+                            assertEquals(cleared, harness.loadSlot(9))
+                        }
                         navigateLegalPath("orbital_customs_lounge")
                         harness.restAtVisibleStop()
                         navigateLegalPath(room.id)
+                        if (remaining == "boardroom_bailiff") {
+                            assertFalse("Bailiff stays defeated after reload and revisit",
+                                "boardroom_bailiff" in harness.explorationVm.uiState.value.enemies)
+                            assertEquals(beforeAp + 4, harness.sessionStore.state.value.playerAp)
+                        }
                     }
                 }
             }
@@ -3016,6 +3118,8 @@ class LegalRouteCampaignRunnerTest {
             assertEquals(interlude.playerXp, harness.sessionStore.state.value.playerXp)
             assertEquals(interlude.playerAp, harness.sessionStore.state.value.playerAp)
             assertEquals(listOf("ascended_god"), harness.explorationVm.uiState.value.enemies)
+            if (compareEarnedBossChoices) harness.compareBossChoices("ascended_god")
+            if (compareEarnedGear) harness.compareBossGear("ascended_god")
             harness.playPublicEncounter("ascended_god", seed = if (alternate) 41 else 17, preferChassis = alternate)
             if (exportNarrativeReview) harness.exportNarrativeReviewSave(10)
             if (exportStoryReview && !alternate) harness.exportStoryReviewSave(29)
@@ -3455,9 +3559,54 @@ class LegalRouteCampaignRunnerTest {
             assertEquals(saved, loadSlot(slot))
         }
 
+        fun compareBossGear(enemyId: String, pending: Boolean = false) {
+            val checkpoint = saveSlot(10)
+            for (seed in listOf(17, 41, 73)) for (useUpgrades in listOf(false, true)) {
+                assertEquals(checkpoint, loadSlot(10))
+                val before = sessionStore.state.value
+                if (useUpgrades) {
+                    val weaponUpgrades = mapOf("nova" to "nova_laser_blaster", "zeke" to "zeke_quake_knuckles")
+                    weaponUpgrades.filterValues { (before.inventory[it] ?: 0) > 0 }.forEach { (owner, item) ->
+                        explorationVm.equipWeapon(owner, item)
+                        assertEquals(item, sessionStore.state.value.equippedWeapons[owner])
+                    }
+                    if ((before.inventory["heat_liner"] ?: 0) > 0 && "heat_liner" !in before.equippedArmors.values) {
+                        explorationVm.equipArmor("orion", "heat_liner")
+                        assertEquals("heat_liner", sessionStore.state.value.equippedArmors["orion"])
+                    }
+                    val equipped = sessionStore.state.value
+                    assertTrue(before.equippedWeapons != equipped.equippedWeapons)
+                    assertEquals(before.inventory, equipped.inventory)
+                    assertEquals(before.partyMemberHp, equipped.partyMemberHp)
+                    assertEquals(before.purchasedSkillNodes, equipped.purchasedSkillNodes)
+                }
+                playPublicEncounter(enemyId, pending = pending, seed = seed, bossChoice = BossChoice.BASELINE,
+                    gearLabel = if (useUpgrades) "upgrades" else "baseline")
+            }
+            assertEquals(checkpoint, loadSlot(10))
+        }
+
+        fun compareBossChoices(enemyId: String) {
+            val checkpoint = saveSlot(10)
+            assertTrue(checkpoint.pendingBattleJson.isBlank())
+            fun combatInputs(state: GameSessionState) = state.copy(roomStates = state.roomStates.mapValues {
+                it.value - "discovered"
+            }.filterValues { it.isNotEmpty() })
+            loadSlot(10)
+            val restored = combatInputs(sessionStore.state.value)
+            for (seed in listOf(17, 41, 73)) for (choice in BossChoice.entries) {
+                assertEquals(checkpoint, loadSlot(10))
+                assertEquals(restored, combatInputs(sessionStore.state.value))
+                playPublicEncounter(enemyId, seed = seed, bossChoice = choice)
+            }
+            loadSlot(10)
+            assertEquals(restored, combatInputs(sessionStore.state.value))
+        }
+
         fun playPublicEncounter(
             enemyId: String, retreat: Boolean = false, pending: Boolean = false, seed: Int = 17,
-            verifyIntercept: Boolean = false, preferChassis: Boolean = false
+            verifyIntercept: Boolean = false, preferChassis: Boolean = false, bossChoice: BossChoice? = null,
+            gearLabel: String? = null
         ) {
             val room = requireNotNull(sessionStore.state.value.roomId)
             if (!pending && enemyId in setOf("the_iron_warden", "stalker_vine", "shard_hound")) {
@@ -3484,6 +3633,26 @@ class LegalRouteCampaignRunnerTest {
             val combat = publicCombat(encounterIds, seed)
             try {
                 combat.onScreenReady()
+                progressionRoute?.let { route ->
+                    val snapshot = sessionStore.state.value
+                    progressionRows += linkedMapOf(
+                        "route" to route,
+                        "world" to snapshot.worldId,
+                        "room" to room,
+                        "enemy" to enemyId,
+                        "levels" to snapshot.partyMemberLevels,
+                        "unspentAp" to snapshot.playerAp,
+                        "purchases" to snapshot.purchasedSkillNodes,
+                        "capstonesOpen" to ("ms_w4_mq20_complete" in snapshot.completedMilestones),
+                        "credits" to snapshot.playerCredits,
+                        "inventory" to snapshot.inventory,
+                        "weapons" to snapshot.equippedWeapons,
+                        "armor" to snapshot.equippedArmors,
+                        "otherGear" to snapshot.equippedItems,
+                        "schematics" to snapshot.learnedSchematics.toList().sorted(),
+                        "abilities" to snapshot.partyMembers.associateWith { id -> combat.skillsForPlayer(id).map { it.id } }
+                    )
+                }
                 File("build/reports/campaign-systems/encounter-$enemyId-before.txt").apply {
                     requireNotNull(parentFile).mkdirs()
                     val snapshot = sessionStore.state.value
@@ -3495,6 +3664,7 @@ class LegalRouteCampaignRunnerTest {
                         requireNotNull(combat.combatState).combatants.values.single { it.combatant.side == com.example.starborn.domain.combat.CombatSide.ENEMY }.hp)
                 }
                 var interceptUsed = false
+                var choiceActions = 0
                 for (tick in 0 until 4800) {
                     dispatcher.scheduler.advanceTimeBy(50)
                     dispatcher.scheduler.runCurrent()
@@ -3511,6 +3681,38 @@ class LegalRouteCampaignRunnerTest {
                         val actor = requireNotNull(combat.awaitingAction.value)
                         val active = state.combatants.getValue(actor)
                         val livingEnemies = state.combatants.values.filter { it.combatant.side == com.example.starborn.domain.combat.CombatSide.ENEMY && it.isAlive }
+                        if (bossChoice != null && bossChoice != BossChoice.BASELINE) {
+                            val preparation = state.authored.preparations.values.firstOrNull()
+                            val skillIds = when {
+                                bossChoice == BossChoice.GUARD && preparation?.targetIds?.contains(actor) == true -> {
+                                    combat.guard()
+                                    choiceActions++
+                                    continue
+                                }
+                                bossChoice == BossChoice.FIELD_PATCH && actor == "orion" -> listOf("orion_stasis_stitch")
+                                bossChoice == BossChoice.INTERRUPT && preparation != null -> when (actor) {
+                                    "nova" -> listOf("nova_breaker_bolt", "nova_arc_tether")
+                                    "gh0st" -> listOf("gh0st_system_crash")
+                                    else -> emptyList()
+                                }
+                                else -> emptyList()
+                            }
+                            val targetId = when (bossChoice) {
+                                BossChoice.FIELD_PATCH -> state.combatants.values.filter {
+                                    it.combatant.id in sessionStore.state.value.partyMembers && it.isAlive &&
+                                        it.hp < it.combatant.stats.maxHp * .8
+                                }.minByOrNull { it.hp.toDouble() / it.combatant.stats.maxHp }?.combatant?.id
+                                BossChoice.INTERRUPT -> preparation?.sourceId
+                                else -> null
+                            }
+                            val available = combat.skillsForPlayer(actor).filter { combat.canUseSkill(actor, it) }
+                            val skill = skillIds.firstNotNullOfOrNull { id -> available.firstOrNull { it.id == id } }
+                            if (skill != null && targetId != null) {
+                                combat.useSkill(skill, listOf(targetId))
+                                choiceActions++
+                                continue
+                            }
+                        }
                         if (verifyIntercept && actor == "gh0st" && !interceptUsed) {
                             val intercept = combat.skillsForPlayer(actor).single { it.id == "gh0st_intercept" }
                             if (combat.canUseSkill(actor, intercept)) {
@@ -3634,6 +3836,19 @@ class LegalRouteCampaignRunnerTest {
                     }
                 }
                 val state = requireNotNull(combat.combatState)
+                if (bossChoice != null) {
+                    val crew = sessionStore.state.value.partyMembers
+                    val actions = state.log.filterIsInstance<CombatLogEntry.ActionQueued>().filter { it.actorId in crew }
+                    val damage = state.log.filterIsInstance<CombatLogEntry.Damage>().filter { it.targetId in crew }.sumOf { it.amount }
+                    val healing = state.log.filterIsInstance<CombatLogEntry.Heal>().filter { it.targetId in crew }.sumOf { it.amount }
+                    val interrupts = state.log.filterIsInstance<CombatLogEntry.TurnSkipped>().count { it.reason.endsWith(" interrupted") }
+                    val knockouts = crew.count { state.combatants[it]?.isAlive == false }
+                    val items = actions.count { it.action is com.example.starborn.domain.combat.CombatAction.ItemUse }
+                    val outcome = state.outcome?.javaClass?.simpleName ?: "timeout"
+                    val policyLabel = if (gearLabel == null) "CHOICE" else "GEAR"
+                    publicCombats += "$policyLabel boss=$enemyId seed=$seed policy=${gearLabel ?: bossChoice} outcome=$outcome actions=${actions.size} overrides=$choiceActions damage=$damage heal=$healing items=$items interrupts=$interrupts knockouts=$knockouts"
+                    return
+                }
                 if (retreat) {
                     assertEquals("Optional encounter must retreat through public command", com.example.starborn.domain.combat.CombatOutcome.Retreat, state.outcome)
                     explorationVm.onCombatRetreat(combat.encounterEnemyIds)

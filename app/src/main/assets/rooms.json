@@ -103,7 +103,7 @@
     "env": "mine",
     "title": "Ration Sink",
     "background_image": "images/rooms/world_1/pit_kitchen_v5.webp",
-    "description": "Scorched grease and simmering broth warm the cramped kitchen behind the mess hall. [npc:Rourke] tends an industrial thermal cooker beside a dented ingredient hopper, stretching the colony's supplies into another shift's meals.",
+    "description": "Scorched grease and simmering broth warm the cramped kitchen behind the mess hall. [npc:Rourke] tends the thermal cooker beside a dented ingredient hopper. A [action:shift ration tin|shift ration tin] sits on the counter beside the serving bowls.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -116,6 +116,14 @@
     ],
     "state": {},
     "actions": [
+      {
+        "name": "shift ration tin",
+        "type": "container",
+        "state_key": "shift_ration_tin_opened",
+        "items": ["starbar_crunch"],
+        "popup_title": "Shift Rations",
+        "already_open_message": "The ration tin is empty."
+      },
       {
         "name": "thermal cooker",
         "activity_title": "Ration Sink Galley",
@@ -286,9 +294,7 @@
       }
     ],
     "npcs": [],
-    "items": [
-      "starbar_crunch"
-    ],
+    "items": [],
     "enemies": [],
     "connections": {
       "south": "pit_shaft",
@@ -12254,7 +12260,7 @@
         "guarded_by": [
           "shard_hound"
         ],
-        "guarded_message": "The Shard-Hounds are guarding the pack in their den. Defeat them before retrieving the supplies.",
+        "guarded_message": "The Shard-Hounds won't let you near the pack. Wiring and a strip of ballistic weave show through a torn seam.",
         "type": "container",
         "state_key": "w2_hound_nest_pack_opened",
         "items": [
@@ -16629,7 +16635,7 @@
       {
         "name": "silver tray",
         "type": "generic",
-        "condition_unmet_message": "The tray is polished enough to reflect the patrol outside."
+        "condition_unmet_message": "The polished tray reflects the patrol outside. The guard carries a split-edged blade, and the drone's casing has an exposed circuit board."
       },
       {
         "name": "executive safe",
@@ -17065,7 +17071,7 @@
       {
         "name": "steam curtain",
         "type": "generic",
-        "condition_unmet_message": "The curtain turns patrol silhouettes into guesswork."
+        "condition_unmet_message": "Through a gap in the steam, you spot two Pure Iron billets in the welder's feed tray. That would cover the iron needed for the Slag Catcher repair."
       }
     ]
   },
@@ -20340,7 +20346,7 @@
       {
         "name": "empty chairs",
         "type": "generic",
-        "condition_unmet_message": "The chairs are more loyal than the board ever was."
+        "condition_unmet_message": "The chairs are more loyal than the board ever was. Three power cells sit in the bailiff's charging cradle beside the head seat."
       },
       {
         "name": "casualty projection",

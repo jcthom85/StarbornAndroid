@@ -333,7 +333,7 @@ The numbered route includes all eleven quests and every authored World 3 room. O
 
 141. At **Service Dumbwaiter** (`spire_exec_lounge_scale_05`), inspect **Service Dumbwaiter**, **silver tray**; defeat the Riot Guard / Aero Drone squad near **executive safe**, then open it for its one-time contents.
 
-142. Check that the Service Dumbwaiter squad dropped its guaranteed **Circuit Board**. Its guard braces the squad once before switching to baton rushes.
+142. Check that the Service Dumbwaiter squad dropped its guaranteed **Circuit Board** and **Splitter Edge** for Gh0st. Its guard braces the squad once before switching to baton rushes.
 
 The guard also drops **Splitter Edge** for Gh0st. Equip it for basic attacks against the whole formation. Keep Whisperblade for stronger focused hits on one enemy.
 

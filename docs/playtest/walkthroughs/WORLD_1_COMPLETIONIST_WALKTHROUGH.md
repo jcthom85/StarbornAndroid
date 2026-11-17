@@ -52,14 +52,14 @@ At the workshop checkpoint, after certification and before the Fork/Warden, revi
 1. Watch or skip the intro, then wait for the bunk fade to finish. Turn on **bunk light**.
 2. Inspect **door control panel** while the light is on. This isolates the conduit and opens the exit. If the panel is unavailable, confirm the light is on; do not turn it off yet.
 3. Inspect **cargo netting** and **rusty locker** while the light is on. Use **sleeping shelf** if you want to rest. Resting is optional and restores the party; dismiss its prompt fully.
-4. Go **west** to Pod Row (`pit_L2_corridor`). Pick up **Starbar Crunch** from the room and equip it in Nova’s **Snack** slot for +6 Speed. The **Snack** action in combat boosts her evasion for two turns and then recharges. Inspect **sleeping pods** and **posters**.
+4. Go **west** to Pod Row (`pit_L2_corridor`). Inspect **sleeping pods** and **posters**.
 5. Go **west** to Supply Closet (`pit_storage`). Turn on **emergency breaker** before attempting the **loose floor panel**. Inspect the panel for the first VHS tape; also inspect **filter units**. Return **east** to Pod Row.
 6. Go **south** to Lift Shaft (`pit_shaft`). Inspect **ladder** and **pipe**.
 7. Go **west** to Jed's Bunk (`pit_jed_bunk`). Talk to **Jed** until he has told you to visit the workshop and the conversation ends. Inspect **tool case** for spare supplies and **manuals** for lore.
 8. Review Jed's starter-kit reward cards: Mining Pistol, Nova's Flux Liner, damaged Cryo-Inductor, scrap metal, and a ration. In the updated opening, the weapon and armor stay unequipped. Choose **Show me how to equip** after the cards to open Party, select Nova's **Weapon** slot and equip **Mining Pistol**, then select **Armor** and equip **Flux Liner**. The next slot is highlighted while tutorials are enabled; completion follows the actual equip actions. **Later** leaves the tutorial unfinished and you can return through Menu > Party. With tutorials off, **Open equipment** still offers a shortcut. Older builds/saves may already have the kit equipped; inspect the two slots instead of unequipping working gear. Keep the damaged inductor and at least one scrap for its repair.
 9. Go **east** to Lift Shaft, then **south** to Pit Landing (`pit_L1_landing`). The colony map exit becomes available after Jed's briefing. Inspect **bulkhead**, but do not leave yet.
 10. Go **east** to Mess Hall (`pit_mess`). Inspect **broken Hyperion cabinet** to discover the arcade cabinet; this is discovery, not its later repair/install. Inspect the other listed room interactions for lore.
-11. Go **east** to Ration Sink (`pit_kitchen`). Inspect **ingredient hopper** for its one-time supplies and **thermal cooker** for lore. Return **west** to Mess Hall.
+11. Go **east** to Ration Sink (`pit_kitchen`). Open **shift ration tin** on the counter for **Starbar Crunch**. Equip it in Nova’s **Snack** slot for +6 Speed. The combat **Snack** action boosts her evasion for two turns and then recharges. Inspect **ingredient hopper** for its one-time supplies and **thermal cooker** for lore. Return **west** to Mess Hall.
 12. Go **south** to Vent Crawl (`pit_vents`). Inspect **maintenance crawl** for the hidden supplies and **grates** for lore.
 13. Go **east** to Shared Showers (`pit_showers`). Inspect **steam valves first**, then **drainage grate**. The valves make the drain loot available. Inspect **tiles**.
 14. Return **west** to Vent Crawl, **north** to Mess Hall, **west** to Pit Landing. Return to the hub map and choose **Jed's Workshop**.
@@ -285,7 +285,6 @@ Use this section to finish every side inspection, cache, and lore interaction. C
 #### Pod Row (`pit_L2_corridor`)
 
 - **Exits:** South to Lift Shaft (`pit_shaft`); East to Nova's Bunk (`pit_nova_bunk`); West to Supply Closet (`pit_storage`).
-- **Ground pickup:** Starbar Crunch.
 - **sleeping pods**: Inspect/select this action. In-room feedback: Most doors carry a name, a shift code, and a repair tally.
 - **posters**: Inspect/select this action. In-room feedback: The faces of the 'Founders' are faded and covered in grease stains.
 
@@ -322,6 +321,8 @@ Use this section to finish every side inspection, cache, and lore interaction. C
 - **vintage mystery monitor**: Inspect/select this action. A retro amber CRT playing archived broadcasts of 'Cosmic Enigmas' with haunting synth music. A faded note beside an old recipe card reads: 'In memory of Nana Jessie — I hated cooking every meal, but I loved you kids too much to let you eat slop. Give Ashley a biscuit.'
 
 #### Ration Sink (`pit_kitchen`)
+
+- **shift ration tin**: One-time container on the counter with 1 × Starbar Crunch.
 
 - **Exits:** West to Mess Hall (`pit_mess`).
 - **thermal cooker**: Inspect/select this action. In-room feedback: The industrial cooker hums with lukewarm colony broth. Cook Vance keeps the regulator low. Use the Field Kit's cooking menu to prepare meals.

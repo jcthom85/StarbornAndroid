@@ -70,26 +70,34 @@ fun AuthoredEncounterPanel(state: CombatState?, enemies: List<Enemy>, onTarget: 
                         } else action
                         val full = "$source: ${intent.label}" + if (target.isEmpty()) "" else " → ${names.joinToString()}"
                         val slim = compact || preparations.size > 1
+                        val showSource = preparations.size == 1
+                        val sourceHint = if (intent.sourceId != intent.actorId) "Stop the source: $source" else "Target $source"
                         Surface(
-                            Modifier.widthIn(max = groupWidth).heightIn(min = if (slim) 24.dp else 38.dp)
-                                .clickable { onTarget(intent.sourceId) }
+                            Modifier.widthIn(max = groupWidth).heightIn(min = if (showSource) 40.dp else 24.dp)
+                                .clickable(onClickLabel = "Target $source") { onTarget(intent.sourceId) }
                                 .testTag("combat-preparation-${intent.actorId}")
                                 .semantics { contentDescription = full },
                             color = Color(0xED101A23), shape = RoundedCornerShape(8.dp),
                             border = BorderStroke(1.dp, ThreatAmber.copy(alpha = .38f))
                         ) {
-                            Row(
-                                Modifier.padding(horizontal = if (slim) 8.dp else 12.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(7.dp)
+                            Column(
+                                Modifier.padding(horizontal = if (slim) 8.dp else 12.dp, vertical = if (showSource) 3.dp else 0.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
                             ) {
-                                Icon(Icons.Rounded.GpsFixed, null, Modifier.size(if (slim) 12.dp else 15.dp), tint = ThreatAmber)
-                                Text(label, Modifier.weight(1f, fill = false), color = ThreatAmber,
-                                    style = MaterialTheme.typography.labelMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                                if (target.isNotEmpty()) {
-                                    Text("→", color = ThreatAmber, style = MaterialTheme.typography.labelMedium)
-                                    Text(target, Modifier.widthIn(max = 104.dp), color = Color.White,
+                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                                    Icon(Icons.Rounded.GpsFixed, null, Modifier.size(if (slim) 12.dp else 15.dp), tint = ThreatAmber)
+                                    Text(label, Modifier.weight(1f, fill = false), color = ThreatAmber,
                                         style = MaterialTheme.typography.labelMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                    if (target.isNotEmpty()) {
+                                        Text("→", color = ThreatAmber, style = MaterialTheme.typography.labelMedium)
+                                        Text(target, Modifier.widthIn(max = 104.dp), color = Color.White,
+                                            style = MaterialTheme.typography.labelMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                    }
+                                }
+                                if (showSource) {
+                                    Text(sourceHint, color = Color(0xFFCEDAE1), style = MaterialTheme.typography.labelSmall,
+                                        maxLines = 1, overflow = TextOverflow.Ellipsis)
                                 }
                             }
                         }

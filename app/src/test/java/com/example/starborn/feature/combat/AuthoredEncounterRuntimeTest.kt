@@ -251,10 +251,10 @@ class AuthoredEncounterRuntimeTest {
             } finally { vm.close() }
         }
     }
-    @Test fun earnedBeastArrivalsWinWithBasicAttacksOrGuardAndKeepRewards() {
+    @Test fun earnedBeastArrivalsCompareBasicAttacksGuardAndCrewSupport() {
         val adapter=MoshiProvider.instance.adapter(GameSessionState::class.java)
         val evidence=File("build/reports/world2-authored").apply { mkdirs() }
-        for(route in listOf("main","completionist")) for(seed in listOf(17,41,73)) for(policy in listOf("direct","guard")) {
+        for(route in listOf("main","completionist")) for(seed in listOf(17,41,73)) for(policy in listOf("direct","guard","support")) {
             val arrival=javaClass.getResourceAsStream("/playtest/world2-beast-$route.json")!!.bufferedReader().use {
                 adapter.fromJson(it.readText())!!
             }
@@ -273,8 +273,24 @@ class AuthoredEncounterRuntimeTest {
                     val healing=vm.inventory.value.filter { it.quantity>0 && it.item.type.equals("consumable",true) &&
                         (it.item.effect?.restoreHp ?: 0)>0 }.maxByOrNull { it.item.effect?.restoreHp ?: 0 }
                     val marked=state.authored.preparations.values.any { id in it.targetIds }
+                    val threatened = state.authored.preparations.values.flatMap { it.targetIds }.toSet()
+                    val healTarget = state.combatants.values.filter {
+                        it.combatant.side == CombatSide.PLAYER && it.isAlive &&
+                            (it.hp < it.combatant.stats.maxHp * .75 ||
+                                it.combatant.id in threatened && it.hp < it.combatant.stats.maxHp)
+                    }.minByOrNull { it.hp.toDouble() / it.combatant.stats.maxHp }
+                    val support = if (policy == "support") vm.skillsForPlayer(id).firstOrNull {
+                        vm.canUseSkill(id, it) && when (it.id) {
+                            "orion_stasis_stitch" -> healTarget != null
+                            "zeke_shatter_blow" -> threatened.isNotEmpty() &&
+                                state.combatants.getValue("the_beast").statusEffects.none { effect -> effect.id == "weak" }
+                            else -> false
+                        }
+                    } else null
                     when {
                         wounded!=null && healing!=null -> vm.useItem(healing,if(healing.item.effect?.target=="party") null else wounded.combatant.id)
+                        support != null -> vm.useSkill(support, listOf(
+                            if (support.id == "orion_stasis_stitch") requireNotNull(healTarget).combatant.id else "the_beast"))
                         policy=="guard" && marked -> vm.guard()
                         else -> vm.playerAttack("the_beast")
                     }
@@ -289,6 +305,8 @@ class AuthoredEncounterRuntimeTest {
                 assertEquals(setOf("nova","zeke","orion"),vm.playerParty.map { it.id }.toSet())
                 assertEquals(setOf("the_beast"),result.combatants.values.filter { it.combatant.side==CombatSide.ENEMY }.map { it.combatant.id }.toSet())
                 if(policy=="guard") assertTrue(result.log.filterIsInstance<CombatLogEntry.ActionQueued>().any { it.action is CombatAction.Defend })
+                if (policy == "support") assertTrue(result.log.filterIsInstance<CombatLogEntry.ActionQueued>()
+                    .any { it.action is CombatAction.SkillUse && it.actorId in setOf("zeke", "orion") })
             } finally { vm.close() }
         }
     }

@@ -884,7 +884,7 @@ DesktopBattleFormation(enemies, services, Modifier.fillMaxWidth().weight(if (wid
                             if (targetAction != null && id in validIds) targetAction?.invoke(id)
                         }
                     })
-                Box(Modifier.fillMaxWidth().height(24.dp), contentAlignment = Alignment.Center) {
+                Box(Modifier.fillMaxWidth().height(56.dp), contentAlignment = Alignment.Center) {
                     if (com.example.starborn.ui.combat.hasAuthoredPreparation(battle))
                         com.example.starborn.ui.combat.AuthoredEncounterPanel(battle, runtime.enemies,
                             runtime::focusEnemyTarget, compact = true, skillName = runtime::skillDisplayName)
