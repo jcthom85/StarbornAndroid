@@ -37,7 +37,7 @@ class DesktopJedDialogueSnapshotTest {
                 DesktopStarbornTheme { DesktopDialogueOverlay(
                     speakerName = "Jed",
                     speakerRole = "Senior Pit Mechanic",
-                    portraitId = "images/npcs/jed.webp",
+                    portraitId = "images/npcs/jed_portrait_v2.webp",
                     text = "You look awful. Sit down. " .repeat(30),
                     choices = if (choiceMode.value) listOf("Ask about the mine", "Ask about the ship") else emptyList(),
                     services = services,

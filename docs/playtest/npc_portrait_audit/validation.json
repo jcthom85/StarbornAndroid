@@ -1,0 +1,104 @@
+{
+  "date": "2026-11-16",
+  "castValidation": "passed",
+  "productionIdentities": 47,
+  "newPortraits": 40,
+  "retainedPortraits": 7,
+  "shopMappingsChecked": 9,
+  "usedEmoteReferencesChecked": 51,
+  "portraitDimensions": [
+    1024,
+    1024
+  ],
+  "cinematicDimensions": [
+    1088,
+    1920
+  ],
+  "transparentCornersAndMargins": "passed",
+  "nearPureChromaKeyResidue": "none",
+  "visibleSilhouetteNormalization": "passed",
+  "distinctPortraitFileHashes": "passed",
+  "protectedCharacterFilesUnchanged": 69,
+  "introSceneAndSixIllustrationsUnchanged": true,
+  "existingNpcNonPortraitDataUnchanged": true,
+  "shopNonPortraitDataUnchanged": true,
+  "cinematicNonArtDataUnchanged": true,
+  "desktopTests": [
+    {
+      "suite": "DesktopJedDialogueSnapshotTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "suite": "DesktopMerchantInteractionTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "suite": "CinematicMusicIntegrityTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "suite": "IntroCinematicAssetIntegrityTest",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "classification": "Pre-existing; unchanged intro_prologue in HEAD and working tree has no explicit portraits on its two anonymous-speaker lines.",
+      "failure": "java.lang.AssertionError: Unknown speaker lines must use contextual portraits without revealing the name"
+    }
+  ],
+  "newPortraitBytes": 4087612,
+  "retiredAssets": [
+    "images/cinematics/w4_coup_display_v1.webp",
+    "images/cinematics/w5_stasis_elara_v1.webp",
+    "images/npcs/bogs.webp",
+    "images/npcs/concierge.webp",
+    "images/npcs/curator.webp",
+    "images/npcs/doc.webp",
+    "images/npcs/elara.webp",
+    "images/npcs/guard_hank.webp",
+    "images/npcs/jax.webp",
+    "images/npcs/jed.webp",
+    "images/npcs/miner_bill.webp",
+    "images/npcs/orlo.webp",
+    "images/npcs/pam.png",
+    "images/npcs/scrapper.webp",
+    "images/npcs/the_warden.webp",
+    "images/npcs/thorne.webp",
+    "images/npcs/vale.webp",
+    "images/npcs/vance.webp",
+    "images/cinematics/w5_tear_hands_v1.webp"
+  ],
+  "deviceInstallation": false,
+  "phonePlaytestPerformed": false,
+  "elaraRevision": {
+    "date": "2026-11-17",
+    "portrait": "images/npcs/elara_portrait_v2.webp",
+    "cinematics": [
+      "images/cinematics/w5_stasis_elara_v2.webp",
+      "images/cinematics/w5_tear_hands_v2.webp"
+    ],
+    "castAndCinematicReferences": "passed",
+    "dialogueEmoteReferences": "passed",
+    "chromaKeyResidue": "none",
+    "unrelatedCharacterAndCinematicArt": "unchanged",
+    "deviceInstallation": false
+  },
+  "elaraOutfitRevision": {
+    "date": "2026-11-17",
+    "castAndCinematicReferences": "passed",
+    "dialogueEmoteReferences": "passed (51)",
+    "visualReview": "portrait, reunion scene and reaching-hands scene reviewed together",
+    "changedArtFiles": [
+      "world_assets/src/main/assets/images/npcs/elara_portrait_v2.webp",
+      "world_assets/src/main/assets/images/cinematics/w5_stasis_elara_v2.webp",
+      "world_assets/src/main/assets/images/cinematics/w5_tear_hands_v2.webp"
+    ],
+    "otherArtFilesVerifiedUnchanged": 132,
+    "deviceInstallation": false
+  }
+}

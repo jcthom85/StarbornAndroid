@@ -376,7 +376,7 @@
   },
   "scrappers_contraband": {
     "name": "Scrapper's Contraband",
-    "portrait": "images/npcs/scrapper.webp",
+    "portrait": "images/npcs/scrapper_portrait_v2.webp",
     "greeting": "Scrapper: Keep your voice down. Good salvage costs extra when it has a story.",
     "pricing": {
       "sell_markup": 1.4,
@@ -435,7 +435,7 @@
   },
   "upper_city_lounge": {
     "name": "Upper City Concierge",
-    "portrait": "images/npcs/concierge.webp",
+    "portrait": "images/npcs/upper_city_concierge_portrait_v2.webp",
     "greeting": "Concierge: Premium equipment is available to guests with verified altitude clearance.",
     "pricing": {
       "sell_markup": 1.35,
@@ -562,7 +562,7 @@
   },
   "arcade_prize_shop": {
     "name": "Arcade Prize Dispenser",
-    "portrait": "images/npcs/mechanic.webp",
+    "portrait": "images/npcs/arcade_prize_dispenser_portrait_v2.webp",
     "greeting": "PRIZE DISPENSER ONLINE: Insert tokens to redeem rare modifications and consumables.",
     "pricing": {
       "sell_markup": 1.0,
@@ -614,7 +614,7 @@
   },
   "noodle_row_stall": {
     "name": "Noodle Row Counter",
-    "portrait": "images/npcs/vance.webp",
+    "portrait": "images/npcs/noodle_cook_ren_portrait_v2.webp",
     "greeting": "Ren: Hot broth or synth strips? Order fast, the line stretches to the plaza.",
     "pricing": {
       "sell_markup": 1.15,
@@ -669,7 +669,7 @@
   },
   "foundry_welder_shop": {
     "name": "Rylan's Welder Rig",
-    "portrait": "images/npcs/mechanic.webp",
+    "portrait": "images/npcs/forge_hand_rylan_portrait_v2.webp",
     "greeting": "Rylan: Watch your step near the slag conduits. If you need heat shields or reinforced plating, I've got spares.",
     "pricing": {
       "sell_markup": 1.2,
@@ -727,7 +727,7 @@
   },
   "orbital_dispensary": {
     "name": "Zenith Automated Commissary",
-    "portrait": "images/npcs/maintenance_bot.webp",
+    "portrait": "images/npcs/zenith_dispensary_portrait_v2.webp",
     "greeting": "Terminal: [Automated chime] Executive tier account verified. Welcome to Zenith Concourse Dispensary.",
     "pricing": {
       "sell_markup": 1.25,
@@ -784,7 +784,7 @@
   },
   "davids_provisions": {
     "name": "David's Camp & Provisions",
-    "portrait": "images/npcs/vance.webp",
+    "portrait": "images/npcs/chef_david_portrait_v2.webp",
     "greeting": "David: Welcome to camp! Pull up a chair by the fire. Nobody walks past my table on an empty stomach.",
     "pricing": {
       "sell_markup": 1.15,

@@ -1,0 +1,558 @@
+{
+  "date": "2026-11-16",
+  "scope": "Planning only; no game files or generated art changed",
+  "protected": [
+    "nova",
+    "zeke",
+    "orion",
+    "gh0st"
+  ],
+  "liveProductionIdentities": [
+    {
+      "id": "jed",
+      "name": "Jed",
+      "group": "World 1",
+      "recommendation": "Redraw",
+      "currentPortrait": "images/npcs/jed.webp",
+      "rooms": [
+        "pit_jed_bunk",
+        "workshop_floor",
+        "launch_lift"
+      ],
+      "direction": "Keep the gray hair, beard and work apron; broaden the head/face shapes, simplify the tools, and give him tired warmth instead of a stern concept-art stare."
+    },
+    {
+      "id": "scrapper",
+      "name": "Scrapper",
+      "group": "World 1",
+      "recommendation": "Redraw",
+      "currentPortrait": "images/npcs/scrapper.webp",
+      "rooms": [
+        "trade_scrapper"
+      ],
+      "direction": "Keep hood and goggles; narrow, watchful eyes and a guarded half-smile. Distinct from the burly arena operator."
+    },
+    {
+      "id": "doc",
+      "name": "Doc",
+      "group": "World 1",
+      "recommendation": "Redraw",
+      "currentPortrait": "images/npcs/doc.webp",
+      "rooms": [
+        "medbay_exam1"
+      ],
+      "direction": "Keep the exhausted male medic identity, messy hair and teal clinical clothing. Bold eye bags and one medical patch; reduce fine costume detail."
+    },
+    {
+      "id": "foreman_bogs",
+      "name": "Foreman Boggs",
+      "group": "World 1",
+      "recommendation": "Redraw",
+      "currentPortrait": "images/npcs/bogs.webp",
+      "rooms": [
+        "admin_lobby"
+      ],
+      "direction": "Preserve stout build, moustache and industrial yellow helmet; simplify armor and give him a managerial scowl."
+    },
+    {
+      "id": "guard_hank",
+      "name": "Guard Hank",
+      "group": "World 1",
+      "recommendation": "Redraw",
+      "currentPortrait": "images/npcs/guard_hank.webp",
+      "rooms": [
+        "checkpoint_bay"
+      ],
+      "direction": "Preserve blue uniform, cap and heavy-lidded boredom. Ordinary guard, not another boss."
+    },
+    {
+      "id": "miner_bill",
+      "name": "Miner Bill",
+      "group": "World 1",
+      "recommendation": "Redraw",
+      "currentPortrait": "images/npcs/miner_bill.webp",
+      "rooms": [
+        "trade_bar"
+      ],
+      "direction": "Preserve miner helmet, moustache and weary friendliness; larger readable face, less painted texture."
+    },
+    {
+      "id": "the_warden",
+      "name": "The Warden",
+      "group": "World 1",
+      "recommendation": "Redraw",
+      "currentPortrait": "images/npcs/the_warden.webp",
+      "rooms": [
+        "launch_bay"
+      ],
+      "direction": "Match the active Iron Warden\u2019s enclosed brass/steel armor, cyan visor and command insignia. Do not base the portrait on the unrelated older exposed-face design."
+    },
+    {
+      "id": "jax",
+      "name": "Jax",
+      "group": "World 3",
+      "recommendation": "Redraw",
+      "currentPortrait": "images/npcs/jax.webp",
+      "rooms": [
+        "spire_the_static"
+      ],
+      "direction": "Keep older salt-and-pepper bartender identity, broad shoulders and loader claw. Larger expressive face; the claw is a secondary silhouette cue, not the subject."
+    },
+    {
+      "id": "mika",
+      "name": "Mika",
+      "group": "World 3",
+      "recommendation": "Retain",
+      "currentPortrait": "images/npcs/mika.webp",
+      "rooms": [
+        "spire_night_market"
+      ],
+      "direction": "Bright vendor expression, orange bandanna, yellow apron and simple utensil already sit close to the intended family."
+    },
+    {
+      "id": "curator",
+      "name": "Museum Curator",
+      "group": "World 3",
+      "recommendation": "Redraw",
+      "currentPortrait": "images/npcs/curator.webp",
+      "rooms": [
+        "spire_skypark_dome"
+      ],
+      "direction": "Keep swept silver hair, neat facial hair and violet high collar. Simplify the ornate costume into a futuristic museum official, with precise disapproval."
+    },
+    {
+      "id": "lab_terminal",
+      "name": "Hacked Lab Terminal",
+      "group": "World 3 / shared consoles",
+      "recommendation": "Retain",
+      "currentPortrait": "images/npcs/lab_terminal.webp",
+      "rooms": [
+        "spire_exec_lounge_bar"
+      ],
+      "direction": "Keep the readable screen/terminal portrait as an intentional system-image family. Do not turn every puzzle control into a new human face."
+    },
+    {
+      "id": "thorne",
+      "name": "Director Mara Thorne",
+      "group": "World 5 / World 3\u20134 transmissions",
+      "recommendation": "Redraw",
+      "currentPortrait": "images/npcs/thorne.webp",
+      "rooms": [
+        "deep_mainframe_nave"
+      ],
+      "direction": "Keep mature face, silver bob and tailored executive blue. Controlled, assessing expression and expensive restraint; soften rendering, not authority."
+    },
+    {
+      "id": "maintenance_bot",
+      "name": "Maintenance Bot",
+      "group": "World 5",
+      "recommendation": "Retain",
+      "currentPortrait": "images/npcs/maintenance_bot.webp",
+      "rooms": [
+        "orbital_solarium"
+      ],
+      "direction": "Keep the warm garden-bot shell, amber eye and leaf cue. It belongs to the Solarium only, not the archive or commissary."
+    },
+    {
+      "id": "elara",
+      "name": "Elara",
+      "group": "World 5",
+      "recommendation": "Redraw \u2014 required",
+      "currentPortrait": "images/npcs/elara.webp",
+      "rooms": [
+        "deep_anchor_chamber"
+      ],
+      "direction": "User-approved revision: human adult with warm brown skin, amber-brown eyes, strong brows and dark brown wavy hair loosely tied back. Mature attentive face with subtle tiredness. Worn charcoal utility outfit with muted teal inset panels, a notched stand collar and geometric seams echoing Gh0st\u2019s gear. A small cyan wrist interface links their cinematic designs. Soft fabric, no lab coat, hood or armor. No pale-blue hair, blue eyes, pointed ears or Orion-like facial silhouette. Match this identity in the glass scene and reaching-hand close-up."
+    },
+    {
+      "id": "vale",
+      "name": "Lieutenant Arden Vale",
+      "group": "World 5 / World 3\u20136 dialogue",
+      "recommendation": "Redraw",
+      "currentPortrait": "images/npcs/vale.webp",
+      "rooms": [
+        "deep_throne_room"
+      ],
+      "direction": "A mature, controlled officer whose facial structure and silver hair remain recognizable in the current ascended combat form. Use restrained Dominion tailoring before ascension; no youthful fantasy-prince face. Set the shared identity reference before rendering."
+    },
+    {
+      "id": "sentinel_3",
+      "name": "Sentinel-3",
+      "group": "World 2",
+      "recommendation": "Retain",
+      "currentPortrait": "images/npcs/sentinel_3.webp",
+      "rooms": [
+        "sector9_temple_lock_chamber"
+      ],
+      "direction": "Strong blue/cyan single-eye drone silhouette; same identity in dialogue and Sentinel Scraps."
+    },
+    {
+      "id": "miner_orlo",
+      "name": "Orlo",
+      "group": "World 1",
+      "recommendation": "Redraw",
+      "currentPortrait": "images/npcs/orlo.webp",
+      "rooms": [
+        "pit_mess"
+      ],
+      "direction": "An experienced drill-hand, salt-and-pepper hair and beard, compact work harness; show a worker rather than another heavy-armored commander."
+    },
+    {
+      "id": "cook_vance",
+      "name": "Rourke",
+      "group": "World 1",
+      "recommendation": "Redraw",
+      "currentPortrait": "images/npcs/vance.webp",
+      "rooms": [
+        "pit_kitchen"
+      ],
+      "direction": "Rourke owns the cook identity: lean face, dark hair/stubble, stained apron, dry expression, one ladle. Remove this face from unrelated characters."
+    },
+    {
+      "id": "mechanic_mira",
+      "name": "Mira",
+      "group": "World 1",
+      "recommendation": "Retain",
+      "currentPortrait": "images/npcs/mira.webp",
+      "rooms": [
+        "workshop_yard"
+      ],
+      "direction": "Good expressive silhouette and graphic workwear. Keep her goggles, dark hair and orange accents; compare against the first production batch."
+    },
+    {
+      "id": "scout_kaelen",
+      "name": "Scout Kaelen",
+      "group": "World 2",
+      "recommendation": "New identity",
+      "currentPortrait": "images/npcs/vale.webp",
+      "rooms": [
+        "sector9_beach_cove"
+      ],
+      "direction": "A stranded scout in weathered field gear, practical short hair and sun/wind wear; observant rather than regal. No resemblance to Vale\u2019s uniformed prince placeholder."
+    },
+    {
+      "id": "caretaker_drone",
+      "name": "Caretaker Echo",
+      "group": "World 2",
+      "recommendation": "New identity",
+      "currentPortrait": "images/npcs/maintenance_bot.webp",
+      "rooms": [
+        "sector9_archive_reading_room"
+      ],
+      "direction": "An archive diagnostic unit: hovering geometric body, ivory/stone and muted cyan, a simple scanning aperture. Different chassis from the horticultural Maintenance Bot."
+    },
+    {
+      "id": "forge_hand_rylan",
+      "name": "Rylan",
+      "group": "World 4",
+      "recommendation": "New identity",
+      "currentPortrait": "images/npcs/mechanic.webp",
+      "rooms": [
+        "foundry_lava_tube_bypass"
+      ],
+      "direction": "Heat-battered machinist in patched workwear, soot marks and a heat-baffle/tool cue. Base on Rylan\u2019s authored identity, not the cheerful generic mechanic shopkeeper."
+    },
+    {
+      "id": "contractor_cheno",
+      "name": "Cheno",
+      "group": "World 3",
+      "recommendation": "New identity",
+      "currentPortrait": "images/npcs/armorer.webp",
+      "rooms": [
+        "spire_rigging_deck"
+      ],
+      "direction": "Towering broad-shouldered male rigger with an easy grin, work vest and one rigging hook/headset cue. Distinct from Cameron\u2019s leaner, intense pipe-fitting identity."
+    },
+    {
+      "id": "musician_chris",
+      "name": "Chris",
+      "group": "World 3",
+      "recommendation": "New identity",
+      "currentPortrait": "images/npcs/vance.webp",
+      "rooms": [
+        "spire_old_subway_car"
+      ],
+      "direction": "Observant audio engineer/writer, concentrated expression, practical studio layers, one headphone or notebook cue. Do not reuse a cook or give every musician a guitar pose."
+    },
+    {
+      "id": "musician_andrew",
+      "name": "Andrew",
+      "group": "World 3",
+      "recommendation": "New identity",
+      "currentPortrait": "images/npcs/orlo.webp",
+      "rooms": [
+        "spire_old_subway_car"
+      ],
+      "direction": "Warm, curly-haired musician with a softer expression and one instrument-repair cue; clearly different face, hair mass and palette from Chris."
+    },
+    {
+      "id": "chef_david",
+      "name": "David",
+      "group": "World 2",
+      "recommendation": "New identity",
+      "currentPortrait": "images/npcs/vance.webp",
+      "rooms": [
+        "sector9_stream_falls"
+      ],
+      "direction": "A mature, warm frontier cook with a broad welcoming face, outdoor layers and a camp apron; one cup or cooking implement. Distinguish from lean mess cook Rourke and fast-moving Ren."
+    },
+    {
+      "id": "noodle_cook_ren",
+      "name": "Ren",
+      "group": "World 3",
+      "recommendation": "New identity",
+      "currentPortrait": "images/npcs/vance.webp",
+      "rooms": [
+        "spire_noodle_row"
+      ],
+      "direction": "Brisk noodle-row chef, tied-back hair or a simple head wrap, rolled sleeves and one ladle; focused energy distinct from David\u2019s hospitality and Rourke\u2019s dry reserve."
+    },
+    {
+      "id": "pipefitter_cameron",
+      "name": "Cameron",
+      "group": "World 4",
+      "recommendation": "New identity",
+      "currentPortrait": "images/npcs/armorer.webp",
+      "rooms": [
+        "foundry_pipe_gallery"
+      ],
+      "direction": "Sharp-eyed adult male pipe-fitter in soot-dusted protective coveralls, welding visor pushed back and inherited work gloves; one subtle racing-color accent."
+    },
+    {
+      "id": "analyst_charles",
+      "name": "Charles",
+      "group": "World 5",
+      "recommendation": "New identity",
+      "currentPortrait": "images/npcs/curator.webp",
+      "rooms": [
+        "orbital_customs_lounge"
+      ],
+      "direction": "An adult analyst in comfortable professional layers, a direct appraising expression and one compact datapad cue. Clearly distinct from Robert and the Curator."
+    },
+    {
+      "id": "creator_jason",
+      "name": "Jason",
+      "group": "World 3",
+      "recommendation": "New identity",
+      "currentPortrait": "images/npcs/vance.webp",
+      "rooms": [
+        "spire_hidden_studio"
+      ],
+      "direction": "Adult builder/musician with an irreverent grin, practical creative-work layers and one synth/cable cue. A recognizable individual, not the shared cook portrait."
+    },
+    {
+      "id": "oliver_supervisor",
+      "name": "Oliver",
+      "group": "Astra",
+      "recommendation": "New identity",
+      "currentPortrait": "images/characters/orion_portrait.png",
+      "rooms": [
+        "astra_quarters"
+      ],
+      "direction": "Poised black-and-white feline with upright posture and an inspecting gaze; distinct coat pattern and proportions from charcoal Meeko."
+    },
+    {
+      "id": "hound_penny",
+      "name": "Penny",
+      "group": "World 2",
+      "recommendation": "Retain",
+      "currentPortrait": "images/npcs/penny_portrait.png",
+      "rooms": [
+        "sector9_stream_falls"
+      ],
+      "direction": "The current shaggy black-and-white dog is recognizable and friendly. Keep her markings and clear eyes; watch that fur detail does not overpower the finished set."
+    },
+    {
+      "id": "clinician_megan",
+      "name": "Megan",
+      "group": "World 2",
+      "recommendation": "New identity",
+      "currentPortrait": "images/npcs/doc.webp",
+      "rooms": [
+        "sector9_coastal_research_station"
+      ],
+      "direction": "Adult clinical-care specialist with practical hair, clean work layers, teal/white accents and a small inspection tool. Attentive and precise; give her her own face instead of Doc\u2019s."
+    },
+    {
+      "id": "botanist_evelyn",
+      "name": "Evelyn",
+      "group": "World 3",
+      "recommendation": "New identity \u2014 required",
+      "currentPortrait": "images/npcs/elara.webp",
+      "rooms": [
+        "spire_skypark_dome"
+      ],
+      "direction": "Older blonde gardener with visible age, warm laugh lines, expressive brows and practical hydroponic clothing. One pruning/flower cue and a modest jazz-inspired accessory. No goddess halo, closed-eye anime maiden, or young Elara face."
+    },
+    {
+      "id": "entrepreneur_robert",
+      "name": "Robert",
+      "group": "World 3",
+      "recommendation": "New identity",
+      "currentPortrait": "images/npcs/curator.webp",
+      "rooms": [
+        "spire_skypark_dome"
+      ],
+      "direction": "Distinguished older entrepreneur with a courtly face, tailored practical jacket and expressive hands. Theatrical warmth without mime face paint or the Curator\u2019s fantasy regalia."
+    },
+    {
+      "id": "matriarch_pam",
+      "name": "Pam",
+      "group": "World 1",
+      "recommendation": "Redraw",
+      "currentPortrait": "images/npcs/pam.png",
+      "rooms": [
+        "pit_mess"
+      ],
+      "direction": "Keep her adult matriarch appearance, practical tied-back brown hair, red work shirt and apron. Render her warmth and firmness in the party\u2019s cel-shaded style; avoid making her a generic young cook."
+    },
+    {
+      "id": "feline_meeko",
+      "name": "Meeko",
+      "group": "World 3",
+      "recommendation": "New identity",
+      "currentPortrait": "images/characters/orion_portrait.png",
+      "rooms": [
+        "spire_hidden_studio"
+      ],
+      "direction": "Heavy charcoal cat-like creature with a broad face and unimpressed gaze. Preserve feline anatomy; no human Orion portrait."
+    },
+    {
+      "id": "bartender_dax",
+      "name": "Dax",
+      "group": "World 3",
+      "recommendation": "New identity",
+      "currentPortrait": "images/npcs/orlo.webp",
+      "rooms": [
+        "spire_skyline_vip_suite"
+      ],
+      "direction": "A discreet polished bartender with a neat silhouette, dark vest and one bar-towel cue. Clearly not the older field miner Orlo."
+    },
+    {
+      "id": "director_vance",
+      "name": "Director Sorrell",
+      "group": "World 3",
+      "recommendation": "New identity",
+      "currentPortrait": "images/npcs/vance.webp",
+      "rooms": [
+        "spire_skyline_vip_suite"
+      ],
+      "direction": "Director Sorrell: privileged procurement executive, immaculate suit, expensive lapel detail and disdainful expression. No apron, ladle or Rourke face. Keep the existing internal ID."
+    },
+    {
+      "id": "dr_lyra",
+      "name": "Dr. Lyra",
+      "group": "World 3",
+      "recommendation": "New identity",
+      "currentPortrait": "images/npcs/doc.webp",
+      "rooms": [
+        "spire_skyline_vip_suite"
+      ],
+      "direction": "Disgraced chemical specialist with an incisive, tired expression and worn professional coat; a different face/palette from both Doc and Megan."
+    },
+    {
+      "id": "singer_selene",
+      "name": "Selene",
+      "group": "World 3",
+      "recommendation": "New identity",
+      "currentPortrait": "images/npcs/elara.webp",
+      "rooms": [
+        "spire_skyline_vip_suite"
+      ],
+      "direction": "Adult cabaret performer with a composed expressive face, graphic stage jacket and one microphone cue. Distinct silhouette from Evelyn and Elara; avoid exaggerated pin-up styling."
+    },
+    {
+      "id": "pitmaster_brutus",
+      "name": "Pitmaster Brutus",
+      "group": "World 4",
+      "recommendation": "New identity",
+      "currentPortrait": "images/npcs/scrapper.webp",
+      "rooms": [
+        "foundry_crucible_arena"
+      ],
+      "direction": "Burly ex-welder/bookmaker with a broad nose, blunt grin, heavy protective apron and an arena tally device. Different body and attitude from hooded Scrapper."
+    },
+    {
+      "id": "shopkeep",
+      "name": "Shopkeep",
+      "group": "World 1",
+      "recommendation": "Retain",
+      "currentPortrait": "images/npcs/shopkeep.webp",
+      "rooms": [
+        "trade_strip"
+      ],
+      "direction": "The rounded face, moustache, apron and welcoming pose already read well. Preserve the same face in the General Store."
+    },
+    {
+      "id": "rylos",
+      "name": "Commander Rylos",
+      "group": "World 4",
+      "recommendation": "New identity",
+      "currentPortrait": null,
+      "rooms": [
+        "foundry_titan_dock"
+      ],
+      "direction": "Author a face for the scripted speaker: severe commander with the described chrome facial plating, charcoal work-command uniform and restrained furnace-orange cues. Relate him to the Titan\u2019s machinery without substituting the entire Titan sprite."
+    },
+    {
+      "id": "upper_city_concierge",
+      "name": "Upper City Concierge",
+      "group": "World 3",
+      "recommendation": "Redraw",
+      "currentPortrait": "images/npcs/concierge.webp",
+      "rooms": [
+        "spire_exec_lounge_bar"
+      ],
+      "direction": "Keep professional poise and dark hair; use clean future-hospitality clothing and simplified face shapes. Avoid the ornate fantasy/anime styling of the current shop portrait."
+    },
+    {
+      "id": "arcade_prize_dispenser",
+      "name": "Arcade Prize Dispenser",
+      "group": "Astra / arcade service",
+      "recommendation": "New identity",
+      "currentPortrait": "images/npcs/mechanic.webp",
+      "rooms": [
+        "Astra recreation service"
+      ],
+      "direction": "A friendly, graphic prize-terminal faceplate with a ticket/token slot. This is a machine, not the generic mechanic woman currently displayed."
+    },
+    {
+      "id": "zenith_dispensary",
+      "name": "Zenith Automated Commissary",
+      "group": "World 5",
+      "recommendation": "New identity",
+      "currentPortrait": "images/npcs/maintenance_bot.webp",
+      "rooms": [
+        "orbital_customs_lounge"
+      ],
+      "direction": "A sleek corporate dispenser with a simple status display and sealed supply drawer; distinguish it from the Solarium gardener bot and the arcade prize machine."
+    }
+  ],
+  "deferred": {
+    "catalog": [
+      "ollie",
+      "creature_charlie"
+    ],
+    "shopOnlyDebugOrUnconfirmed": [
+      "mechanic_shop",
+      "weapon_shop",
+      "armor_shop",
+      "accessory_shop"
+    ],
+    "unplacedDialogueSpeakers": [
+      "Innkeeper Bran",
+      "Caretaker Iva",
+      "Juno",
+      "Sergeant Leto",
+      "Pasha",
+      "Rana",
+      "Sedge",
+      "Doctor Sera",
+      "Sima",
+      "Tallo",
+      "Ellie",
+      "Schoolteacher Kasey",
+      "Maddie"
+    ]
+  }
+}

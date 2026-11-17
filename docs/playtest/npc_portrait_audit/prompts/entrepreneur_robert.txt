@@ -1,0 +1,12 @@
+Use case: stylized-concept
+Asset type: Starborn NPC dialogue portrait.
+Primary request: Create one finished portrait of Robert.
+Inputs: Image 1 is the protected party STYLE reference only: match its bold line weight, cel shading, large expressive features and mobile readability; do not copy its characters. This character needs their own distinct design, not a face copied from the style reference.
+Authored role: A courtly, distinguished entrepreneur and former theatrical mime who founded an interstellar industrial cleaning equipment empire. Known for communicating complex equipment tolerances through expressive, silent pantomime and occasionally misplacing his multi-stage floor buffers.
+Art direction: Distinguished older entrepreneur with a courtly face, tailored practical jacket and expressive hands. Theatrical warmth without mime face paint or the Curator’s fantasy regalia.
+Style: bold 2D comic science-fiction RPG, clean thick dark outlines, graphic cel shading, expressive readable face, simple confident shapes. Match the attached party style without making mature adults teenagers. Bright controlled palette, no painterly texture or realistic rendering.
+Framing: centered isolated head-and-shoulders/upper-chest bust, head large in frame, full hair and shoulders inside canvas with 6 percent safety margin. No full body, no legs, no elaborate pose. Clear unobstructed face.
+Background: perfectly flat solid pure #00ff00 green chroma key, no gradient, no shadow, no floor, no glow or vignette. Never use key green inside the subject; botanical greens must be dark olive or teal.
+Constraints: one subject only; no text, numbers, logo, border or watermark; no photo realism, generic fantasy regalia, floating ornament, or excessive tiny equipment. Output square 1024x1024.
+
+Framing priority: FULL silhouette of an isolated portrait bust, including complete hair and shoulder contours and a simple curved lower bust edge. Keep the whole bust inside the image with at least 60 pixels of uninterrupted green on ALL four sides. No cut-off hair or cropped shoulder at the canvas edge. Do not add an oval frame.

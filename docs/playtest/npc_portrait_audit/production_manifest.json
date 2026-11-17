@@ -1,0 +1,469 @@
+{
+  "date": "2026-11-16",
+  "model": "gpt-image-2",
+  "quality": "low",
+  "portraits": [
+    {
+      "id": "jed",
+      "name": "Jed",
+      "group": "World 1",
+      "oldPortrait": "images/npcs/jed.webp",
+      "portrait": "images/npcs/jed_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/jed_refined.png",
+      "prompt": "prompts/jed.txt",
+      "refinementPrompt": "prompts/jed_refine.txt",
+      "bytes": 119544
+    },
+    {
+      "id": "scrapper",
+      "name": "Scrapper",
+      "group": "World 1",
+      "oldPortrait": "images/npcs/scrapper.webp",
+      "portrait": "images/npcs/scrapper_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/scrapper.png",
+      "prompt": "prompts/scrapper.txt",
+      "refinementPrompt": null,
+      "bytes": 84426
+    },
+    {
+      "id": "doc",
+      "name": "Doc",
+      "group": "World 1",
+      "oldPortrait": "images/npcs/doc.webp",
+      "portrait": "images/npcs/doc_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/doc.png",
+      "prompt": "prompts/doc.txt",
+      "refinementPrompt": null,
+      "bytes": 89664
+    },
+    {
+      "id": "foreman_bogs",
+      "name": "Foreman Boggs",
+      "group": "World 1",
+      "oldPortrait": "images/npcs/bogs.webp",
+      "portrait": "images/npcs/foreman_bogs_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/foreman_bogs.png",
+      "prompt": "prompts/foreman_bogs.txt",
+      "refinementPrompt": null,
+      "bytes": 95474
+    },
+    {
+      "id": "guard_hank",
+      "name": "Guard Hank",
+      "group": "World 1",
+      "oldPortrait": "images/npcs/guard_hank.webp",
+      "portrait": "images/npcs/guard_hank_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/guard_hank.png",
+      "prompt": "prompts/guard_hank.txt",
+      "refinementPrompt": null,
+      "bytes": 75084
+    },
+    {
+      "id": "miner_bill",
+      "name": "Miner Bill",
+      "group": "World 1",
+      "oldPortrait": "images/npcs/miner_bill.webp",
+      "portrait": "images/npcs/miner_bill_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/miner_bill.png",
+      "prompt": "prompts/miner_bill.txt",
+      "refinementPrompt": null,
+      "bytes": 95706
+    },
+    {
+      "id": "the_warden",
+      "name": "The Warden",
+      "group": "World 1",
+      "oldPortrait": "images/npcs/the_warden.webp",
+      "portrait": "images/npcs/the_warden_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/the_warden_refined.png",
+      "prompt": "prompts/the_warden.txt",
+      "refinementPrompt": "prompts/the_warden_refine.txt",
+      "bytes": 163842
+    },
+    {
+      "id": "jax",
+      "name": "Jax",
+      "group": "World 3",
+      "oldPortrait": "images/npcs/jax.webp",
+      "portrait": "images/npcs/jax_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/jax.png",
+      "prompt": "prompts/jax.txt",
+      "refinementPrompt": null,
+      "bytes": 131648
+    },
+    {
+      "id": "curator",
+      "name": "Museum Curator",
+      "group": "World 3",
+      "oldPortrait": "images/npcs/curator.webp",
+      "portrait": "images/npcs/curator_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/curator.png",
+      "prompt": "prompts/curator.txt",
+      "refinementPrompt": null,
+      "bytes": 106372
+    },
+    {
+      "id": "thorne",
+      "name": "Director Mara Thorne",
+      "group": "World 5 / World 3\u20134 transmissions",
+      "oldPortrait": "images/npcs/thorne.webp",
+      "portrait": "images/npcs/thorne_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/thorne_refined.png",
+      "prompt": "prompts/thorne.txt",
+      "refinementPrompt": "prompts/thorne_refine.txt",
+      "bytes": 89080
+    },
+    {
+      "id": "elara",
+      "name": "Elara",
+      "group": "World 5",
+      "oldPortrait": "images/npcs/elara.webp",
+      "portrait": "images/npcs/elara_portrait_v2.webp",
+      "source": "output/imagegen/elara_outfit_20261117/elara_keyed.png",
+      "prompt": "prompts/elara_utility_outfit.txt",
+      "refinementPrompt": null,
+      "bytes": 91744
+    },
+    {
+      "id": "vale",
+      "name": "Lieutenant Arden Vale",
+      "group": "World 5 / World 3\u20136 dialogue",
+      "oldPortrait": "images/npcs/vale.webp",
+      "portrait": "images/npcs/vale_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/vale_refined.png",
+      "prompt": "prompts/vale.txt",
+      "refinementPrompt": "prompts/vale_refine.txt",
+      "bytes": 86586
+    },
+    {
+      "id": "miner_orlo",
+      "name": "Orlo",
+      "group": "World 1",
+      "oldPortrait": "images/npcs/orlo.webp",
+      "portrait": "images/npcs/miner_orlo_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/miner_orlo.png",
+      "prompt": "prompts/miner_orlo.txt",
+      "refinementPrompt": null,
+      "bytes": 119492
+    },
+    {
+      "id": "cook_vance",
+      "name": "Rourke",
+      "group": "World 1",
+      "oldPortrait": "images/npcs/vance.webp",
+      "portrait": "images/npcs/cook_vance_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/cook_vance.png",
+      "prompt": "prompts/cook_vance.txt",
+      "refinementPrompt": null,
+      "bytes": 120050
+    },
+    {
+      "id": "scout_kaelen",
+      "name": "Scout Kaelen",
+      "group": "World 2",
+      "oldPortrait": "images/npcs/vale.webp",
+      "portrait": "images/npcs/scout_kaelen_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/scout_kaelen.png",
+      "prompt": "prompts/scout_kaelen.txt",
+      "refinementPrompt": null,
+      "bytes": 107010
+    },
+    {
+      "id": "caretaker_drone",
+      "name": "Caretaker Echo",
+      "group": "World 2",
+      "oldPortrait": "images/npcs/maintenance_bot.webp",
+      "portrait": "images/npcs/caretaker_drone_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/caretaker_drone_refined.png",
+      "prompt": "prompts/caretaker_drone.txt",
+      "refinementPrompt": "prompts/caretaker_drone_refine.txt",
+      "bytes": 91832
+    },
+    {
+      "id": "forge_hand_rylan",
+      "name": "Rylan",
+      "group": "World 4",
+      "oldPortrait": "images/npcs/mechanic.webp",
+      "portrait": "images/npcs/forge_hand_rylan_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/forge_hand_rylan.png",
+      "prompt": "prompts/forge_hand_rylan.txt",
+      "refinementPrompt": null,
+      "bytes": 118872
+    },
+    {
+      "id": "contractor_cheno",
+      "name": "Cheno",
+      "group": "World 3",
+      "oldPortrait": "images/npcs/armorer.webp",
+      "portrait": "images/npcs/contractor_cheno_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/contractor_cheno.png",
+      "prompt": "prompts/contractor_cheno.txt",
+      "refinementPrompt": null,
+      "bytes": 91574
+    },
+    {
+      "id": "musician_chris",
+      "name": "Chris",
+      "group": "World 3",
+      "oldPortrait": "images/npcs/vance.webp",
+      "portrait": "images/npcs/musician_chris_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/musician_chris.png",
+      "prompt": "prompts/musician_chris.txt",
+      "refinementPrompt": null,
+      "bytes": 82372
+    },
+    {
+      "id": "musician_andrew",
+      "name": "Andrew",
+      "group": "World 3",
+      "oldPortrait": "images/npcs/orlo.webp",
+      "portrait": "images/npcs/musician_andrew_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/musician_andrew.png",
+      "prompt": "prompts/musician_andrew.txt",
+      "refinementPrompt": null,
+      "bytes": 117356
+    },
+    {
+      "id": "chef_david",
+      "name": "David",
+      "group": "World 2",
+      "oldPortrait": "images/npcs/vance.webp",
+      "portrait": "images/npcs/chef_david_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/chef_david.png",
+      "prompt": "prompts/chef_david.txt",
+      "refinementPrompt": null,
+      "bytes": 115892
+    },
+    {
+      "id": "noodle_cook_ren",
+      "name": "Ren",
+      "group": "World 3",
+      "oldPortrait": "images/npcs/vance.webp",
+      "portrait": "images/npcs/noodle_cook_ren_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/noodle_cook_ren.png",
+      "prompt": "prompts/noodle_cook_ren.txt",
+      "refinementPrompt": null,
+      "bytes": 100658
+    },
+    {
+      "id": "pipefitter_cameron",
+      "name": "Cameron",
+      "group": "World 4",
+      "oldPortrait": "images/npcs/armorer.webp",
+      "portrait": "images/npcs/pipefitter_cameron_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/pipefitter_cameron.png",
+      "prompt": "prompts/pipefitter_cameron.txt",
+      "refinementPrompt": null,
+      "bytes": 97522
+    },
+    {
+      "id": "analyst_charles",
+      "name": "Charles",
+      "group": "World 5",
+      "oldPortrait": "images/npcs/curator.webp",
+      "portrait": "images/npcs/analyst_charles_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/analyst_charles.png",
+      "prompt": "prompts/analyst_charles.txt",
+      "refinementPrompt": null,
+      "bytes": 86088
+    },
+    {
+      "id": "creator_jason",
+      "name": "Jason",
+      "group": "World 3",
+      "oldPortrait": "images/npcs/vance.webp",
+      "portrait": "images/npcs/creator_jason_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/creator_jason.png",
+      "prompt": "prompts/creator_jason.txt",
+      "refinementPrompt": null,
+      "bytes": 108478
+    },
+    {
+      "id": "oliver_supervisor",
+      "name": "Oliver",
+      "group": "Astra",
+      "oldPortrait": "images/characters/orion_portrait.png",
+      "portrait": "images/npcs/oliver_supervisor_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/oliver_supervisor_refined.png",
+      "prompt": "prompts/oliver_supervisor.txt",
+      "refinementPrompt": "prompts/oliver_supervisor_refine.txt",
+      "bytes": 60636
+    },
+    {
+      "id": "clinician_megan",
+      "name": "Megan",
+      "group": "World 2",
+      "oldPortrait": "images/npcs/doc.webp",
+      "portrait": "images/npcs/clinician_megan_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/clinician_megan.png",
+      "prompt": "prompts/clinician_megan.txt",
+      "refinementPrompt": null,
+      "bytes": 104790
+    },
+    {
+      "id": "botanist_evelyn",
+      "name": "Evelyn",
+      "group": "World 3",
+      "oldPortrait": "images/npcs/elara.webp",
+      "portrait": "images/npcs/botanist_evelyn_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/botanist_evelyn_refined.png",
+      "prompt": "prompts/botanist_evelyn.txt",
+      "refinementPrompt": "prompts/botanist_evelyn_refine.txt",
+      "bytes": 152448
+    },
+    {
+      "id": "entrepreneur_robert",
+      "name": "Robert",
+      "group": "World 3",
+      "oldPortrait": "images/npcs/curator.webp",
+      "portrait": "images/npcs/entrepreneur_robert_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/entrepreneur_robert_refined.png",
+      "prompt": "prompts/entrepreneur_robert.txt",
+      "refinementPrompt": "prompts/entrepreneur_robert_refine.txt",
+      "bytes": 131892
+    },
+    {
+      "id": "matriarch_pam",
+      "name": "Pam",
+      "group": "World 1",
+      "oldPortrait": "images/npcs/pam.png",
+      "portrait": "images/npcs/matriarch_pam_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/matriarch_pam.png",
+      "prompt": "prompts/matriarch_pam.txt",
+      "refinementPrompt": null,
+      "bytes": 131198
+    },
+    {
+      "id": "feline_meeko",
+      "name": "Meeko",
+      "group": "World 3",
+      "oldPortrait": "images/characters/orion_portrait.png",
+      "portrait": "images/npcs/feline_meeko_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/feline_meeko_refined.png",
+      "prompt": "prompts/feline_meeko.txt",
+      "refinementPrompt": "prompts/feline_meeko_refine.txt",
+      "bytes": 91360
+    },
+    {
+      "id": "bartender_dax",
+      "name": "Dax",
+      "group": "World 3",
+      "oldPortrait": "images/npcs/orlo.webp",
+      "portrait": "images/npcs/bartender_dax_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/bartender_dax_refined.png",
+      "prompt": "prompts/bartender_dax.txt",
+      "refinementPrompt": "prompts/bartender_dax_refine.txt",
+      "bytes": 78526
+    },
+    {
+      "id": "director_vance",
+      "name": "Director Sorrell",
+      "group": "World 3",
+      "oldPortrait": "images/npcs/vance.webp",
+      "portrait": "images/npcs/director_vance_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/director_vance.png",
+      "prompt": "prompts/director_vance.txt",
+      "refinementPrompt": null,
+      "bytes": 88202
+    },
+    {
+      "id": "dr_lyra",
+      "name": "Dr. Lyra",
+      "group": "World 3",
+      "oldPortrait": "images/npcs/doc.webp",
+      "portrait": "images/npcs/dr_lyra_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/dr_lyra.png",
+      "prompt": "prompts/dr_lyra.txt",
+      "refinementPrompt": null,
+      "bytes": 94816
+    },
+    {
+      "id": "singer_selene",
+      "name": "Selene",
+      "group": "World 3",
+      "oldPortrait": "images/npcs/elara.webp",
+      "portrait": "images/npcs/singer_selene_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/singer_selene.png",
+      "prompt": "prompts/singer_selene.txt",
+      "refinementPrompt": null,
+      "bytes": 97278
+    },
+    {
+      "id": "pitmaster_brutus",
+      "name": "Pitmaster Brutus",
+      "group": "World 4",
+      "oldPortrait": "images/npcs/scrapper.webp",
+      "portrait": "images/npcs/pitmaster_brutus_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/pitmaster_brutus.png",
+      "prompt": "prompts/pitmaster_brutus.txt",
+      "refinementPrompt": null,
+      "bytes": 118324
+    },
+    {
+      "id": "rylos",
+      "name": "Commander Rylos",
+      "group": "World 4",
+      "oldPortrait": null,
+      "portrait": "images/npcs/rylos_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/rylos.png",
+      "prompt": "prompts/rylos.txt",
+      "refinementPrompt": null,
+      "bytes": 108740
+    },
+    {
+      "id": "upper_city_concierge",
+      "name": "Upper City Concierge",
+      "group": "World 3",
+      "oldPortrait": "images/npcs/concierge.webp",
+      "portrait": "images/npcs/upper_city_concierge_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/upper_city_concierge.png",
+      "prompt": "prompts/upper_city_concierge.txt",
+      "refinementPrompt": null,
+      "bytes": 81104
+    },
+    {
+      "id": "arcade_prize_dispenser",
+      "name": "Arcade Prize Dispenser",
+      "group": "Astra / arcade service",
+      "oldPortrait": "images/npcs/mechanic.webp",
+      "portrait": "images/npcs/arcade_prize_dispenser_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/arcade_prize_dispenser.png",
+      "prompt": "prompts/arcade_prize_dispenser.txt",
+      "refinementPrompt": null,
+      "bytes": 104354
+    },
+    {
+      "id": "zenith_dispensary",
+      "name": "Zenith Automated Commissary",
+      "group": "World 5",
+      "oldPortrait": "images/npcs/maintenance_bot.webp",
+      "portrait": "images/npcs/zenith_dispensary_portrait_v2.webp",
+      "source": "output/imagegen/npc_cast_20261116/keyed/zenith_dispensary_refined.png",
+      "prompt": "prompts/zenith_dispensary.txt",
+      "refinementPrompt": "prompts/zenith_dispensary_refine.txt",
+      "bytes": 57578
+    }
+  ],
+  "cinematics": [
+    {
+      "scene": "scene_w5_anchor_stasis",
+      "image": "images/cinematics/w5_stasis_elara_v2.webp",
+      "prompt": "prompts/cinematic_elara_utility_outfit.txt",
+      "source": "output/imagegen/elara_outfit_20261117/glass_refined.png",
+      "refinementPrompt": "prompts/cinematic_elara_utility_cleanup.txt"
+    },
+    {
+      "scene": "scene_w4_outer_shield",
+      "image": "images/cinematics/w4_coup_display_v2.webp",
+      "prompt": "prompts/cinematic_coup.txt",
+      "refinementPrompt": "prompts/cinematic_coup_refine.txt",
+      "source": "output/imagegen/npc_cast_20261116/cinematics/w4_coup_display_v2_refined.png"
+    },
+    {
+      "scene": "scene_w5_cross_the_tear",
+      "image": "images/cinematics/w5_tear_hands_v2.webp",
+      "prompt": "prompts/cinematic_elara_wrist_interface.txt",
+      "source": "output/imagegen/elara_outfit_20261117/hands.png"
+    }
+  ]
+}

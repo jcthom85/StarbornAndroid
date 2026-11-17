@@ -5,7 +5,7 @@
     "aliases": [],
     "role": "Mentor",
     "description": "A gruff tinkerer who keeps Nova fed, patched, and supplied with parts Dominion says do not exist.",
-    "portrait": "images/npcs/jed.webp",
+    "portrait": "images/npcs/jed_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -38,7 +38,7 @@
     "aliases": [],
     "role": "Fence",
     "description": "A paranoid black-market vendor who deals in illegal tech.",
-    "portrait": "images/npcs/scrapper.webp",
+    "portrait": "images/npcs/scrapper_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -60,7 +60,7 @@
     "aliases": [],
     "role": "Medic",
     "description": "The colony's cynical and overworked medical officer.",
-    "portrait": "images/npcs/doc.webp",
+    "portrait": "images/npcs/doc_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -80,7 +80,7 @@
     "short_name": "Boggs",
     "role": "Supervisor",
     "description": "A loud, bureaucratic bully who prioritizes quotas over lives.",
-    "portrait": "images/npcs/bogs.webp",
+    "portrait": "images/npcs/foreman_bogs_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -96,7 +96,7 @@
     "aliases": [],
     "role": "Security",
     "description": "A bored Dominion guard who's seen it all.",
-    "portrait": "images/npcs/guard_hank.webp",
+    "portrait": "images/npcs/guard_hank_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -112,7 +112,7 @@
     "aliases": [],
     "role": "Worker",
     "description": "A weary miner who spends his meager scrip at the bar.",
-    "portrait": "images/npcs/miner_bill.webp",
+    "portrait": "images/npcs/miner_bill_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -147,7 +147,7 @@
     ],
     "role": "Dominion Commander",
     "description": "The armored Sector Commander who enforces Dominion asset policy with ritual calm.",
-    "portrait": "images/npcs/the_warden.webp",
+    "portrait": "images/npcs/the_warden_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -197,7 +197,7 @@
     "aliases": [],
     "role": "Bartender",
     "description": "A gruff information broker and bartender at The Static with a cybernetic loader claw.",
-    "portrait": "images/npcs/jax.webp",
+    "portrait": "images/npcs/jax_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -231,7 +231,7 @@
     ],
     "role": "Upper City Curator",
     "description": "A velvet-robed cultural gatekeeper who treats living people like mislabeled exhibits.",
-    "portrait": "images/npcs/curator.webp",
+    "portrait": "images/npcs/curator_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -268,7 +268,7 @@
     ],
     "role": "Deposed Director",
     "description": "The former Dominion director, stripped of command and hiding in her own Server Farm.",
-    "portrait": "images/npcs/thorne.webp",
+    "portrait": "images/npcs/thorne_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -302,7 +302,7 @@
     "aliases": [],
     "role": "Living CPU",
     "description": "Gh0st's sister, conscious inside the Source while Dominion uses her body and chordprint as Ring infrastructure.",
-    "portrait": "images/npcs/elara.webp",
+    "portrait": "images/npcs/elara_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -321,7 +321,7 @@
     ],
     "role": "Orbital Compliance Commander",
     "description": "The calm architect of the coup, now using Harmony to replace every voice with his own.",
-    "portrait": "images/npcs/vale.webp",
+    "portrait": "images/npcs/vale_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -366,7 +366,7 @@
     ],
     "role": "Drill-Hand",
     "description": "A seasoned shaft miner with scarred knuckles and sharp ears for shifting rock.",
-    "portrait": "images/npcs/orlo.webp",
+    "portrait": "images/npcs/miner_orlo_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -385,7 +385,7 @@
     ],
     "role": "Ration Cook",
     "description": "A dry-witted mess cook who turns synth protein bricks into hot trail meals.",
-    "portrait": "images/npcs/vance.webp",
+    "portrait": "images/npcs/cook_vance_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -423,7 +423,7 @@
     ],
     "role": "Stranded Dominion Scout",
     "description": "A resourceful survivor of a crashed Dominion survey craft, keeping watch over Tideglass Beach and the razor-vine canopy.",
-    "portrait": "images/npcs/vale.webp",
+    "portrait": "images/npcs/scout_kaelen_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -443,7 +443,7 @@
     ],
     "role": "Aethel Archive Unit",
     "description": "An ancient hovering diagnostic drone whose cymatic chassis hums softly with harmonic data fragments.",
-    "portrait": "images/npcs/maintenance_bot.webp",
+    "portrait": "images/npcs/caretaker_drone_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -463,7 +463,7 @@
     ],
     "role": "Foundry Machinist",
     "description": "A heat-battered foundry survivor who keeps the lava tube bypass cool with improvised heat baffles and flux welds.",
-    "portrait": "images/npcs/mechanic.webp",
+    "portrait": "images/npcs/forge_hand_rylan_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -484,7 +484,7 @@
     ],
     "role": "Chief Rigging Contractor",
     "description": "A towering, broad-shouldered powerhouse of a man with an easy grin, a booming laugh, and a heart of gold. As lead civil contractor and live audio rigger, Cheno is the person who keeps the Spire's heaviest trusses standing—and the guy who would cross the star system to haul a friend out of a ditch.",
-    "portrait": "images/npcs/armorer.webp",
+    "portrait": "images/npcs/contractor_cheno_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -504,7 +504,7 @@
     ],
     "role": "Acoustic Engineer & Lyricist",
     "description": "A sharp-witted audio engineer and brilliant writer with an articulate, observant edge. He works with Andrew in the old subway car to broadcast uncompromised music across the Spire.",
-    "portrait": "images/npcs/vance.webp",
+    "portrait": "images/npcs/musician_chris_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -524,7 +524,7 @@
     ],
     "role": "Resonance Technician & Guitarist",
     "description": "A quiet, warm, and artistic musician with curly hair and an easy smile. He handles instrument repairs and acoustic resonance coils, keeping the heart of the music alive.",
-    "portrait": "images/npcs/orlo.webp",
+    "portrait": "images/npcs/musician_andrew_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -544,7 +544,7 @@
     ],
     "role": "Master Camp Cook",
     "description": "A seasoned, warm-hearted frontier cook and retired supply specialist who loves the outdoors, good food, and gathering people around the campfire.",
-    "portrait": "images/npcs/vance.webp",
+    "portrait": "images/npcs/chef_david_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -570,7 +570,7 @@
     ],
     "role": "Noodle Row Chef",
     "description": "A lightning-fast wok chef who feeds half the Night Market through torrential rain.",
-    "portrait": "images/npcs/vance.webp",
+    "portrait": "images/npcs/noodle_cook_ren_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -590,7 +590,7 @@
     ],
     "role": "Master Pipe-Fitter",
     "description": "A tireless, sharp-eyed shipyard pipe-fitter in soot-dusted flame-retardant coveralls. Between seventy-hour double shifts and steam emergencies, Cameron carries on his father Sherman's legacy with flawless welds, high-speed racing pride, and boundless love for his wife Kasey and three daughters.",
-    "portrait": "images/npcs/armorer.webp",
+    "portrait": "images/npcs/pipefitter_cameron_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -610,7 +610,7 @@
     ],
     "role": "Systems Venture Analyst",
     "description": "A sharp-witted strategist and computer scientist running continuous macro-economic models from a cushioned concourse lounge. Equally capable of pinpointing a fatal flaw in a starship's economy or championing a friend's wildest invention, Charles balances unsparing analytical honesty with a deep heart and an unyielding drive to do good.",
-    "portrait": "images/npcs/curator.webp",
+    "portrait": "images/npcs/analyst_charles_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -650,7 +650,7 @@
     ],
     "role": "Relentless Builder",
     "description": "A tireless creator, guitarist, and father with an irreverent grin and a workbench that never empties. Surrounded by vintage synthesizers, monitors, and half-finished inventions, he is always building three things at once and planning the fourth.",
-    "portrait": "images/npcs/vance.webp",
+    "portrait": "images/npcs/creator_jason_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -670,7 +670,7 @@
     ],
     "role": "Vessel Operations Supervisor",
     "description": "An impeccably poised black-and-white feline who quietly enforces the ship's daily schedule. Oliver monitors crew meal cadences, tests every new blanket for thermal retention by sleeping directly on it, and allows the crew to operate the starship only under his supervision.",
-    "portrait": "images/characters/orion_portrait.png",
+    "portrait": "images/npcs/oliver_supervisor_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -709,7 +709,7 @@
     ],
     "role": "Clinical Hygiene and Sanitation Specialist",
     "description": "Megan maintains Tidewatch's water filters and provides practical clinical care for the coastal survivors. Her clinical hygiene background and interest in forensics make her patient with details and cautious about conclusions.",
-    "portrait": "images/npcs/doc.webp",
+    "portrait": "images/npcs/clinician_megan_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -729,7 +729,7 @@
     ],
     "role": "Hydroponic Jazz Botanist",
     "description": "A kind, charmingly eccentric gardener with blonde hair, an infectious laugh, and a lifelong love of jazz. Evelyn hums vocal riffs while pruning rare botanical blossoms, beaming with boundless grandmotherly love for her grandsons Tyson and Ian.",
-    "portrait": "images/npcs/elara.webp",
+    "portrait": "images/npcs/botanist_evelyn_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -749,7 +749,7 @@
     ],
     "role": "Industrial Sanitary Mogul",
     "description": "A courtly, distinguished entrepreneur and former theatrical mime who founded an interstellar industrial cleaning equipment empire. Known for communicating complex equipment tolerances through expressive, silent pantomime and occasionally misplacing his multi-stage floor buffers.",
-    "portrait": "images/npcs/curator.webp",
+    "portrait": "images/npcs/entrepreneur_robert_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -768,7 +768,7 @@
     ],
     "role": "Mess-Hall Manager",
     "description": "A sharp-tongued, fiercely loyal mountain matriarch who runs the mess hall, serves the miners, and makes sure nobody leaves hungry. Her skillet biscuits are a personal specialty; Rourke handles the everyday kitchen. Known for her ceramic rooster figurines, blunt honesty, and love for her family and dogs.",
-    "portrait": "images/npcs/pam.png",
+    "portrait": "images/npcs/matriarch_pam_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -788,7 +788,7 @@
     ],
     "role": "Equal Creative Partner",
     "description": "A hefty, sleek charcoal cat-like creature with an imposing mafia boss gaze, lounging across the warm chassis of a tube amplifier. Meeko swats indifferently at loose patch cables, considers himself Jason's executive peer rather than anyone's pet, and demands mutual respect before granting a single majestic audience.",
-    "portrait": "images/characters/orion_portrait.png",
+    "portrait": "images/npcs/feline_meeko_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -807,7 +807,7 @@
     ],
     "role": "Lounge Bartender",
     "description": "A high-end mixologist who prides himself on discretion and pristine vintage spirits.",
-    "portrait": "images/npcs/orlo.webp",
+    "portrait": "images/npcs/bartender_dax_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -826,7 +826,7 @@
     ],
     "role": "Dominion Procurement VP",
     "description": "An arrogant corporate executive who treats everyone below tier-four clearance like cheap grease.",
-    "portrait": "images/npcs/vance.webp",
+    "portrait": "images/npcs/director_vance_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -845,7 +845,7 @@
     ],
     "role": "Disgraced Chem-Engineer",
     "description": "A cynical medical technician who was recently demoted after questioning Dominion chemical contracts.",
-    "portrait": "images/npcs/doc.webp",
+    "portrait": "images/npcs/dr_lyra_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -864,7 +864,7 @@
     ],
     "role": "Cabaret Singer",
     "description": "A sultry jazz vocalist whose acoustic set was cut short by the emergency lockdown sirens.",
-    "portrait": "images/npcs/elara.webp",
+    "portrait": "images/npcs/singer_selene_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -880,7 +880,7 @@
     "aliases": [],
     "role": "Arena Master",
     "description": "A burly, welder-turned-bookie who runs underground gladiator machine bouts in the Foundry drainage basin.",
-    "portrait": "images/npcs/scrapper.webp",
+    "portrait": "images/npcs/pitmaster_brutus_portrait_v2.webp",
     "dialogue": {},
     "interactions": [
       {
@@ -909,5 +909,29 @@
         "dialogue_id": ""
       }
     ]
+  },
+  {
+    "id": "rylos",
+    "name": "Commander Rylos",
+    "aliases": [
+      "Rylos"
+    ],
+    "role": "Foundry Commander",
+    "description": "The chrome-faced commander who pilots the Titan Walker and claims ownership over Gh0st.",
+    "portrait": "images/npcs/rylos_portrait_v2.webp",
+    "dialogue": {},
+    "interactions": []
+  },
+  {
+    "id": "upper_city_concierge",
+    "name": "Concierge",
+    "aliases": [
+      "Upper City Concierge"
+    ],
+    "role": "Executive Concierge",
+    "description": "The Upper City concierge who verifies clearance and supplies executive guests.",
+    "portrait": "images/npcs/upper_city_concierge_portrait_v2.webp",
+    "dialogue": {},
+    "interactions": []
   }
 ]

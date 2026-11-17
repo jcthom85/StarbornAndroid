@@ -1402,37 +1402,37 @@
       {
         "type": "dialogue",
         "speaker": "Vale",
-        "portrait": "images/npcs/vale.webp",
+        "portrait": "images/npcs/vale_portrait_v2.webp",
         "text": "Commander Rylos, bring up the ownership register. Director Thorne’s signature is no longer valid.",
         "duration_seconds": 6.7,
         "caption_style": "dialogue",
-        "image": "images/cinematics/w4_coup_display_v1.webp"
+        "image": "images/cinematics/w4_coup_display_v2.webp"
       },
       {
         "type": "dialogue",
         "speaker": "Thorne",
-        "portrait": "images/npcs/thorne.webp",
+        "portrait": "images/npcs/thorne_portrait_v2.webp",
         "text": "That register includes my name because I paid for everything attached to it. Read it again.",
         "duration_seconds": 6.1,
         "caption_style": "dialogue",
-        "image": "images/cinematics/w4_coup_display_v1.webp"
+        "image": "images/cinematics/w4_coup_display_v2.webp"
       },
       {
         "type": "narration",
         "text": "",
         "duration_seconds": 0.75,
         "caption_style": "none",
-        "image": "images/cinematics/w4_coup_display_v1.webp",
+        "image": "images/cinematics/w4_coup_display_v2.webp",
         "transition": "cut"
       },
       {
         "type": "dialogue",
         "speaker": "Vale",
-        "portrait": "images/npcs/vale.webp",
+        "portrait": "images/npcs/vale_portrait_v2.webp",
         "text": "It includes the authorization you gave me at the Spire. I’ve extended it to the Ring. All sectors, lock down.",
         "duration_seconds": 7.4,
         "caption_style": "dialogue",
-        "image": "images/cinematics/w4_coup_display_v1.webp"
+        "image": "images/cinematics/w4_coup_display_v2.webp"
       },
       {
         "type": "dialogue",
@@ -1441,7 +1441,7 @@
         "text": "The Ring used to announce whose orders I was following. Listen. It’s stopped saying her name.",
         "duration_seconds": 6.5,
         "caption_style": "dialogue",
-        "image": "images/cinematics/w4_coup_display_v1.webp"
+        "image": "images/cinematics/w4_coup_display_v2.webp"
       },
       {
         "type": "narration",
@@ -1491,17 +1491,17 @@
         "text": "Elara. Can you feel my hand?",
         "duration_seconds": 3.7,
         "caption_style": "dialogue",
-        "image": "images/cinematics/w5_stasis_elara_v1.webp",
+        "image": "images/cinematics/w5_stasis_elara_v2.webp",
         "transition": "cut"
       },
       {
         "type": "dialogue",
         "speaker": "Elara",
-        "portrait": "images/npcs/elara.webp",
+        "portrait": "images/npcs/elara_portrait_v2.webp",
         "text": "I can feel the glass. The tank still has me. Follow the cable to the Throne Room. I’ll keep the door open.",
         "duration_seconds": 7.5,
         "caption_style": "dialogue",
-        "image": "images/cinematics/w5_stasis_elara_v1.webp"
+        "image": "images/cinematics/w5_stasis_elara_v2.webp"
       }
     ],
     "presentation": "illustrated",
@@ -1532,7 +1532,7 @@
         "text": "",
         "duration_seconds": 2.6,
         "caption_style": "none",
-        "image": "images/cinematics/w5_tear_hands_v1.webp",
+        "image": "images/cinematics/w5_tear_hands_v2.webp",
         "transition": "cut",
         "audio_cue": "sfx_combat_enemy_void_blast"
       },
@@ -1543,7 +1543,7 @@
         "text": "We’re going after her. Take my arm.",
         "duration_seconds": 4.2,
         "caption_style": "dialogue",
-        "image": "images/cinematics/w5_tear_hands_v1.webp"
+        "image": "images/cinematics/w5_tear_hands_v2.webp"
       },
       {
         "type": "narration",

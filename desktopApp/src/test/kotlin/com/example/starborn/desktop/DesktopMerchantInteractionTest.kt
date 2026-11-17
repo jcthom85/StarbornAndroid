@@ -53,7 +53,7 @@ class DesktopMerchantInteractionTest {
         s.questPresentations.clear()
         runtime.onNpcInteraction("matriarch_pam")
         compose.waitUntil(5000) { runtime.uiState.value.activeDialogue != null }
-        assertEquals("images/npcs/pam.png", runtime.uiState.value.activeDialogue?.portrait)
+        assertEquals("images/npcs/matriarch_pam_portrait_v2.webp", runtime.uiState.value.activeDialogue?.portrait)
         assertFalse(s.worldDataSource.loadNpcs().first { it.id == "matriarch_pam" }.aliases.any { it.equals("gaga", true) })
         s.promptManager.enqueue(com.example.starborn.domain.prompt.ItemGrantedPrompt("Deferred test reward", 1))
         compose.setContent { DesktopStarbornTheme(s) {
