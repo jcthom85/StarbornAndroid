@@ -140,4 +140,12 @@ The Forge's test chamber previously completed its calibration on selection. It n
 
 The generic numeric panels now display Too low, Too high, or In range on each control. Desktop previously displayed the exact targets, while Android only confirmed a correct value. Their feedback now follows the same rule. The desktop calibration panel also removes a decorative waveform that did not reflect the actual targets. The specialized World 1 waveform and World 2 optics controls remain the reference for a future pass that gives more of the later devices their own physical feedback.
 
+### Puzzle variety follow-up
+
+The required Foundry override now uses the timing tower and underpass clues to make two physical decisions. The crusher animation reflects the chosen beat, and the carriage preview moves toward the selected stop. A rejected setting explains the obstruction. The successful override clears the lane to the Bellows Walk pistons through the existing quest milestone, including for saves that already parked the belt.
+
+At the finale, Nova enters the open beat in a score shared by Orion, Gh0st and Zeke. The preview shows whose voice she would cover and when she can enter cleanly. The release into the Final Note still uses the existing victory, quest and cinematic checks.
+
+The Graviton Well now shows the path of a test mass. The counter-field moves its path sideways, and the magnetic brake changes its stopping distance. The projection explains misses and the controls stay available for an immediate retry. Chrono Coils and Magma Conduit retain numeric controls. Both are optional and separated by puzzles with distinct mechanics.
+
 To reproduce the runtime snapshot, run the `OpeningCombatRuntimeTest` method named `export production player choices for the current design review`; it writes `app/build/reports/player-choices/current-runtime.json`. The saved snapshot and source hashes describe this checkpoint. Regenerate after any further ability or targeting changes.

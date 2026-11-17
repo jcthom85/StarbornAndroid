@@ -418,7 +418,7 @@ The locker holds **Pure Iron**, **Ballistic Weave**, and a **Circuit Board**. In
 
 169. From **Roller Underpass**, go **north** to **Control Perch** (`foundry_conveyor_belt_scale_04`).
 
-170. At **Control Perch**, use **override paddle**. Commit the override after the two timing/route clues.
+170. At **Control Perch**, use **override paddle**. Select **3 · Lift** and **Service notch**, preview the cleared lane, then select **Set override**. An unsafe choice explains which part of the route is blocked and can be retried immediately.
 
 171. From **Control Perch**, go **north** to **Foundry Belt Nerve** (`foundry_conveyor_belt_scale_final`).
 
@@ -1311,7 +1311,7 @@ Completed tasks need not be repeated. Choose one Quality Control ending.
 - **A Crucible round does not advance:** finish the Brutus start conversation, win the actual encounter, then speak again. Retreat/defeat leaves the round available. Three completed rounds still require the final prize conversation.
 - **Quality Control cannot resolve:** read the rejected droid at Reject Bay before reprogramming at Conveyor Belt. Choose one release/defense endpoint there; completion closes the other payout.
 - **Overclocked profile is missing:** map the Control Alcove hazard cycle, calibrate the Forge test terminal, then return for the profile. The internal task name “survive waves” does not promise a separate live fight.
-- **Anvil cradle stays closed:** while The Anvil quest is active, visit the Forge so the core-chamber task is credited, then read Timing Tower pulse board and Roller Underpass grease marks, throw Control Perch override paddle, starve Bellows Walk breath pistons, and return to the cradle. Merely visiting the branch rooms does not operate their controls.
+- **Anvil cradle stays closed:** while The Anvil quest is active, visit the Forge so the core-chamber task is credited. Read the Timing Tower pulse board and Roller Underpass grease marks, park the belt at Control Perch, starve the Bellows Walk breath pistons, and return to the cradle.
 - **Titan victory does not unlock departure:** finish the Rylos confrontation before the fight, then verify the victory receipt and collect both hardware components from Power Core/Engine Service Ring. Finish pending dialogue/feedback before retrying escape launch.
 - **Only a completion notification appears:** check Journal and inventory for actual progress; do not replay a completed reward event to chase a second popup. Record missing narrative feedback separately from missing progression.
 

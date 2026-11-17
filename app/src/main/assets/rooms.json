@@ -17747,7 +17747,7 @@
         "inspection_completion_milestone": "ms_w4_pulse_board_read",
         "type": "generic",
         "action_event": "w4_mq19_read_pulse_board",
-        "condition_unmet_message": "The board predicts crush points before they happen."
+        "condition_unmet_message": "The pulse board marks three beats: strike, drag, then lift."
       },
       {
         "name": "belt speed dial",
@@ -17848,7 +17848,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The roller underpass is still low and loud, but the grease marks now form a route: three breaths under the belt, then stop before the red scrape.",
+        "description": "The roller underpass is still low and loud. A palm print in the grease marks the service notch. Beyond the red scrape, the rollers close flush.",
         "requires_milestones": [
           "ms_w4_grease_route_read"
         ]
@@ -17866,7 +17866,7 @@
         "inspection_completion_milestone": "ms_w4_grease_route_read",
         "type": "generic",
         "action_event": "w4_mq19_read_grease_marks",
-        "condition_unmet_message": "The marks show where previous crews crawled."
+        "condition_unmet_message": "A palm print marks the service notch before the red scrape. The belt has to stop at the notch to leave anyone room to crawl."
       }
     ],
     "enemy_parties": [
@@ -17924,7 +17924,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The control perch hangs over a quieter belt lane. The override paddle is down, shuddering against the mesh, and one section of crusher teeth keeps missing its bite.",
+        "description": "The override paddle shudders against the mesh. Crusher teeth hang open above a belt parked at the service notch. The crawl lane is clear.",
         "requires_milestones": [
           "ms_w4_paddle_thrown"
         ]
@@ -17940,9 +17940,11 @@
         "name": "override paddle",
         "inspect_after_completion": true,
         "inspection_completion_milestone": "ms_w4_paddle_thrown",
-        "type": "generic",
-        "action_event": "w4_mq19_throw_override_paddle",
-        "condition_unmet_message": "The paddle can pause one section if the mesh comes loose."
+        "inspection_completion_event": "w4_mq19_throw_override_paddle",
+        "type": "tuning_puzzle",
+        "puzzle_id": "w4_conveyor_override",
+        "requires_milestones": ["ms_w4_pulse_board_read", "ms_w4_grease_route_read"],
+        "condition_unmet_message": "Check the pulse board in Timing Tower and the grease marks in Roller Underpass before parking the belt."
       }
     ]
   },

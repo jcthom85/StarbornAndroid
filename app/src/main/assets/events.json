@@ -7262,7 +7262,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova marks the pulse board's fatal beats. The crushers are not random; they breathe in groups of three."
+        "message": "Nova chalks the cycle on the pulse board. First beat: teeth strike. Second: they drag along the belt. Third: they lift clear."
       }
     ]
   },
@@ -7300,7 +7300,7 @@
       },
       {
         "type": "show_message",
-        "message": "The grease marks turn into a route once the rhythm is known: crawl on the third breath, stop before the red scrape."
+        "message": "A palm print in the grease marks a service notch just before the red scrape. Beyond it the rollers meet flush. Anyone riding the belt needs to stop at that notch."
       }
     ]
   },
@@ -7338,7 +7338,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova throws the override paddle through the mesh. One crusher lane misses its bite, leaving a silence wide enough to matter."
+        "message": "The paddle drops on the lift beat. The belt rolls into the service notch and holds beneath the raised teeth. The crawl lane to the Bellows Walk pistons is clear."
       }
     ]
   },
@@ -14558,6 +14558,12 @@
       "type": "player_action",
       "action": "w5_relic_graviton_solved"
     },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_relic_w5_graviton_solved"
+      }
+    ],
     "actions": [
       {
         "type": "give_item",

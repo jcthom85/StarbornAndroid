@@ -3273,13 +3273,14 @@ private fun TuningPuzzleDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val choicePanel = com.example.starborn.shared.puzzle.ChoicePuzzlePanel.forPresentation(puzzle.presentation)
     AlertDialog(
         onDismissRequest = onDismiss,
         modifier = modifier,
         title = { Text(puzzle.title) },
         text = {
-            if (puzzle.presentation == "hazard_cycle") {
-                com.example.starborn.shared.puzzle.HazardCyclePanel(puzzle.prompt, puzzle.sliders.map {
+            if (choicePanel != null) {
+                com.example.starborn.shared.puzzle.PuzzleChoices(choicePanel, puzzle.prompt, puzzle.sliders.map {
                     com.example.starborn.shared.puzzle.SignalDial(it.id, it.value, it.min, it.max, it.target, it.tolerance)
                 }, puzzle.feedback, onSliderChange)
             } else if (puzzle.presentation == "counter_tune") {
@@ -3312,9 +3313,8 @@ private fun TuningPuzzleDialog(
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
-                    val choir = puzzle.id == "source_harmonic_focus"
-                    val panelColor = if (choir) Color(0xFF201932) else MaterialTheme.colorScheme.surfaceVariant
-                    val accent = if (choir) Color(0xFFD4BBFF) else MaterialTheme.colorScheme.primary
+                    val panelColor = MaterialTheme.colorScheme.surfaceVariant
+                    val accent = MaterialTheme.colorScheme.primary
                     puzzle.sliders.forEach { slider ->
                         val aligned = kotlin.math.abs(slider.value - slider.target) <= slider.tolerance
                         val readoutColor = if (aligned) Color(0xFF81E7B1) else accent
@@ -3379,12 +3379,8 @@ private fun TuningPuzzleDialog(
         },
         confirmButton = {
             if (puzzle.presentation !in setOf("counter_tune", "prism_optics")) {
-                Button(onClick = onSubmit, enabled = puzzle.presentation != "hazard_cycle" || puzzle.sliders.all { it.value >= 0f }) {
-                    Text(when {
-                        puzzle.presentation == "hazard_cycle" -> "Run test"
-                        puzzle.id == "source_harmonic_focus" -> "Tune the Chorus"
-                        else -> "Engage Handshake"
-                    })
+                Button(onClick = onSubmit, enabled = choicePanel == null || puzzle.sliders.all { it.value >= 0f }) {
+                    Text(choicePanel?.submitLabel ?: "Engage Handshake")
                 }
             }
         },

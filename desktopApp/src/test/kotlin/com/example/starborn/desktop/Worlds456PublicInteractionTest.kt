@@ -10,6 +10,7 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.graphics.toAwtImage
 import com.example.starborn.desktop.ui.DesktopExplorationScreen
 import com.example.starborn.desktop.ui.DesktopStarbornTheme
+import com.example.starborn.desktop.ui.DesktopTuningPuzzleDialog
 import com.example.starborn.domain.audio.AudioCommand
 import com.example.starborn.domain.model.GenericAction
 import com.example.starborn.domain.session.GameSessionState
@@ -21,6 +22,62 @@ import java.nio.file.Files
 
 class Worlds456PublicInteractionTest {
     @get:Rule val compose = createComposeRule()
+
+    @Test fun gravitonWellShowsOvershootAndAcceptsABrakedTrajectory() = runWith { services ->
+        var submitted: Map<String, Float>? = null
+        showChoicePuzzle(services, "w5_graviton_matrix_tune") { submitted = it }
+        val release = compose.onNodeWithText("Release test mass")
+        compose.onNodeWithTag("mass-field-0").performClick()
+        release.performClick()
+        compose.onNodeWithText("Test missed. The mass lines up but overshoots the receiver.").assertExists()
+        compose.runOnIdle { assertNull(submitted) }
+        compose.onNodeWithTag("mass-brake-1").performClick()
+        compose.onNodeWithText("The mass stops in the receiver.").assertExists()
+        release.performClick()
+        compose.runOnIdle { assertEquals(mapOf("deflection" to 0f, "brake" to 1f), submitted) }
+    }
+
+    @Test fun conveyorPreviewShowsWhyAnUnsafeStopFails() = runWith { services ->
+        var submitted: Map<String, Float>? = null
+        showChoicePuzzle(services, "w4_conveyor_override") { submitted = it }
+        val confirm = compose.onNodeWithText("Set override")
+        confirm.assertIsNotEnabled()
+        compose.onNodeWithTag("belt-beat-2").performClick()
+        compose.onNodeWithTag("belt-stop-1").performClick()
+        confirm.performClick()
+        compose.onNodeWithText("Override rejected. The rollers pinch shut at the red scrape.").assertExists()
+        compose.runOnIdle { assertNull(submitted) }
+        compose.onNodeWithTag("belt-stop-0").performClick()
+        compose.onNodeWithText("The belt can reach shelter in the service notch.").assertExists()
+        capturePuzzlePanel("conveyor-panel", "conveyor-override")
+        confirm.performClick()
+        compose.runOnIdle { assertEquals(mapOf("beat" to 2f, "stop" to 0f), submitted) }
+    }
+
+    @Test fun choirLeavesAnOccupiedBeatIntactAndAcceptsNovaInTheGap() = runWith { services ->
+        var submitted: Map<String, Float>? = null
+        showChoicePuzzle(services, "source_harmonic_focus") { submitted = it }
+        val confirm = compose.onNodeWithText("Join the Chorus")
+        confirm.assertIsNotEnabled()
+        compose.onNodeWithTag("choir-beat-1").performClick()
+        confirm.performClick()
+        compose.onNodeWithText("Nova's note covers Gh0st. Leave that voice its own beat.").assertExists()
+        compose.runOnIdle { assertNull(submitted) }
+        compose.onNodeWithTag("choir-beat-2").performClick()
+        compose.onNodeWithText("Nova has room. Every voice is still distinct.").assertExists()
+        capturePuzzlePanel("choir-panel", "choir-lock")
+        confirm.performClick()
+        compose.runOnIdle { assertEquals(mapOf("entry" to 2f), submitted) }
+    }
+
+    private fun showChoicePuzzle(services: DesktopAppServices, id: String, onValues: (Map<String, Float>) -> Unit) {
+        val puzzle = services.worldDataSource.loadTuningPuzzles().single { it.id == id }
+        compose.setContent {
+            DesktopStarbornTheme {
+                DesktopTuningPuzzleDialog(services, puzzle, onSuccess = {}, onDismiss = {}, onValues = onValues)
+            }
+        }
+    }
 
     @Test fun forgeSimulationShowsFailedBeatsAndAcceptsACorrectedRun() = runWith { services ->
         val puzzle = services.worldDataSource.loadTuningPuzzles().single { it.id == "w4_hazard_calibration" }
@@ -43,15 +100,19 @@ class Worlds456PublicInteractionTest {
         compose.onNodeWithText("Run test").performClick()
         compose.onNodeWithText("Check this beat").assertExists()
         compose.runOnIdle { assertFalse(completed) }
-        val folder = java.io.File("build/reports/puzzle-review").apply { mkdirs() }
-        javax.imageio.ImageIO.write(compose.onNodeWithTag("forge-hazard-panel").captureToImage().toAwtImage(),
-            "png", java.io.File(folder, "forge-calibration.png"))
+        capturePuzzlePanel("forge-hazard-panel", "forge-calibration")
         choose("heat", 0)
         compose.onNodeWithText("Run test").performClick()
         compose.runOnIdle {
             assertTrue(completed)
             assertEquals(mapOf("heat" to 0f, "pressure" to 1f, "quiet" to 2f), submitted)
         }
+    }
+
+    private fun capturePuzzlePanel(tag: String, filename: String) {
+        val folder = java.io.File("build/reports/puzzle-review").apply { mkdirs() }
+        javax.imageio.ImageIO.write(compose.onNodeWithTag(tag).captureToImage().toAwtImage(),
+            "png", java.io.File(folder, "$filename.png"))
     }
 
     private fun runWith(block: (DesktopAppServices) -> Unit) {

@@ -43,43 +43,15 @@
   },
   {
     "id": "source_harmonic_focus",
+    "presentation": "choir_lock",
     "title": "Harmonic Choir Lock",
-    "prompt": "Bring Nova's heartbeat to a resting pace, ease the pressure, and turn her signal until it leaves room for the other voices. The readouts show which way to adjust.",
+    "prompt": "Orion, Gh0st, and Zeke hold the phrase. Place Nova's note where the others leave a breath.",
     "success_event": "w6_mq30_tune_world",
     "success_message": "The Chorus keeps its separate voices and turns with Nova instead of against her.",
-    "failure_hint": "The voices still crowd each other. Check which controls are outside their range, then try again.",
+    "failure_hint": "That beat already carries a voice. Let it finish before Nova joins.",
     "audio_cue": "ui_confirm",
     "sliders": [
-      {
-        "id": "frequency",
-        "label": "Heartbeat",
-        "min": 40,
-        "max": 160,
-        "initial": 118,
-        "target": 72,
-        "tolerance": 4,
-        "unit": "BPM"
-      },
-      {
-        "id": "amplitude",
-        "label": "Neural Pressure",
-        "min": 0,
-        "max": 100,
-        "initial": 90,
-        "target": 36,
-        "tolerance": 5,
-        "unit": "%"
-      },
-      {
-        "id": "phase",
-        "label": "Choir Phase",
-        "min": 0,
-        "max": 360,
-        "initial": 45,
-        "target": 270,
-        "tolerance": 8,
-        "unit": "deg"
-      }
+      {"id": "entry", "label": "Nova's entry", "min": -1, "max": 3, "initial": -1, "target": 2, "tolerance": 0}
     ]
   },
   {
@@ -166,6 +138,19 @@
     ]
   },
   {
+    "id": "w4_conveyor_override",
+    "presentation": "conveyor_override",
+    "title": "Conveyor Override",
+    "prompt": "Use the pulse board and the grease marks to park the belt in a safe position.",
+    "success_event": "w4_mq19_throw_override_paddle",
+    "failure_hint": "The belt is still unsafe. Check the crusher clearance and the stop point.",
+    "audio_cue": "ui_confirm",
+    "sliders": [
+      {"id": "beat", "label": "Crusher beat", "min": -1, "max": 2, "initial": -1, "target": 2, "tolerance": 0},
+      {"id": "stop", "label": "Belt stop", "min": -1, "max": 1, "initial": -1, "target": 0, "tolerance": 0}
+    ]
+  },
+  {
     "id": "w4_hazard_calibration",
     "presentation": "hazard_cycle",
     "title": "Forge Test Chamber",
@@ -222,43 +207,16 @@
   },
   {
     "id": "w5_graviton_matrix_tune",
+    "presentation": "graviton_well",
     "title": "Phase-Lock Graviton Well",
-    "prompt": "Bring the well's spin, field frequency, and dampener into range so the field stops twisting the vault.",
+    "prompt": "Catch the test mass in the receiver ring. The well pulls it sideways, and the brake sets where it stops.",
     "success_event": "w5_relic_graviton_solved",
-    "success_message": "Gravity normalizes with a deep hum, unsealing the graviton inertia matrix.",
-    "failure_hint": "The field still pulls off-axis. Check the control readouts before trying again.",
+    "success_message": "The receiver catches the mass. Gravity settles around the Graviton Inertia Matrix.",
+    "failure_hint": "The test mass missed the receiver.",
     "audio_cue": "ui_confirm",
     "sliders": [
-      {
-        "id": "spin",
-        "label": "Graviton Spin",
-        "min": 0,
-        "max": 100,
-        "initial": 25,
-        "target": 62,
-        "tolerance": 4,
-        "unit": " RPM"
-      },
-      {
-        "id": "freq",
-        "label": "Horizon Frequency",
-        "min": 40,
-        "max": 200,
-        "initial": 80,
-        "target": 144,
-        "tolerance": 3,
-        "unit": " kHz"
-      },
-      {
-        "id": "damp",
-        "label": "Mass Dampener",
-        "min": 0,
-        "max": 100,
-        "initial": 40,
-        "target": 80,
-        "tolerance": 4,
-        "unit": "%"
-      }
+      {"id": "deflection", "label": "Counter-field", "min": 0, "max": 2, "initial": 1, "target": 0, "tolerance": 0},
+      {"id": "brake", "label": "Magnetic brake", "min": 0, "max": 1, "initial": 0, "target": 1, "tolerance": 0}
     ]
   }
 ]

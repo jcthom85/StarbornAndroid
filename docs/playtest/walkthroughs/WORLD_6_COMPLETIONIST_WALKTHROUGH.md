@@ -384,7 +384,7 @@ The Nightmare Guard drops **Sunder Seeds** in Memory Defense Arena. Equip them f
 
 171. At **The Center**, save in a separate pre-ending slot. Confirm both boss objectives and all optional quest rewards. Keep this save if you want to retest the tuning, cinematics or emotional pacing.
 
-172. At **The Center**, use **shared tuning focus**. Solve **Harmonic Choir Lock**: **Heartbeat = 72 BPM**, **Neural Pressure = 36%**, **Choir Phase = 270°**, then select **Tune the Chorus**. Finish or deliberately skip the Final Note and epilogue cinematics through their normal controls. Completion is awarded by the cinematic callback, not merely by opening the sliders.
+172. At **The Center**, use **shared tuning focus**. In **Harmonic Choir Lock**, place Nova's note in the **open third beat** and select **Join the Chorus**. Finish or deliberately skip the Final Note and epilogue cinematics through their normal controls to receive completion credit.
 
 173. After the ending, confirm **The Final Note** complete, **Tune World** unlocked, 3,000 quest XP awarded, credits seen and arrival at **New World** (`source_new_world`). A save during a pending ending should resume that completion on load; retain the pre-ending save if the callback fails.
 

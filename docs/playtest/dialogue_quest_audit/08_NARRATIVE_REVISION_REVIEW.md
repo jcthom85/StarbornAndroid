@@ -30,7 +30,7 @@ The automated main-story route exports an isolated save pack to `app/build/repor
 | 7 | Anchor Chamber | Use **elara**, then **anchor relic**. Compare the reunion with slot 5. |
 | 8 | Shared Memory Span | Use **campfire promise**, go east to Singularity Threshold, and use **singularity threshold**. Review all three refusals at Memory Stair. |
 | 9 | The Center | Use **Vale**. Review the confrontation and Nova's answer. |
-| 10 | The Center, both final enemies defeated | Use **shared tuning focus**. Set Heartbeat **72 BPM**, Neural Pressure **36%**, Choir Phase **270°**; choose **Tune the Chorus**. Watch the Final Note and diner ending. |
+| 10 | The Center, both final enemies defeated | Use **shared tuning focus**. Place Nova's note in the open third beat and choose **Join the Chorus**. Watch the Final Note and diner ending. |
 | 11 | Jed's Echo Bench, marks already found | Use **jed echo**. Finish the remembered lesson, then go east and use **open shift gate** for Legacy. |
 
 Slots 1–10 come from a fresh main-story run that skips Tideglass Day and Jed's Echo. Slot 11 branches from that earned World 6 save and follows the optional marks route. The main-story ending therefore does not rely on completing either side quest.

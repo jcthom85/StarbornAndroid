@@ -386,7 +386,7 @@ The Firewall Construct drops **Quake Knuckles** for Zeke. Their basic attack hit
 
 171. At **Anchor Chamber**, use **anchor relic**. Finish the relic feedback. Confirm **The Anchor** complete, **Anchor Relic** owned, **Stasis** unlocked and **Critical Mass** active. The Hunter-Killer freeze is the scripted acquisition beat, not another required fight.
 
-172. At **Anchor Chamber**, use **graviton well**. Optional relic puzzle: set **Graviton Spin = 62 RPM**, **Horizon Frequency = 144 kHz**, **Mass Dampener = 80%**, then confirm. Collect **Graviton Inertia Matrix**. This is separate from the Anchor and its Stasis unlock.
+172. At **Anchor Chamber**, use **graviton well**. To catch the test mass, set **Counter-field** to **Left** and **Magnetic brake** to **On**, then select **Release test mass**. Collect the optional **Graviton Inertia Matrix**.
 
 173. From **Anchor Chamber**, go **north** to **Cable Narthex** (`deep_anchor_chamber_scale_01`).
 

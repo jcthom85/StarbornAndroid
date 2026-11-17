@@ -58,17 +58,21 @@ fun DesktopTuningPuzzleDialog(
         }
     }
 
-    if (puzzle.presentation == "hazard_cycle") {
+    val choicePanel = com.example.starborn.shared.puzzle.ChoicePuzzlePanel.forPresentation(puzzle.presentation)
+    if (choicePanel != null) {
         var feedback by remember(puzzle.id) { mutableStateOf<String?>(null) }
         var submitted by remember(puzzle.id) { mutableStateOf(false) }
         AlertDialog(
             onDismissRequest = onDismiss,
             title = { Text(puzzle.title) },
             text = {
-                com.example.starborn.shared.puzzle.HazardCyclePanel(puzzle.prompt, puzzle.sliders.map {
+                com.example.starborn.shared.puzzle.PuzzleChoices(choicePanel, puzzle.prompt, puzzle.sliders.map {
                     com.example.starborn.shared.puzzle.SignalDial(
                         it.id, sliderValues[it.id] ?: it.initial, it.min, it.max, it.target, it.tolerance)
-                }, feedback, onChange = { id, value -> sliderValues[id] = value; feedback = null })
+                }, feedback, onChange = { id, value ->
+                    sliderValues[id] = value
+                    feedback = null
+                })
             },
             confirmButton = {
                 Button(enabled = !submitted && sliderValues.values.all { it >= 0f }, onClick = {
@@ -77,7 +81,7 @@ fun DesktopTuningPuzzleDialog(
                         onValues(sliderValues.toMap())
                         onSuccess()
                     } else feedback = puzzle.failureHint
-                }) { Text("Run test") }
+                }) { Text(choicePanel.submitLabel) }
             },
             dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
         )
