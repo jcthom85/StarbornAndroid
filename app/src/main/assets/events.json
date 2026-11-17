@@ -7797,6 +7797,10 @@
     },
     "conditions": [
       {
+        "type": "milestone_not_set",
+        "milestone": "ms_w4_hazard_trial_cleared"
+      },
+      {
         "type": "quest_not_completed",
         "quest_id": "w4_sq20"
       },
@@ -8365,7 +8369,7 @@
       },
       {
         "type": "show_message",
-        "message": "The pressure map marks three breaches in order of collapse: red carpet seam, docking collar, observation glass. Seal them out of order and the dock vents anyway."
+        "message": "The map shows the observation glass sharing a pressure line with the docking collar. At the red carpet seam, a tear in the inner seal leaves the worker passage exposed."
       }
     ]
   },
@@ -11282,7 +11286,7 @@
       },
       {
         "type": "show_message",
-        "message": "The hazard sequence repeats: heat, pressure, silence. Nova marks the safe beat for the terminal calibration."
+        "message": "Heat builds while the hammer is running. The pressure spike comes next, with the hammer paused. The quiet beat is the only clear window to advance the test belt."
       }
     ]
   },

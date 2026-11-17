@@ -397,7 +397,7 @@ The locker holds **Pure Iron**, **Ballistic Weave**, and a **Circuit Board**. In
 
 161. From **Control Alcove**, go **east** to **The Forge** (`foundry_forge_anvil`).
 
-162. At **The Forge**, use **test chamber terminal**. Calibrate against the mapped heat cycle. This is the recorded hazard program; do not wait for an unimplemented live wave battle.
+162. At **The Forge**, use **test chamber terminal**. Assign a safeguard to each beat of the recorded cycle, then select **Run test**. Use **Coolant spray** for Heat, **Pressure vent** for Pressure, and **Belt advance** for Quiet. An incorrect test flags the beats to revisit and can be retried immediately.
 
 163. From **The Forge**, go **west** to **Control Alcove** (`foundry_forge_control_alcove`).
 

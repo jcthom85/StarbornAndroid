@@ -44,10 +44,10 @@
   {
     "id": "source_harmonic_focus",
     "title": "Harmonic Choir Lock",
-    "prompt": "Hold Nova's heartbeat against the Chorus without flattening the other voices.",
+    "prompt": "Bring Nova's heartbeat to a resting pace, ease the pressure, and turn her signal until it leaves room for the other voices. The readouts show which way to adjust.",
     "success_event": "w6_mq30_tune_world",
     "success_message": "The Chorus keeps its separate voices and turns with Nova instead of against her.",
-    "failure_hint": "The note is too solitary. Keep the heartbeat steady, but leave room for the others.",
+    "failure_hint": "The voices still crowd each other. Check which controls are outside their range, then try again.",
     "audio_cue": "ui_confirm",
     "sliders": [
       {
@@ -127,10 +127,10 @@
   {
     "id": "w3_chrono_flux_tune",
     "title": "Synchronize Chrono Coils",
-    "prompt": "Align the tachyon oscillation loop before the archive crystals decohere.",
+    "prompt": "Steady the coil before it drops the signal. Damping cuts the jitter, pitch brings the carrier into range, and dilation lines up the return pulse.",
     "success_event": "w3_relic_chrono_solved",
     "success_message": "The tachyon loop locks into crystalline harmony, expelling an overclocked core.",
-    "failure_hint": "Temporal jitter is distorting the loop. Dampen the flux and steady the pitch.",
+    "failure_hint": "The coil dropped the signal. Use the readouts to bring each control into range.",
     "audio_cue": "ui_confirm",
     "sliders": [
       {
@@ -166,12 +166,26 @@
     ]
   },
   {
+    "id": "w4_hazard_calibration",
+    "presentation": "hazard_cycle",
+    "title": "Forge Test Chamber",
+    "prompt": "Assign a safeguard to each beat of the recorded cycle. The simulation won't move the live machinery.",
+    "success_event": "w4_sq20_survive_waves",
+    "failure_hint": "Review the highlighted beats, then run the test again.",
+    "audio_cue": "ui_confirm",
+    "sliders": [
+      {"id": "heat", "label": "Heat", "min": -1, "max": 2, "initial": -1, "target": 0, "tolerance": 0},
+      {"id": "pressure", "label": "Pressure", "min": -1, "max": 2, "initial": -1, "target": 1, "tolerance": 0},
+      {"id": "quiet", "label": "Quiet", "min": -1, "max": 2, "initial": -1, "target": 2, "tolerance": 0}
+    ]
+  },
+  {
     "id": "w4_magma_conduit_tune",
     "title": "Balance Magma Conduit",
-    "prompt": "Regulate the smelting conduit pressure to unlock the ancient cooling cradle.",
+    "prompt": "Bleed heat before the conduit bursts, thin the slag so it can flow, and turn the pressure seal until it seats.",
     "success_event": "w4_relic_magma_solved",
     "success_message": "Pressure stabilizes with a heavy hiss, releasing a pristine thermal armor plate.",
-    "failure_hint": "Conduit pressure is spiking dangerously. Bleed the excess heat and reseal the valve.",
+    "failure_hint": "The cradle is still under pressure. Bring any out-of-range controls back toward their operating range.",
     "audio_cue": "ui_confirm",
     "sliders": [
       {
@@ -209,10 +223,10 @@
   {
     "id": "w5_graviton_matrix_tune",
     "title": "Phase-Lock Graviton Well",
-    "prompt": "Neutralize gravitational shearing forces to stabilize the ancient subterranean vault.",
+    "prompt": "Bring the well's spin, field frequency, and dampener into range so the field stops twisting the vault.",
     "success_event": "w5_relic_graviton_solved",
     "success_message": "Gravity normalizes with a deep hum, unsealing the graviton inertia matrix.",
-    "failure_hint": "The gravity well pulls violently off-axis. Stabilize the mass dampener and spin frequency.",
+    "failure_hint": "The field still pulls off-axis. Check the control readouts before trying again.",
     "audio_cue": "ui_confirm",
     "sliders": [
       {

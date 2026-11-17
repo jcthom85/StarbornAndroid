@@ -7383,8 +7383,9 @@
         "name": "test chamber terminal",
         "inspect_after_completion": true,
         "inspection_completion_milestone": "ms_w4_hazard_trial_cleared",
-        "type": "generic",
-        "action_event": "w4_sq20_survive_waves",
+        "inspection_completion_event": "w4_sq20_survive_waves",
+        "type": "tuning_puzzle",
+        "puzzle_id": "w4_hazard_calibration",
         "requires_milestones": [
           "ms_w4_hazards_mapped"
         ],
@@ -7431,7 +7432,7 @@
         "type": "generic",
         "action_event": "w4_sq20_map_hazards",
         "inspect_after_completion": true,
-        "condition_unmet_message": "The heat-cycle sequence repeats behind the Forge controls."
+        "condition_unmet_message": "Heat builds while the hammer is running. The pressure spike comes next, with the hammer paused. The quiet beat is the only clear window to advance the test belt."
       },
       {
         "name": "overclock profile",
@@ -7876,7 +7877,7 @@
         "type": "generic",
         "action_event": "w5_sq23_map_pressure_loss",
         "inspect_after_completion": true,
-        "condition_unmet_message": "The pressure map marks three breach warnings, but the order matters more than the count."
+        "condition_unmet_message": "The observation glass and docking collar share a pressure line. The torn seam under the carpet leaves the worker passage exposed."
       },
       {
         "name": "airlock console",

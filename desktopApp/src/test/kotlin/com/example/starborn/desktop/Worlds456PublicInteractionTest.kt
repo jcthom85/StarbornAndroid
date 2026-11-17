@@ -1,6 +1,13 @@
 package com.example.starborn.desktop
 
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.captureToImage
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.graphics.toAwtImage
 import com.example.starborn.desktop.ui.DesktopExplorationScreen
 import com.example.starborn.desktop.ui.DesktopStarbornTheme
 import com.example.starborn.domain.audio.AudioCommand
@@ -14,6 +21,38 @@ import java.nio.file.Files
 
 class Worlds456PublicInteractionTest {
     @get:Rule val compose = createComposeRule()
+
+    @Test fun forgeSimulationShowsFailedBeatsAndAcceptsACorrectedRun() = runWith { services ->
+        val puzzle = services.worldDataSource.loadTuningPuzzles().single { it.id == "w4_hazard_calibration" }
+        var submitted: Map<String, Float>? = null
+        var completed = false
+        compose.setContent {
+            DesktopStarbornTheme {
+                com.example.starborn.desktop.ui.DesktopTuningPuzzleDialog(services, puzzle,
+                    onSuccess = { completed = true }, onDismiss = {}, onValues = { submitted = it })
+            }
+        }
+        compose.onNodeWithText("Run test").assertIsNotEnabled()
+        fun choose(beat: String, safeguard: Int) {
+            compose.onNodeWithTag("forge-select-$beat").performScrollTo().performClick()
+            compose.onNodeWithTag("forge-safeguard-$safeguard").performClick()
+        }
+        choose("heat", 2)
+        choose("pressure", 1)
+        choose("quiet", 2)
+        compose.onNodeWithText("Run test").performClick()
+        compose.onNodeWithText("Check this beat").assertExists()
+        compose.runOnIdle { assertFalse(completed) }
+        val folder = java.io.File("build/reports/puzzle-review").apply { mkdirs() }
+        javax.imageio.ImageIO.write(compose.onNodeWithTag("forge-hazard-panel").captureToImage().toAwtImage(),
+            "png", java.io.File(folder, "forge-calibration.png"))
+        choose("heat", 0)
+        compose.onNodeWithText("Run test").performClick()
+        compose.runOnIdle {
+            assertTrue(completed)
+            assertEquals(mapOf("heat" to 0f, "pressure" to 1f, "quiet" to 2f), submitted)
+        }
+    }
 
     private fun runWith(block: (DesktopAppServices) -> Unit) {
         val dir = Files.createTempDirectory("worlds456-public").toFile()

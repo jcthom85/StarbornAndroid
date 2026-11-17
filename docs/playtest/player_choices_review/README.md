@@ -123,4 +123,21 @@ Portrait work was committed/pushed first as `8965f879`. This follow-up changes o
 
 Resume with **Scan's self-targeting and the explicit self/party support contracts**, preserving intended party abilities. Then resolve passive wording/behavior and AP-budget evidence before numerical balance experiments. This is a completed baseline review and one verified repair; the remaining balance/design pass is open.
 
+## Phase 3: puzzles and exploration
+
+The first pass checked the six walkthroughs against the current puzzle definitions and looked for places where player-facing clues, controls, and outcomes disagreed.
+
+| World | What works | What to examine in a blind playtest |
+| --- | --- | --- |
+| 1 | The minecart has visible route consequences. The Fork teaches one control at a time through a waveform that works without audio. | Whether players can explain a blocked cart route from its feedback. |
+| 2 | The prism shows the beam, fringe, and receiver, so the player can predict what each adjustment will do. | Whether nearby routes and rewards make the grotto a satisfying optional discovery. |
+| 3 | The Lens and the optional Chrono Coils have separate objectives and rewards. | Whether the heist's setup and containment controls feel like distinct problems. The coil readouts now give direction on both platforms. |
+| 4 | The physical Anvil route uses machinery in the world. Overclocked now provides a separate, optional simulation about matching safeguards to machine conditions. | Whether players understand why each safeguard works. The main machinery route still deserves a check for too many sequential taps. |
+| 5 | The bulkhead simulation explains the pressure dependencies in the dock and gives a safe retry. | Whether players can derive the sequence from the dock itself. The Graviton Well now gives directional readings, but remains a three-control tuning puzzle. |
+| 6 | Memory Stair's refusals are character choices, and the Choir Lock gives the finale an interactive resolution. | Whether the choices feel emotionally distinct and the lock's feedback sustains the scene instead of interrupting it. |
+
+The Forge's test chamber previously completed its calibration on selection. It now pairs three recorded machine conditions with three safeguards. The local log and panel state explain the relationship. Incorrect simulations flag the affected beats, retain the choices, and can be rerun immediately. Successful calibration uses the existing quest task and reward path. Completed calibrations remain inspectable.
+
+The generic numeric panels now display Too low, Too high, or In range on each control. Desktop previously displayed the exact targets, while Android only confirmed a correct value. Their feedback now follows the same rule. The desktop calibration panel also removes a decorative waveform that did not reflect the actual targets. The specialized World 1 waveform and World 2 optics controls remain the reference for a future pass that gives more of the later devices their own physical feedback.
+
 To reproduce the runtime snapshot, run the `OpeningCombatRuntimeTest` method named `export production player choices for the current design review`; it writes `app/build/reports/player-choices/current-runtime.json`. The saved snapshot and source hashes describe this checkpoint. Regenerate after any further ability or targeting changes.

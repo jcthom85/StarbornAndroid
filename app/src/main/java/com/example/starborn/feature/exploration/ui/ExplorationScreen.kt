@@ -3278,7 +3278,11 @@ private fun TuningPuzzleDialog(
         modifier = modifier,
         title = { Text(puzzle.title) },
         text = {
-            if (puzzle.presentation == "counter_tune") {
+            if (puzzle.presentation == "hazard_cycle") {
+                com.example.starborn.shared.puzzle.HazardCyclePanel(puzzle.prompt, puzzle.sliders.map {
+                    com.example.starborn.shared.puzzle.SignalDial(it.id, it.value, it.min, it.max, it.target, it.tolerance)
+                }, puzzle.feedback, onSliderChange)
+            } else if (puzzle.presentation == "counter_tune") {
                 com.example.starborn.shared.puzzle.CounterTunePanel(
                     dials = puzzle.sliders.map {
                         com.example.starborn.shared.puzzle.SignalDial(it.id, it.value, it.min, it.max, it.target, it.tolerance)
@@ -3330,7 +3334,11 @@ private fun TuningPuzzleDialog(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(slider.label, style = MaterialTheme.typography.labelLarge)
-                                if (aligned) Text("In phase", color = readoutColor, style = MaterialTheme.typography.labelSmall)
+                                Text(when {
+                                    aligned -> "In range"
+                                    slider.value < slider.target -> "Too low"
+                                    else -> "Too high"
+                                }, color = readoutColor, style = MaterialTheme.typography.labelSmall)
                             }
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -3371,7 +3379,13 @@ private fun TuningPuzzleDialog(
         },
         confirmButton = {
             if (puzzle.presentation !in setOf("counter_tune", "prism_optics")) {
-                Button(onClick = onSubmit) { Text(if (puzzle.id == "source_harmonic_focus") "Tune the Chorus" else "Engage Handshake") }
+                Button(onClick = onSubmit, enabled = puzzle.presentation != "hazard_cycle" || puzzle.sliders.all { it.value >= 0f }) {
+                    Text(when {
+                        puzzle.presentation == "hazard_cycle" -> "Run test"
+                        puzzle.id == "source_harmonic_focus" -> "Tune the Chorus"
+                        else -> "Engage Handshake"
+                    })
+                }
             }
         },
         dismissButton = {

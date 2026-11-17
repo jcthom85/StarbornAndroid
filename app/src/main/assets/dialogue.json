@@ -3945,17 +3945,17 @@
     "id": "w5_bulkheads_first",
     "speaker": "Dock Interlock",
     "scripted_only": true,
-    "text": "Pressure map: RED CARPET SEAM → DOCKING COLLAR → OBSERVATION GLASS. The interlock will simulate each command before releasing a bulkhead. Which breach do you isolate first?",
+    "text": "Simulation ready. Cycling either outer seal will vent the dock for a second. The torn seam under the carpet is all that separates the worker passage from the dock. Which seal do you close first?",
     "options": [
-      {
-        "id": "correct",
-        "text": "Isolate the red carpet seam.",
-        "next": "w5_bulkheads_second"
-      },
       {
         "id": "collar",
         "text": "Seal the docking collar.",
         "next": "w5_bulkheads_retry"
+      },
+      {
+        "id": "correct",
+        "text": "Isolate the red carpet seam.",
+        "next": "w5_bulkheads_second"
       },
       {
         "id": "glass",
@@ -3974,7 +3974,7 @@
     "id": "w5_bulkheads_second",
     "speaker": "Dock Interlock",
     "scripted_only": true,
-    "text": "The carpet seam is isolated in the simulation. Pressure still falls at the collar. What closes next?",
+    "text": "Worker passage isolated. The glass seal needs pressure to seat. Its supply line is bleeding air at the docking collar. What closes next?",
     "options": [
       {
         "id": "correct",
@@ -3997,17 +3997,17 @@
     "id": "w5_bulkheads_third",
     "speaker": "Dock Interlock",
     "scripted_only": true,
-    "text": "The collar holds. One breach remains against open space.",
+    "text": "Docking collar sealed. Pressure is back at the glass. One breach remains against open space.",
     "options": [
-      {
-        "id": "correct",
-        "text": "Seal the observation glass.",
-        "next": "w5_bulkheads_success"
-      },
       {
         "id": "release",
         "text": "Release the carpet bulkhead.",
         "next": "w5_bulkheads_retry"
+      },
+      {
+        "id": "correct",
+        "text": "Seal the observation glass.",
+        "next": "w5_bulkheads_success"
       }
     ]
   },
@@ -4015,7 +4015,7 @@
     "id": "w5_bulkheads_retry",
     "speaker": "Dock Interlock",
     "scripted_only": true,
-    "text": "The simulation flashes red: that sequence would shift the pressure loss into an unsealed compartment. No bulkhead moves. Check the map and try again.",
+    "text": "Simulation aborted. Keep the worker passage sealed while the dock is exposed. The glass seal can only seat once the collar holds pressure. The live bulkheads are still in place.",
     "options": [
       {
         "id": "retry",

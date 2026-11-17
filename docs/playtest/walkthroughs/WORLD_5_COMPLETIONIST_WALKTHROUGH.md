@@ -54,7 +54,7 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 ## 3. Vacuum Seal and the docking service wing
 
-14. At **Executive Dock**, use **pressure map**. Start **Vacuum Seal**. Read the three breaches in their collapse order.
+14. At **Executive Dock**, use **pressure map**. Start **Vacuum Seal**. Locate the torn seam into the worker passage and the shared pressure line that feeds the glass seal.
 
 15. At **Executive Dock**, use **airlock console**. Complete the bulkhead simulation in this order: **red carpet seam → docking collar → observation glass**. Wrong commands fail the simulation, not a live dock. Reset and retry; leaving/reloading before success resets the attempt while retaining the mapped clue.
 

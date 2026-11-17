@@ -300,7 +300,8 @@ class DataIntegrityTest {
             .orEmpty()
 
         assertTrue("Forge puzzle labels should use in-world nouns, not 'puzzle': $puzzleLabels", puzzleLabels.isEmpty())
-        assertTrue("Forge puzzle slice should not use tuning puzzle actions: $forgeTuningReferences", forgeTuningReferences.isEmpty())
+        assertEquals("Only the optional hazard simulation uses a panel in the Forge slice",
+            listOf("foundry_forge_anvil:w4_hazard_calibration"), forgeTuningReferences)
         assertTrue("Forge puzzle action events should exist: $missingEvents", missingEvents.isEmpty())
         assertTrue("Forge cradle actions should require the environmental chain: $cradleActionsMissingRequirements", cradleActionsMissingRequirements.isEmpty())
         assertTrue("Forge open-cradle event should require the environmental chain.", openCradleEventMilestones.containsAll(requiredForgeMilestones))
