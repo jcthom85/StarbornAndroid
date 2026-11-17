@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_arcade_game_over",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:30.063090",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "6feab401f512ea5a03ef20da172f89e9febfa0bde5bf7e91081d18e617a589bc",
+  "bytes": 45497,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 97020,
+    "duration_seconds": 2.2,
+    "rms_dbfs": -12.94,
+    "peak_dbfs": -1.98,
+    "integrated_lufs": -9.71,
+    "true_peak_dbtp": -1.94,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -11.28,
+    "last_second_rms_dbfs": -15.88
+  },
+  "source_provenance": {
+    "cue_id": "sfx_arcade_game_over",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:13:10.477452",
+    "source_filename": "sfx_arcade_game_over.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "4444a68d22d9081503b9196135fbd98b8449c89ed624259d896af5bd8b57c709",
+    "bytes": 36405,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 97020,
+      "duration_seconds": 2.2,
+      "rms_dbfs": -14.37,
+      "peak_dbfs": -3.16,
+      "integrated_lufs": -11.13,
+      "true_peak_dbtp": -3.14,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -12.71,
+      "last_second_rms_dbfs": -17.31
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Classic 8-bit descending arcade game over arpeggio",
+      "duration_seconds": 2.2,
+      "prompt_influence": 0.45
+    }
+  }
+}

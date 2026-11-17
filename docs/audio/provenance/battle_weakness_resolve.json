@@ -1,0 +1,56 @@
+{
+  "cue_id": "battle_weakness_resolve",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:16:22.444275",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "12623fc508ad9f34182524ec4cd6da260f7b9fa6ddde40bfbfb1312616c52ced",
+  "bytes": 18852,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 38808,
+    "duration_seconds": 0.88,
+    "rms_dbfs": -17.54,
+    "peak_dbfs": -1.65,
+    "integrated_lufs": -9.7,
+    "true_peak_dbtp": -0.84,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -17.54,
+    "last_second_rms_dbfs": -17.54
+  },
+  "source_provenance": {
+    "cue_id": "battle_weakness_resolve",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:03.043817",
+    "source_filename": "battle_weakness_resolve.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "7bed9933d6c20c04578499a77711d6d16b5e1a2986a68047e49504c80e141bb1",
+    "bytes": 15089,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 38808,
+      "duration_seconds": 0.88,
+      "rms_dbfs": -27.96,
+      "peak_dbfs": -9.38,
+      "integrated_lufs": -20.02,
+      "true_peak_dbtp": -9.11,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -27.96,
+      "last_second_rms_dbfs": -27.96
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Two clean glass chimes forming a luminous perfect fifth with warm cello harmonic bloom",
+      "duration_seconds": 0.9,
+      "prompt_influence": 0.45
+    }
+  }
+}

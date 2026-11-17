@@ -873,7 +873,19 @@ class ExplorationController(
             room?.env?.takeIf { it.isNotBlank() }?.let { add(it.lowercase(Locale.getDefault())) }
             weatherId?.takeIf { it.isNotBlank() }?.let { add(it.lowercase(Locale.getDefault())) }
         }
-        emitAudioCommands(audioRouter.commandsForRoom(hubId, roomId, weatherId, tags, suppressMusic))
+        val hubNodeId = roomId?.let { nodeIdByRoomId[it] }
+        val worldId = sessionStore.state.value.worldId
+        emitAudioCommands(
+            audioRouter.commandsForRoom(
+                hubId = hubId,
+                roomId = roomId,
+                weatherId = weatherId,
+                tags = tags,
+                suppressMusic = suppressMusic,
+                hubNodeId = hubNodeId,
+                worldId = worldId
+            )
+        )
     }
 
     private fun shouldSuppressRoomMusic(room: Room?): Boolean {
@@ -1849,7 +1861,7 @@ class ExplorationController(
     fun stopTapeTrack() {
         _uiState.update { it.copy(playingTapeId = null) }
         emitAudioCommands(audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, stop = true))
-        playRoomAudio(null, _uiState.value.currentRoom?.id)
+        playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
     }
 
     init {

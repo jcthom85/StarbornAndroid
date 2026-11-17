@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_combat_enemy_spore_blast",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:34.520877",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "f61643e531be6c522b1c2285fd765b216827eac923320216488a306a38b6fb77",
+  "bytes": 28778,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 59976,
+    "duration_seconds": 1.36,
+    "rms_dbfs": -18.35,
+    "peak_dbfs": -0.78,
+    "integrated_lufs": -10.68,
+    "true_peak_dbtp": -0.17,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -17.02,
+    "last_second_rms_dbfs": -21.62
+  },
+  "source_provenance": {
+    "cue_id": "sfx_combat_enemy_spore_blast",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:38.144358",
+    "source_filename": "sfx_combat_enemy_spore_blast.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "d38be0a28e1f704e066d0584c7c655db82bb713e902234a624323048bb66a692",
+    "bytes": 23030,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 59976,
+      "duration_seconds": 1.36,
+      "rms_dbfs": -23.75,
+      "peak_dbfs": -0.5,
+      "integrated_lufs": -15.81,
+      "true_peak_dbtp": -0.48,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -22.41,
+      "last_second_rms_dbfs": -31.95
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Mutant flora pod bursting with pressurized toxic spore puff",
+      "duration_seconds": 1.4,
+      "prompt_influence": 0.45
+    }
+  }
+}

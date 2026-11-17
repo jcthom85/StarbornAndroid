@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_crash_impact",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:37.774213",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "9e734b1893a1365a749d5983ca3f105ecf1adf69881fae5c942f30b55fd71e44",
+  "bytes": 45497,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 97020,
+    "duration_seconds": 2.2,
+    "rms_dbfs": -14.42,
+    "peak_dbfs": -0.41,
+    "integrated_lufs": -8.31,
+    "true_peak_dbtp": -0.34,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -11.0,
+    "last_second_rms_dbfs": -53.17
+  },
+  "source_provenance": {
+    "cue_id": "sfx_crash_impact",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:38.221943",
+    "source_filename": "sfx_crash_impact.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "1f9737d2f651eb43c4ed5eaaba02d59e2facda8f8b8fae3646435a48aa05239a",
+    "bytes": 36405,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 97020,
+      "duration_seconds": 2.2,
+      "rms_dbfs": -12.68,
+      "peak_dbfs": 0.0,
+      "integrated_lufs": -6.15,
+      "true_peak_dbtp": 1.99,
+      "samples_at_full_scale": 504,
+      "first_second_rms_dbfs": -9.26,
+      "last_second_rms_dbfs": -52.86
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Violent hull crash impact, buckling steel and shattering branches, abrupt pressure drop",
+      "duration_seconds": 2.2,
+      "prompt_influence": 0.45
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_fishing_splash",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:42.043901",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "6a87b7a384b98d6601931c9a484a0d3a4cb04cd5a2eaa9119c79ab7e168ee7f2",
+  "bytes": 14672,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 28995,
+    "duration_seconds": 0.6575,
+    "rms_dbfs": -21.77,
+    "peak_dbfs": -1.94,
+    "integrated_lufs": -18.3,
+    "true_peak_dbtp": -1.94,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -21.77,
+    "last_second_rms_dbfs": -21.77
+  },
+  "source_provenance": {
+    "cue_id": "sfx_fishing_splash",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:52.911019",
+    "source_filename": "sfx_fishing_splash.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "1fee2d8446dce673b7c8a336a10baf604f37500857c19f698f4a33492187104e",
+    "bytes": 18433,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 47628,
+      "duration_seconds": 1.08,
+      "rms_dbfs": -31.24,
+      "peak_dbfs": -7.16,
+      "integrated_lufs": -25.87,
+      "true_peak_dbtp": -7.16,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -30.91,
+      "last_second_rms_dbfs": -30.93
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Clean lure bobber splash plopping into quiet alien stream",
+      "duration_seconds": 1.1,
+      "prompt_influence": 0.45
+    }
+  }
+}

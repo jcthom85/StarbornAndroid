@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_w2_stasis_release",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:50.447227",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "15b4551ee72c5bfe0600554979fbbc036c30809720b0530eb0f8b5bd64d91d33",
+  "bytes": 50721,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 109368,
+    "duration_seconds": 2.48,
+    "rms_dbfs": -16.69,
+    "peak_dbfs": -2.29,
+    "integrated_lufs": -8.85,
+    "true_peak_dbtp": -1.7,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -14.17,
+    "last_second_rms_dbfs": -31.86
+  },
+  "source_provenance": {
+    "cue_id": "sfx_w2_stasis_release",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:47.075711",
+    "source_filename": "sfx_w2_stasis_release.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "16bb539978fdc43b8d203760fa73cfa191383f60bee97c0bb9b14d93c4c7fff9",
+    "bytes": 40585,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 109368,
+      "duration_seconds": 2.48,
+      "rms_dbfs": -13.84,
+      "peak_dbfs": 0.0,
+      "integrated_lufs": -5.92,
+      "true_peak_dbtp": 1.56,
+      "samples_at_full_scale": 48,
+      "first_second_rms_dbfs": -11.22,
+      "last_second_rms_dbfs": -30.74
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Cryogenic stasis pod vacuum breaking with cold vapor hiss, hydraulic lock opening cleanly",
+      "duration_seconds": 2.5,
+      "prompt_influence": 0.45
+    }
+  }
+}

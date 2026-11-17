@@ -1,0 +1,56 @@
+{
+  "cue_id": "shield_block",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:52.150644",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "380144758543603b5b45d157e442e000ea7cd1078c606dfd7b074f96f39c4d43",
+  "bytes": 18852,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 38808,
+    "duration_seconds": 0.88,
+    "rms_dbfs": -17.74,
+    "peak_dbfs": -1.38,
+    "integrated_lufs": -19.46,
+    "true_peak_dbtp": -1.38,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -17.74,
+    "last_second_rms_dbfs": -17.74
+  },
+  "source_provenance": {
+    "cue_id": "shield_block",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:58.139653",
+    "source_filename": "shield_block.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "460dc85efeff6a9a4576e702ccdec50476db1c30c9cbb2fe95e8875256c92f28",
+    "bytes": 15089,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 38808,
+      "duration_seconds": 0.88,
+      "rms_dbfs": -24.88,
+      "peak_dbfs": -3.37,
+      "integrated_lufs": -24.22,
+      "true_peak_dbtp": -3.37,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -24.88,
+      "last_second_rms_dbfs": -24.88
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Heavy solid metal plate slamming shut against kinetic impact, dry resonant clank",
+      "duration_seconds": 0.9,
+      "prompt_influence": 0.45
+    }
+  }
+}

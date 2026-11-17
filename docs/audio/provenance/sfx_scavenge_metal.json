@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_scavenge_metal",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:44.890740",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "92527d6e522b1cc8b4e9d60ab51a87ac97815a94e6f7341e20a00c52ea6b3e72",
+  "bytes": 30346,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 64175,
+    "duration_seconds": 1.4552,
+    "rms_dbfs": -16.54,
+    "peak_dbfs": -1.28,
+    "integrated_lufs": -8.51,
+    "true_peak_dbtp": -0.33,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -14.91,
+    "last_second_rms_dbfs": -18.6
+  },
+  "source_provenance": {
+    "cue_id": "sfx_scavenge_metal",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:10.110194",
+    "source_filename": "sfx_scavenge_metal.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "18b08434bb46cd6fd5913136ad245d998d627557187beaf503e0160af249e321",
+    "bytes": 29300,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 77616,
+      "duration_seconds": 1.76,
+      "rms_dbfs": -22.6,
+      "peak_dbfs": -1.16,
+      "integrated_lufs": -13.88,
+      "true_peak_dbtp": -0.64,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -20.15,
+      "last_second_rms_dbfs": -31.83
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Gritty salvage rummaging through spare steel bolts, tools, and dry colony dust",
+      "duration_seconds": 1.8,
+      "prompt_influence": 0.45
+    }
+  }
+}

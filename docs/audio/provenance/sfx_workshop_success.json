@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_workshop_success",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:51.948211",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "2ad161f2b6cbfe89670ce324188b91d20c62fe52250d3f3b38affb499174d98a",
+  "bytes": 25121,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 52723,
+    "duration_seconds": 1.1955,
+    "rms_dbfs": -22.91,
+    "peak_dbfs": -3.33,
+    "integrated_lufs": -15.83,
+    "true_peak_dbtp": -1.53,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -22.24,
+    "last_second_rms_dbfs": -22.67
+  },
+  "source_provenance": {
+    "cue_id": "sfx_workshop_success",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:26.525924",
+    "source_filename": "sfx_workshop_success.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "1b484e38666b79a88077e61b1e17c5f24ccdfc1d2b4fc4d1a853105d6b85104c",
+    "bytes": 23030,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 59976,
+      "duration_seconds": 1.36,
+      "rms_dbfs": -26.62,
+      "peak_dbfs": -2.78,
+      "integrated_lufs": -19.52,
+      "true_peak_dbtp": -2.63,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -25.42,
+      "last_second_rms_dbfs": -26.98
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Precision socket ratchet turn, solder spark pop, and warm metallic chime in dusty workshop",
+      "duration_seconds": 1.4,
+      "prompt_influence": 0.45
+    }
+  }
+}

@@ -194,4 +194,95 @@ class AudioRouterTest {
         assertTrue(stability.any { it is AudioCommand.Play && it.type == AudioCueType.BATTLE && it.cueId == "battle_stability_shatter" })
         assertTrue(erosion.any { it is AudioCommand.Play && it.type == AudioCueType.BATTLE && it.cueId == "battle_erosion_warning" })
     }
+
+    @Test
+    fun commandsForRoomResolvesRoomNodeHubWorldHierarchyAndLoopPoints() {
+        val bindings = AudioBindings(
+            music = mapOf("hub_1" to "hub_theme", "world_1" to "world_theme"),
+            nodeMusic = mapOf("deep_mine" to "node_theme"),
+            roomMusic = mapOf("astra_bridge" to "bridge_theme")
+        )
+        val catalog = AudioCatalog(
+            tracks = listOf(
+                AudioTrackMetadata(id = "hub_theme", loopStartMs = 4000L, loopEndMs = 64000L),
+                AudioTrackMetadata(id = "node_theme", loopStartMs = 1500L),
+                AudioTrackMetadata(id = "bridge_theme")
+            )
+        )
+        val router = AudioRouter(bindings, catalog)
+
+        val hubCmd = router.commandsForRoom(
+            hubId = "hub_1",
+            roomId = "pit_mess",
+            hubNodeId = "pit",
+            worldId = "world_1"
+        ).filterIsInstance<AudioCommand.Play>().single()
+        assertEquals("hub_theme", hubCmd.cueId)
+        assertEquals(4000L, hubCmd.loopStartMs)
+        assertEquals(64000L, hubCmd.loopEndMs)
+
+        val nodeCmd = router.commandsForRoom(
+            hubId = "hub_1",
+            roomId = "mine_alpha",
+            hubNodeId = "deep_mine",
+            worldId = "world_1"
+        ).filterIsInstance<AudioCommand.Play>().single()
+        assertEquals("node_theme", nodeCmd.cueId)
+        assertEquals(1500L, nodeCmd.loopStartMs)
+
+        val roomCmd = router.commandsForRoom(
+            hubId = "hub_1",
+            roomId = "astra_bridge",
+            hubNodeId = "deep_mine",
+            worldId = "world_1"
+        ).filterIsInstance<AudioCommand.Play>().single()
+        assertEquals("bridge_theme", roomCmd.cueId)
+    }
+
+    @Test
+    fun suiteSelectionAvoidsImmediateRepeatsAndStaysSteadyWithinSuite() {
+        val bindings = AudioBindings(
+            music = mapOf("hub_1" to "suite:w1_explore")
+        )
+        val catalog = AudioCatalog(
+            tracks = listOf(
+                AudioTrackMetadata(id = "w1_a"),
+                AudioTrackMetadata(id = "w1_b")
+            ),
+            suites = mapOf(
+                "w1_explore" to AudioSuiteMetadata(tracks = listOf("w1_a", "w1_b"), shuffle = false)
+            )
+        )
+        val router = AudioRouter(bindings, catalog)
+        val first = router.commandsForRoom("hub_1", "room_1").filterIsInstance<AudioCommand.Play>().single()
+        assertEquals("w1_a", first.cueId)
+        assertTrue(router.commandsForRoom("hub_1", "room_2").isEmpty())
+
+        router.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "combat")
+        val returned = router.commandsForRoom("hub_1", "room_2").filterIsInstance<AudioCommand.Play>().single()
+        assertEquals("w1_b", returned.cueId)
+    }
+
+    @Test
+    fun combatMusicResolvesEnemyOverrideBeforeWorldFallback() {
+        val bindings = AudioBindings(
+            combatMusic = mapOf(
+                "compliance_avatar" to "music_w5_boss_compliance",
+                "world_5_combat" to "music_w5_combat"
+            )
+        )
+        val router = AudioRouter(bindings)
+        assertEquals(
+            "music_w5_boss_compliance",
+            router.resolveCombatMusicTrack(listOf("compliance_avatar"), "world_5", isBoss = true)
+        )
+        assertEquals(
+            "music_w5_combat",
+            router.resolveCombatMusicTrack(listOf("orbital_fighter"), "world_5", isBoss = false)
+        )
+        val stinger = router.commandsForStinger("stinger_motif_jed").single() as AudioCommand.Play
+        assertEquals(AudioCueType.BATTLE, stinger.type)
+        assertEquals(false, stinger.loop)
+        assertEquals(false, stinger.triggerHaptic)
+    }
 }

@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_combat_enemy_spit_acid",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:34.203952",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "170c91f7a6003b6ebcd0f1a765fa35e99e5f9db6fd36e816996b1be0627e3e94",
+  "bytes": 28778,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 59976,
+    "duration_seconds": 1.36,
+    "rms_dbfs": -17.31,
+    "peak_dbfs": -1.11,
+    "integrated_lufs": -9.37,
+    "true_peak_dbtp": -0.5,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -15.98,
+    "last_second_rms_dbfs": -26.3
+  },
+  "source_provenance": {
+    "cue_id": "sfx_combat_enemy_spit_acid",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:36.372502",
+    "source_filename": "sfx_combat_enemy_spit_acid.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "2250444178b6e321f955c291d3e11c2e271383dcfc05c8e957d05bc9f5b790de",
+    "bytes": 23030,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 59976,
+      "duration_seconds": 1.36,
+      "rms_dbfs": -22.0,
+      "peak_dbfs": -0.15,
+      "integrated_lufs": -14.94,
+      "true_peak_dbtp": 0.02,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -20.67,
+      "last_second_rms_dbfs": -36.42
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Alien biological acid spit launch followed by sizzling corrosive splash",
+      "duration_seconds": 1.4,
+      "prompt_influence": 0.45
+    }
+  }
+}

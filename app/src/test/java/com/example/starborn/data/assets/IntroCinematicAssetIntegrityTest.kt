@@ -96,7 +96,7 @@ class IntroCinematicAssetIntegrityTest {
         val roomCopy = File("src/main/assets/rooms.json").readText()
         assertTrue("Opening quest must retain immediate quota pressure", questCopy.contains("Quota is due at first cage"))
         assertTrue("Bunk reveal must retain the suppressed quota ticket", roomCopy.contains("CLOSED: WITHIN QUOTA"))
-        val unknownDialogue = steps.filter { it.speaker == "???" }
+        val unknownDialogue = steps.filter { it.speaker == "????" }
         assertEquals(2, unknownDialogue.size)
         assertTrue(
             "Spoken intro lines must use dialogue presentation",
@@ -104,7 +104,7 @@ class IntroCinematicAssetIntegrityTest {
         )
         assertTrue(
             "Unknown speaker lines must use contextual portraits without revealing the name",
-            unknownDialogue.all { !it.portrait.isNullOrBlank() && it.portrait!!.contains("orion_") }
+            unknownDialogue.all { it.portrait == "images/characters/orion_portrait.png" }
         )
         val illustratedSteps = steps.filter { it.imagePath != null }
         illustratedSteps.zipWithNext().forEach { (current, next) ->

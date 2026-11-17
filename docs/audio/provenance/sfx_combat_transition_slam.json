@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_combat_transition_slam",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:36.734392",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "097d4c802df83c77ffaefba10546e6683b717e4602cc5eb8fead45c32a72c637",
+  "bytes": 36615,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 77616,
+    "duration_seconds": 1.76,
+    "rms_dbfs": -15.96,
+    "peak_dbfs": -0.89,
+    "integrated_lufs": -16.33,
+    "true_peak_dbtp": -0.85,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -13.52,
+    "last_second_rms_dbfs": -34.25
+  },
+  "source_provenance": {
+    "cue_id": "sfx_combat_transition_slam",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:56.351102",
+    "source_filename": "sfx_combat_transition_slam.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "de740cfafb345d7b9a147892b74846ec2db0ebd41de2665c65d8e4cf52c98838",
+    "bytes": 29300,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 77616,
+      "duration_seconds": 1.76,
+      "rms_dbfs": -15.64,
+      "peak_dbfs": 0.0,
+      "integrated_lufs": -16.4,
+      "true_peak_dbtp": 1.67,
+      "samples_at_full_scale": 52,
+      "first_second_rms_dbfs": -13.19,
+      "last_second_rms_dbfs": -36.56
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Sudden metallic ambush slam with deep sub boom and crisp tactical warning chirp",
+      "duration_seconds": 1.8,
+      "prompt_influence": 0.45
+    }
+  }
+}

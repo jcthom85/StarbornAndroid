@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_rest_chime",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:44.543867",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -14.0,
+  "sha256": "550cea93ebda7fd3a541a7bf3fb1bedb075b7a9454a2b695f5641bbb6a69264e",
+  "bytes": 30868,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 65268,
+    "duration_seconds": 1.48,
+    "rms_dbfs": -17.09,
+    "peak_dbfs": -1.64,
+    "integrated_lufs": -10.04,
+    "true_peak_dbtp": -1.37,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -15.39,
+    "last_second_rms_dbfs": -33.0
+  },
+  "source_provenance": {
+    "cue_id": "sfx_rest_chime",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:10:42.509132",
+    "source_filename": "sfx_rest_chime.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "4cdca8cd8649cd291ff1ace72338b7f751d3e3ba695d1aab7a50c6e207fb03b0",
+    "bytes": 24702,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 65268,
+      "duration_seconds": 1.48,
+      "rms_dbfs": -20.6,
+      "peak_dbfs": -2.21,
+      "integrated_lufs": -13.25,
+      "true_peak_dbtp": -2.21,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -18.9,
+      "last_second_rms_dbfs": -40.14
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Warm comforting acoustic harmonic chime and soft analog pad breath, restful camp relief, clean decay",
+      "duration_seconds": 1.5,
+      "prompt_influence": 0.45
+    }
+  }
+}

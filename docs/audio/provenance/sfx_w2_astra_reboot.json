@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_w2_astra_reboot",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:49.312733",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "59a16e6fb108e050d994c641c30231e74cd84f229f5197bab556871126c204a2",
+  "bytes": 43407,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 92855,
+    "duration_seconds": 2.1056,
+    "rms_dbfs": -29.51,
+    "peak_dbfs": -2.2,
+    "integrated_lufs": -22.57,
+    "true_peak_dbtp": -1.39,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -27.77,
+    "last_second_rms_dbfs": -31.72
+  },
+  "source_provenance": {
+    "cue_id": "sfx_w2_astra_reboot",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:42.994894",
+    "source_filename": "sfx_w2_astra_reboot.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "75519632e8a7afeba3b6d9fe930a328d2f672376e6156c64d0ae370a266d3b5d",
+    "bytes": 40585,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 109368,
+      "duration_seconds": 2.48,
+      "rms_dbfs": -34.1,
+      "peak_dbfs": -1.53,
+      "integrated_lufs": -26.88,
+      "true_peak_dbtp": -1.32,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -31.34,
+      "last_second_rms_dbfs": -65.33
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Old Dominion survey ship auxiliary generator catching, relays snapping in sequence, cabin hum stabilizing",
+      "duration_seconds": 2.5,
+      "prompt_influence": 0.45
+    }
+  }
+}

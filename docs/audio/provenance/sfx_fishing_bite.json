@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_fishing_bite",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:40.472053",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "0e229709c7a7a4ff80a40f5ba1cb8ddeaa6fbe8b90fc78797f53e36a1594f9e0",
+  "bytes": 23031,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 47628,
+    "duration_seconds": 1.08,
+    "rms_dbfs": -17.03,
+    "peak_dbfs": -1.66,
+    "integrated_lufs": -11.9,
+    "true_peak_dbtp": -1.16,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -16.7,
+    "last_second_rms_dbfs": -17.68
+  },
+  "source_provenance": {
+    "cue_id": "sfx_fishing_bite",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:54.683289",
+    "source_filename": "sfx_fishing_bite.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "d22633524646665ffe881e9db4f67c331363f466f4d39a2be9f53c5928845ea2",
+    "bytes": 18433,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 47628,
+      "duration_seconds": 1.08,
+      "rms_dbfs": -25.13,
+      "peak_dbfs": -2.82,
+      "integrated_lufs": -20.51,
+      "true_peak_dbtp": -2.12,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -24.8,
+      "last_second_rms_dbfs": -26.37
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Sharp fishing line tug splash and quick alert chime",
+      "duration_seconds": 1.1,
+      "prompt_influence": 0.45
+    }
+  }
+}

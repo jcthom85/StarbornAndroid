@@ -11,7 +11,9 @@ sealed interface AudioCommand {
         val gain: Float = 1f,
         val triggerHaptic: Boolean = false,
         val pitch: Float = 1f,
-        val restartFromBeginning: Boolean = false
+        val restartFromBeginning: Boolean = false,
+        val loopStartMs: Long? = null,
+        val loopEndMs: Long? = null
     ) : AudioCommand
 
     data class Stop(

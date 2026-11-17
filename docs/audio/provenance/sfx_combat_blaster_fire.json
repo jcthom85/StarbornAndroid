@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_combat_blaster_fire",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:31.304194",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "18365b0c3d22bd883d0e1bf55d97b88c535cbf4c0593409b4eff9989f5cf9fa9",
+  "bytes": 21464,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 44100,
+    "duration_seconds": 1.0,
+    "rms_dbfs": -14.65,
+    "peak_dbfs": -1.19,
+    "integrated_lufs": -13.21,
+    "true_peak_dbtp": -0.93,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -14.65,
+    "last_second_rms_dbfs": -14.65
+  },
+  "source_provenance": {
+    "cue_id": "sfx_combat_blaster_fire",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:11.657754",
+    "source_filename": "sfx_combat_blaster_fire.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "1ab5b77c6dd9df06152465a12be07980cf37698fed11899ae4d127a99ab08c68",
+    "bytes": 17179,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 44100,
+      "duration_seconds": 1.0,
+      "rms_dbfs": -14.3,
+      "peak_dbfs": 0.0,
+      "integrated_lufs": -11.75,
+      "true_peak_dbtp": 0.53,
+      "samples_at_full_scale": 12,
+      "first_second_rms_dbfs": -14.3,
+      "last_second_rms_dbfs": -14.3
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Punchy 1980s analog sci-fi blaster shot, tight plasma transient, dry crisp tail",
+      "duration_seconds": 1.0,
+      "prompt_influence": 0.45
+    }
+  }
+}

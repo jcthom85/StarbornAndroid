@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_combat_enemy_flamethrower",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:32.449598",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "be193090170b4d72c71cb5f9847fc939ace55630b948ca4fa29e062a1665aa7d",
+  "bytes": 30868,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 65268,
+    "duration_seconds": 1.48,
+    "rms_dbfs": -11.93,
+    "peak_dbfs": -2.32,
+    "integrated_lufs": -10.14,
+    "true_peak_dbtp": -2.33,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -10.9,
+    "last_second_rms_dbfs": -12.95
+  },
+  "source_provenance": {
+    "cue_id": "sfx_combat_enemy_flamethrower",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:49.110240",
+    "source_filename": "sfx_combat_enemy_flamethrower.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "8bd5fa42d4818f3380585510ce2e5d15cdd3006d853129bb25221fd6a020e2b0",
+    "bytes": 24702,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 65268,
+      "duration_seconds": 1.48,
+      "rms_dbfs": -8.83,
+      "peak_dbfs": 0.0,
+      "integrated_lufs": -7.04,
+      "true_peak_dbtp": 0.7,
+      "samples_at_full_scale": 33,
+      "first_second_rms_dbfs": -7.8,
+      "last_second_rms_dbfs": -9.85
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Industrial military flamethrower roaring ignited gas burst",
+      "duration_seconds": 1.5,
+      "prompt_influence": 0.45
+    }
+  }
+}

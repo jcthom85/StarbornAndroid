@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_terminal_hack_success",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:46.205971",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "4a130df4470be9348c22f3e018ca3ee8166350a9a843d6b7b076d48f4bff9933",
+  "bytes": 45497,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 97020,
+    "duration_seconds": 2.2,
+    "rms_dbfs": -12.95,
+    "peak_dbfs": -7.14,
+    "integrated_lufs": -9.85,
+    "true_peak_dbtp": -7.14,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -12.91,
+    "last_second_rms_dbfs": -12.87
+  },
+  "source_provenance": {
+    "cue_id": "sfx_terminal_hack_success",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:00.960005",
+    "source_filename": "sfx_terminal_hack_success.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "bd00e73bb1b5b2fa16a3d1ddf62204d9e8f0a39b55ee09b4b190fbcd6e0eeb90",
+    "bytes": 36405,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 97020,
+      "duration_seconds": 2.2,
+      "rms_dbfs": -5.7,
+      "peak_dbfs": 0.0,
+      "integrated_lufs": -2.61,
+      "true_peak_dbtp": 0.39,
+      "samples_at_full_scale": 21,
+      "first_second_rms_dbfs": -5.67,
+      "last_second_rms_dbfs": -5.63
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Rapid analog modem data chirp burst resolving into crisp terminal unlock chime",
+      "duration_seconds": 2.2,
+      "prompt_influence": 0.45
+    }
+  }
+}

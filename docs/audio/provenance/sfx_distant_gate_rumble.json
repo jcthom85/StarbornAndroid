@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_distant_gate_rumble",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:38.704985",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "cc3a58596a5553f5207cf4517e48e43b2bf86b6d3ac41c54a02f774e278a5472",
+  "bytes": 54378,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 116677,
+    "duration_seconds": 2.6457,
+    "rms_dbfs": -13.46,
+    "peak_dbfs": -1.94,
+    "integrated_lufs": -13.75,
+    "true_peak_dbtp": -1.94,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -11.52,
+    "last_second_rms_dbfs": -25.73
+  },
+  "source_provenance": {
+    "cue_id": "sfx_distant_gate_rumble",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:19.528754",
+    "source_filename": "sfx_distant_gate_rumble.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "b81029759185ba7b4b9e94e8e298d2b0493a3d9d97e05548fd9d0fed69eed3e9",
+    "bytes": 45182,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 121716,
+      "duration_seconds": 2.76,
+      "rms_dbfs": -15.37,
+      "peak_dbfs": -2.14,
+      "integrated_lufs": -15.46,
+      "true_peak_dbtp": -2.14,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -13.36,
+      "last_second_rms_dbfs": -29.68
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Deep subterranean ancient stone and steel seal cracking open in the distance, resonant low rumble",
+      "duration_seconds": 2.8,
+      "prompt_influence": 0.45
+    }
+  }
+}

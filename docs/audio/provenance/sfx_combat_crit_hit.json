@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_combat_crit_hit",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:31.594145",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "b827a6bcf01f336ae886aa1f8d24ade06cd23f11e431c14faca4a4420bfaa267",
+  "bytes": 33480,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 70560,
+    "duration_seconds": 1.6,
+    "rms_dbfs": -14.34,
+    "peak_dbfs": -1.61,
+    "integrated_lufs": -17.3,
+    "true_peak_dbtp": -1.61,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -12.3,
+    "last_second_rms_dbfs": -29.46
+  },
+  "source_provenance": {
+    "cue_id": "sfx_combat_crit_hit",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:24.966484",
+    "source_filename": "sfx_combat_crit_hit.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "310ddec4c8e4d91ea99068963d03598b876cb6eac11e359b537ef0a1d63eb8e3",
+    "bytes": 26792,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 70560,
+      "duration_seconds": 1.6,
+      "rms_dbfs": -13.74,
+      "peak_dbfs": 0.0,
+      "integrated_lufs": -16.7,
+      "true_peak_dbtp": 0.1,
+      "samples_at_full_scale": 3,
+      "first_second_rms_dbfs": -11.7,
+      "last_second_rms_dbfs": -31.26
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Massive sub-bass critical strike punch and crystalline armor shatter",
+      "duration_seconds": 1.6,
+      "prompt_influence": 0.45
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_w3_shield_anchor",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:51.196863",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "01e494a220c5e3ec01baa428167db270a8d36f4dc09e239c7fb0059d1eae8528",
+  "bytes": 41317,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 88200,
+    "duration_seconds": 2.0,
+    "rms_dbfs": -13.31,
+    "peak_dbfs": -1.91,
+    "integrated_lufs": -11.69,
+    "true_peak_dbtp": -1.91,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -10.3,
+    "last_second_rms_dbfs": -56.75
+  },
+  "source_provenance": {
+    "cue_id": "sfx_w3_shield_anchor",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:51.958059",
+    "source_filename": "sfx_w3_shield_anchor.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "869b8342821644173277cb81cb6a678bd944ef21a4265311a8270832b96ddcfb",
+    "bytes": 33061,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 88200,
+      "duration_seconds": 2.0,
+      "rms_dbfs": -12.34,
+      "peak_dbfs": -0.32,
+      "integrated_lufs": -10.8,
+      "true_peak_dbtp": -0.32,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -9.33,
+      "last_second_rms_dbfs": -56.04
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "High-voltage barrier anchor activating with deep magnetic thump and harmonic forcefield hum",
+      "duration_seconds": 2.0,
+      "prompt_influence": 0.45
+    }
+  }
+}

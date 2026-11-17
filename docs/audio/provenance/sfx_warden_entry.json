@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_warden_entry",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:51.539226",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "be6f0060fe4c277f3bccdab313f67822c8b57e9856c266a2dfff3300175aca14",
+  "bytes": 47064,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 100548,
+    "duration_seconds": 2.28,
+    "rms_dbfs": -15.78,
+    "peak_dbfs": -1.72,
+    "integrated_lufs": -14.43,
+    "true_peak_dbtp": -0.93,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -12.22,
+    "last_second_rms_dbfs": -41.17
+  },
+  "source_provenance": {
+    "cue_id": "sfx_warden_entry",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:30.667588",
+    "source_filename": "sfx_warden_entry.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "486198129bb4b83740ab4ff7d68cf668c2c164ab3b4bac3c0b925460cfc25f23",
+    "bytes": 37659,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 100548,
+      "duration_seconds": 2.28,
+      "rms_dbfs": -23.41,
+      "peak_dbfs": -4.26,
+      "integrated_lufs": -23.74,
+      "true_peak_dbtp": -4.07,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -19.84,
+      "last_second_rms_dbfs": -51.63
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Colossal security mech powering up, heavy servo whine rising into thunderous metal boot stomp",
+      "duration_seconds": 2.3,
+      "prompt_influence": 0.45
+    }
+  }
+}

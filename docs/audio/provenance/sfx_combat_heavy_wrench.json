@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_combat_heavy_wrench",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:35.092798",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "4bb447d7d53cfbd2989905271bb76fc0877a4a0ee598ec6295491165d23b88c5",
+  "bytes": 23031,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 47628,
+    "duration_seconds": 1.08,
+    "rms_dbfs": -18.5,
+    "peak_dbfs": -0.93,
+    "integrated_lufs": -9.4,
+    "true_peak_dbtp": -0.27,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -18.17,
+    "last_second_rms_dbfs": -18.62
+  },
+  "source_provenance": {
+    "cue_id": "sfx_combat_heavy_wrench",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:14.219818",
+    "source_filename": "sfx_combat_heavy_wrench.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "f6cf3a6937516bc0e6a79a9b1ce26fa292b1ec84598de107dddfe6bc45f7aba4",
+    "bytes": 18433,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 47628,
+      "duration_seconds": 1.08,
+      "rms_dbfs": -21.68,
+      "peak_dbfs": -0.9,
+      "integrated_lufs": -12.44,
+      "true_peak_dbtp": -0.54,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -21.35,
+      "last_second_rms_dbfs": -21.47
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Brutal heavy iron pipe wrench strike slamming against metal armor, crisp crunch",
+      "duration_seconds": 1.1,
+      "prompt_influence": 0.45
+    }
+  }
+}

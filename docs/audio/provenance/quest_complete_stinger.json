@@ -1,0 +1,56 @@
+{
+  "cue_id": "quest_complete_stinger",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:29.050576",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -14.0,
+  "sha256": "c539889d2aa5819d0a99bb65dcac4d0b4f6e8d244147b0bb7e852578c398461e",
+  "bytes": 45497,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 97020,
+    "duration_seconds": 2.2,
+    "rms_dbfs": -15.3,
+    "peak_dbfs": -1.88,
+    "integrated_lufs": -10.58,
+    "true_peak_dbtp": -1.88,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -11.93,
+    "last_second_rms_dbfs": -38.2
+  },
+  "source_provenance": {
+    "cue_id": "quest_complete_stinger",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:10:47.029411",
+    "source_filename": "quest_complete_stinger.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "11e79a5f0c09f57ee35a73dbbe15c0d75c8fa1ab7a50460b8da5051c382437fe",
+    "bytes": 36405,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 97020,
+      "duration_seconds": 2.2,
+      "rms_dbfs": -25.55,
+      "peak_dbfs": -8.34,
+      "integrated_lufs": -21.28,
+      "true_peak_dbtp": -8.34,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -22.16,
+      "last_second_rms_dbfs": -49.72
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Short rewarding JRPG quest complete stinger, warm acoustic chord and soft brass-synth resolution, clean 1.5s tail",
+      "duration_seconds": 2.2,
+      "prompt_influence": 0.45
+    }
+  }
+}

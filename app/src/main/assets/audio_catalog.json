@@ -1226,7 +1226,7 @@
       "gain": 0.62,
       "fade_in_ms": 0,
       "fade_out_ms": 80,
-      "duration_ms": 500
+      "duration_ms": 480
     },
     {
       "id": "ui_click",
@@ -1234,7 +1234,8 @@
       "priority": 0,
       "gain": 0.7,
       "fade_in_ms": 0,
-      "fade_out_ms": 120
+      "fade_out_ms": 120,
+      "duration_ms": 353
     },
     {
       "id": "ui_confirm",
@@ -1242,7 +1243,8 @@
       "priority": 1,
       "gain": 0.8,
       "fade_in_ms": 0,
-      "fade_out_ms": 150
+      "fade_out_ms": 150,
+      "duration_ms": 800
     },
     {
       "id": "ui_error",
@@ -1250,7 +1252,8 @@
       "priority": 1,
       "gain": 0.9,
       "fade_in_ms": 0,
-      "fade_out_ms": 180
+      "fade_out_ms": 180,
+      "duration_ms": 680
     },
     {
       "id": "ui_back",
@@ -1258,7 +1261,8 @@
       "priority": 0,
       "gain": 0.65,
       "fade_in_ms": 0,
-      "fade_out_ms": 140
+      "fade_out_ms": 140,
+      "duration_ms": 248
     },
     {
       "id": "quest_new_stinger",
@@ -1267,7 +1271,7 @@
       "gain": 0.82,
       "fade_in_ms": 0,
       "fade_out_ms": 260,
-      "duration_ms": 1400
+      "duration_ms": 1228
     },
     {
       "id": "quest_complete_stinger",
@@ -1285,7 +1289,7 @@
       "gain": 0.72,
       "fade_in_ms": 0,
       "fade_out_ms": 140,
-      "duration_ms": 700
+      "duration_ms": 680
     },
     {
       "id": "sfx_bunk_light_on",
@@ -1294,7 +1298,7 @@
       "gain": 0.82,
       "fade_in_ms": 0,
       "fade_out_ms": 220,
-      "duration_ms": 1200
+      "duration_ms": 1182
     },
     {
       "id": "sfx_bunk_light_off",
@@ -1303,7 +1307,7 @@
       "gain": 0.78,
       "fade_in_ms": 0,
       "fade_out_ms": 180,
-      "duration_ms": 900
+      "duration_ms": 248
     },
     {
       "id": "sfx_terminal_boot",
@@ -1312,7 +1316,7 @@
       "gain": 0.88,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 3000
+      "duration_ms": 1760
     },
     {
       "id": "sfx_workshop_success",
@@ -1321,7 +1325,7 @@
       "gain": 0.82,
       "fade_in_ms": 0,
       "fade_out_ms": 220,
-      "duration_ms": 1400
+      "duration_ms": 1195
     },
     {
       "id": "sfx_security_lockdown",
@@ -1330,7 +1334,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 320,
-      "duration_ms": 2000
+      "duration_ms": 1935
     },
     {
       "id": "sfx_warden_entry",
@@ -1339,7 +1343,7 @@
       "gain": 0.92,
       "fade_in_ms": 0,
       "fade_out_ms": 380,
-      "duration_ms": 2300
+      "duration_ms": 2280
     },
     {
       "id": "sfx_chime_splice",
@@ -1357,7 +1361,7 @@
       "gain": 0.94,
       "fade_in_ms": 0,
       "fade_out_ms": 420,
-      "duration_ms": 3000
+      "duration_ms": 2936
     },
     {
       "id": "sfx_crash_impact",
@@ -1366,7 +1370,7 @@
       "gain": 0.96,
       "fade_in_ms": 0,
       "fade_out_ms": 420,
-      "duration_ms": 2000
+      "duration_ms": 2200
     },
     {
       "id": "sfx_combat_transition_slam",
@@ -1374,7 +1378,8 @@
       "priority": 5,
       "gain": 1,
       "fade_in_ms": 0,
-      "fade_out_ms": 200
+      "fade_out_ms": 200,
+      "duration_ms": 1760
     },
     {
       "id": "battle_start",
@@ -1382,7 +1387,8 @@
       "priority": 5,
       "gain": 1,
       "fade_in_ms": 0,
-      "fade_out_ms": 400
+      "fade_out_ms": 400,
+      "duration_ms": 1480
     },
     {
       "id": "shield_block",
@@ -1390,7 +1396,8 @@
       "priority": 3,
       "gain": 0.95,
       "fade_in_ms": 0,
-      "fade_out_ms": 140
+      "fade_out_ms": 140,
+      "duration_ms": 880
     },
     {
       "id": "shield_break",
@@ -1398,7 +1405,8 @@
       "priority": 4,
       "gain": 1,
       "fade_in_ms": 0,
-      "fade_out_ms": 220
+      "fade_out_ms": 220,
+      "duration_ms": 1280
     },
     {
       "id": "battle_weakness_resolve",
@@ -1407,7 +1415,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 180,
-      "duration_ms": 900
+      "duration_ms": 880
     },
     {
       "id": "battle_stability_shatter",
@@ -1416,7 +1424,7 @@
       "gain": 1,
       "fade_in_ms": 0,
       "fade_out_ms": 260,
-      "duration_ms": 1300
+      "duration_ms": 1280
     },
     {
       "id": "battle_erosion_warning",
@@ -1425,7 +1433,7 @@
       "gain": 0.62,
       "fade_in_ms": 0,
       "fade_out_ms": 300,
-      "duration_ms": 1800
+      "duration_ms": 1346
     },
     {
       "id": "victory_fanfare",
@@ -1449,7 +1457,8 @@
       "priority": 5,
       "gain": 1,
       "fade_in_ms": 0,
-      "fade_out_ms": 400
+      "fade_out_ms": 400,
+      "duration_ms": 2400
     },
     {
       "id": "voice_murmur_female_01",
@@ -1742,7 +1751,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 300,
-      "duration_ms": 2000
+      "duration_ms": 2298
     },
     {
       "id": "sfx_w2_stasis_release",
@@ -1751,7 +1760,7 @@
       "gain": 0.88,
       "fade_in_ms": 0,
       "fade_out_ms": 360,
-      "duration_ms": 2500
+      "duration_ms": 2480
     },
     {
       "id": "sfx_w2_astra_reboot",
@@ -1760,7 +1769,7 @@
       "gain": 0.86,
       "fade_in_ms": 0,
       "fade_out_ms": 300,
-      "duration_ms": 2200
+      "duration_ms": 2105
     },
     {
       "id": "sfx_w2_astra_launch",
@@ -1769,7 +1778,7 @@
       "gain": 0.94,
       "fade_in_ms": 0,
       "fade_out_ms": 420,
-      "duration_ms": 3000
+      "duration_ms": 2885
     },
     {
       "id": "sfx_w3_shield_anchor",
@@ -1787,7 +1796,7 @@
       "gain": 0.82,
       "fade_in_ms": 0,
       "fade_out_ms": 320,
-      "duration_ms": 2400
+      "duration_ms": 2200
     },
     {
       "id": "sfx_intro_chorus_answer",
@@ -1806,7 +1815,7 @@
       "gain": 0.95,
       "fade_in_ms": 0,
       "fade_out_ms": 300,
-      "duration_ms": 1500
+      "duration_ms": 1187
     },
     {
       "id": "sfx_distant_gate_rumble",
@@ -1815,7 +1824,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 500,
-      "duration_ms": 2500
+      "duration_ms": 2645
     },
     {
       "id": "sfx_path_cleared",
@@ -1824,7 +1833,7 @@
       "gain": 0.95,
       "fade_in_ms": 0,
       "fade_out_ms": 400,
-      "duration_ms": 1800
+      "duration_ms": 1760
     },
     {
       "id": "sfx_loot_cache",
@@ -1833,7 +1842,7 @@
       "gain": 0.95,
       "fade_in_ms": 0,
       "fade_out_ms": 300,
-      "duration_ms": 1500
+      "duration_ms": 1279
     },
     {
       "id": "sfx_forage_gather",
@@ -1842,7 +1851,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 300,
-      "duration_ms": 1200
+      "duration_ms": 1058
     },
     {
       "id": "sfx_datapad_read",
@@ -1860,7 +1869,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 2500
+      "duration_ms": 2200
     },
     {
       "id": "sfx_tinkering_wrench",
@@ -1878,7 +1887,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 500
+      "duration_ms": 480
     },
     {
       "id": "sfx_ui_confirm",
@@ -1896,7 +1905,7 @@
       "gain": 0.85,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 500
+      "duration_ms": 419
     },
     {
       "id": "sfx_ui_error",
@@ -1905,7 +1914,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1000
+      "duration_ms": 880
     },
     {
       "id": "sfx_ui_tab_switch",
@@ -1914,7 +1923,7 @@
       "gain": 0.85,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 500
+      "duration_ms": 450
     },
     {
       "id": "sfx_ui_equip_item",
@@ -1923,7 +1932,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1000
+      "duration_ms": 880
     },
     {
       "id": "sfx_ui_item_pickup",
@@ -1941,7 +1950,7 @@
       "gain": 0.95,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 3000
+      "duration_ms": 2760
     },
     {
       "id": "sfx_door_airlock_close",
@@ -1950,7 +1959,7 @@
       "gain": 0.95,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 2500
+      "duration_ms": 1771
     },
     {
       "id": "sfx_terminal_hack_success",
@@ -1959,7 +1968,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 2500
+      "duration_ms": 2200
     },
     {
       "id": "sfx_loot_crate_open",
@@ -1968,7 +1977,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 2500
+      "duration_ms": 1983
     },
     {
       "id": "sfx_tape_insert",
@@ -1977,7 +1986,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1500
+      "duration_ms": 1081
     },
     {
       "id": "sfx_scavenge_metal",
@@ -1986,7 +1995,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 2000
+      "duration_ms": 1455
     },
     {
       "id": "sfx_combat_blaster_fire",
@@ -2004,7 +2013,7 @@
       "gain": 0.95,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1200
+      "duration_ms": 1080
     },
     {
       "id": "sfx_combat_plasma_arc",
@@ -2013,7 +2022,7 @@
       "gain": 0.95,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1800
+      "duration_ms": 1480
     },
     {
       "id": "sfx_combat_phase_blade",
@@ -2022,7 +2031,7 @@
       "gain": 0.95,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1500
+      "duration_ms": 1280
     },
     {
       "id": "sfx_combat_shield_deflect",
@@ -2031,7 +2040,7 @@
       "gain": 0.95,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1500
+      "duration_ms": 1200
     },
     {
       "id": "sfx_combat_crit_hit",
@@ -2040,7 +2049,7 @@
       "gain": 1.0,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 2000
+      "duration_ms": 1600
     },
     {
       "id": "sfx_combat_enemy_screech",
@@ -2049,7 +2058,7 @@
       "gain": 0.95,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 2000
+      "duration_ms": 1760
     },
     {
       "id": "sfx_combat_robot_stomp",
@@ -2058,7 +2067,7 @@
       "gain": 1.0,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 2500
+      "duration_ms": 1760
     },
     {
       "id": "sfx_fishing_cast",
@@ -2067,7 +2076,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1500
+      "duration_ms": 1360
     },
     {
       "id": "sfx_fishing_splash",
@@ -2076,7 +2085,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1200
+      "duration_ms": 657
     },
     {
       "id": "sfx_fishing_bite",
@@ -2085,7 +2094,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1200
+      "duration_ms": 1080
     },
     {
       "id": "sfx_fishing_warning",
@@ -2094,7 +2103,7 @@
       "gain": 0.85,
       "fade_in_ms": 0,
       "fade_out_ms": 150,
-      "duration_ms": 900
+      "duration_ms": 880
     },
     {
       "id": "sfx_fishing_snap",
@@ -2103,7 +2112,7 @@
       "gain": 0.95,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1100
+      "duration_ms": 997
     },
     {
       "id": "sfx_fishing_catch",
@@ -2112,7 +2121,7 @@
       "gain": 0.95,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 2000
+      "duration_ms": 1760
     },
     {
       "id": "sfx_arcade_coin_insert",
@@ -2121,7 +2130,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1500
+      "duration_ms": 1360
     },
     {
       "id": "sfx_arcade_jump",
@@ -2130,7 +2139,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 500
+      "duration_ms": 480
     },
     {
       "id": "sfx_arcade_laser",
@@ -2139,7 +2148,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 500
+      "duration_ms": 480
     },
     {
       "id": "sfx_arcade_game_over",
@@ -2148,7 +2157,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 2500
+      "duration_ms": 2200
     },
     {
       "id": "sfx_tinkering_ratchet",
@@ -2157,7 +2166,7 @@
       "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1800
+      "duration_ms": 1462
     },
     {
       "id": "sfx_combat_enemy_melee_slash",
@@ -2166,7 +2175,7 @@
       "gain": 0.95,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1200
+      "duration_ms": 1080
     },
     {
       "id": "sfx_combat_enemy_bite",
@@ -2184,7 +2193,7 @@
       "gain": 0.95,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1500
+      "duration_ms": 1360
     },
     {
       "id": "sfx_combat_enemy_spore_blast",
@@ -2193,7 +2202,7 @@
       "gain": 0.95,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1500
+      "duration_ms": 1360
     },
     {
       "id": "sfx_combat_enemy_drone_pulse",
@@ -2211,7 +2220,7 @@
       "gain": 1.0,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1600
+      "duration_ms": 1480
     },
     {
       "id": "sfx_combat_enemy_gunshot",
@@ -2220,7 +2229,7 @@
       "gain": 0.95,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1000
+      "duration_ms": 880
     },
     {
       "id": "sfx_combat_enemy_void_blast",
@@ -2229,7 +2238,7 @@
       "gain": 0.95,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1800
+      "duration_ms": 1600
     },
     {
       "id": "sfx_combat_enemy_flamethrower",
@@ -2238,14 +2247,14 @@
       "gain": 0.95,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1600
+      "duration_ms": 1480
     },
     {
       "id": "sfx_rest_chime",
       "category": "ui",
       "priority": 3,
       "gain": 0.72,
-      "duration_ms": 1450
+      "duration_ms": 1480
     },
     {
       "id": "voice_murmur_machine_01",

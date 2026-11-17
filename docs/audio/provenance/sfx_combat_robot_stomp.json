@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_combat_robot_stomp",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:35.874629",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "7b5a65083091b63245617f038a8413ddc1d9f44e113d6407c6b477b4ebbe8d1e",
+  "bytes": 36615,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 77616,
+    "duration_seconds": 1.76,
+    "rms_dbfs": -16.24,
+    "peak_dbfs": -0.77,
+    "integrated_lufs": -12.3,
+    "true_peak_dbtp": -0.62,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -17.4,
+    "last_second_rms_dbfs": -16.26
+  },
+  "source_provenance": {
+    "cue_id": "sfx_combat_robot_stomp",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:29.406951",
+    "source_filename": "sfx_combat_robot_stomp.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "dd98ea23e17a8d0d4eb6b2bb5c770f84e29575e462c24210465bf1112384b522",
+    "bytes": 29300,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 77616,
+      "duration_seconds": 1.76,
+      "rms_dbfs": -21.75,
+      "peak_dbfs": -1.55,
+      "integrated_lufs": -16.75,
+      "true_peak_dbtp": -1.37,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -23.21,
+      "last_second_rms_dbfs": -21.56
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Multi-ton security mech hydraulic foot slam with floor shake and piston hiss",
+      "duration_seconds": 1.8,
+      "prompt_influence": 0.45
+    }
+  }
+}

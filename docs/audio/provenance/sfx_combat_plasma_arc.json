@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_combat_plasma_arc",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:35.604987",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "671de15be1d1d81cc8c92c6c37bcef5e123e50fab20a7bac76b41129178d6670",
+  "bytes": 30868,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 65268,
+    "duration_seconds": 1.48,
+    "rms_dbfs": -19.49,
+    "peak_dbfs": -1.15,
+    "integrated_lufs": -13.17,
+    "true_peak_dbtp": -0.77,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -17.79,
+    "last_second_rms_dbfs": -34.52
+  },
+  "source_provenance": {
+    "cue_id": "sfx_combat_plasma_arc",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:17.980900",
+    "source_filename": "sfx_combat_plasma_arc.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "ab4d3ca7321f3a3286d7f2bd76037254ea9eba157ba5ee33eae8ec024b31589c",
+    "bytes": 24702,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 65268,
+      "duration_seconds": 1.48,
+      "rms_dbfs": -21.58,
+      "peak_dbfs": -0.0,
+      "integrated_lufs": -14.21,
+      "true_peak_dbtp": 0.6,
+      "samples_at_full_scale": 1,
+      "first_second_rms_dbfs": -19.88,
+      "last_second_rms_dbfs": -44.15
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Crackling high-voltage arc discharge, sizzling ionized plasma whip",
+      "duration_seconds": 1.5,
+      "prompt_influence": 0.45
+    }
+  }
+}

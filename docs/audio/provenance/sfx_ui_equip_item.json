@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_ui_equip_item",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:47.599827",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -14.0,
+  "sha256": "2776c3f54ee77b24780591c6b7de1ab92b84ece0abfa4ff6fc31466c25d52f55",
+  "bytes": 18852,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 38808,
+    "duration_seconds": 0.88,
+    "rms_dbfs": -20.5,
+    "peak_dbfs": -1.54,
+    "integrated_lufs": -11.74,
+    "true_peak_dbtp": -1.06,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -20.5,
+    "last_second_rms_dbfs": -20.5
+  },
+  "source_provenance": {
+    "cue_id": "sfx_ui_equip_item",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:10:23.747073",
+    "source_filename": "sfx_ui_equip_item.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "01328bd8f19424ab48d52616d4693e234fdf273fe4e6d7c11edd234e96a4f41f",
+    "bytes": 15089,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 38808,
+      "duration_seconds": 0.88,
+      "rms_dbfs": -25.99,
+      "peak_dbfs": -2.15,
+      "integrated_lufs": -17.09,
+      "true_peak_dbtp": -1.29,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -25.99,
+      "last_second_rms_dbfs": -25.99
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Heavy canvas strap buckle and metallic tactical harness latch click, dry close-miked foley",
+      "duration_seconds": 0.9,
+      "prompt_influence": 0.45
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_w2_chime_gate",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:49.640275",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "b08564b6af43c51cb0098db2c39dbaa2f5d77f7ab67b9ebc65e298696204e048",
+  "bytes": 47064,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 101361,
+    "duration_seconds": 2.2984,
+    "rms_dbfs": -15.1,
+    "peak_dbfs": -1.75,
+    "integrated_lufs": -10.0,
+    "true_peak_dbtp": -1.72,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -15.09,
+    "last_second_rms_dbfs": -16.2
+  },
+  "source_provenance": {
+    "cue_id": "sfx_w2_chime_gate",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:45.098695",
+    "source_filename": "sfx_w2_chime_gate.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "71fd13a652b709335f4f30b1cda4b9c301e0d61d803828af86a35048d30bb637",
+    "bytes": 39331,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 105840,
+      "duration_seconds": 2.4,
+      "rms_dbfs": -17.27,
+      "peak_dbfs": -0.22,
+      "integrated_lufs": -12.01,
+      "true_peak_dbtp": -0.11,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -18.3,
+      "last_second_rms_dbfs": -21.09
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Ancient stone sanctuary seal unlocking to a deep Tibetan bowl harmonic and sliding granite resonance",
+      "duration_seconds": 2.4,
+      "prompt_influence": 0.45
+    }
+  }
+}

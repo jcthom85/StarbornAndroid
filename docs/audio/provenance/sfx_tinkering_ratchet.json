@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_tinkering_ratchet",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:46.705739",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "2b3995459516f39b1e82fea82b44e950057be0dd3b61457d194d8f3b49e671b7",
+  "bytes": 30346,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 64488,
+    "duration_seconds": 1.4623,
+    "rms_dbfs": -23.08,
+    "peak_dbfs": -2.12,
+    "integrated_lufs": -16.94,
+    "true_peak_dbtp": -1.4,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -23.27,
+    "last_second_rms_dbfs": -22.54
+  },
+  "source_provenance": {
+    "cue_id": "sfx_tinkering_ratchet",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:13:13.052694",
+    "source_filename": "sfx_tinkering_ratchet.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "5a2a8717e41df265820771e6d26b9186b173c036e8d76339d5829626144378e1",
+    "bytes": 24702,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 65268,
+      "duration_seconds": 1.48,
+      "rms_dbfs": -26.77,
+      "peak_dbfs": -2.7,
+      "integrated_lufs": -20.58,
+      "true_peak_dbtp": -2.2,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -26.98,
+      "last_second_rms_dbfs": -26.46
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Mechanical socket wrench ratcheting tightly on metal workbench",
+      "duration_seconds": 1.5,
+      "prompt_influence": 0.45
+    }
+  }
+}

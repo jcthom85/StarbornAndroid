@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_combat_enemy_drone_pulse",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:32.151565",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "680fdb4d722852c80b351949459594cfcb9e1d14423e75d3400a382e2aaf4974",
+  "bytes": 25121,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 52920,
+    "duration_seconds": 1.2,
+    "rms_dbfs": -13.74,
+    "peak_dbfs": -1.49,
+    "integrated_lufs": -7.28,
+    "true_peak_dbtp": -1.03,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -12.95,
+    "last_second_rms_dbfs": -13.93
+  },
+  "source_provenance": {
+    "cue_id": "sfx_combat_enemy_drone_pulse",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:40.447809",
+    "source_filename": "sfx_combat_enemy_drone_pulse.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "0339c3ecebb34d0743129d18183f049288998e4c8ecea66582ee483fdcfc11bc",
+    "bytes": 20105,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 52920,
+      "duration_seconds": 1.2,
+      "rms_dbfs": -19.99,
+      "peak_dbfs": -3.45,
+      "integrated_lufs": -13.78,
+      "true_peak_dbtp": -3.25,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -19.2,
+      "last_second_rms_dbfs": -20.51
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Security drone sharp electronic charge chirp and tight laser pulse",
+      "duration_seconds": 1.2,
+      "prompt_influence": 0.45
+    }
+  }
+}

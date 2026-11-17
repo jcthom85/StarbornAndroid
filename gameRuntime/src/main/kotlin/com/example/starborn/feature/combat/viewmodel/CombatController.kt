@@ -3834,11 +3834,16 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
                 val norm = key.lowercase(Locale.getDefault())
                 norm.contains("boss") || norm.contains("warden") || norm.contains("beast")
             }
-        val trackId = if (hasBoss) {
+        val trackId = audioRouter.resolveCombatMusicTrack(
+            enemyIds = encounterEnemyIdList,
+            worldId = worldId,
+            isBoss = hasBoss
+        ) ?: if (hasBoss) {
             when (worldId) {
                 "world_2" -> "music_w2_boss_guardian"
                 "world_3" -> "music_w3_boss_phantom"
                 "world_4" -> "music_w4_boss_titan"
+                "world_5" -> "music_w5_combat"
                 "world_6" -> "music_w6_boss_final"
                 else -> "music_w1_boss_warden"
             }

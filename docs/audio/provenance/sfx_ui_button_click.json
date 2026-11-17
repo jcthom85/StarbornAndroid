@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_ui_button_click",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:46.904152",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -14.0,
+  "sha256": "06b6c623d76b96d831c9b0f42e0d996ed57657a3756715ae4b15f1ed41f3ce21",
+  "bytes": 11015,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 21168,
+    "duration_seconds": 0.48,
+    "rms_dbfs": -30.01,
+    "peak_dbfs": -1.41,
+    "integrated_lufs": -23.05,
+    "true_peak_dbtp": -1.09,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -30.01,
+    "last_second_rms_dbfs": -30.01
+  },
+  "source_provenance": {
+    "cue_id": "sfx_ui_button_click",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T12:08:46.739043",
+    "source_filename": "sfx_ui_button_click.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "c7a955e504036ae7155a9fd8f25e8337fdb07ffd82ac9816cc6b56130e3e1981",
+    "bytes": 8820,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 21168,
+      "duration_seconds": 0.48,
+      "rms_dbfs": -40.25,
+      "peak_dbfs": -11.67,
+      "integrated_lufs": -33.35,
+      "true_peak_dbtp": -11.33,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -40.25,
+      "last_second_rms_dbfs": -40.25
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Tactile 1980s mechanical relay switch click, vintage sci-fi console key press, crisp dry transient, subtle spring, no reverb tail",
+      "duration_seconds": 0.5,
+      "prompt_influence": 0.45
+    }
+  }
+}

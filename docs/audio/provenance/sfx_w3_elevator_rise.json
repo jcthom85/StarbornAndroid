@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_w3_elevator_rise",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:50.841012",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "f067477b274cd7a09bd16c8dafa69aa6af290f2737ec5707ca78870eb88673e9",
+  "bytes": 45497,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 97020,
+    "duration_seconds": 2.2,
+    "rms_dbfs": -15.27,
+    "peak_dbfs": -1.73,
+    "integrated_lufs": -9.73,
+    "true_peak_dbtp": -1.7,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -11.89,
+    "last_second_rms_dbfs": -36.64
+  },
+  "source_provenance": {
+    "cue_id": "sfx_w3_elevator_rise",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:49.373979",
+    "source_filename": "sfx_w3_elevator_rise.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "86b4ea72d6458f0fc27d40b858f55019ca0caf92db12e62b80d2807f802b8226",
+    "bytes": 36405,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 97020,
+      "duration_seconds": 2.2,
+      "rms_dbfs": -20.79,
+      "peak_dbfs": -0.75,
+      "integrated_lufs": -14.55,
+      "true_peak_dbtp": -0.64,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -17.39,
+      "last_second_rms_dbfs": -44.47
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Heavy industrial cargo lift locking in and accelerating upward with steel cable hum",
+      "duration_seconds": 2.2,
+      "prompt_influence": 0.45
+    }
+  }
+}

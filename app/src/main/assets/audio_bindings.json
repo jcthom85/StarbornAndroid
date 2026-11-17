@@ -17,6 +17,24 @@
     "vfx_sandbox": "music_w1_homestead_explore",
     "hub_astra": "music_astra_common_room"
   },
+  "node_music": {
+    "deep_mine": "music_w1_deep_mine",
+    "echo_chamber": "music_w1_deep_mine"
+  },
+  "room_music": {
+    "astra_bridge": "music_astra_bridge"
+  },
+  "combat_music": {
+    "the_iron_warden": "music_w1_boss_warden",
+    "the_beast": "music_w2_boss_guardian",
+    "ruin_guardian": "music_w2_boss_guardian",
+    "phantom_prototype": "music_w3_boss_phantom",
+    "titan_walker_boss": "music_w4_boss_titan",
+    "crucible_champion": "music_w4_boss_titan",
+    "compliance_avatar": "music_w5_combat",
+    "ascended_vale": "music_w6_boss_final",
+    "ascended_god": "music_w6_boss_final"
+  },
   "ambience": {
     "hub_1_homestead": "amb_colony_vent_crowd",
     "hub_2_logistics": "amb_logistics_machinery",

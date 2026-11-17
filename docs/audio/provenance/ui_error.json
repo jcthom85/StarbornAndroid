@@ -1,0 +1,56 @@
+{
+  "cue_id": "ui_error",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:54.579685",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -14.0,
+  "sha256": "a5ebbb36166bf71b43d25c6260aabcf06a34cb1b3e305d9468f3b4a10953caa6",
+  "bytes": 15195,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 29999,
+    "duration_seconds": 0.6802,
+    "rms_dbfs": -13.45,
+    "peak_dbfs": -4.53,
+    "integrated_lufs": -12.64,
+    "true_peak_dbtp": -4.53,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -13.45,
+    "last_second_rms_dbfs": -13.45
+  },
+  "source_provenance": {
+    "cue_id": "ui_error",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:10:36.447188",
+    "source_filename": "ui_error.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "97cbc7f461ce9b9961ba14bca670cb33d22574e67bcca4bcda6c69d24c561353",
+    "bytes": 12163,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 29999,
+      "duration_seconds": 0.6802,
+      "rms_dbfs": -9.21,
+      "peak_dbfs": -0.3,
+      "integrated_lufs": -8.44,
+      "true_peak_dbtp": -0.29,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -9.21,
+      "last_second_rms_dbfs": -9.21
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Compact dry low corporate security double buzz, muffled metallic speaker, short tail",
+      "duration_seconds": 0.7,
+      "prompt_influence": 0.45
+    }
+  }
+}

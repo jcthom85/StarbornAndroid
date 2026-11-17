@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_door_airlock_close",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:39.064233",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "3d50430e3c84035e90d892b1de8d8f22917c11a3529dfbb082bd14812d8fd1c1",
+  "bytes": 36615,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 78102,
+    "duration_seconds": 1.771,
+    "rms_dbfs": -21.65,
+    "peak_dbfs": -1.33,
+    "integrated_lufs": -14.22,
+    "true_peak_dbtp": -0.99,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -19.21,
+    "last_second_rms_dbfs": -20.76
+  },
+  "source_provenance": {
+    "cue_id": "sfx_door_airlock_close",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:10:53.642648",
+    "source_filename": "sfx_door_airlock_close.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "f526cd4fdfe51fca4bceb4bf00b532af7145cce93a9657db7d1b5526b7b6b3b7",
+    "bytes": 39331,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 105840,
+      "duration_seconds": 2.4,
+      "rms_dbfs": -33.96,
+      "peak_dbfs": -10.87,
+      "integrated_lufs": -25.28,
+      "true_peak_dbtp": -10.81,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -31.25,
+      "last_second_rms_dbfs": -66.56
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Heavy steel bulkhead door sliding shut and locking with deep hydraulic clamp thud",
+      "duration_seconds": 2.4,
+      "prompt_influence": 0.45
+    }
+  }
+}

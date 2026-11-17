@@ -1,0 +1,56 @@
+{
+  "cue_id": "battle_erosion_warning",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:16:21.723196",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "de3b885fc8ce0b0e6581ea62d871e99074b9a84ed554d53710dbc4f5ecb824cf",
+  "bytes": 28256,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 59397,
+    "duration_seconds": 1.3469,
+    "rms_dbfs": -24.84,
+    "peak_dbfs": -10.69,
+    "integrated_lufs": -20.55,
+    "true_peak_dbtp": -10.68,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -24.51,
+    "last_second_rms_dbfs": -28.16
+  },
+  "source_provenance": {
+    "cue_id": "battle_erosion_warning",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:09.467244",
+    "source_filename": "battle_erosion_warning.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "181e6aee3a04da1249743370592b8add49893d1005f12b59e58630e38d59d3e7",
+    "bytes": 23030,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 59976,
+      "duration_seconds": 1.36,
+      "rms_dbfs": -36.42,
+      "peak_dbfs": -22.27,
+      "integrated_lufs": -32.07,
+      "true_peak_dbtp": -22.22,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -36.05,
+      "last_second_rms_dbfs": -39.8
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Subtle unsettling detuned glass ring and faint tape crackle warning, restrained mental strain",
+      "duration_seconds": 1.4,
+      "prompt_influence": 0.45
+    }
+  }
+}

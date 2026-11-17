@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_pod_launch",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:44.240987",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "aa33bee629ebebdb24bf0bb081e1072517f9ae9839a947fe23b06f9c80e03f3d",
+  "bytes": 60125,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 129506,
+    "duration_seconds": 2.9366,
+    "rms_dbfs": -16.29,
+    "peak_dbfs": -1.21,
+    "integrated_lufs": -10.81,
+    "true_peak_dbtp": -1.17,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -12.72,
+    "last_second_rms_dbfs": -38.84
+  },
+  "source_provenance": {
+    "cue_id": "sfx_pod_launch",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:35.743107",
+    "source_filename": "sfx_pod_launch.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "568cc730f272e265fa7a2cea77396f4d0eaecb2cf004127c621895ec3171b4b9",
+    "bytes": 48944,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 132300,
+      "duration_seconds": 3.0,
+      "rms_dbfs": -17.93,
+      "peak_dbfs": 0.0,
+      "integrated_lufs": -12.18,
+      "true_peak_dbtp": 0.16,
+      "samples_at_full_scale": 1,
+      "first_second_rms_dbfs": -13.77,
+      "last_second_rms_dbfs": -44.34
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Industrial ore escape pod clamps releasing, rail catapult clang, roaring thruster ignition",
+      "duration_seconds": 3.0,
+      "prompt_influence": 0.45
+    }
+  }
+}

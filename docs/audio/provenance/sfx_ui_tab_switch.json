@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_ui_tab_switch",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:48.231708",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -14.0,
+  "sha256": "30a9fa17f1a66127b43e416292d2d93c0b7fd5751088f96ed787a1060033a9b8",
+  "bytes": 10493,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 19869,
+    "duration_seconds": 0.4505,
+    "rms_dbfs": -26.37,
+    "peak_dbfs": -1.87,
+    "integrated_lufs": -20.05,
+    "true_peak_dbtp": -1.64,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -26.37,
+    "last_second_rms_dbfs": -26.37
+  },
+  "source_provenance": {
+    "cue_id": "sfx_ui_tab_switch",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:10:21.213535",
+    "source_filename": "sfx_ui_tab_switch.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "99d5fa4b8a0aebe88f52d18fe1255a71fbf8fa59bf75435ad924ce8871a06d54",
+    "bytes": 8820,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 21168,
+      "duration_seconds": 0.48,
+      "rms_dbfs": -32.31,
+      "peak_dbfs": -5.03,
+      "integrated_lufs": -25.75,
+      "true_peak_dbtp": -5.03,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -32.31,
+      "last_second_rms_dbfs": -32.31
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Analog cassette transport slider snap, subtle mechanical detent click, clean short UI transient",
+      "duration_seconds": 0.5,
+      "prompt_influence": 0.45
+    }
+  }
+}

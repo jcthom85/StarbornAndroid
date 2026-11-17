@@ -2,215 +2,499 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Starborn — Master Soundtrack Review Board</title>
+  <title>Starborn — Audio Studio &amp; Loop Audition Board</title>
   <style>
     :root {
-      --bg: #0d1117;
-      --card-bg: #161b22;
-      --border: #30363d;
+      --bg: #0b0f16;
+      --panel: #131924;
+      --panel-2: #192130;
+      --border: #283347;
       --accent: #58a6ff;
-      --accent-green: #2ea043;
-      --text: #c9d1d9;
-      --text-dim: #8b949e;
-      --header: #f0f6fc;
+      --accent-warm: #f0a850;
+      --good: #3fb950;
+      --warn: #d29922;
+      --text: #dce4f0;
+      --muted: #8b9bb4;
     }
+    * { box-sizing: border-box; }
     body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       margin: 0;
-      padding: 24px;
+      padding: 20px 24px 64px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     header {
-      margin-bottom: 24px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--border);
-    }
-    h1 {
-      color: var(--header);
-      margin: 0 0 8px 0;
-      font-size: 28px;
-    }
-    p.subtitle {
-      color: var(--text-dim);
-      margin: 0;
-      font-size: 14px;
-    }
-    .filters {
       display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
       flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 14px;
+      margin-bottom: 18px;
     }
-    .filter-btn {
-      background: var(--card-bg);
+    h1 { margin: 0 0 4px; font-size: 24px; color: #f4f7fc; }
+    .subtitle { margin: 0; color: var(--muted); font-size: 13px; }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+    }
+    .toolbar label { font-size: 12px; color: var(--muted); }
+    select, input[type="search"], button {
+      background: var(--panel-2);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 6px 14px;
       border-radius: 6px;
-      cursor: pointer;
-      font-size: 13px;
-      transition: all 0.2s;
+      padding: 6px 10px;
+      font-size: 12px;
     }
-    .filter-btn:hover, .filter-btn.active {
-      background: var(--accent);
-      color: #ffffff;
-      border-color: var(--accent);
-    }
+    button { cursor: pointer; transition: 0.15s border-color, 0.15s background; }
+    button:hover { border-color: var(--accent); }
+    button.primary { background: #1e4b85; border-color: var(--accent); color: #fff; font-weight: 600; }
+    button.good { background: #1e462a; border-color: var(--good); color: #d8f8df; }
+    .filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .filter-btn { background: var(--panel); padding: 6px 11px; border-radius: 16px; }
+    .filter-btn.active { background: var(--accent); color: #09111e; font-weight: 700; border-color: var(--accent); }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(390px, 1fr));
+      gap: 14px;
     }
     .card {
-      background: var(--card-bg);
+      background: var(--panel);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
+      border-radius: 10px;
+      padding: 14px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 9px;
     }
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-    .card-title {
-      font-weight: 600;
-      font-size: 15px;
-      color: var(--header);
-      margin: 0;
-    }
-    .card-id {
-      font-family: monospace;
-      font-size: 12px;
-      color: var(--accent);
-      margin-top: 2px;
-    }
+    .card.approved { border-color: var(--good); box-shadow: 0 0 0 1px rgba(63, 185, 80, 0.35); }
+    .card.reroll { border-color: var(--warn); box-shadow: 0 0 0 1px rgba(210, 153, 34, 0.35); }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .card-title { margin: 0; font-size: 15px; color: #f3f7ff; }
+    .card-id { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--accent); margin-top: 2px; }
+    .badges { display: flex; flex-wrap: wrap; gap: 5px; }
     .badge {
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 12px;
-      background: #21262d;
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      background: var(--panel-2);
       border: 1px solid var(--border);
-      color: var(--text-dim);
-      text-transform: uppercase;
+      color: var(--muted);
     }
-    .prompt-box {
-      background: #0d1117;
-      padding: 10px;
+    .badge.warm { color: var(--accent-warm); border-color: rgba(240, 168, 80, 0.45); }
+    .badge.ok { color: var(--good); border-color: rgba(63, 185, 80, 0.45); }
+    .badge.warn { color: var(--warn); border-color: rgba(210, 153, 34, 0.45); }
+    .prompt {
+      background: #0d121b;
+      border: 1px solid #202a3b;
       border-radius: 6px;
-      font-size: 12px;
-      color: var(--text-dim);
+      padding: 8px 10px;
+      font-size: 11.5px;
+      color: var(--muted);
       line-height: 1.4;
-      max-height: 70px;
+      max-height: 68px;
       overflow-y: auto;
-      border: 1px solid #21262d;
     }
-    audio {
-      width: 100%;
-      height: 32px;
-      margin-top: 4px;
+    .eval-box {
+      background: #0e141f;
+      border: 1px solid #243044;
+      border-radius: 6px;
+      padding: 7px 9px;
+      font-size: 11px;
+      line-height: 1.4;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
+    .eval-box a { color: var(--accent); text-decoration: none; }
+    .eval-box a:hover { text-decoration: underline; }
+    .review-controls { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+    .review-controls input[type="text"] {
+      flex: 1 1 160px;
+      background: #0d121b;
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 6px;
+      padding: 5px 8px;
+      font-size: 11px;
+    }
+    button.warn { background: #3b2d12; border-color: var(--warn); color: #ffe3a8; }
+    .source-row { display: flex; flex-wrap: wrap; gap: 5px; }
+    .src-btn { font-size: 11px; padding: 4px 8px; }
+    .src-btn.active { background: var(--accent); color: #09111e; border-color: var(--accent); font-weight: 700; }
+    audio { width: 100%; height: 32px; }
+    .card-actions { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px; }
+    .metrics { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--muted); }
   </style>
 </head>
 <body>
-
   <header>
-    <h1>🌌 Starborn Master Soundtrack Review Board</h1>
-    <p class="subtitle">37 Production-Grade Themes Composed with ElevenLabs <code>music_v2</code> (90s–150s Studio Mixes)</p>
+    <div>
+      <h1>Starborn Audio Studio &amp; Loop Audition Board</h1>
+      <p class="subtitle" id="summary-line">Loading manifest...</p>
+    </div>
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button onclick="exportDecisions()" class="primary">Export review_decisions.json</button>
+      <button onclick="exportApprovals()" class="good">Export approved_takes.json</button>
+      <button onclick="clearApprovals()">Clear Decisions</button>
+    </div>
   </header>
 
-  <div class="filters" id="filters">
-    <button class="filter-btn active" onclick="filterCategory('all')">All Tracks (37)</button>
-    <button class="filter-btn" onclick="filterCategory('core')">Core & Ships</button>
-    <button class="filter-btn" onclick="filterCategory('w1')">World 1 (Homestead)</button>
-    <button class="filter-btn" onclick="filterCategory('w2')">World 2 (Sector 9)</button>
-    <button class="filter-btn" onclick="filterCategory('w3')">World 3 (Spire)</button>
-    <button class="filter-btn" onclick="filterCategory('w4')">World 4 (Foundry)</button>
-    <button class="filter-btn" onclick="filterCategory('w5')">World 5 (Void Ring)</button>
-    <button class="filter-btn" onclick="filterCategory('w6')">World 6 (The Source)</button>
-    <button class="filter-btn" onclick="filterCategory('combat')">Combat</button>
-    <button class="filter-btn" onclick="filterCategory('boss')">Boss Battles</button>
-    <button class="filter-btn" onclick="filterCategory('activities')">Mini-Games & Activities</button>
-    <button class="filter-btn" onclick="filterCategory('cinematic')">Cinematics & Credits</button>
+  <div class="toolbar">
+    <input type="search" id="search-box" placeholder="Search ID, title, batch, motif, key..." oninput="render()" style="min-width:220px;">
+    <select id="batch-filter" onchange="render()">
+      <option value="all">All Batches</option>
+    </select>
+    <select id="status-filter" onchange="render()">
+      <option value="all">All Statuses</option>
+      <option value="pilot">Batch 0: Pilot Cues (4)</option>
+      <option value="ready_for_review">Ready For Review</option>
+      <option value="missing">Needs Audio (Not Yet in res/raw)</option>
+      <option value="has_takes">Has Staged Takes</option>
+      <option value="mastered">Mastered Ready</option>
+      <option value="approved">Approved</option>
+      <option value="reroll">Reroll / Revise / Hold</option>
+    </select>
+    <div style="margin-left:auto; display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+      <label>Crossfade Simulator:</label>
+      <select id="xfade-a"></select>
+      <span>↔</span>
+      <select id="xfade-b"></select>
+      <button class="primary" onclick="runCrossfadeDemo()">Crossfade A → B (1.2s)</button>
+      <button onclick="stopCrossfadeDemo()">Stop</button>
+    </div>
   </div>
 
-  <div class="grid" id="track-grid"></div>
+  <div class="filters" id="filters"></div>
+  <div class="grid" id="grid"></div>
 
+  <script src="audio_board_data.js"></script>
   <script>
-    const tracks = [
-      { id: "music_title_theme", title: "Starborn Main Title (The Spark in the Dark)", cat: "core", prompt: "Cinematic Sci-Fi Acoustic-Orchestral Synthwave. BPM: 82. Resonant acoustic guitar playing an ascending 4-note motif over warm Prophet-5 synth pads and soaring cello." },
-      { id: "music_astra_common_room", title: "The Astra Lounge (Coffee & Cassettes)", cat: "core", prompt: "Lo-Fi Chill Synthwave & Downtempo. BPM: 74. Warm Fender Rhodes piano, mellow acoustic slide guitar, dusty vinyl crackle, cozy tape hiss." },
-      { id: "music_astra_bridge", title: "Flight Bridge (Navigating the Frontier)", cat: "core", prompt: "Ambient Space Synthwave & Downtempo. BPM: 88. Pulsing sequencer synths, clean rhythmic delay electric guitar plucks, ethereal vocal pads." },
-      { id: "music_victory_standard", title: "Victory Fanfare (Battle Won)", cat: "core", prompt: "16-bit JRPG Victory Fanfare & Uplifting Rock Fusion. BPM: 124. Triumphant brass stabs, soaring electric guitar lead, punchy bass groove." },
-      { id: "music_game_over", title: "The Signal Fades (Defeat & Memory)", cat: "core", prompt: "Melancholy Ambient Piano & Tape Drone. BPM: 60. Distant upright piano with felt muting, slow decaying reverb, low cello drone." },
-      { id: "music_w1_homestead_explore", title: "Homestead Crater Exploration", cat: "w1", prompt: "Industrial Blues & Frontier Acoustic Slag-Rock. BPM: 90. Resonator slide guitar, dusty blues harmonica, rhythmic anvil hammer percussion." },
-      { id: "music_w1_deep_mine", title: "Sub-Level 4 (Descent into Slag)", cat: "w1", prompt: "Dark Industrial Ambient & Sub-Bass Drone. BPM: 72. Low subterranean bass hum, metallic clinking in deep reverb, rhythmic pneumatic valve releases." },
-      { id: "music_w1_combat", title: "Homestead Scrap Skirmish", cat: "combat", prompt: "Aggressive Industrial Rock & Synth-Metal. BPM: 132. Heavy distorted electric guitar riffs, pounding industrial drums, energetic slap bass." },
-      { id: "music_w1_boss_warden", title: "The Pit Warden (Overclocked Sentry)", cat: "boss", prompt: "Fast-Paced Cyber-Metal Boss Theme. BPM: 142. Screeching guitar harmonics, thundering double-kick drums, blaring emergency sirens." },
-      { id: "music_w2_sector9_explore", title: "Sector 9 Canopy Walk", cat: "w2", prompt: "Organic Dark Folk & Shamanic World Ambient. BPM: 76. Wooden pan flute, bowed acoustic contrabass, swamp water drips, lush poly-synth sweeps." },
-      { id: "music_w2_ancient_gateway", title: "Tideglass Shore & Stone Relics", cat: "w2", prompt: "Tribal Ambient & Ethereal Mystery Folk. BPM: 80. Resonant kalimba, deep taiko drum heartbeat, wind synth harmonics, singing bowls." },
-      { id: "music_w2_combat", title: "Swamp Ambush & Predator Strike", cat: "combat", prompt: "Tribal Shamanic Electro-Battle. BPM: 128. Rapid taiko and djembe percussion, distorted bass synth wobble, frantic wooden flute trills." },
-      { id: "music_w2_boss_guardian", title: "Ruin Guardian (Ancient Harmonic Strike)", cat: "boss", prompt: "Epic Orchestral World Boss Theme. BPM: 136. Massive tribal war drums, soaring choir chants, heavy cello Ostinato, mystical synths." },
-      { id: "music_w3_spire_explore", title: "Neon Rain & Night Market", cat: "w3", prompt: "Cyberpunk Synthwave & Dark Jazz-Noir. BPM: 106. Pulsing analog bassline, smoky tenor saxophone solo with slapback delay, 808 trap hi-hats." },
-      { id: "music_w3_upper_city", title: "The Glass Spire (Cloud District)", cat: "w3", prompt: "Minimalist Cyber-Luxury & Glass Synthwave. BPM: 98. Crystal synthesizer arpeggios, cold sterile string orchestra, deep sub-bass pulses." },
-      { id: "music_w3_combat", title: "Spire Security Encounter", cat: "combat", prompt: "High-Octane Cyberpunk Darksynth. BPM: 135. Screaming saw-wave synth leads, heavy sidechained sub-bass, industrial electronic drum loops." },
-      { id: "music_w3_boss_phantom", title: "Phantom Prototype (Phase Blade Duel)", cat: "boss", prompt: "Darkwave Synth-Metal Boss Theme. BPM: 144. Dual dueling electric guitars, blistering synth arpeggiators, aggressive slap bass." },
-      { id: "music_w4_foundry_explore", title: "Slag Run & Conveyor Lines", cat: "w4", prompt: "Industrial Machine Techno & Slag Rhythms. BPM: 124. Pounding hydraulic four-on-the-floor beat, distorted synth bass, clanging steel machinery." },
-      { id: "music_w4_power_core", title: "The Meltdown Core", cat: "w4", prompt: "Ominous Dark Techno & Alarm Pulse. BPM: 130. Heavy analog Moog bass pulses, screaming radioactive synth sirens, rapid sequencer arpeggios." },
-      { id: "music_w4_combat", title: "Foundry Line Battle", cat: "combat", prompt: "Industrial Metal & Cyber Metal Groove. BPM: 140. Down-tuned 8-string metal guitars, pneumatic hammer percussion, relentless double-bass drumming." },
-      { id: "music_w4_boss_titan", title: "Titan Walker (Overheat Catastrophe)", cat: "boss", prompt: "Colossal Industrial Metal Boss Symphony. BPM: 148. Massive mechanical stomps, screaming guitar solos, blaring industrial horns." },
-      { id: "music_w5_void_explore", title: "The Silent Ring Walk", cat: "w5", prompt: "Zero-G Ambient Drone & Cosmic Space Music. BPM: 64. Massive lush reverb synth pads, delicate echo harp plucks, subtle radio static." },
-      { id: "music_w5_security_hub", title: "Command Bastion (Dominion Control)", cat: "w5", prompt: "Authoritarian Military Synthwave. BPM: 112. Cold mechanical synth brass stabs, precise electronic percussion, deep bass pulse." },
-      { id: "music_w5_combat", title: "Zero-G Skirmish", cat: "combat", prompt: "High-Tech Space Drum & Bass Breakbeat Battle. BPM: 165. Lightning-fast breakbeats, floating ambient synth chords, deep Reese bassline." },
-      { id: "music_w6_source_explore", title: "The Event Horizon", cat: "w6", prompt: "Sacred Choral Ambient & Cosmic Pipe Organ. BPM: 60. Ethereal soprano choir chords, massive celestial pipe organ, low church bell chimes." },
-      { id: "music_w6_the_center", title: "Singularity Nexus", cat: "w6", prompt: "Avant-Garde Orchestral Drone & Harmonic Resonance. BPM: 54. Soaring solo cello, harmonic glass harmonica, swirling ethereal synth textures." },
-      { id: "music_w6_boss_final", title: "Ascended Vale (The Source Symphony)", cat: "boss", prompt: "Full Symphonic Metal & Sacred Choral Masterpiece. BPM: 152. 60-piece orchestra, full operatic choir, lead guitar, church organ." },
-      { id: "music_cinematic_prologue", title: "The Launch & The Fall", cat: "cinematic", prompt: "Emotional Cinematic Narrative Score. BPM: 78. Solo acoustic guitar evolving into French horn, rising orchestra, timpani rolls." },
-      { id: "music_cinematic_crash", title: "Planetary Impact", cat: "cinematic", prompt: "Ambient Disaster Score & Deep Resonance. BPM: 50. Deep sub-bass impact thump, descending string glissandos, entry synths." },
-      { id: "music_elaras_song", title: "Elara's Complete Song (Tape 08)", cat: "cinematic", prompt: "80s Vintage Lofi Folk-Pop Cassette with Soft Female Vocals. BPM: 86. Fingerpicked acoustic guitar, celesta, warm bass, soft soprano vocals." },
-      { id: "music_credits_ending", title: "The Great Frontier (End Credits Suite)", cat: "cinematic", prompt: "80s Nostalgic Synth-Pop / Soft Rock Anthem. BPM: 104. Simmons 80s drum kit, 12-string acoustic guitar, soaring saxophone solo." },
-      { id: "music_epilogue", title: "A New Orbit (Post-Game Reflection)", cat: "cinematic", prompt: "Peaceful Ambient Guitar & Celestial Tape Loop. BPM: 68. Gentle acoustic guitar picking, Fender Rhodes piano echoing into space reverb." },
-      { id: "music_fishing_ambient", title: "Tideglass Angler (Relaxing Fishing)", cat: "activities", prompt: "Relaxing Acoustic Water Folk & Lofi Chill. BPM: 72. Fingerstyle nylon guitar, wooden kalimba chimes, atmospheric water ripples." },
-      { id: "music_arcade_cabinet", title: "Hyperion 1986 (Arcade Cabinet Theme)", cat: "activities", prompt: "1980s Chiptune & Upbeat FM Synth Theme. BPM: 130. Bouncy 8-bit square-wave lead melody, punchy FM slap bass, 16-bit arcade snare." },
-      { id: "music_tinkering_focus", title: "Workstation Flow (Tinkering)", cat: "activities", prompt: "Cozy Mechanical Downtempo & Lofi Study Beats. BPM: 80. Mellow electric piano chords, soft metallic clinks, tape delay guitar." },
-      { id: "music_cooking_kitchen", title: "Mess Hall Stew (Cooking Mini-Game)", cat: "activities", prompt: "Playful Acoustic Kitchen Swing & Django Jazz. BPM: 110. Upbeat gypsy jazz guitar, pizzicato strings, wooden spoon clacks." },
-      { id: "music_shop_cozy", title: "Wandering Trader (Shops & Markets)", cat: "activities", prompt: "Exotic Frontier Trade Groove & World Lofi. BPM: 88. Middle-Eastern oud, hand drums, Fender Rhodes chords, synth flute." }
-    ];
+    const DATA = window.STARBORN_AUDIO_BOARD || { items: [] };
+    const APPROVALS_KEY = "starborn_audio_approvals_v3";
+    let decisions = JSON.parse(localStorage.getItem(APPROVALS_KEY) || "{}");
+    let activeCat = "all";
+    const selectedSrcByItem = {};
+    let audioCtx = null;
+    let demoNodes = [];
 
-    const grid = document.getElementById("track-grid");
+    function esc(s) {
+      return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
 
-    function renderTracks(filter = 'all') {
-      grid.innerHTML = "";
-      const filtered = filter === 'all' ? tracks : tracks.filter(t => t.cat === filter);
-      
-      filtered.forEach(t => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-          <div class="card-header">
-            <div>
-              <h3 class="card-title">${t.title}</h3>
-              <div class="card-id">${t.id}.mp3</div>
-            </div>
-            <span class="badge">${t.cat}</span>
-          </div>
-          <div class="prompt-box">${t.prompt}</div>
-          <audio controls preload="none" src="../app/src/main/res/raw/${t.id}.mp3"></audio>
-        `;
-        grid.appendChild(card);
+    const CAT_LABELS = {
+      all: "All",
+      core: "Core & Ship",
+      character: "Characters",
+      stinger: "Motif Stingers",
+      w1: "W1 Mines",
+      w2: "W2 Sector 9",
+      w3: "W3 Spire",
+      w4: "W4 Foundry",
+      w5: "W5 Orbital Ring",
+      w6: "W6 The Source",
+      combat: "Combat",
+      boss: "Bosses",
+      cinematic: "Cinematics",
+      activities: "Activities",
+      sfx_ui: "SFX: UI",
+      sfx_world_interactions: "SFX: World",
+      sfx_combat: "SFX: Combat",
+      sfx_activities: "SFX: Activities"
+    };
+
+    function getSourceOptions(item) {
+      const opts = [];
+      if (item.mastered) opts.push({ key: "mastered", label: "Mastered", path: item.mastered.path, metrics: item.mastered.metrics });
+      (item.takes || []).forEach((t, idx) => {
+        const rankBadge = t.shortlist_label ? `[${t.shortlist_label}] ` : "";
+        opts.push({
+          key: `take_${idx}`,
+          label: `${rankBadge}${t.name} (${t.provider})`,
+          path: t.path,
+          metrics: t.metrics,
+          analysis: t.analysis,
+          suno_url: t.suno_url,
+          shortlist_label: t.shortlist_label,
+          ai_eval: t.ai_eval_argon || t.ai_eval_hydrogen
+        });
       });
+      if (item.reference_wav) opts.push({ key: "ref_wav", label: "MIDI Reference WAV", path: `../${item.reference_wav}`, metrics: null });
+      if (item.live_path) opts.push({ key: "live", label: "Current Live", path: item.live_path, metrics: null });
+      if (item.backup_path) opts.push({ key: "backup", label: "Backup Pre-Rebrand", path: item.backup_path, metrics: null });
+      return opts;
     }
 
-    function filterCategory(cat) {
-      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-      event.target.classList.add("active");
-      renderTracks(cat);
+    function initControls() {
+      const counts = { all: DATA.items.length };
+      const batches = new Set();
+      DATA.items.forEach(i => {
+        counts[i.category] = (counts[i.category] || 0) + 1;
+        if (i.batch_id) batches.add(i.batch_id);
+      });
+      const bSel = document.getElementById("batch-filter");
+      const curBatch = bSel.value || "all";
+      bSel.innerHTML = `<option value="all">All Batches</option>` + Array.from(batches).sort().map(b => `<option value="${esc(b)}">${esc(b)}</option>`).join("");
+      bSel.value = curBatch;
+
+      const fDiv = document.getElementById("filters");
+      fDiv.innerHTML = Object.keys(CAT_LABELS)
+        .filter(k => k === "all" || counts[k])
+        .map(k => `<button class="filter-btn ${k === activeCat ? 'active' : ''}" onclick="setCat('${k}')">${CAT_LABELS[k]} (${counts[k] || 0})</button>`)
+        .join("");
+
+      const tracks = DATA.items.filter(i => i.kind === "track" && (i.mastered || i.live_path));
+      const selA = document.getElementById("xfade-a");
+      const selB = document.getElementById("xfade-b");
+      const optsHtml = tracks.map(t => `<option value="${esc(t.id)}">${esc(t.id)}</option>`).join("");
+      selA.innerHTML = optsHtml;
+      selB.innerHTML = optsHtml;
+      const comb = tracks.find(t => t.category === "combat");
+      if (comb) selB.value = comb.id;
+
+      const missing = DATA.items.filter(i => !i.live_path).length;
+      const mastered = DATA.items.filter(i => i.mastered).length;
+      const sunoPlan = DATA.suno_plan || {};
+      const creditsStr = sunoPlan.monthly_credit_allowance ? ` · Suno Credits: ${sunoPlan.credits_consumed || 0}/${sunoPlan.monthly_credit_allowance}` : "";
+      document.getElementById("summary-line").textContent =
+        `${DATA.aesthetic || "Starborn"} · ${DATA.items.length} cues · ${mastered} mastered · ${missing} new pending${creditsStr} · GF tapes locked`;
     }
 
-    renderTracks('all');
+    function setCat(cat) {
+      activeCat = cat;
+      initControls();
+      render();
+    }
+
+    function setDecision(id, decision, candidate) {
+      const prev = decisions[id] || {};
+      const fbEl = document.getElementById(`fb_${id}`);
+      const feedback = fbEl ? fbEl.value : (prev.feedback || "");
+      decisions[id] = {
+        cue_id: id,
+        decision: decision,
+        candidate: candidate || prev.candidate || null,
+        feedback: feedback,
+        approved: decision === "approve",
+        at: new Date().toISOString()
+      };
+      localStorage.setItem(APPROVALS_KEY, JSON.stringify(decisions));
+      render();
+    }
+
+    function updateFeedback(id, text) {
+      const prev = decisions[id] || { cue_id: id, decision: "revise" };
+      prev.feedback = text;
+      decisions[id] = prev;
+      localStorage.setItem(APPROVALS_KEY, JSON.stringify(decisions));
+    }
+
+    function clearApprovals() {
+      decisions = {};
+      localStorage.removeItem(APPROVALS_KEY);
+      render();
+    }
+
+    function exportDecisions() {
+      const payload = { exported_at: new Date().toISOString(), decisions: Object.values(decisions) };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "review_decisions.json";
+      a.click();
+    }
+
+    function exportApprovals() {
+      const approvedMap = {};
+      Object.entries(decisions).forEach(([k, v]) => {
+        if (v && (v.decision === "approve" || v.approved)) approvedMap[k] = v;
+      });
+      const blob = new Blob([JSON.stringify(approvedMap, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "approved_takes.json";
+      a.click();
+    }
+
+    function selectSrc(id, key) {
+      selectedSrcByItem[id] = key;
+      render();
+    }
+
+    function testLoopSeam(id) {
+      const audioEl = document.getElementById(`audio_${id}`);
+      if (!audioEl) return;
+      audioEl.loop = true;
+      const jump = () => {
+        if (isFinite(audioEl.duration) && audioEl.duration > 5) {
+          audioEl.currentTime = Math.max(0, audioEl.duration - 4.0);
+        }
+        audioEl.play();
+      };
+      if (audioEl.readyState >= 1) jump();
+      else {
+        audioEl.addEventListener("loadedmetadata", jump, { once: true });
+        audioEl.load();
+      }
+    }
+
+    async function runCrossfadeDemo() {
+      stopCrossfadeDemo();
+      const idA = document.getElementById("xfade-a").value;
+      const idB = document.getElementById("xfade-b").value;
+      const itemA = DATA.items.find(i => i.id === idA);
+      const itemB = DATA.items.find(i => i.id === idB);
+      if (!itemA || !itemB) return;
+      const urlA = (itemA.mastered && itemA.mastered.path) || itemA.live_path;
+      const urlB = (itemB.mastered && itemB.mastered.path) || itemB.live_path;
+      if (!urlA || !urlB) return;
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      await audioCtx.resume();
+      const elA = new Audio(urlA);
+      const elB = new Audio(urlB);
+      elA.loop = true;
+      elB.loop = true;
+      const srcA = audioCtx.createMediaElementSource(elA);
+      const srcB = audioCtx.createMediaElementSource(elB);
+      const gainA = audioCtx.createGain();
+      const gainB = audioCtx.createGain();
+      srcA.connect(gainA).connect(audioCtx.destination);
+      srcB.connect(gainB).connect(audioCtx.destination);
+
+      const t0 = audioCtx.currentTime;
+      gainA.gain.setValueAtTime(1, t0);
+      gainB.gain.setValueAtTime(0, t0);
+      await elA.play();
+
+      const steps = 32;
+      const fadeSec = 1.2;
+      setTimeout(async () => {
+        await elB.play();
+        const start = audioCtx.currentTime;
+        for (let i = 0; i <= steps; i++) {
+          const frac = i / steps;
+          const t = start + frac * fadeSec;
+          gainA.gain.linearRampToValueAtTime(Math.cos(frac * Math.PI / 2), t);
+          gainB.gain.linearRampToValueAtTime(Math.sin(frac * Math.PI / 2), t);
+        }
+        setTimeout(() => elA.pause(), (fadeSec + 0.1) * 1000);
+      }, 2200);
+      demoNodes = [elA, elB];
+    }
+
+    function stopCrossfadeDemo() {
+      demoNodes.forEach(el => { try { el.pause(); } catch (_) {} });
+      demoNodes = [];
+    }
+
+    function render() {
+      const q = document.getElementById("search-box").value.trim().toLowerCase();
+      const bf = document.getElementById("batch-filter").value;
+      const sf = document.getElementById("status-filter").value;
+      const list = DATA.items.filter(item => {
+        if (activeCat !== "all" && item.category !== activeCat) return false;
+        if (bf !== "all" && item.batch_id !== bf) return false;
+        const dec = decisions[item.id];
+        const effStatus = (dec && dec.decision) || item.production_status || "";
+        if (sf === "pilot" && item.batch_id !== "batch_0_pilot") return false;
+        if (sf === "ready_for_review" && effStatus !== "ready_for_review" && effStatus !== "candidates_ready") return false;
+        if (sf === "missing" && item.live_path) return false;
+        if (sf === "has_takes" && (!item.takes || item.takes.length === 0)) return false;
+        if (sf === "mastered" && !item.mastered) return false;
+        if (sf === "approved" && !(dec && dec.decision === "approve") && effStatus !== "approved" && effStatus !== "integrated") return false;
+        if (sf === "reroll" && !["reroll", "revise", "hold", "reroll_requested", "revision_requested", "on_hold"].includes(effStatus)) return false;
+        if (q) {
+          const hay = `${item.id} ${item.title} ${item.batch_id || ""} ${item.key} ${(item.motifs || []).join(" ")} ${item.prompt}`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+
+      const grid = document.getElementById("grid");
+      grid.innerHTML = list.map(item => {
+        const opts = getSourceOptions(item);
+        const selKey = selectedSrcByItem[item.id] || (opts[0] && opts[0].key);
+        const selOpt = opts.find(o => o.key === selKey) || opts[0];
+        const dec = decisions[item.id];
+        const isApproved = (dec && dec.decision === "approve") || ["approved", "integrated", "verified_in_game"].includes(item.production_status);
+        const isWarn = (dec && ["reroll", "revise", "hold"].includes(dec.decision)) || ["reroll_requested", "revision_requested"].includes(item.production_status);
+        const metricsText = selOpt && selOpt.metrics
+          ? `${selOpt.metrics.duration_seconds || '?'}s · LUFS ${selOpt.metrics.integrated_lufs ?? '?'} · Peak ${selOpt.metrics.true_peak_dbtp ?? '?'} dBTP`
+          : (selOpt ? "Reference/live source" : "Not generated yet");
+
+        let analysisHtml = "";
+        if (selOpt && selOpt.analysis) {
+          const a = selOpt.analysis;
+          const kTop = (a.estimated_keys && a.estimated_keys[0]) ? `${a.estimated_keys[0].key} (${a.estimated_keys[0].correlation})` : "?";
+          const bpmTxt = a.tempo && a.tempo.estimated_bpm ? `${a.tempo.estimated_bpm} BPM` : "?";
+          const motifKeys = a.motif_alignment ? Object.entries(a.motif_alignment).map(([m, v]) => `${m}: cos=${v.exact_key_chroma_cosine}/win=${v.peak_passage_chroma_cosine} (${v.best_shift_semitones}st)`).join("; ") : "";
+          const cScore = a.computational_score ? `${a.computational_score.score}/100` : "?";
+          analysisHtml = `<div class="eval-box"><div><strong>DSP:</strong> Score ${cScore} · Key ${esc(kTop)} · Tempo ${esc(bpmTxt)}</div>${motifKeys ? `<div><strong>Chroma:</strong> ${esc(motifKeys)}</div>` : ""}${selOpt.suno_url ? `<div><a href="${esc(selOpt.suno_url)}" target="_blank" rel="noopener">Open in Suno Web</a></div>` : ""}</div>`;
+        } else if (item.shortlist && Object.keys(item.shortlist).length) {
+          const sl = Object.entries(item.shortlist).map(([lbl, info]) => {
+            const link = info.suno_url ? `<a href="${esc(info.suno_url)}" target="_blank" rel="noopener">${esc(lbl)}</a>` : `<strong>${esc(lbl)}</strong>`;
+            return `<div>${link}: ${esc(info.rationale || info.candidate_id)}</div>`;
+          }).join("");
+          analysisHtml = `<div class="eval-box">${sl}</div>`;
+        }
+
+        const hasShortlist = item.shortlist && Object.keys(item.shortlist).length > 0;
+        const candBtns = hasShortlist
+          ? ["A", "B", "C"].filter(k => item.shortlist[k]).map(k => `<button class="${dec && dec.decision === 'approve' && dec.candidate === k ? 'good' : ''}" onclick="setDecision('${item.id}', 'approve', '${k}')">Approve ${k}</button>`).join("")
+          : `<button class="${isApproved ? 'good' : ''}" onclick="setDecision('${item.id}', 'approve', '${selOpt ? esc(selOpt.key) : 'A'}')">${isApproved ? '✓ Approved' : 'Approve'}</button>`;
+
+        return `
+          <div class="card ${isApproved ? 'approved' : (isWarn ? 'reroll' : '')}">
+            <div class="card-top">
+              <div>
+                <h3 class="card-title">${esc(item.title)}</h3>
+                <div class="card-id">${esc(item.id)}${item.batch_id ? ` · ${esc(item.batch_id)}` : ""}</div>
+              </div>
+              <div class="badges">
+                <span class="badge">${esc(item.recommended_provider)}</span>
+                ${item.key ? `<span class="badge warm">${esc(item.key)}</span>` : ""}
+                ${item.bpm ? `<span class="badge">${item.bpm} BPM</span>` : ""}
+                ${item.production_status ? `<span class="badge ${isApproved ? 'ok' : (isWarn ? 'warn' : '')}">${esc(item.production_status)}</span>` : ""}
+                ${item.commercial_use_flagged ? `<span class="badge warn">VERIFY LICENSE</span>` : ""}
+                ${item.live_path ? `<span class="badge ok">LIVE</span>` : `<span class="badge">NEW</span>`}
+              </div>
+            </div>
+            ${(item.motifs && item.motifs.length) ? `<div class="badges">${item.motifs.map(m => `<span class="badge warm">${esc(m)}</span>`).join("")}</div>` : ""}
+            <div class="prompt">${esc(item.prompt)}</div>
+            <div class="source-row">
+              ${opts.map(o => `<button class="src-btn ${selOpt && o.key === selOpt.key ? 'active' : ''}" onclick="selectSrc('${item.id}', '${o.key}')">${esc(o.label)}</button>`).join("") || `<span class="metrics">Drop Suno WAV or connect Suno MCP</span>`}
+            </div>
+            ${selOpt ? `<audio id="audio_${item.id}" controls preload="none" src="${esc(selOpt.path)}"></audio>` : ""}
+            ${analysisHtml}
+            <div class="card-actions">
+              <span class="metrics">${esc(metricsText)}</span>
+              ${selOpt && item.loop ? `<button onclick="testLoopSeam('${item.id}')">Test Loop Seam</button>` : ""}
+            </div>
+            ${item.kind === "track" ? `
+              <div class="review-controls">
+                ${candBtns}
+                <button class="${dec && dec.decision === 'reroll' ? 'warn' : ''}" onclick="setDecision('${item.id}', 'reroll')">Reroll</button>
+                <button class="${dec && dec.decision === 'revise' ? 'warn' : ''}" onclick="setDecision('${item.id}', 'revise')">Revise</button>
+                <button onclick="setDecision('${item.id}', 'hold')">Hold</button>
+                <input id="fb_${item.id}" type="text" placeholder="Notes (e.g. more acoustic guitar, avoid sax)..." value="${esc((dec && dec.feedback) || '')}" oninput="updateFeedback('${item.id}', this.value)">
+              </div>` : ""}
+          </div>
+        `;
+      }).join("");
+    }
+
+    initControls();
+    render();
   </script>
 </body>
 </html>

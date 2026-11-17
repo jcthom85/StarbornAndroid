@@ -341,7 +341,12 @@ class DesktopAudioDriver(
                             readyClip.microsecondPosition = if (command.loop && !command.restartFromBeginning)
                                 musicPositions[cue] ?: 0L else 0L
                             if (!backgroundPaused) {
-                                if (command.loop) readyClip.loop(Clip.LOOP_CONTINUOUSLY) else readyClip.start()
+                                if (command.loop) {
+                                    applyLoopPoints(readyClip, command.loopStartMs, command.loopEndMs)
+                                    readyClip.loop(Clip.LOOP_CONTINUOUSLY)
+                                } else {
+                                    readyClip.start()
+                                }
                             }
                             if (command.fadeMs > 0) {
                                 fade(AudioCueType.MUSIC, playing, 1f, command.fadeMs)
@@ -438,16 +443,40 @@ class DesktopAudioDriver(
         }
     }
 
+    private fun applyLoopPoints(clip: Clip, loopStartMs: Long?, loopEndMs: Long?) {
+        if (loopStartMs == null && loopEndMs == null) return
+        val frameLength = clip.frameLength
+        if (frameLength <= 2) return
+        val frameRate = clip.format.frameRate.takeIf { it > 0f } ?: 44100f
+        val startFrame = (((loopStartMs ?: 0L).coerceAtLeast(0L) * frameRate) / 1000f)
+            .toInt()
+            .coerceIn(0, frameLength - 2)
+        val endFrame = loopEndMs?.let {
+            ((it * frameRate) / 1000f).toInt().coerceIn(startFrame + 1, frameLength - 1)
+        } ?: -1
+        try {
+            clip.setLoopPoints(startFrame, endFrame)
+        } catch (_: Exception) { }
+    }
+
     private fun fade(type: AudioCueType, playing: Playing, target: Float, duration: Long, done: () -> Unit = {}) {
         val version = ++playing.fadeVersion
         val start = playing.envelope
         val steps = (duration.coerceIn(0, 10_000) / 25).toInt().coerceAtLeast(1)
         val worker = workerFor(type)
+        val equalPower = type == AudioCueType.MUSIC || type == AudioCueType.AMBIENT
         for (step in 1..steps) {
             try {
                 worker.schedule({
                     if (!released && playing.fadeVersion == version && playing.clip.isOpen) {
-                        playing.envelope = start + (target - start) * step / steps
+                        val progress = step.toDouble() / steps.toDouble()
+                        val factor = if (equalPower) {
+                            if (target >= start) kotlin.math.sin(progress * Math.PI / 2.0).toFloat()
+                            else (1.0 - kotlin.math.cos(progress * Math.PI / 2.0)).toFloat()
+                        } else {
+                            progress.toFloat()
+                        }
+                        playing.envelope = start + (target - start) * factor
                         applyGain(type, playing)
                         if (step == steps) done()
                     }

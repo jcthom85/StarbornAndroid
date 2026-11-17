@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_cooking_sizzle",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:37.361156",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "03caa41aa38aa841a75ad068634b60bf9fdca8c3b4e8489193731608cd825cb1",
+  "bytes": 45497,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 97020,
+    "duration_seconds": 2.2,
+    "rms_dbfs": -19.56,
+    "peak_dbfs": -1.32,
+    "integrated_lufs": -11.4,
+    "true_peak_dbtp": -1.26,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -16.24,
+    "last_second_rms_dbfs": -36.77
+  },
+  "source_provenance": {
+    "cue_id": "sfx_cooking_sizzle",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:13:15.020404",
+    "source_filename": "sfx_cooking_sizzle.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "aee2a39add3fe09033857e1f83f91e50ce03917470629d3fdd6f20b09c03ef3a",
+    "bytes": 36405,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 97020,
+      "duration_seconds": 2.2,
+      "rms_dbfs": -20.18,
+      "peak_dbfs": 0.0,
+      "integrated_lufs": -12.11,
+      "true_peak_dbtp": 0.55,
+      "samples_at_full_scale": 4,
+      "first_second_rms_dbfs": -16.79,
+      "last_second_rms_dbfs": -41.7
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Hot cast iron pan sizzling with hearty frontier stew and wooden spoon stir",
+      "duration_seconds": 2.2,
+      "prompt_influence": 0.45
+    }
+  }
+}

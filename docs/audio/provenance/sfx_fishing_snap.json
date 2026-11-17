@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_fishing_snap",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:41.711453",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "cd6681c52accd7a632df75aa7786c001b0b0f53e2bed0c30c3ad132812b6d057",
+  "bytes": 21464,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 43996,
+    "duration_seconds": 0.9976,
+    "rms_dbfs": -20.24,
+    "peak_dbfs": -1.59,
+    "integrated_lufs": -16.69,
+    "true_peak_dbtp": -0.52,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -20.24,
+    "last_second_rms_dbfs": -20.24
+  },
+  "source_provenance": {
+    "cue_id": "sfx_fishing_snap",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:58.470684",
+    "source_filename": "sfx_fishing_snap.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "8366ab85f26819bebcc384e582556002907c0477373b5fabdea48ca3a5dc45c8",
+    "bytes": 17179,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 44100,
+      "duration_seconds": 1.0,
+      "rms_dbfs": -28.36,
+      "peak_dbfs": -3.76,
+      "integrated_lufs": -25.63,
+      "true_peak_dbtp": -3.31,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -28.36,
+      "last_second_rms_dbfs": -28.36
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Sudden sharp fishing line snap twang and water flop",
+      "duration_seconds": 1.0,
+      "prompt_influence": 0.45
+    }
+  }
+}

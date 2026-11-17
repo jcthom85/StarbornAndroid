@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_bunk_light_on",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:30.797098",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "3d9ebc28dad3485f275beb421000808b0eba04a720d3a2a56bcf6528f93809bf",
+  "bytes": 25121,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 52150,
+    "duration_seconds": 1.1825,
+    "rms_dbfs": -30.52,
+    "peak_dbfs": -1.79,
+    "integrated_lufs": -20.73,
+    "true_peak_dbtp": -1.47,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -29.79,
+    "last_second_rms_dbfs": -29.83
+  },
+  "source_provenance": {
+    "cue_id": "sfx_bunk_light_on",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:21.919921",
+    "source_filename": "sfx_bunk_light_on.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "2aef1aa6e6ad75bb369008bae23e75e71f9640909283dbed20640edf6df307ca",
+    "bytes": 20105,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 52920,
+      "duration_seconds": 1.2,
+      "rms_dbfs": -35.05,
+      "peak_dbfs": -1.45,
+      "integrated_lufs": -25.12,
+      "true_peak_dbtp": -0.19,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -34.26,
+      "last_second_rms_dbfs": -34.27
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Dusty metal room toggle switch clicking on, tired fluorescent tube buzzing alive in cramped quarters",
+      "duration_seconds": 1.2,
+      "prompt_influence": 0.45
+    }
+  }
+}

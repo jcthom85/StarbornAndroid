@@ -11,6 +11,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.Log
 import androidx.annotation.OptIn
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.datasource.RawResourceDataSource
@@ -19,6 +20,8 @@ import androidx.media3.exoplayer.ExoPlayer
 import com.example.starborn.core.platform.AudioDriver
 import java.util.EnumMap
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.math.cos
+import kotlin.math.sin
 
 private const val TAG = "AudioCuePlayer"
 private const val MISSING_SOUND_ID = -1
@@ -45,7 +48,7 @@ class AudioCuePlayer(
         .setMaxStreams(16)
         .build()
 
-    private val musicPlayer: ExoPlayer = ExoPlayer.Builder(context)
+    private fun createMusicExoPlayer(): ExoPlayer = ExoPlayer.Builder(context)
         .setAudioAttributes(
             androidx.media3.common.AudioAttributes.Builder()
                 .setContentType(androidx.media3.common.C.AUDIO_CONTENT_TYPE_MUSIC)
@@ -54,6 +57,19 @@ class AudioCuePlayer(
             true
         )
         .build()
+        .apply {
+            addListener(object : Player.Listener {
+                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                    if (mediaItemCount > 1 && currentMediaItemIndex == mediaItemCount - 1) {
+                        repeatMode = Player.REPEAT_MODE_ONE
+                    }
+                }
+            })
+        }
+
+    private var musicPlayer: ExoPlayer = createMusicExoPlayer()
+    private var standbyMusicPlayer: ExoPlayer = createMusicExoPlayer()
+    private var outgoingMusicAnimator: ValueAnimator? = null
     private val ambientPlayers = ConcurrentHashMap<String, ExoPlayer>()
 
     private val soundCache = ConcurrentHashMap<String, Int>()
@@ -61,6 +77,8 @@ class AudioCuePlayer(
     private val activeStreams = ConcurrentHashMap<Pair<AudioCueType, String>, Int>()
     private val fadeAnimators = EnumMap<AudioCueType, ValueAnimator>(AudioCueType::class.java)
     private var currentMusicCue: String? = null
+    private var currentMusicLoopStartMs: Long? = null
+    private var currentMusicInLoopBodyOnly: Boolean = false
     private val musicTrackPositions = ConcurrentHashMap<String, Long>()
     private var musicGain: Float = 1f
     private var ambientGain: Float = 1f
@@ -192,35 +210,144 @@ class AudioCuePlayer(
         }
     }
 
+    private fun absoluteMusicPosition(player: ExoPlayer): Long {
+        val ls = currentMusicLoopStartMs ?: 0L
+        if (ls <= 0L) return player.currentPosition
+        val inLoopBody = currentMusicInLoopBodyOnly || (player.mediaItemCount > 1 && player.currentMediaItemIndex == 1)
+        return if (inLoopBody) ls + player.currentPosition else player.currentPosition
+    }
+
     private fun playStreaming(player: ExoPlayer, type: AudioCueType, cueId: String, command: AudioCommand.Play) {
         val uri = resolveRawResourceUri(cueId) ?: return
         cancelFade(type)
         if (type == AudioCueType.MUSIC) {
             val previousCue = currentMusicCue
             if (previousCue != null && previousCue != cueId) {
-                musicTrackPositions[previousCue] = player.currentPosition
+                musicTrackPositions[previousCue] = absoluteMusicPosition(musicPlayer)
+                if (command.fadeMs > 0L && (musicPlayer.isPlaying || musicPlayer.playWhenReady)) {
+                    handOffMusicToStandbyFade(command.fadeMs)
+                } else {
+                    musicPlayer.stop()
+                }
+            } else {
+                musicPlayer.stop()
             }
             currentMusicCue = cueId
+        } else {
+            player.stop()
         }
-        player.stop()
-        player.setMediaItem(MediaItem.fromUri(uri))
-        player.repeatMode = if (command.loop) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
-        setLayerGainImmediate(type, if (command.fadeMs > 0L) 0f else command.gain)
-        player.prepare()
-        if (type == AudioCueType.MUSIC && command.loop) {
+
+        val activePlayer = if (type == AudioCueType.MUSIC) musicPlayer else player
+        val loopStartMs = command.loopStartMs?.coerceAtLeast(0L)
+        val loopEndMs = command.loopEndMs?.takeIf { it > (loopStartMs ?: 0L) }
+        val startPosition = if (type == AudioCueType.MUSIC && command.loop) {
             if (command.restartFromBeginning) musicTrackPositions.remove(cueId)
-            val startPosition = if (command.restartFromBeginning) 0L else musicTrackPositions[cueId] ?: 0L
-            player.seekTo(startPosition)
+            if (command.restartFromBeginning) 0L else musicTrackPositions[cueId] ?: 0L
+        } else 0L
+
+        if (type == AudioCueType.MUSIC && command.loop && ((loopStartMs ?: 0L) > 0L || loopEndMs != null)) {
+            val ls = loopStartMs ?: 0L
+            val le = loopEndMs ?: C.TIME_END_OF_SOURCE
+            currentMusicLoopStartMs = ls.takeIf { it > 0L }
+            if (ls > 0L && startPosition < ls) {
+                currentMusicInLoopBodyOnly = false
+                val introItem = MediaItem.Builder()
+                    .setUri(uri)
+                    .setClippingConfiguration(
+                        MediaItem.ClippingConfiguration.Builder()
+                            .setStartPositionMs(0L)
+                            .setEndPositionMs(ls)
+                            .build()
+                    )
+                    .build()
+                val loopItem = MediaItem.Builder()
+                    .setUri(uri)
+                    .setClippingConfiguration(
+                        MediaItem.ClippingConfiguration.Builder()
+                            .setStartPositionMs(ls)
+                            .setEndPositionMs(le)
+                            .build()
+                    )
+                    .build()
+                activePlayer.setMediaItems(listOf(introItem, loopItem))
+                activePlayer.repeatMode = Player.REPEAT_MODE_OFF
+            } else {
+                currentMusicInLoopBodyOnly = ls > 0L
+                val loopItem = MediaItem.Builder()
+                    .setUri(uri)
+                    .setClippingConfiguration(
+                        MediaItem.ClippingConfiguration.Builder()
+                            .setStartPositionMs(ls)
+                            .setEndPositionMs(le)
+                            .build()
+                    )
+                    .build()
+                activePlayer.setMediaItem(loopItem)
+                activePlayer.repeatMode = Player.REPEAT_MODE_ONE
+            }
+        } else {
+            if (type == AudioCueType.MUSIC) {
+                currentMusicLoopStartMs = null
+                currentMusicInLoopBodyOnly = false
+            }
+            activePlayer.setMediaItem(MediaItem.fromUri(uri))
+            activePlayer.repeatMode = if (command.loop) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
         }
-        player.playWhenReady = !pausedForBackground
+
+        setLayerGainImmediate(type, if (command.fadeMs > 0L) 0f else command.gain)
+        activePlayer.prepare()
+        if (type == AudioCueType.MUSIC && command.loop) {
+            val ls = loopStartMs ?: 0L
+            val seekTarget = if (ls > 0L && startPosition >= ls) (startPosition - ls).coerceAtLeast(0L) else startPosition
+            activePlayer.seekTo(seekTarget)
+        }
+        activePlayer.playWhenReady = !pausedForBackground
         if (pausedForBackground) resumeMusicAfterBackground = true
         if (command.fadeMs > 0L) scheduleGain(type, command.gain, command.fadeMs)
     }
 
+    private fun handOffMusicToStandbyFade(fadeMs: Long) {
+        outgoingMusicAnimator?.cancel()
+        outgoingMusicAnimator = null
+        standbyMusicPlayer.stop()
+        standbyMusicPlayer.clearMediaItems()
+
+        val outgoingDeck = musicPlayer
+        musicPlayer = standbyMusicPlayer
+        standbyMusicPlayer = outgoingDeck
+
+        val startVol = outgoingDeck.volume
+        if (fadeMs <= 0L || startVol <= 0.001f) {
+            outgoingDeck.stop()
+            outgoingDeck.clearMediaItems()
+            return
+        }
+        outgoingMusicAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = fadeMs
+            addUpdateListener { anim ->
+                val frac = (anim.animatedValue as Float).coerceIn(0f, 1f)
+                val curve = cos(frac.toDouble() * Math.PI / 2.0).toFloat()
+                outgoingDeck.volume = (startVol * curve).coerceIn(0f, 1f)
+            }
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    outgoingMusicAnimator = null
+                    outgoingDeck.stop()
+                    outgoingDeck.clearMediaItems()
+                }
+            })
+            start()
+        }
+    }
+
     override fun resetMusicPlayback() {
         cancelFade(AudioCueType.MUSIC)
+        outgoingMusicAnimator?.cancel()
+        outgoingMusicAnimator = null
         musicPlayer.stop()
         musicPlayer.clearMediaItems()
+        standbyMusicPlayer.stop()
+        standbyMusicPlayer.clearMediaItems()
         currentMusicCue = null
         musicTrackPositions.clear()
         resumeMusicAfterBackground = false
@@ -242,23 +369,25 @@ class AudioCuePlayer(
         cancelFade(type)
         if (type == AudioCueType.MUSIC) {
             currentMusicCue?.let { cue ->
-                musicTrackPositions[cue] = player.currentPosition
+                musicTrackPositions[cue] = absoluteMusicPosition(musicPlayer)
             }
+            if (fadeMs > 0 && (musicPlayer.isPlaying || musicPlayer.playWhenReady)) {
+                handOffMusicToStandbyFade(fadeMs)
+            } else {
+                musicPlayer.stop()
+            }
+            currentMusicCue = null
+            currentMusicLoopStartMs = null
+            currentMusicInLoopBodyOnly = false
+            musicGain = 0f
+            return
         }
         if (fadeMs > 0) {
             scheduleGain(type, 0f, fadeMs) {
                 player.stop()
-                when (type) {
-                    AudioCueType.MUSIC -> currentMusicCue = null
-                    else -> Unit
-                }
             }
         } else {
             player.stop()
-            when (type) {
-                AudioCueType.MUSIC -> currentMusicCue = null
-                else -> Unit
-            }
             setLayerGainImmediate(type, 0f)
         }
     }
@@ -280,7 +409,10 @@ class AudioCuePlayer(
 
     override fun release() {
         soundPool.release()
+        outgoingMusicAnimator?.cancel()
+        outgoingMusicAnimator = null
         musicPlayer.release()
+        standbyMusicPlayer.release()
         ambientPlayers.values.forEach { player ->
             player.stop()
             player.release()
@@ -299,6 +431,7 @@ class AudioCuePlayer(
         resumeMusicAfterBackground = musicPlayer.playWhenReady && currentMusicCue != null
         resumeAmbientAfterBackground = ambientPlayers.values.any { it.playWhenReady }
         musicPlayer.pause()
+        standbyMusicPlayer.pause()
         ambientPlayers.values.forEach { it.pause() }
         soundPool.autoPause()
     }
@@ -330,10 +463,18 @@ class AudioCuePlayer(
             onComplete?.invoke()
             return
         }
-        val animator = ValueAnimator.ofFloat(start, clampedTarget).apply {
+        val equalPower = type == AudioCueType.MUSIC || type == AudioCueType.AMBIENT
+        val animator = ValueAnimator.ofFloat(0f, 1f).apply {
             duration = durationMs
             addUpdateListener { animation ->
-                val gain = (animation.animatedValue as Float).coerceIn(0f, 1f)
+                val frac = (animation.animatedValue as Float).coerceIn(0f, 1f)
+                val curve = if (equalPower) {
+                    if (clampedTarget >= start) sin(frac.toDouble() * Math.PI / 2.0).toFloat()
+                    else (1.0 - cos(frac.toDouble() * Math.PI / 2.0)).toFloat()
+                } else {
+                    frac
+                }
+                val gain = (start + (clampedTarget - start) * curve).coerceIn(0f, 1f)
                 setLayerGainImmediate(type, gain)
             }
             addListener(object : AnimatorListenerAdapter() {

@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_chime_splice",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:31.083250",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "c7c2395b3e5a65c2c570df43e3e06480516c32342360245a5651010c0bc3e094",
+  "bytes": 41317,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 88200,
+    "duration_seconds": 2.0,
+    "rms_dbfs": -13.01,
+    "peak_dbfs": -1.43,
+    "integrated_lufs": -6.85,
+    "true_peak_dbtp": -1.23,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -12.94,
+    "last_second_rms_dbfs": -13.08
+  },
+  "source_provenance": {
+    "cue_id": "sfx_chime_splice",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:33.175274",
+    "source_filename": "sfx_chime_splice.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "92d22d60ddb223fa9b8dba0f7f53f68052675f20c32b9fbe4c0fb4187baa7419",
+    "bytes": 33061,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 88200,
+      "duration_seconds": 2.0,
+      "rms_dbfs": -13.86,
+      "peak_dbfs": -0.0,
+      "integrated_lufs": -7.73,
+      "true_peak_dbtp": 0.38,
+      "samples_at_full_scale": 2,
+      "first_second_rms_dbfs": -13.8,
+      "last_second_rms_dbfs": -13.91
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Dry electronic circuitry suddenly overtaken by luminous singing crystal chime resonance and deep ocean pressure",
+      "duration_seconds": 2.0,
+      "prompt_influence": 0.45
+    }
+  }
+}

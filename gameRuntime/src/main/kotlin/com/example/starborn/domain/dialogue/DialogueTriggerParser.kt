@@ -124,7 +124,7 @@ object DialogueTriggerParser {
                 audioLayer = "music",
                 context = "restore"
             )
-            "sting", "play_sting" -> value.takeIf { it.isNotBlank() }?.let {
+            "sting", "play_sting", "motif", "play_motif" -> value.takeIf { it.isNotBlank() }?.let {
                 EventAction(
                     type = "audio_layer",
                     audioLayer = "battle",

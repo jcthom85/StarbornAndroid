@@ -1,0 +1,56 @@
+{
+  "cue_id": "ui_click",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:54.147337",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -14.0,
+  "sha256": "3716d245d9ea14044016836b16869a550ff02c70b0c5f636178fc268a683bb87",
+  "bytes": 8403,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 15582,
+    "duration_seconds": 0.3533,
+    "rms_dbfs": -26.21,
+    "peak_dbfs": -0.26,
+    "integrated_lufs": null,
+    "true_peak_dbtp": -0.36,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -26.21,
+    "last_second_rms_dbfs": -26.21
+  },
+  "source_provenance": {
+    "cue_id": "ui_click",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:10:28.082896",
+    "source_filename": "ui_click.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "041ba2549246c45bdf158e021b2a080544452a631f64ec1e7518920c43af03d0",
+    "bytes": 8820,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 21168,
+      "duration_seconds": 0.48,
+      "rms_dbfs": -31.56,
+      "peak_dbfs": -2.38,
+      "integrated_lufs": -24.45,
+      "true_peak_dbtp": -2.25,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -31.56,
+      "last_second_rms_dbfs": -31.56
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Short dry mechanical wood-and-metal button click, crisp transient spike, clean 100ms tail",
+      "duration_seconds": 0.5,
+      "prompt_influence": 0.45
+    }
+  }
+}

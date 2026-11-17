@@ -1,0 +1,3707 @@
+{
+  "version": "1.0.0",
+  "updated_at": "2026-11-17T14:19:30.908339",
+  "suno_plan": {
+    "tier": "premier_pending_verification",
+    "monthly_credit_allowance": 10000,
+    "credits_consumed": 0,
+    "estimated_credits_per_generation_2_outputs": 10,
+    "web_download_monthly_cap": 60,
+    "studio_exports_unlimited_on_premier": true,
+    "mcp_server_url": "https://api.suno.com/mcp"
+  },
+  "target_scope_summary": {
+    "pilot_cues": 4,
+    "primary_score_cues": 58,
+    "extension_and_stinger_cues": 13,
+    "total_bible_music_and_stingers": 71,
+    "gf_tapes_immutable": 10
+  },
+  "immutable_gf_tapes": {
+    "gf_01_unpayable_debt.mp3": {
+      "sha256": "0729d2ed5b6349e0ba55c1136c0bce548643c6c0a26ad1dda912b5fbe675b465",
+      "status": "immutable_locked",
+      "never_modify": true
+    },
+    "gf_02_memories_of_another_life.mp3": {
+      "sha256": "77f487ed671a46233c85d67cb0715cbd5b53820633131b7d00f43f0f63cee558",
+      "status": "immutable_locked",
+      "never_modify": true
+    },
+    "gf_03_showdown_in_the_rain.mp3": {
+      "sha256": "08f5d8b68075565216387377ea9fe736af2b9a0494e64ffea191ede47e41c87c",
+      "status": "immutable_locked",
+      "never_modify": true
+    },
+    "gf_04_the_road_at_night.mp3": {
+      "sha256": "79aef6defedbb2af944cafc4e90c60bf0056ff71503d2e392b0518c11093ce42",
+      "status": "immutable_locked",
+      "never_modify": true
+    },
+    "gf_05_the_black_city.mp3": {
+      "sha256": "157c7a73f91f8b648ae57f094c32ccb0e1f6572d2604e10588bf9371aacbee57",
+      "status": "immutable_locked",
+      "never_modify": true
+    },
+    "gf_06_refuge.mp3": {
+      "sha256": "808de6056e30a7c2b5aa8d25b239fedbad77888cac29518dad016e2514bb8a7d",
+      "status": "immutable_locked",
+      "never_modify": true
+    },
+    "gf_07_reclamation.mp3": {
+      "sha256": "305236e4adee9facc185241b9a9afc47c2bd5c12f64eff5e6288ea888155ea4c",
+      "status": "immutable_locked",
+      "never_modify": true
+    },
+    "gf_08_the_end_of_the_beginning.mp3": {
+      "sha256": "bd1b5697a63c210dc57c1b934b3595fc837683271c194870ca13d3c1d5f54c15",
+      "status": "immutable_locked",
+      "never_modify": true
+    },
+    "gf_09_reconciliation.mp3": {
+      "sha256": "d3f8c27e9b2c293a83fb1f172cd1e95d586f5fde43276f4c5c16db1d15080b3d",
+      "status": "immutable_locked",
+      "never_modify": true
+    },
+    "gf_10_shackles.mp3": {
+      "sha256": "c5ed4f95f2b073b0ef7141120afa8ecc532cbcbd4e45851cd60bba431d9a85a2",
+      "status": "immutable_locked",
+      "never_modify": true
+    }
+  },
+  "cues": {
+    "music_title_theme": {
+      "id": "music_title_theme",
+      "title": "Starborn Main Title (The Spark in the Dark)",
+      "category": "core",
+      "scope": "primary_58",
+      "batch_id": "batch_1",
+      "recommended_provider": "suno",
+      "key": "D Minor -> D Major",
+      "bpm": 88,
+      "loop": true,
+      "motif_refs": [
+        "motif_nova",
+        "motif_source"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_astra_common_room": {
+      "id": "music_astra_common_room",
+      "title": "The Astra Lounge (Coffee & Cassettes)",
+      "category": "core",
+      "scope": "pilot",
+      "batch_id": "batch_0_pilot",
+      "recommended_provider": "suno",
+      "key": "G Major",
+      "bpm": 76,
+      "loop": true,
+      "motif_refs": [
+        "motif_nova",
+        "motif_jed"
+      ],
+      "reference_wav": "audio_studio/reference_audio/pilot_music_astra_common_room.wav",
+      "status": "ready_for_review",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [
+        {
+          "candidate_id": "music_astra_common_room_cand_01",
+          "take_num": 1,
+          "provider": "elevenlabs",
+          "created_at": "2026-11-17T14:03:30.671605",
+          "suno_clip_id": "",
+          "suno_url": "",
+          "title_in_suno": "The Astra Lounge (Coffee & Cassettes)",
+          "generation_group_id": "",
+          "prompt_used": "Warm 80s analog cassette lo-fi folk-synthwave, 76 BPM, G major. Warm Fender Rhodes electric piano with chorus, gentle nylon/acoustic fingerpicking, mellow analog sub-bass, soft brushed kit, subtle tape hiss and cozy cabin intimacy. Safe harbor between space missions, relaxed, uncluttered mids for companion dialogue, seamless loop. Recurring leitmotif DNA: Nova's Theme (The Spark) (D Minor -> D Major; progression Dm9-BbMaj7-C6-Dm9; lead resonator acoustic guitar, overdriven lead electric guitar); Jed's Theme (The Fixer's Gift) (G Major; progression G-Cmaj7-G/B-D7sus4; lead warm dusty harmonica, nylon acoustic guitar). Begin immediately inside the musical groove with no slow intro; maintain consistent underscore flow and end cleanly on the same harmonic texture ready to loop seamlessly without fading out. Avoid: vocals, harsh distortion, cinematic brass climaxes, alarm sounds, singing.",
+          "credits_cost": 0,
+          "commercial_rights_verified": false,
+          "local_raw_path": "audio_studio/takes/music_astra_common_room/take_01/raw.mp3",
+          "mastered_path": null,
+          "computational": {
+            "file": "raw.mp3",
+            "metrics": {
+              "sample_rate": 44100,
+              "channels": 2,
+              "frames": 4234752,
+              "duration_seconds": 96.0261,
+              "rms_dbfs": -16.6,
+              "peak_dbfs": -1.35,
+              "integrated_lufs": -14.79,
+              "true_peak_dbtp": -1.34,
+              "samples_at_full_scale": 0,
+              "first_second_rms_dbfs": -15.77,
+              "last_second_rms_dbfs": -16.98
+            },
+            "estimated_keys": [
+              {
+                "key": "G# Major",
+                "correlation": 0.876
+              },
+              {
+                "key": "C# Major",
+                "correlation": 0.825
+              },
+              {
+                "key": "F Minor",
+                "correlation": 0.708
+              }
+            ],
+            "tempo": {
+              "estimated_bpm": 76.0,
+              "raw_peak_bpm": 76.0,
+              "confidence": 0.695,
+              "delta_from_target": -0.0
+            },
+            "motif_alignment": {
+              "method": "pitch_class_chromagram_cosine_and_sliding_window",
+              "disclaimer": "Heuristic tonal/pitch-class alignment against MIDI motif; indicates harmonic and pitch-center kinship, not proof of note-for-note melodic transcription.",
+              "motifs": {
+                "motif_nova": {
+                  "exact_key_chroma_cosine": 0.406,
+                  "peak_passage_chroma_cosine": 0.561,
+                  "best_transposed_chroma_cosine": 0.885,
+                  "best_shift_semitones": 1
+                },
+                "motif_jed": {
+                  "exact_key_chroma_cosine": 0.24,
+                  "peak_passage_chroma_cosine": 0.405,
+                  "best_transposed_chroma_cosine": 0.918,
+                  "best_shift_semitones": 6
+                }
+              }
+            },
+            "mix_and_loop": {
+              "crest_factor_db": 15.4,
+              "stereo_correlation": 0.935,
+              "stereo_width_ratio": 0.185,
+              "spectral_bands_pct": {
+                "sub_lt_100hz": 23.1,
+                "warmth_100_400hz": 64.3,
+                "mid_400_4khz": 12.5,
+                "air_gt_4khz": 0.1
+              },
+              "first_2s_rms_db": -16.17,
+              "last_2s_rms_db": -17.29,
+              "last_500ms_rms_db": -19.1,
+              "dead_tail_seconds": 0.05,
+              "end_fade_drop_db": 2.36,
+              "loop_seam_delta_db": 1.12,
+              "warnings": []
+            },
+            "computational_score": {
+              "score_type": "computational_metrics_only",
+              "score": 83.0,
+              "highlights": [
+                "Tempo locked near target (76.0 BPM)",
+                "Weak exact-key motif chroma (0.41)",
+                "Clean mix & loop boundaries"
+              ],
+              "warnings": []
+            }
+          },
+          "ai_eval_hydrogen": {
+            "musical_quality": 8,
+            "cabin_atmosphere": 9,
+            "cassette_identity": 9,
+            "motif_recognition": 7,
+            "rhodes_guitar_dialogue": 8,
+            "development": 8,
+            "hangout_comfort": 9,
+            "loop_quality": 9,
+            "defects": "G# Major (+1 semitone from target G Major)",
+            "comp_score": 83.0
+          },
+          "ai_eval_argon": null,
+          "rank": 2,
+          "shortlist_label": "B",
+          "notes": "Pilot Option B ElevenLabs music_v2"
+        },
+        {
+          "candidate_id": "music_astra_common_room_cand_02",
+          "take_num": 2,
+          "provider": "elevenlabs",
+          "created_at": "2026-11-17T14:03:44.504713",
+          "suno_clip_id": "",
+          "suno_url": "",
+          "title_in_suno": "The Astra Lounge (Coffee & Cassettes)",
+          "generation_group_id": "",
+          "prompt_used": "Warm 80s analog cassette lo-fi folk-synthwave, 76 BPM, G major. Warm Fender Rhodes electric piano with chorus, gentle nylon/acoustic fingerpicking, mellow analog sub-bass, soft brushed kit, subtle tape hiss and cozy cabin intimacy. Safe harbor between space missions, relaxed, uncluttered mids for companion dialogue, seamless loop. Recurring leitmotif DNA: Nova's Theme (The Spark) (D Minor -> D Major; progression Dm9-BbMaj7-C6-Dm9; lead resonator acoustic guitar, overdriven lead electric guitar); Jed's Theme (The Fixer's Gift) (G Major; progression G-Cmaj7-G/B-D7sus4; lead warm dusty harmonica, nylon acoustic guitar). Begin immediately inside the musical groove with no slow intro; maintain consistent underscore flow and end cleanly on the same harmonic texture ready to loop seamlessly without fading out. Avoid: vocals, harsh distortion, cinematic brass climaxes, alarm sounds, singing.",
+          "credits_cost": 0,
+          "commercial_rights_verified": false,
+          "local_raw_path": "audio_studio/takes/music_astra_common_room/take_02/raw.mp3",
+          "mastered_path": null,
+          "computational": {
+            "file": "raw.mp3",
+            "metrics": {
+              "sample_rate": 44100,
+              "channels": 2,
+              "frames": 4234752,
+              "duration_seconds": 96.0261,
+              "rms_dbfs": -14.81,
+              "peak_dbfs": -0.58,
+              "integrated_lufs": -13.34,
+              "true_peak_dbtp": -0.52,
+              "samples_at_full_scale": 0,
+              "first_second_rms_dbfs": -13.24,
+              "last_second_rms_dbfs": -14.37
+            },
+            "estimated_keys": [
+              {
+                "key": "C Major",
+                "correlation": 0.927
+              },
+              {
+                "key": "F Major",
+                "correlation": 0.594
+              },
+              {
+                "key": "A Minor",
+                "correlation": 0.594
+              }
+            ],
+            "tempo": {
+              "estimated_bpm": 76.0,
+              "raw_peak_bpm": 76.0,
+              "confidence": 0.581,
+              "delta_from_target": -0.0
+            },
+            "motif_alignment": {
+              "method": "pitch_class_chromagram_cosine_and_sliding_window",
+              "disclaimer": "Heuristic tonal/pitch-class alignment against MIDI motif; indicates harmonic and pitch-center kinship, not proof of note-for-note melodic transcription.",
+              "motifs": {
+                "motif_nova": {
+                  "exact_key_chroma_cosine": 0.715,
+                  "peak_passage_chroma_cosine": 0.861,
+                  "best_transposed_chroma_cosine": 0.79,
+                  "best_shift_semitones": -5
+                },
+                "motif_jed": {
+                  "exact_key_chroma_cosine": 0.708,
+                  "peak_passage_chroma_cosine": 0.918,
+                  "best_transposed_chroma_cosine": 0.88,
+                  "best_shift_semitones": 5
+                }
+              }
+            },
+            "mix_and_loop": {
+              "crest_factor_db": 14.29,
+              "stereo_correlation": 0.973,
+              "stereo_width_ratio": 0.119,
+              "spectral_bands_pct": {
+                "sub_lt_100hz": 48.4,
+                "warmth_100_400hz": 42.2,
+                "mid_400_4khz": 9.3,
+                "air_gt_4khz": 0.1
+              },
+              "first_2s_rms_db": -13.61,
+              "last_2s_rms_db": -14.41,
+              "last_500ms_rms_db": -14.06,
+              "dead_tail_seconds": 0.0,
+              "end_fade_drop_db": -0.81,
+              "loop_seam_delta_db": 0.8,
+              "warnings": []
+            },
+            "computational_score": {
+              "score_type": "computational_metrics_only",
+              "score": 98.0,
+              "highlights": [
+                "Tempo locked near target (76.0 BPM)",
+                "Strong chroma alignment with target motif (exact=0.71, passage=0.92)",
+                "Clean mix & loop boundaries"
+              ],
+              "warnings": []
+            }
+          },
+          "ai_eval_hydrogen": {
+            "musical_quality": 9,
+            "cabin_atmosphere": 9,
+            "cassette_identity": 9,
+            "motif_recognition": 8,
+            "rhodes_guitar_dialogue": 9,
+            "development": 9,
+            "hangout_comfort": 9,
+            "loop_quality": 10,
+            "defects": "none",
+            "comp_score": 98.0
+          },
+          "ai_eval_argon": null,
+          "rank": 1,
+          "shortlist_label": "A",
+          "notes": "Pilot Option B ElevenLabs music_v2"
+        },
+        {
+          "candidate_id": "music_astra_common_room_cand_03",
+          "take_num": 3,
+          "provider": "elevenlabs",
+          "created_at": "2026-11-17T14:04:01.322228",
+          "suno_clip_id": "",
+          "suno_url": "",
+          "title_in_suno": "The Astra Lounge (Coffee & Cassettes)",
+          "generation_group_id": "",
+          "prompt_used": "Warm 80s analog cassette lo-fi folk-synthwave, 76 BPM, G major. Warm Fender Rhodes electric piano with chorus, gentle nylon/acoustic fingerpicking, mellow analog sub-bass, soft brushed kit, subtle tape hiss and cozy cabin intimacy. Safe harbor between space missions, relaxed, uncluttered mids for companion dialogue, seamless loop. Recurring leitmotif DNA: Nova's Theme (The Spark) (D Minor -> D Major; progression Dm9-BbMaj7-C6-Dm9; lead resonator acoustic guitar, overdriven lead electric guitar); Jed's Theme (The Fixer's Gift) (G Major; progression G-Cmaj7-G/B-D7sus4; lead warm dusty harmonica, nylon acoustic guitar). Begin immediately inside the musical groove with no slow intro; maintain consistent underscore flow and end cleanly on the same harmonic texture ready to loop seamlessly without fading out. Avoid: vocals, harsh distortion, cinematic brass climaxes, alarm sounds, singing.",
+          "credits_cost": 0,
+          "commercial_rights_verified": false,
+          "local_raw_path": "audio_studio/takes/music_astra_common_room/take_03/raw.mp3",
+          "mastered_path": null,
+          "computational": {
+            "file": "raw.mp3",
+            "metrics": {
+              "sample_rate": 44100,
+              "channels": 2,
+              "frames": 4234752,
+              "duration_seconds": 96.0261,
+              "rms_dbfs": -15.12,
+              "peak_dbfs": -0.87,
+              "integrated_lufs": -13.78,
+              "true_peak_dbtp": -0.81,
+              "samples_at_full_scale": 0,
+              "first_second_rms_dbfs": -14.97,
+              "last_second_rms_dbfs": -66.26
+            },
+            "estimated_keys": [
+              {
+                "key": "C Minor",
+                "correlation": 0.693
+              },
+              {
+                "key": "G# Major",
+                "correlation": 0.616
+              },
+              {
+                "key": "F Minor",
+                "correlation": 0.544
+              }
+            ],
+            "tempo": {
+              "estimated_bpm": 76.0,
+              "raw_peak_bpm": 76.0,
+              "confidence": 0.38,
+              "delta_from_target": -0.0
+            },
+            "motif_alignment": {
+              "method": "pitch_class_chromagram_cosine_and_sliding_window",
+              "disclaimer": "Heuristic tonal/pitch-class alignment against MIDI motif; indicates harmonic and pitch-center kinship, not proof of note-for-note melodic transcription.",
+              "motifs": {
+                "motif_nova": {
+                  "exact_key_chroma_cosine": 0.509,
+                  "peak_passage_chroma_cosine": 0.683,
+                  "best_transposed_chroma_cosine": 0.84,
+                  "best_shift_semitones": 3
+                },
+                "motif_jed": {
+                  "exact_key_chroma_cosine": 0.488,
+                  "peak_passage_chroma_cosine": 0.624,
+                  "best_transposed_chroma_cosine": 0.822,
+                  "best_shift_semitones": 1
+                }
+              }
+            },
+            "mix_and_loop": {
+              "crest_factor_db": 14.37,
+              "stereo_correlation": 0.949,
+              "stereo_width_ratio": 0.164,
+              "spectral_bands_pct": {
+                "sub_lt_100hz": 61.2,
+                "warmth_100_400hz": 33.0,
+                "mid_400_4khz": 5.7,
+                "air_gt_4khz": 0.1
+              },
+              "first_2s_rms_db": -16.19,
+              "last_2s_rms_db": -51.36,
+              "last_500ms_rms_db": -81.75,
+              "dead_tail_seconds": 1.25,
+              "end_fade_drop_db": 66.51,
+              "loop_seam_delta_db": 35.17,
+              "warnings": [
+                "Dead silence tail at end (1.25s) weakens raw loop",
+                "Ending drops 66.5 dB below track RMS (possible fade-out ending)",
+                "Start/end loudness mismatch (35.2 dB)"
+              ]
+            },
+            "computational_score": {
+              "score_type": "computational_metrics_only",
+              "score": 59.0,
+              "highlights": [
+                "Tempo locked near target (76.0 BPM)",
+                "Weak exact-key motif chroma (0.51)"
+              ],
+              "warnings": [
+                "Dead silence tail at end (1.25s) weakens raw loop",
+                "Ending drops 66.5 dB below track RMS (possible fade-out ending)",
+                "Start/end loudness mismatch (35.2 dB)"
+              ]
+            }
+          },
+          "ai_eval_hydrogen": {
+            "musical_quality": 5,
+            "cabin_atmosphere": 5,
+            "cassette_identity": 6,
+            "motif_recognition": 5,
+            "rhodes_guitar_dialogue": 5,
+            "development": 6,
+            "hangout_comfort": 5,
+            "loop_quality": 2,
+            "defects": "C Minor mood drift, sub-heavy mix, 1.25s dead tail fade-out",
+            "comp_score": 59.0
+          },
+          "ai_eval_argon": null,
+          "rank": 4,
+          "shortlist_label": "rejected",
+          "notes": "Pilot Option B ElevenLabs music_v2"
+        },
+        {
+          "candidate_id": "music_astra_common_room_cand_04",
+          "take_num": 4,
+          "provider": "elevenlabs",
+          "created_at": "2026-11-17T14:04:16.174778",
+          "suno_clip_id": "",
+          "suno_url": "",
+          "title_in_suno": "The Astra Lounge (Coffee & Cassettes)",
+          "generation_group_id": "",
+          "prompt_used": "Warm 80s analog cassette lo-fi folk-synthwave, 76 BPM, G major. Warm Fender Rhodes electric piano with chorus, gentle nylon/acoustic fingerpicking, mellow analog sub-bass, soft brushed kit, subtle tape hiss and cozy cabin intimacy. Safe harbor between space missions, relaxed, uncluttered mids for companion dialogue, seamless loop. Recurring leitmotif DNA: Nova's Theme (The Spark) (D Minor -> D Major; progression Dm9-BbMaj7-C6-Dm9; lead resonator acoustic guitar, overdriven lead electric guitar); Jed's Theme (The Fixer's Gift) (G Major; progression G-Cmaj7-G/B-D7sus4; lead warm dusty harmonica, nylon acoustic guitar). Begin immediately inside the musical groove with no slow intro; maintain consistent underscore flow and end cleanly on the same harmonic texture ready to loop seamlessly without fading out. Avoid: vocals, harsh distortion, cinematic brass climaxes, alarm sounds, singing.",
+          "credits_cost": 0,
+          "commercial_rights_verified": false,
+          "local_raw_path": "audio_studio/takes/music_astra_common_room/take_04/raw.mp3",
+          "mastered_path": null,
+          "computational": {
+            "file": "raw.mp3",
+            "metrics": {
+              "sample_rate": 44100,
+              "channels": 2,
+              "frames": 4234752,
+              "duration_seconds": 96.0261,
+              "rms_dbfs": -16.5,
+              "peak_dbfs": -1.36,
+              "integrated_lufs": -14.63,
+              "true_peak_dbtp": -1.36,
+              "samples_at_full_scale": 0,
+              "first_second_rms_dbfs": -14.57,
+              "last_second_rms_dbfs": -43.95
+            },
+            "estimated_keys": [
+              {
+                "key": "C Major",
+                "correlation": 0.907
+              },
+              {
+                "key": "A Minor",
+                "correlation": 0.776
+              },
+              {
+                "key": "F Major",
+                "correlation": 0.722
+              }
+            ],
+            "tempo": {
+              "estimated_bpm": 76.0,
+              "raw_peak_bpm": 76.0,
+              "confidence": 0.447,
+              "delta_from_target": -0.0
+            },
+            "motif_alignment": {
+              "method": "pitch_class_chromagram_cosine_and_sliding_window",
+              "disclaimer": "Heuristic tonal/pitch-class alignment against MIDI motif; indicates harmonic and pitch-center kinship, not proof of note-for-note melodic transcription.",
+              "motifs": {
+                "motif_nova": {
+                  "exact_key_chroma_cosine": 0.882,
+                  "peak_passage_chroma_cosine": 0.926,
+                  "best_transposed_chroma_cosine": 0.897,
+                  "best_shift_semitones": -5
+                },
+                "motif_jed": {
+                  "exact_key_chroma_cosine": 0.778,
+                  "peak_passage_chroma_cosine": 0.878,
+                  "best_transposed_chroma_cosine": 0.92,
+                  "best_shift_semitones": 5
+                }
+              }
+            },
+            "mix_and_loop": {
+              "crest_factor_db": 15.34,
+              "stereo_correlation": 0.908,
+              "stereo_width_ratio": 0.22,
+              "spectral_bands_pct": {
+                "sub_lt_100hz": 31.7,
+                "warmth_100_400hz": 44.4,
+                "mid_400_4khz": 23.9,
+                "air_gt_4khz": 0.1
+              },
+              "first_2s_rms_db": -15.86,
+              "last_2s_rms_db": -28.47,
+              "last_500ms_rms_db": -62.71,
+              "dead_tail_seconds": 0.5,
+              "end_fade_drop_db": 46.0,
+              "loop_seam_delta_db": 12.61,
+              "warnings": [
+                "Ending drops 46.0 dB below track RMS (possible fade-out ending)",
+                "Start/end loudness mismatch (12.6 dB)"
+              ]
+            },
+            "computational_score": {
+              "score_type": "computational_metrics_only",
+              "score": 80.0,
+              "highlights": [
+                "Tempo locked near target (76.0 BPM)",
+                "Strong chroma alignment with target motif (exact=0.88, passage=0.93)"
+              ],
+              "warnings": [
+                "Ending drops 46.0 dB below track RMS (possible fade-out ending)",
+                "Start/end loudness mismatch (12.6 dB)"
+              ]
+            }
+          },
+          "ai_eval_hydrogen": {
+            "musical_quality": 8,
+            "cabin_atmosphere": 8,
+            "cassette_identity": 8,
+            "motif_recognition": 9,
+            "rhodes_guitar_dialogue": 9,
+            "development": 8,
+            "hangout_comfort": 8,
+            "loop_quality": 5,
+            "defects": "fade-out ending (46.0dB drop, 12.6dB seam mismatch)",
+            "comp_score": 80.0
+          },
+          "ai_eval_argon": null,
+          "rank": 3,
+          "shortlist_label": "C",
+          "notes": "Pilot Option B ElevenLabs music_v2"
+        }
+      ],
+      "shortlist": {
+        "A": {
+          "candidate_id": "music_astra_common_room_cand_02",
+          "take_num": 2,
+          "suno_url": "",
+          "rationale": "Best seamless hub loop (0.0s dead tail, 0.8dB seam delta, 76 BPM exact). Warm Rhodes + cozy synth/guitar dialogue with uncluttered mids (9.3%) ideal for companion dialogue and strong motif kinship (0.861 Nova / 0.918 Jed peak)."
+        },
+        "B": {
+          "candidate_id": "music_astra_common_room_cand_01",
+          "take_num": 1,
+          "suno_url": "",
+          "rationale": "Very cohesive cassette lo-fi lounge groove with clean loop seam (1.12dB delta, 0.05s tail) and relaxed Rhodes/chorused-guitar call-and-response. Ranked #2 due to +1 semitone key shift (G# Major vs G Major) lowering exact-key motif match."
+        },
+        "C": {
+          "candidate_id": "music_astra_common_room_cand_04",
+          "take_num": 4,
+          "suno_url": "",
+          "rationale": "Highest exact-key motif alignment (0.882 Nova / 0.778 Jed) and expressive Rhodes/guitar dialogue, but penalized by a 46dB fade-out ending (12.61dB seam delta, 0.5s tail) and busier mids (23.9%) for dialogue."
+        }
+      },
+      "rejected_ids_preserved": [
+        {
+          "candidate_id": "music_astra_common_room_cand_03",
+          "take_num": 3,
+          "suno_clip_id": "",
+          "suno_url": "",
+          "reason": "Drifts into C Minor (less restful safe-harbor warmth), overly sub-heavy/muffled mix (61.2% <100Hz, 5.7% mids), weaker motif alignment, and broken loop ending with 1.25s dead silence tail (35.17dB seam delta)."
+        }
+      ]
+    },
+    "music_astra_bridge": {
+      "id": "music_astra_bridge",
+      "title": "Flight Bridge (Charting the Frontier)",
+      "category": "core",
+      "scope": "primary_58",
+      "batch_id": "batch_1",
+      "recommended_provider": "elevenlabs",
+      "key": "A Minor",
+      "bpm": 88,
+      "loop": true,
+      "motif_refs": [
+        "motif_orion",
+        "motif_nova"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_orion.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_victory_standard": {
+      "id": "music_victory_standard",
+      "title": "Victory Fanfare (Battle Won)",
+      "category": "core",
+      "scope": "primary_58",
+      "batch_id": "batch_1",
+      "recommended_provider": "suno",
+      "key": "D Major",
+      "bpm": 126,
+      "loop": false,
+      "motif_refs": [
+        "motif_nova"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_victory_boss": {
+      "id": "music_victory_boss",
+      "title": "Major Victory (Breakthrough)",
+      "category": "core",
+      "scope": "extension_or_stinger",
+      "batch_id": "batch_7_extensions_and_stingers",
+      "recommended_provider": "suno",
+      "key": "D Major",
+      "bpm": 128,
+      "loop": false,
+      "motif_refs": [
+        "motif_nova"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_game_over": {
+      "id": "music_game_over",
+      "title": "The Signal Fades (Defeat)",
+      "category": "core",
+      "scope": "primary_58",
+      "batch_id": "batch_1",
+      "recommended_provider": "elevenlabs",
+      "key": "D Minor",
+      "bpm": 60,
+      "loop": false,
+      "motif_refs": [
+        "motif_nova"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_nova_theme": {
+      "id": "music_nova_theme",
+      "title": "Nova's Theme (The Spark)",
+      "category": "character",
+      "scope": "primary_58",
+      "batch_id": "batch_1",
+      "recommended_provider": "suno",
+      "key": "D Minor -> D Major",
+      "bpm": 92,
+      "loop": true,
+      "motif_refs": [
+        "motif_nova"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_jed_theme": {
+      "id": "music_jed_theme",
+      "title": "Jed's Theme (The Fixer's Gift)",
+      "category": "character",
+      "scope": "primary_58",
+      "batch_id": "batch_1",
+      "recommended_provider": "suno",
+      "key": "G Major",
+      "bpm": 76,
+      "loop": true,
+      "motif_refs": [
+        "motif_jed"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_jed.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_zeke_theme": {
+      "id": "music_zeke_theme",
+      "title": "Zeke's Theme (Unbroken Iron)",
+      "category": "character",
+      "scope": "primary_58",
+      "batch_id": "batch_1",
+      "recommended_provider": "suno",
+      "key": "E Minor",
+      "bpm": 84,
+      "loop": true,
+      "motif_refs": [
+        "motif_zeke"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_zeke.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_orion_theme": {
+      "id": "music_orion_theme",
+      "title": "Orion's Theme (Memory of Aethel)",
+      "category": "character",
+      "scope": "primary_58",
+      "batch_id": "batch_1",
+      "recommended_provider": "suno",
+      "key": "A Dorian",
+      "bpm": 70,
+      "loop": true,
+      "motif_refs": [
+        "motif_orion",
+        "motif_source"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_orion.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_gh0st_theme": {
+      "id": "music_gh0st_theme",
+      "title": "Gh0st's Theme (The Phantom Trace)",
+      "category": "character",
+      "scope": "primary_58",
+      "batch_id": "batch_1",
+      "recommended_provider": "suno",
+      "key": "F# Minor",
+      "bpm": 104,
+      "loop": true,
+      "motif_refs": [
+        "motif_gh0st",
+        "motif_elara"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_gh0st.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_elaras_song": {
+      "id": "music_elaras_song",
+      "title": "Elara's Song (The Pure Voice)",
+      "category": "character",
+      "scope": "primary_58",
+      "batch_id": "batch_1",
+      "recommended_provider": "suno",
+      "key": "F# Major",
+      "bpm": 84,
+      "loop": false,
+      "motif_refs": [
+        "motif_elara"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_elara.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_thorne_theme": {
+      "id": "music_thorne_theme",
+      "title": "Thorne's Theme (Closed Market)",
+      "category": "character",
+      "scope": "primary_58",
+      "batch_id": "batch_2",
+      "recommended_provider": "suno",
+      "key": "Bb Minor",
+      "bpm": 98,
+      "loop": true,
+      "motif_refs": [
+        "motif_thorne"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_thorne.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_vale_theme": {
+      "id": "music_vale_theme",
+      "title": "Vale's Theme (The Soloist)",
+      "category": "character",
+      "scope": "primary_58",
+      "batch_id": "batch_2",
+      "recommended_provider": "suno",
+      "key": "C Minor",
+      "bpm": 80,
+      "loop": true,
+      "motif_refs": [
+        "motif_vale"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_vale.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_theme_emotional": {
+      "id": "music_theme_emotional",
+      "title": "Shared Ground (Emotional Theme)",
+      "category": "character",
+      "scope": "primary_58",
+      "batch_id": "batch_2",
+      "recommended_provider": "suno",
+      "key": "D Minor -> G Major",
+      "bpm": 68,
+      "loop": false,
+      "motif_refs": [
+        "motif_nova",
+        "motif_jed"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "stinger_motif_nova": {
+      "id": "stinger_motif_nova",
+      "title": "Motif Stinger: Nova's Spark",
+      "category": "stinger",
+      "scope": "extension_or_stinger",
+      "batch_id": "batch_7_extensions_and_stingers",
+      "recommended_provider": "elevenlabs",
+      "key": "D Minor",
+      "bpm": 92,
+      "loop": false,
+      "motif_refs": [
+        "motif_nova"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "status": "mastered_ready",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [
+        {
+          "candidate_id": "stinger_motif_nova_cand_01",
+          "take_num": 1,
+          "provider": "elevenlabs",
+          "created_at": "2026-11-17T13:44:26.281085",
+          "suno_clip_id": "",
+          "suno_url": "",
+          "title_in_suno": "Motif Stinger: Nova's Spark",
+          "generation_group_id": "",
+          "prompt_used": "",
+          "credits_cost": 0,
+          "commercial_rights_verified": false,
+          "local_raw_path": "audio_studio/takes/stinger_motif_nova/take_01/raw.mp3",
+          "mastered_path": null,
+          "computational": {
+            "file": "raw.mp3",
+            "metrics": {
+              "sample_rate": 44100,
+              "channels": 2,
+              "frames": 309888,
+              "duration_seconds": 7.0269,
+              "rms_dbfs": -20.4,
+              "peak_dbfs": -3.98,
+              "integrated_lufs": -17.86,
+              "true_peak_dbtp": -3.98,
+              "samples_at_full_scale": 0,
+              "first_second_rms_dbfs": -17.17,
+              "last_second_rms_dbfs": -49.06
+            },
+            "estimated_keys": [
+              {
+                "key": "E Major",
+                "correlation": 0.798
+              },
+              {
+                "key": "E Minor",
+                "correlation": 0.761
+              },
+              {
+                "key": "B Major",
+                "correlation": 0.395
+              }
+            ],
+            "tempo": {
+              "estimated_bpm": 92.3,
+              "raw_peak_bpm": 92.3,
+              "confidence": 0.382,
+              "delta_from_target": 0.3
+            },
+            "motif_alignment": {
+              "method": "pitch_class_chromagram_cosine_and_sliding_window",
+              "disclaimer": "Heuristic tonal/pitch-class alignment against MIDI motif; indicates harmonic and pitch-center kinship, not proof of note-for-note melodic transcription.",
+              "motifs": {
+                "motif_nova": {
+                  "exact_key_chroma_cosine": 0.356,
+                  "peak_passage_chroma_cosine": 0.389,
+                  "best_transposed_chroma_cosine": 0.692,
+                  "best_shift_semitones": 2
+                }
+              }
+            },
+            "mix_and_loop": {
+              "crest_factor_db": 16.67,
+              "stereo_correlation": 0.891,
+              "stereo_width_ratio": 0.242,
+              "spectral_bands_pct": {
+                "sub_lt_100hz": 1.9,
+                "warmth_100_400hz": 90.4,
+                "mid_400_4khz": 7.5,
+                "air_gt_4khz": 0.2
+              },
+              "first_2s_rms_db": -17.82,
+              "last_2s_rms_db": -39.98,
+              "last_500ms_rms_db": -65.44,
+              "dead_tail_seconds": 0.6,
+              "end_fade_drop_db": 44.8,
+              "loop_seam_delta_db": 22.16,
+              "warnings": []
+            },
+            "computational_score": {
+              "score_type": "computational_metrics_only",
+              "score": 83.0,
+              "highlights": [
+                "Tempo locked near target (92.3 BPM)",
+                "Weak exact-key motif chroma (0.36)",
+                "Clean mix & loop boundaries"
+              ],
+              "warnings": []
+            }
+          },
+          "ai_eval_hydrogen": null,
+          "ai_eval_argon": null,
+          "rank": 1,
+          "shortlist_label": "A",
+          "notes": ""
+        }
+      ],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "stinger_motif_jed": {
+      "id": "stinger_motif_jed",
+      "title": "Motif Stinger: Jed's Workbench",
+      "category": "stinger",
+      "scope": "extension_or_stinger",
+      "batch_id": "batch_7_extensions_and_stingers",
+      "recommended_provider": "elevenlabs",
+      "key": "G Major",
+      "bpm": 76,
+      "loop": false,
+      "motif_refs": [
+        "motif_jed"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_jed.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "stinger_motif_elara": {
+      "id": "stinger_motif_elara",
+      "title": "Motif Stinger: Elara's Signal",
+      "category": "stinger",
+      "scope": "extension_or_stinger",
+      "batch_id": "batch_7_extensions_and_stingers",
+      "recommended_provider": "elevenlabs",
+      "key": "F# Major",
+      "bpm": 84,
+      "loop": false,
+      "motif_refs": [
+        "motif_elara"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_elara.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "stinger_motif_vale": {
+      "id": "stinger_motif_vale",
+      "title": "Motif Stinger: Soloist Signal",
+      "category": "stinger",
+      "scope": "extension_or_stinger",
+      "batch_id": "batch_7_extensions_and_stingers",
+      "recommended_provider": "elevenlabs",
+      "key": "C Minor",
+      "bpm": 80,
+      "loop": false,
+      "motif_refs": [
+        "motif_vale"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_vale.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "stinger_motif_source": {
+      "id": "stinger_motif_source",
+      "title": "Motif Stinger: Echo Resonance",
+      "category": "stinger",
+      "scope": "extension_or_stinger",
+      "batch_id": "batch_7_extensions_and_stingers",
+      "recommended_provider": "elevenlabs",
+      "key": "A Dorian",
+      "bpm": 64,
+      "loop": false,
+      "motif_refs": [
+        "motif_source"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_source.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w1_homestead_explore": {
+      "id": "music_w1_homestead_explore",
+      "title": "Stellarium Colony (Homestead & Trade Row)",
+      "category": "w1",
+      "scope": "pilot",
+      "batch_id": "batch_0_pilot",
+      "recommended_provider": "suno",
+      "key": "D Minor",
+      "bpm": 86,
+      "loop": true,
+      "motif_refs": [
+        "motif_nova",
+        "motif_zeke"
+      ],
+      "reference_wav": "audio_studio/reference_audio/pilot_music_w1_homestead_explore.wav",
+      "status": "ready_for_review",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [
+        {
+          "candidate_id": "music_w1_homestead_explore_cand_01",
+          "take_num": 1,
+          "provider": "elevenlabs",
+          "created_at": "2026-11-17T14:02:06.192463",
+          "suno_clip_id": "",
+          "suno_url": "",
+          "title_in_suno": "Stellarium Colony (Homestead & Trade Row)",
+          "generation_group_id": "",
+          "prompt_used": "Dusty industrial blues RPG exploration underscore, 86 BPM, D minor. Dry close-miked resonator steel-string guitar carrying Nova's restrained ascending D-F-G-A motif, subtle dusty harmonica and warm Rhodes harmony, muted metallic pipe percussion, warm P-bass, subtle analog tape grit. Working-class survival, restrained dynamics for dialogue, seamless loop. Recurring leitmotif DNA: Nova's Theme (The Spark) (D Minor -> D Major; progression Dm9-BbMaj7-C6-Dm9; lead resonator acoustic guitar, overdriven lead electric guitar); Zeke's Theme (Unbroken Iron) (E Minor; progression Em7-Em7-Am7-Bm7; lead Fender Rhodes electric piano, gritty P-bass). Begin immediately inside the musical groove with no slow intro; maintain consistent underscore flow and end cleanly on the same harmonic texture ready to loop seamlessly without fading out. Avoid: vocals, huge cathedral reverb, epic brass, metal drums, singing.",
+          "credits_cost": 0,
+          "commercial_rights_verified": false,
+          "local_raw_path": "audio_studio/takes/music_w1_homestead_explore/take_01/raw.mp3",
+          "mastered_path": null,
+          "computational": {
+            "file": "raw.mp3",
+            "metrics": {
+              "sample_rate": 44100,
+              "channels": 2,
+              "frames": 4234752,
+              "duration_seconds": 96.0261,
+              "rms_dbfs": -14.49,
+              "peak_dbfs": -0.53,
+              "integrated_lufs": -12.8,
+              "true_peak_dbtp": -0.51,
+              "samples_at_full_scale": 0,
+              "first_second_rms_dbfs": -13.78,
+              "last_second_rms_dbfs": -36.64
+            },
+            "estimated_keys": [
+              {
+                "key": "D Minor",
+                "correlation": 0.727
+              },
+              {
+                "key": "D Major",
+                "correlation": 0.688
+              },
+              {
+                "key": "G Major",
+                "correlation": 0.483
+              }
+            ],
+            "tempo": {
+              "estimated_bpm": 86.1,
+              "raw_peak_bpm": 86.1,
+              "confidence": 0.73,
+              "delta_from_target": 0.1
+            },
+            "motif_alignment": {
+              "method": "pitch_class_chromagram_cosine_and_sliding_window",
+              "disclaimer": "Heuristic tonal/pitch-class alignment against MIDI motif; indicates harmonic and pitch-center kinship, not proof of note-for-note melodic transcription.",
+              "motifs": {
+                "motif_nova": {
+                  "exact_key_chroma_cosine": 0.773,
+                  "peak_passage_chroma_cosine": 0.849,
+                  "best_transposed_chroma_cosine": 0.773,
+                  "best_shift_semitones": 0
+                },
+                "motif_zeke": {
+                  "exact_key_chroma_cosine": 0.592,
+                  "peak_passage_chroma_cosine": 0.675,
+                  "best_transposed_chroma_cosine": 0.866,
+                  "best_shift_semitones": -2
+                }
+              }
+            },
+            "mix_and_loop": {
+              "crest_factor_db": 14.13,
+              "stereo_correlation": 0.924,
+              "stereo_width_ratio": 0.201,
+              "spectral_bands_pct": {
+                "sub_lt_100hz": 30.1,
+                "warmth_100_400hz": 53.5,
+                "mid_400_4khz": 16.2,
+                "air_gt_4khz": 0.1
+              },
+              "first_2s_rms_db": -14.03,
+              "last_2s_rms_db": -25.02,
+              "last_500ms_rms_db": -48.92,
+              "dead_tail_seconds": 0.3,
+              "end_fade_drop_db": 34.26,
+              "loop_seam_delta_db": 10.99,
+              "warnings": [
+                "Ending drops 34.3 dB below track RMS (possible fade-out ending)",
+                "Start/end loudness mismatch (11.0 dB)"
+              ]
+            },
+            "computational_score": {
+              "score_type": "computational_metrics_only",
+              "score": 75.0,
+              "highlights": [
+                "Tempo locked near target (86.1 BPM)",
+                "Moderate chroma alignment with target motif (0.77)"
+              ],
+              "warnings": [
+                "Ending drops 34.3 dB below track RMS (possible fade-out ending)",
+                "Start/end loudness mismatch (11.0 dB)"
+              ]
+            }
+          },
+          "ai_eval_hydrogen": {
+            "scores": {
+              "quality": 7,
+              "scene_fit": 8,
+              "identity": 7,
+              "motif_recognition": 7,
+              "instrumentation": 8,
+              "development": 6,
+              "endurance": 7,
+              "loop_potential": 4,
+              "cleanliness": 8
+            },
+            "heard_instruments": "Warm electric bass, muted snare/rimshot and shaker percussion, Rhodes chords, clean electric/steel guitar ostinato, and subtle sustained pad/organ later.",
+            "heard_motif_match": "Matches the D-minor tonal center and restrained ascending minor feel in the bass/keys, though it functions as a rhythmic vamp rather than stating the reference melody.",
+            "vocals_or_defects": "No vocals or clipping; ending fades out to silence on a resolved final chord.",
+            "ending_quality": "Poor for looping as-is: resolves to a final chord and decays/fades out to silence (~34 dB drop, 0.3s dead tail)."
+          },
+          "ai_eval_argon": null,
+          "rank": 3,
+          "shortlist_label": "C",
+          "notes": "Pilot cue 1 take 1"
+        },
+        {
+          "candidate_id": "music_w1_homestead_explore_cand_02",
+          "take_num": 2,
+          "provider": "elevenlabs",
+          "created_at": "2026-11-17T14:04:34.412327",
+          "suno_clip_id": "",
+          "suno_url": "",
+          "title_in_suno": "Stellarium Colony (Homestead & Trade Row)",
+          "generation_group_id": "",
+          "prompt_used": "Dusty industrial blues RPG exploration underscore, 86 BPM, D minor. Dry close-miked resonator steel-string guitar carrying Nova's restrained ascending D-F-G-A motif, subtle dusty harmonica and warm Rhodes harmony, muted metallic pipe percussion, warm P-bass, subtle analog tape grit. Working-class survival, restrained dynamics for dialogue, seamless loop. Recurring leitmotif DNA: Nova's Theme (The Spark) (D Minor -> D Major; progression Dm9-BbMaj7-C6-Dm9; lead resonator acoustic guitar, overdriven lead electric guitar); Zeke's Theme (Unbroken Iron) (E Minor; progression Em7-Em7-Am7-Bm7; lead Fender Rhodes electric piano, gritty P-bass). Begin immediately inside the musical groove with no slow intro; maintain consistent underscore flow and end cleanly on the same harmonic texture ready to loop seamlessly without fading out. Avoid: vocals, huge cathedral reverb, epic brass, metal drums, singing.",
+          "credits_cost": 0,
+          "commercial_rights_verified": false,
+          "local_raw_path": "audio_studio/takes/music_w1_homestead_explore/take_02/raw.mp3",
+          "mastered_path": null,
+          "computational": {
+            "file": "raw.mp3",
+            "metrics": {
+              "sample_rate": 44100,
+              "channels": 2,
+              "frames": 4234752,
+              "duration_seconds": 96.0261,
+              "rms_dbfs": -15.47,
+              "peak_dbfs": -0.73,
+              "integrated_lufs": -14.15,
+              "true_peak_dbtp": -0.68,
+              "samples_at_full_scale": 0,
+              "first_second_rms_dbfs": -14.85,
+              "last_second_rms_dbfs": -16.47
+            },
+            "estimated_keys": [
+              {
+                "key": "D Minor",
+                "correlation": 0.708
+              },
+              {
+                "key": "D Major",
+                "correlation": 0.687
+              },
+              {
+                "key": "G Major",
+                "correlation": 0.532
+              }
+            ],
+            "tempo": {
+              "estimated_bpm": 86.1,
+              "raw_peak_bpm": 86.1,
+              "confidence": 0.703,
+              "delta_from_target": 0.1
+            },
+            "motif_alignment": {
+              "method": "pitch_class_chromagram_cosine_and_sliding_window",
+              "disclaimer": "Heuristic tonal/pitch-class alignment against MIDI motif; indicates harmonic and pitch-center kinship, not proof of note-for-note melodic transcription.",
+              "motifs": {
+                "motif_nova": {
+                  "exact_key_chroma_cosine": 0.764,
+                  "peak_passage_chroma_cosine": 0.866,
+                  "best_transposed_chroma_cosine": 0.764,
+                  "best_shift_semitones": 0
+                },
+                "motif_zeke": {
+                  "exact_key_chroma_cosine": 0.62,
+                  "peak_passage_chroma_cosine": 0.76,
+                  "best_transposed_chroma_cosine": 0.838,
+                  "best_shift_semitones": -2
+                }
+              }
+            },
+            "mix_and_loop": {
+              "crest_factor_db": 14.87,
+              "stereo_correlation": 0.944,
+              "stereo_width_ratio": 0.17,
+              "spectral_bands_pct": {
+                "sub_lt_100hz": 46.3,
+                "warmth_100_400hz": 39.9,
+                "mid_400_4khz": 13.8,
+                "air_gt_4khz": 0.0
+              },
+              "first_2s_rms_db": -15.02,
+              "last_2s_rms_db": -16.95,
+              "last_500ms_rms_db": -16.13,
+              "dead_tail_seconds": 0.0,
+              "end_fade_drop_db": 0.54,
+              "loop_seam_delta_db": 1.93,
+              "warnings": []
+            },
+            "computational_score": {
+              "score_type": "computational_metrics_only",
+              "score": 93.0,
+              "highlights": [
+                "Tempo locked near target (86.1 BPM)",
+                "Moderate chroma alignment with target motif (0.76)",
+                "Clean mix & loop boundaries"
+              ],
+              "warnings": []
+            }
+          },
+          "ai_eval_hydrogen": {
+            "scores": {
+              "quality": 9,
+              "scene_fit": 9,
+              "identity": 9,
+              "motif_recognition": 7,
+              "instrumentation": 9,
+              "development": 8,
+              "endurance": 9,
+              "loop_potential": 8,
+              "cleanliness": 9
+            },
+            "heard_instruments": "Warm Rhodes electric piano, deep electric bass, light shaker/rim percussion, subtle analog warmth, and a clean-to-lightly-gritty blues electric guitar lead in the second half.",
+            "heard_motif_match": "Outlines the D-minor harmonic center and bluesy minor-pentatonic contour of the reference without a literal note-for-note transcription of the D-F-G-A synth lead.",
+            "vocals_or_defects": "none",
+            "ending_quality": "Maintains steady groove and level through the end with no fade-out or dead tail, making it well-suited for seamless looping."
+          },
+          "ai_eval_argon": null,
+          "rank": 1,
+          "shortlist_label": "A",
+          "notes": "Pilot Option B ElevenLabs music_v2"
+        },
+        {
+          "candidate_id": "music_w1_homestead_explore_cand_03",
+          "take_num": 3,
+          "provider": "elevenlabs",
+          "created_at": "2026-11-17T14:04:48.943241",
+          "suno_clip_id": "",
+          "suno_url": "",
+          "title_in_suno": "Stellarium Colony (Homestead & Trade Row)",
+          "generation_group_id": "",
+          "prompt_used": "Dusty industrial blues RPG exploration underscore, 86 BPM, D minor. Dry close-miked resonator steel-string guitar carrying Nova's restrained ascending D-F-G-A motif, subtle dusty harmonica and warm Rhodes harmony, muted metallic pipe percussion, warm P-bass, subtle analog tape grit. Working-class survival, restrained dynamics for dialogue, seamless loop. Recurring leitmotif DNA: Nova's Theme (The Spark) (D Minor -> D Major; progression Dm9-BbMaj7-C6-Dm9; lead resonator acoustic guitar, overdriven lead electric guitar); Zeke's Theme (Unbroken Iron) (E Minor; progression Em7-Em7-Am7-Bm7; lead Fender Rhodes electric piano, gritty P-bass). Begin immediately inside the musical groove with no slow intro; maintain consistent underscore flow and end cleanly on the same harmonic texture ready to loop seamlessly without fading out. Avoid: vocals, huge cathedral reverb, epic brass, metal drums, singing.",
+          "credits_cost": 0,
+          "commercial_rights_verified": false,
+          "local_raw_path": "audio_studio/takes/music_w1_homestead_explore/take_03/raw.mp3",
+          "mastered_path": null,
+          "computational": {
+            "file": "raw.mp3",
+            "metrics": {
+              "sample_rate": 44100,
+              "channels": 2,
+              "frames": 4234752,
+              "duration_seconds": 96.0261,
+              "rms_dbfs": -18.38,
+              "peak_dbfs": -0.48,
+              "integrated_lufs": -16.23,
+              "true_peak_dbtp": -0.42,
+              "samples_at_full_scale": 0,
+              "first_second_rms_dbfs": -14.71,
+              "last_second_rms_dbfs": -15.81
+            },
+            "estimated_keys": [
+              {
+                "key": "D Major",
+                "correlation": 0.787
+              },
+              {
+                "key": "D Minor",
+                "correlation": 0.76
+              },
+              {
+                "key": "B Minor",
+                "correlation": 0.396
+              }
+            ],
+            "tempo": {
+              "estimated_bpm": 86.1,
+              "raw_peak_bpm": 86.1,
+              "confidence": 0.264,
+              "delta_from_target": 0.1
+            },
+            "motif_alignment": {
+              "method": "pitch_class_chromagram_cosine_and_sliding_window",
+              "disclaimer": "Heuristic tonal/pitch-class alignment against MIDI motif; indicates harmonic and pitch-center kinship, not proof of note-for-note melodic transcription.",
+              "motifs": {
+                "motif_nova": {
+                  "exact_key_chroma_cosine": 0.647,
+                  "peak_passage_chroma_cosine": 0.746,
+                  "best_transposed_chroma_cosine": 0.647,
+                  "best_shift_semitones": 0
+                },
+                "motif_zeke": {
+                  "exact_key_chroma_cosine": 0.434,
+                  "peak_passage_chroma_cosine": 0.585,
+                  "best_transposed_chroma_cosine": 0.739,
+                  "best_shift_semitones": -2
+                }
+              }
+            },
+            "mix_and_loop": {
+              "crest_factor_db": 18.25,
+              "stereo_correlation": 0.846,
+              "stereo_width_ratio": 0.289,
+              "spectral_bands_pct": {
+                "sub_lt_100hz": 0.0,
+                "warmth_100_400hz": 81.5,
+                "mid_400_4khz": 18.4,
+                "air_gt_4khz": 0.1
+              },
+              "first_2s_rms_db": -16.13,
+              "last_2s_rms_db": -18.14,
+              "last_500ms_rms_db": -16.49,
+              "dead_tail_seconds": 0.0,
+              "end_fade_drop_db": -2.23,
+              "loop_seam_delta_db": 2.02,
+              "warnings": []
+            },
+            "computational_score": {
+              "score_type": "computational_metrics_only",
+              "score": 83.0,
+              "highlights": [
+                "Tempo locked near target (86.1 BPM)",
+                "Weak exact-key motif chroma (0.65)",
+                "Clean mix & loop boundaries"
+              ],
+              "warnings": []
+            }
+          },
+          "ai_eval_hydrogen": {
+            "scores": {
+              "quality": 6,
+              "scene_fit": 5,
+              "identity": 5,
+              "motif_recognition": 4,
+              "instrumentation": 6,
+              "development": 4,
+              "endurance": 6,
+              "loop_potential": 7,
+              "cleanliness": 9
+            },
+            "heard_instruments": "Muted low pluck/bass pedal, light ticking shaker/rim percussion, and simple sustained Rhodes electric piano intervals entering mid-track.",
+            "heard_motif_match": "Weakest match to the reference; mostly sits on a static D-minor pedal/ostinato with minimal melodic movement.",
+            "vocals_or_defects": "No vocals or clipping; noticeably thin low end (lacks sub-bass weight).",
+            "ending_quality": "Steady level to the end with no fade-out, so technically loopable, though musically static."
+          },
+          "ai_eval_argon": null,
+          "rank": 4,
+          "shortlist_label": "rejected",
+          "notes": "Pilot Option B ElevenLabs music_v2"
+        },
+        {
+          "candidate_id": "music_w1_homestead_explore_cand_04",
+          "take_num": 4,
+          "provider": "elevenlabs",
+          "created_at": "2026-11-17T14:05:03.090133",
+          "suno_clip_id": "",
+          "suno_url": "",
+          "title_in_suno": "Stellarium Colony (Homestead & Trade Row)",
+          "generation_group_id": "",
+          "prompt_used": "Dusty industrial blues RPG exploration underscore, 86 BPM, D minor. Dry close-miked resonator steel-string guitar carrying Nova's restrained ascending D-F-G-A motif, subtle dusty harmonica and warm Rhodes harmony, muted metallic pipe percussion, warm P-bass, subtle analog tape grit. Working-class survival, restrained dynamics for dialogue, seamless loop. Recurring leitmotif DNA: Nova's Theme (The Spark) (D Minor -> D Major; progression Dm9-BbMaj7-C6-Dm9; lead resonator acoustic guitar, overdriven lead electric guitar); Zeke's Theme (Unbroken Iron) (E Minor; progression Em7-Em7-Am7-Bm7; lead Fender Rhodes electric piano, gritty P-bass). Begin immediately inside the musical groove with no slow intro; maintain consistent underscore flow and end cleanly on the same harmonic texture ready to loop seamlessly without fading out. Avoid: vocals, huge cathedral reverb, epic brass, metal drums, singing.",
+          "credits_cost": 0,
+          "commercial_rights_verified": false,
+          "local_raw_path": "audio_studio/takes/music_w1_homestead_explore/take_04/raw.mp3",
+          "mastered_path": null,
+          "computational": {
+            "file": "raw.mp3",
+            "metrics": {
+              "sample_rate": 44100,
+              "channels": 2,
+              "frames": 4234752,
+              "duration_seconds": 96.0261,
+              "rms_dbfs": -18.6,
+              "peak_dbfs": -1.96,
+              "integrated_lufs": -17.03,
+              "true_peak_dbtp": -1.96,
+              "samples_at_full_scale": 0,
+              "first_second_rms_dbfs": -19.71,
+              "last_second_rms_dbfs": -14.3
+            },
+            "estimated_keys": [
+              {
+                "key": "D Major",
+                "correlation": 0.819
+              },
+              {
+                "key": "D Minor",
+                "correlation": 0.701
+              },
+              {
+                "key": "G Major",
+                "correlation": 0.521
+              }
+            ],
+            "tempo": {
+              "estimated_bpm": 86.1,
+              "raw_peak_bpm": 86.1,
+              "confidence": 0.471,
+              "delta_from_target": 0.1
+            },
+            "motif_alignment": {
+              "method": "pitch_class_chromagram_cosine_and_sliding_window",
+              "disclaimer": "Heuristic tonal/pitch-class alignment against MIDI motif; indicates harmonic and pitch-center kinship, not proof of note-for-note melodic transcription.",
+              "motifs": {
+                "motif_nova": {
+                  "exact_key_chroma_cosine": 0.767,
+                  "peak_passage_chroma_cosine": 0.853,
+                  "best_transposed_chroma_cosine": 0.812,
+                  "best_shift_semitones": -5
+                },
+                "motif_zeke": {
+                  "exact_key_chroma_cosine": 0.677,
+                  "peak_passage_chroma_cosine": 0.872,
+                  "best_transposed_chroma_cosine": 0.826,
+                  "best_shift_semitones": -2
+                }
+              }
+            },
+            "mix_and_loop": {
+              "crest_factor_db": 16.69,
+              "stereo_correlation": 0.974,
+              "stereo_width_ratio": 0.115,
+              "spectral_bands_pct": {
+                "sub_lt_100hz": 38.5,
+                "warmth_100_400hz": 41.2,
+                "mid_400_4khz": 20.3,
+                "air_gt_4khz": 0.0
+              },
+              "first_2s_rms_db": -19.15,
+              "last_2s_rms_db": -16.27,
+              "last_500ms_rms_db": -14.75,
+              "dead_tail_seconds": 0.0,
+              "end_fade_drop_db": -3.9,
+              "loop_seam_delta_db": 2.88,
+              "warnings": []
+            },
+            "computational_score": {
+              "score_type": "computational_metrics_only",
+              "score": 93.0,
+              "highlights": [
+                "Tempo locked near target (86.1 BPM)",
+                "Moderate chroma alignment with target motif (0.77)",
+                "Clean mix & loop boundaries"
+              ],
+              "warnings": []
+            }
+          },
+          "ai_eval_hydrogen": {
+            "scores": {
+              "quality": 8,
+              "scene_fit": 8,
+              "identity": 8,
+              "motif_recognition": 7,
+              "instrumentation": 8,
+              "development": 8,
+              "endurance": 9,
+              "loop_potential": 7,
+              "cleanliness": 9
+            },
+            "heard_instruments": "Soft Rhodes electric piano, light shaker/brush percussion, warm bass, and clean resonant strummed/arpeggiated guitar entering in the second half.",
+            "heard_motif_match": "Captures the bittersweet D-minor/D-major harmonic mood and pitch center of the reference via Rhodes arpeggios and chordal movement rather than a literal melody quote.",
+            "vocals_or_defects": "none",
+            "ending_quality": "Continues cleanly at full sustain without fading out, though the second half is ~2.9 dB louder than the sparse intro so a loop seam will benefit from a short crossfade."
+          },
+          "ai_eval_argon": null,
+          "rank": 2,
+          "shortlist_label": "B",
+          "notes": "Pilot Option B ElevenLabs music_v2"
+        }
+      ],
+      "shortlist": {
+        "A": {
+          "candidate_id": "music_w1_homestead_explore_cand_02",
+          "take_num": 2,
+          "suno_url": "",
+          "rationale": "Best overall fit for dusty Rusthaven homestead exploration: warm Rhodes and bass foundation with restrained percussion and an expressive bluesy electric guitar entering in the second half. Strongest musical arc, zero defects, and clean loop-ready ending."
+        },
+        "B": {
+          "candidate_id": "music_w1_homestead_explore_cand_04",
+          "take_num": 4,
+          "suno_url": "",
+          "rationale": "Warm, intimate Rhodes and light shaker opening that lifts naturally when clean strummed/arpeggiated guitar chords enter mid-track. Very easy on the ears for dialogue, though slightly less gritty/bluesy than Take 2 and has a modest dynamic step from the fuller ending back to the quiet intro."
+        },
+        "C": {
+          "candidate_id": "music_w1_homestead_explore_cand_01",
+          "take_num": 1,
+          "suno_url": "",
+          "rationale": "Good dusty working-class groove with dry bass, muted snare/rimshot, Rhodes, and a steady guitar riff that leaves plenty of room for dialogue. Held back by repetitive vamp structure and a clear fade-out ending on a resolved chord that breaks seamless looping without trimming."
+        }
+      },
+      "rejected_ids_preserved": [
+        {
+          "candidate_id": "music_w1_homestead_explore_cand_03",
+          "take_num": 3,
+          "suno_clip_id": "",
+          "suno_url": "",
+          "reason": "Clean and unobtrusive, but overly sparse and monotonous\u2014essentially a minimal muted-pluck and shaker pulse for the first half before simple two-note Rhodes intervals enter. Lacks low-end weight, Starborn homestead character, and clear motif presence."
+        }
+      ]
+    },
+    "music_w1_jed_workshop": {
+      "id": "music_w1_jed_workshop",
+      "title": "Jed's Workshop (Warm Steel & Grease)",
+      "category": "w1",
+      "scope": "primary_58",
+      "batch_id": "batch_2",
+      "recommended_provider": "suno",
+      "key": "G Major",
+      "bpm": 76,
+      "loop": true,
+      "motif_refs": [
+        "motif_jed"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_jed.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w1_logistics_explore": {
+      "id": "music_w1_logistics_explore",
+      "title": "Logistics Sector (Quota & Concrete)",
+      "category": "w1",
+      "scope": "primary_58",
+      "batch_id": "batch_2",
+      "recommended_provider": "elevenlabs",
+      "key": "E Minor",
+      "bpm": 90,
+      "loop": true,
+      "motif_refs": [
+        "motif_zeke",
+        "motif_nova"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_zeke.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w1_deep_mine": {
+      "id": "music_w1_deep_mine",
+      "title": "Deep Mine & Echo Chamber (Sub-Level 4)",
+      "category": "w1",
+      "scope": "primary_58",
+      "batch_id": "batch_2",
+      "recommended_provider": "elevenlabs",
+      "key": "C Minor / A Modal",
+      "bpm": 72,
+      "loop": true,
+      "motif_refs": [
+        "motif_source",
+        "motif_nova"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_source.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w2_sector9_explore": {
+      "id": "music_w2_sector9_explore",
+      "title": "Sector 9 Wilds (Wreckage in Bloom)",
+      "category": "w2",
+      "scope": "primary_58",
+      "batch_id": "batch_2",
+      "recommended_provider": "suno",
+      "key": "A Dorian",
+      "bpm": 76,
+      "loop": true,
+      "motif_refs": [
+        "motif_source",
+        "motif_nova"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_source.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w2_tideglass_beach": {
+      "id": "music_w2_tideglass_beach",
+      "title": "Tideglass Beach (Glass Sand & Driftwood)",
+      "category": "w2",
+      "scope": "primary_58",
+      "batch_id": "batch_2",
+      "recommended_provider": "suno",
+      "key": "A Dorian / G Major",
+      "bpm": 72,
+      "loop": true,
+      "motif_refs": [
+        "motif_source",
+        "motif_orion"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_source.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w2_ancient_gateway": {
+      "id": "music_w2_ancient_gateway",
+      "title": "Sanctuary Ruins (Hall of Echoes)",
+      "category": "w2",
+      "scope": "primary_58",
+      "batch_id": "batch_2",
+      "recommended_provider": "suno",
+      "key": "A Dorian / F# Minor",
+      "bpm": 78,
+      "loop": true,
+      "motif_refs": [
+        "motif_orion",
+        "motif_source"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_orion.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w2_stasis_sanctuary": {
+      "id": "music_w2_stasis_sanctuary",
+      "title": "Stasis Chamber (The Sleeping Archive)",
+      "category": "w2",
+      "scope": "primary_58",
+      "batch_id": "batch_2",
+      "recommended_provider": "elevenlabs",
+      "key": "A Dorian",
+      "bpm": 66,
+      "loop": true,
+      "motif_refs": [
+        "motif_orion"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_orion.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w3_spire_explore": {
+      "id": "music_w3_spire_explore",
+      "title": "Lower Spire (Neon Rain & Night Market)",
+      "category": "w3",
+      "scope": "primary_58",
+      "batch_id": "batch_3",
+      "recommended_provider": "suno",
+      "key": "C# Minor / E Minor",
+      "bpm": 100,
+      "loop": true,
+      "motif_refs": [
+        "motif_zeke",
+        "motif_nova"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_zeke.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w3_the_static": {
+      "id": "music_w3_the_static",
+      "title": "The Static & Safehouse (Signal Under the Rail)",
+      "category": "w3",
+      "scope": "primary_58",
+      "batch_id": "batch_3",
+      "recommended_provider": "suno",
+      "key": "E Minor",
+      "bpm": 86,
+      "loop": true,
+      "motif_refs": [
+        "motif_zeke",
+        "motif_gh0st"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_zeke.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w3_upper_city": {
+      "id": "music_w3_upper_city",
+      "title": "Upper Spire (Glasswalk & Politeness)",
+      "category": "w3",
+      "scope": "primary_58",
+      "batch_id": "batch_3",
+      "recommended_provider": "suno",
+      "key": "Bb Minor",
+      "bpm": 98,
+      "loop": true,
+      "motif_refs": [
+        "motif_thorne"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_thorne.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w3_archive_stealth": {
+      "id": "music_w3_archive_stealth",
+      "title": "Spire Archive (Prism Vault Heist)",
+      "category": "w3",
+      "scope": "primary_58",
+      "batch_id": "batch_3",
+      "recommended_provider": "elevenlabs",
+      "key": "Bb Minor / F# Minor",
+      "bpm": 108,
+      "loop": true,
+      "motif_refs": [
+        "motif_thorne",
+        "motif_gh0st"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_thorne.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w4_foundry_explore": {
+      "id": "music_w4_foundry_explore",
+      "title": "Slag Pits (Molten Channels)",
+      "category": "w4",
+      "scope": "primary_58",
+      "batch_id": "batch_3",
+      "recommended_provider": "suno",
+      "key": "D Minor",
+      "bpm": 112,
+      "loop": true,
+      "motif_refs": [
+        "motif_nova",
+        "motif_zeke"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w4_power_core": {
+      "id": "music_w4_power_core",
+      "title": "Assembly Line & Deep Forge",
+      "category": "w4",
+      "scope": "primary_58",
+      "batch_id": "batch_3",
+      "recommended_provider": "suno",
+      "key": "B Minor",
+      "bpm": 122,
+      "loop": true,
+      "motif_refs": [
+        "motif_nova",
+        "motif_vale"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w4_conditioning": {
+      "id": "music_w4_conditioning",
+      "title": "Conditioning Wing (Unit 734)",
+      "category": "w4",
+      "scope": "extension_or_stinger",
+      "batch_id": "batch_7_extensions_and_stingers",
+      "recommended_provider": "suno",
+      "key": "F# Minor",
+      "bpm": 94,
+      "loop": true,
+      "motif_refs": [
+        "motif_gh0st",
+        "motif_elara"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_gh0st.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w5_orbital_intrigue": {
+      "id": "music_w5_orbital_intrigue",
+      "title": "Grand Concourse (Borrowed Time)",
+      "category": "w5",
+      "scope": "primary_58",
+      "batch_id": "batch_3",
+      "recommended_provider": "elevenlabs",
+      "key": "C Minor",
+      "bpm": 80,
+      "loop": true,
+      "motif_refs": [
+        "motif_vale",
+        "motif_zeke"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_vale.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w5_solarium": {
+      "id": "music_w5_solarium",
+      "title": "Orbital Solarium (Artificial Paradise)",
+      "category": "w5",
+      "scope": "primary_58",
+      "batch_id": "batch_3",
+      "recommended_provider": "suno",
+      "key": "C Minor / Eb Major",
+      "bpm": 74,
+      "loop": true,
+      "motif_refs": [
+        "motif_thorne",
+        "motif_vale"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_thorne.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w5_security_hub": {
+      "id": "music_w5_security_hub",
+      "title": "Deep Ring Mainframe (Silent Surveillance)",
+      "category": "w5",
+      "scope": "primary_58",
+      "batch_id": "batch_3",
+      "recommended_provider": "elevenlabs",
+      "key": "G# Minor / C Minor",
+      "bpm": 84,
+      "loop": true,
+      "motif_refs": [
+        "motif_vale"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_vale.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w5_anchor_cathedral": {
+      "id": "music_w5_anchor_cathedral",
+      "title": "Anchor Containment & Command Deck (One Breath)",
+      "category": "w5",
+      "scope": "primary_58",
+      "batch_id": "batch_3",
+      "recommended_provider": "suno",
+      "key": "C Minor / F# Major tension",
+      "bpm": 72,
+      "loop": true,
+      "motif_refs": [
+        "motif_vale",
+        "motif_elara",
+        "motif_gh0st"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_vale.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w6_campfire": {
+      "id": "music_w6_campfire",
+      "title": "The Gathering Fire (Still Ourselves)",
+      "category": "w6",
+      "scope": "primary_58",
+      "batch_id": "batch_4",
+      "recommended_provider": "suno",
+      "key": "D Minor / G Major",
+      "bpm": 68,
+      "loop": true,
+      "motif_refs": [
+        "motif_nova",
+        "motif_jed"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w6_nightmare_zeke": {
+      "id": "music_w6_nightmare_zeke",
+      "title": "Zeke's Nightmare (Endless Performance Review)",
+      "category": "w6",
+      "scope": "extension_or_stinger",
+      "batch_id": "batch_7_extensions_and_stingers",
+      "recommended_provider": "suno",
+      "key": "E Minor",
+      "bpm": 78,
+      "loop": true,
+      "motif_refs": [
+        "motif_zeke",
+        "motif_vale"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_zeke.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w6_nightmare_gh0st": {
+      "id": "music_w6_nightmare_gh0st",
+      "title": "Gh0st's Nightmare (Kill-Suite Loop)",
+      "category": "w6",
+      "scope": "extension_or_stinger",
+      "batch_id": "batch_7_extensions_and_stingers",
+      "recommended_provider": "suno",
+      "key": "F# Minor -> F# Major",
+      "bpm": 96,
+      "loop": true,
+      "motif_refs": [
+        "motif_gh0st",
+        "motif_elara"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_gh0st.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w6_nightmare_orion": {
+      "id": "music_w6_nightmare_orion",
+      "title": "Orion's Nightmare (The Silent Shore)",
+      "category": "w6",
+      "scope": "extension_or_stinger",
+      "batch_id": "batch_7_extensions_and_stingers",
+      "recommended_provider": "suno",
+      "key": "A Dorian",
+      "bpm": 62,
+      "loop": true,
+      "motif_refs": [
+        "motif_orion",
+        "motif_source"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_orion.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w6_source_explore": {
+      "id": "music_w6_source_explore",
+      "title": "World-Fracture & Memory Stair (Fragments)",
+      "category": "w6",
+      "scope": "primary_58",
+      "batch_id": "batch_4",
+      "recommended_provider": "suno",
+      "key": "A Modal / D Minor",
+      "bpm": 64,
+      "loop": true,
+      "motif_refs": [
+        "motif_source",
+        "motif_nova",
+        "motif_elara"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_source.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w6_the_center": {
+      "id": "music_w6_the_center",
+      "title": "The White Shore (Heart of the Source)",
+      "category": "w6",
+      "scope": "primary_58",
+      "batch_id": "batch_4",
+      "recommended_provider": "suno",
+      "key": "D Modal / C Minor tension",
+      "bpm": 70,
+      "loop": true,
+      "motif_refs": [
+        "motif_source",
+        "motif_vale"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_source.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w6_new_world": {
+      "id": "music_w6_new_world",
+      "title": "Beyond the Silence (Regional Opening)",
+      "category": "w6",
+      "scope": "primary_58",
+      "batch_id": "batch_4",
+      "recommended_provider": "suno",
+      "key": "D Major",
+      "bpm": 76,
+      "loop": true,
+      "motif_refs": [
+        "motif_nova",
+        "motif_jed"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w1_combat": {
+      "id": "music_w1_combat",
+      "title": "Homestead Scrap Skirmish",
+      "category": "combat",
+      "scope": "pilot",
+      "batch_id": "batch_0_pilot",
+      "recommended_provider": "suno",
+      "key": "D Minor",
+      "bpm": 138,
+      "loop": true,
+      "motif_refs": [
+        "motif_nova",
+        "motif_zeke"
+      ],
+      "reference_wav": "audio_studio/reference_audio/pilot_music_w1_combat.wav",
+      "status": "ready_for_review",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [
+        {
+          "candidate_id": "music_w1_combat_cand_01",
+          "take_num": 1,
+          "provider": "elevenlabs",
+          "created_at": "2026-11-17T14:05:18.991448",
+          "suno_clip_id": "",
+          "suno_url": "",
+          "title_in_suno": "Homestead Scrap Skirmish",
+          "generation_group_id": "",
+          "prompt_used": "High-octane 80s analog blues-rock JRPG battle theme, 138 BPM, D minor. Overdriven resonator and lead electric guitar propelling Nova's ascending D-F-G-A battle hook, punchy live rock drum kit, fat gritty P-bass groove, rhythmic metallic clanks. Gritty working-class adrenaline, seamless loop. Recurring leitmotif DNA: Nova's Theme (The Spark) (D Minor -> D Major; progression Dm9-BbMaj7-C6-Dm9; lead resonator acoustic guitar, overdriven lead electric guitar); Zeke's Theme (Unbroken Iron) (E Minor; progression Em7-Em7-Am7-Bm7; lead Fender Rhodes electric piano, gritty P-bass). Begin immediately inside the musical groove with no slow intro; maintain consistent underscore flow and end cleanly on the same harmonic texture ready to loop seamlessly without fading out. Avoid: vocals, modern dubstep, serene ambient, singing.",
+          "credits_cost": 0,
+          "commercial_rights_verified": false,
+          "local_raw_path": "audio_studio/takes/music_w1_combat/take_01/raw.mp3",
+          "mastered_path": null,
+          "computational": {
+            "file": "raw.mp3",
+            "metrics": {
+              "sample_rate": 44100,
+              "channels": 2,
+              "frames": 3970944,
+              "duration_seconds": 90.0441,
+              "rms_dbfs": -13.44,
+              "peak_dbfs": -0.34,
+              "integrated_lufs": -11.52,
+              "true_peak_dbtp": -0.34,
+              "samples_at_full_scale": 0,
+              "first_second_rms_dbfs": -13.19,
+              "last_second_rms_dbfs": -13.91
+            },
+            "estimated_keys": [
+              {
+                "key": "D Minor",
+                "correlation": 0.578
+              },
+              {
+                "key": "D Major",
+                "correlation": 0.559
+              },
+              {
+                "key": "G Major",
+                "correlation": 0.416
+              }
+            ],
+            "tempo": {
+              "estimated_bpm": 137.8,
+              "raw_peak_bpm": 68.9,
+              "confidence": 0.926,
+              "delta_from_target": -0.2
+            },
+            "motif_alignment": {
+              "method": "pitch_class_chromagram_cosine_and_sliding_window",
+              "disclaimer": "Heuristic tonal/pitch-class alignment against MIDI motif; indicates harmonic and pitch-center kinship, not proof of note-for-note melodic transcription.",
+              "motifs": {
+                "motif_nova": {
+                  "exact_key_chroma_cosine": 0.777,
+                  "peak_passage_chroma_cosine": 0.819,
+                  "best_transposed_chroma_cosine": 0.801,
+                  "best_shift_semitones": -5
+                },
+                "motif_zeke": {
+                  "exact_key_chroma_cosine": 0.709,
+                  "peak_passage_chroma_cosine": 0.776,
+                  "best_transposed_chroma_cosine": 0.842,
+                  "best_shift_semitones": -2
+                }
+              }
+            },
+            "mix_and_loop": {
+              "crest_factor_db": 13.55,
+              "stereo_correlation": 0.806,
+              "stereo_width_ratio": 0.328,
+              "spectral_bands_pct": {
+                "sub_lt_100hz": 50.1,
+                "warmth_100_400hz": 37.7,
+                "mid_400_4khz": 9.9,
+                "air_gt_4khz": 2.3
+              },
+              "first_2s_rms_db": -13.53,
+              "last_2s_rms_db": -14.07,
+              "last_500ms_rms_db": -13.7,
+              "dead_tail_seconds": 0.0,
+              "end_fade_drop_db": -0.18,
+              "loop_seam_delta_db": 0.54,
+              "warnings": []
+            },
+            "computational_score": {
+              "score_type": "computational_metrics_only",
+              "score": 93.0,
+              "highlights": [
+                "Tempo locked near target (137.8 BPM)",
+                "Moderate chroma alignment with target motif (0.78)",
+                "Clean mix & loop boundaries"
+              ],
+              "warnings": []
+            }
+          },
+          "ai_eval_hydrogen": {
+            "scores": {
+              "quality": 8,
+              "scene_fit": 7,
+              "identity": 8,
+              "motif_recognition": 7,
+              "instrumentation": 8,
+              "development": 8,
+              "endurance": 8,
+              "loop_potential": 9,
+              "cleanliness": 9
+            },
+            "heard_instruments": "Driving live-style rock drums, heavy palm-muted bass, overdriven electric guitars, background synth/organ.",
+            "heard_motif_match": "Moderate-to-good match; captures the D-minor ascending battle riff feel and pitch center, though phrased as a broader rock riff variation.",
+            "vocals_or_defects": "none (slightly sub-heavy low end, no clipping or vocals)",
+            "ending_quality": "Ends at full band energy with no fade-out or dead tail (0.0s dead tail, 0.54 dB seam delta)."
+          },
+          "ai_eval_argon": null,
+          "rank": 2,
+          "shortlist_label": "B",
+          "notes": "Pilot Option B ElevenLabs music_v2"
+        },
+        {
+          "candidate_id": "music_w1_combat_cand_02",
+          "take_num": 2,
+          "provider": "elevenlabs",
+          "created_at": "2026-11-17T14:05:35.750969",
+          "suno_clip_id": "",
+          "suno_url": "",
+          "title_in_suno": "Homestead Scrap Skirmish",
+          "generation_group_id": "",
+          "prompt_used": "High-octane 80s analog blues-rock JRPG battle theme, 138 BPM, D minor. Overdriven resonator and lead electric guitar propelling Nova's ascending D-F-G-A battle hook, punchy live rock drum kit, fat gritty P-bass groove, rhythmic metallic clanks. Gritty working-class adrenaline, seamless loop. Recurring leitmotif DNA: Nova's Theme (The Spark) (D Minor -> D Major; progression Dm9-BbMaj7-C6-Dm9; lead resonator acoustic guitar, overdriven lead electric guitar); Zeke's Theme (Unbroken Iron) (E Minor; progression Em7-Em7-Am7-Bm7; lead Fender Rhodes electric piano, gritty P-bass). Begin immediately inside the musical groove with no slow intro; maintain consistent underscore flow and end cleanly on the same harmonic texture ready to loop seamlessly without fading out. Avoid: vocals, modern dubstep, serene ambient, singing.",
+          "credits_cost": 0,
+          "commercial_rights_verified": false,
+          "local_raw_path": "audio_studio/takes/music_w1_combat/take_02/raw.mp3",
+          "mastered_path": null,
+          "computational": {
+            "file": "raw.mp3",
+            "metrics": {
+              "sample_rate": 44100,
+              "channels": 2,
+              "frames": 3970944,
+              "duration_seconds": 90.0441,
+              "rms_dbfs": -14.74,
+              "peak_dbfs": -0.14,
+              "integrated_lufs": -12.35,
+              "true_peak_dbtp": -0.01,
+              "samples_at_full_scale": 0,
+              "first_second_rms_dbfs": -14.59,
+              "last_second_rms_dbfs": -14.74
+            },
+            "estimated_keys": [
+              {
+                "key": "D Major",
+                "correlation": 0.728
+              },
+              {
+                "key": "D Minor",
+                "correlation": 0.708
+              },
+              {
+                "key": "A Minor",
+                "correlation": 0.475
+              }
+            ],
+            "tempo": {
+              "estimated_bpm": 137.8,
+              "raw_peak_bpm": 68.9,
+              "confidence": 0.92,
+              "delta_from_target": -0.2
+            },
+            "motif_alignment": {
+              "method": "pitch_class_chromagram_cosine_and_sliding_window",
+              "disclaimer": "Heuristic tonal/pitch-class alignment against MIDI motif; indicates harmonic and pitch-center kinship, not proof of note-for-note melodic transcription.",
+              "motifs": {
+                "motif_nova": {
+                  "exact_key_chroma_cosine": 0.846,
+                  "peak_passage_chroma_cosine": 0.876,
+                  "best_transposed_chroma_cosine": 0.846,
+                  "best_shift_semitones": 0
+                },
+                "motif_zeke": {
+                  "exact_key_chroma_cosine": 0.747,
+                  "peak_passage_chroma_cosine": 0.763,
+                  "best_transposed_chroma_cosine": 0.88,
+                  "best_shift_semitones": -2
+                }
+              }
+            },
+            "mix_and_loop": {
+              "crest_factor_db": 15.23,
+              "stereo_correlation": 0.73,
+              "stereo_width_ratio": 0.395,
+              "spectral_bands_pct": {
+                "sub_lt_100hz": 38.3,
+                "warmth_100_400hz": 41.6,
+                "mid_400_4khz": 16.5,
+                "air_gt_4khz": 3.6
+              },
+              "first_2s_rms_db": -15.1,
+              "last_2s_rms_db": -15.73,
+              "last_500ms_rms_db": -14.9,
+              "dead_tail_seconds": 0.0,
+              "end_fade_drop_db": -0.47,
+              "loop_seam_delta_db": 0.63,
+              "warnings": []
+            },
+            "computational_score": {
+              "score_type": "computational_metrics_only",
+              "score": 93.0,
+              "highlights": [
+                "Tempo locked near target (137.8 BPM)",
+                "Moderate chroma alignment with target motif (0.85)",
+                "Clean mix & loop boundaries"
+              ],
+              "warnings": []
+            }
+          },
+          "ai_eval_hydrogen": {
+            "scores": {
+              "quality": 8,
+              "scene_fit": 8,
+              "identity": 8,
+              "motif_recognition": 8,
+              "instrumentation": 9,
+              "development": 8,
+              "endurance": 8,
+              "loop_potential": 9,
+              "cleanliness": 9
+            },
+            "heard_instruments": "Punchy rock drum kit, fat gritty bass, overdriven rhythm and lead electric guitars, subtle analog synth pad.",
+            "heard_motif_match": "Strong match; lead guitar/synth line clearly echoes the ascending D-F-G-A contour and syncopated drive of the reference MP3.",
+            "vocals_or_defects": "none",
+            "ending_quality": "Full-energy sustain right to the end (0.0s dead tail, 0.63 dB seam delta); clean loop potential."
+          },
+          "ai_eval_argon": null,
+          "rank": 1,
+          "shortlist_label": "A",
+          "notes": "Pilot Option B ElevenLabs music_v2"
+        },
+        {
+          "candidate_id": "music_w1_combat_cand_03",
+          "take_num": 3,
+          "provider": "elevenlabs",
+          "created_at": "2026-11-17T14:05:48.204814",
+          "suno_clip_id": "",
+          "suno_url": "",
+          "title_in_suno": "Homestead Scrap Skirmish",
+          "generation_group_id": "",
+          "prompt_used": "High-octane 80s analog blues-rock JRPG battle theme, 138 BPM, D minor. Overdriven resonator and lead electric guitar propelling Nova's ascending D-F-G-A battle hook, punchy live rock drum kit, fat gritty P-bass groove, rhythmic metallic clanks. Gritty working-class adrenaline, seamless loop. Recurring leitmotif DNA: Nova's Theme (The Spark) (D Minor -> D Major; progression Dm9-BbMaj7-C6-Dm9; lead resonator acoustic guitar, overdriven lead electric guitar); Zeke's Theme (Unbroken Iron) (E Minor; progression Em7-Em7-Am7-Bm7; lead Fender Rhodes electric piano, gritty P-bass). Begin immediately inside the musical groove with no slow intro; maintain consistent underscore flow and end cleanly on the same harmonic texture ready to loop seamlessly without fading out. Avoid: vocals, modern dubstep, serene ambient, singing.",
+          "credits_cost": 0,
+          "commercial_rights_verified": false,
+          "local_raw_path": "audio_studio/takes/music_w1_combat/take_03/raw.mp3",
+          "mastered_path": null,
+          "computational": {
+            "file": "raw.mp3",
+            "metrics": {
+              "sample_rate": 44100,
+              "channels": 2,
+              "frames": 3970944,
+              "duration_seconds": 90.0441,
+              "rms_dbfs": -14.99,
+              "peak_dbfs": -0.43,
+              "integrated_lufs": -12.56,
+              "true_peak_dbtp": -0.42,
+              "samples_at_full_scale": 0,
+              "first_second_rms_dbfs": -14.74,
+              "last_second_rms_dbfs": -57.68
+            },
+            "estimated_keys": [
+              {
+                "key": "D Major",
+                "correlation": 0.762
+              },
+              {
+                "key": "D Minor",
+                "correlation": 0.747
+              },
+              {
+                "key": "A Minor",
+                "correlation": 0.465
+              }
+            ],
+            "tempo": {
+              "estimated_bpm": 137.8,
+              "raw_peak_bpm": 68.9,
+              "confidence": 0.887,
+              "delta_from_target": -0.2
+            },
+            "motif_alignment": {
+              "method": "pitch_class_chromagram_cosine_and_sliding_window",
+              "disclaimer": "Heuristic tonal/pitch-class alignment against MIDI motif; indicates harmonic and pitch-center kinship, not proof of note-for-note melodic transcription.",
+              "motifs": {
+                "motif_nova": {
+                  "exact_key_chroma_cosine": 0.874,
+                  "peak_passage_chroma_cosine": 0.898,
+                  "best_transposed_chroma_cosine": 0.874,
+                  "best_shift_semitones": 0
+                },
+                "motif_zeke": {
+                  "exact_key_chroma_cosine": 0.73,
+                  "peak_passage_chroma_cosine": 0.765,
+                  "best_transposed_chroma_cosine": 0.913,
+                  "best_shift_semitones": -2
+                }
+              }
+            },
+            "mix_and_loop": {
+              "crest_factor_db": 15.05,
+              "stereo_correlation": 0.788,
+              "stereo_width_ratio": 0.345,
+              "spectral_bands_pct": {
+                "sub_lt_100hz": 29.9,
+                "warmth_100_400hz": 52.0,
+                "mid_400_4khz": 16.1,
+                "air_gt_4khz": 2.0
+              },
+              "first_2s_rms_db": -15.16,
+              "last_2s_rms_db": -23.95,
+              "last_500ms_rms_db": -80.55,
+              "dead_tail_seconds": 0.9,
+              "end_fade_drop_db": 65.07,
+              "loop_seam_delta_db": 8.8,
+              "warnings": [
+                "Dead silence tail at end (0.90s) weakens raw loop",
+                "Ending drops 65.1 dB below track RMS (possible fade-out ending)",
+                "Start/end loudness mismatch (8.8 dB)"
+              ]
+            },
+            "computational_score": {
+              "score_type": "computational_metrics_only",
+              "score": 74.0,
+              "highlights": [
+                "Tempo locked near target (137.8 BPM)",
+                "Strong chroma alignment with target motif (exact=0.87, passage=0.90)"
+              ],
+              "warnings": [
+                "Dead silence tail at end (0.90s) weakens raw loop",
+                "Ending drops 65.1 dB below track RMS (possible fade-out ending)",
+                "Start/end loudness mismatch (8.8 dB)"
+              ]
+            }
+          },
+          "ai_eval_hydrogen": {
+            "scores": {
+              "quality": 7,
+              "scene_fit": 7,
+              "identity": 7,
+              "motif_recognition": 9,
+              "instrumentation": 7,
+              "development": 8,
+              "endurance": 7,
+              "loop_potential": 3,
+              "cleanliness": 8
+            },
+            "heard_instruments": "Rock drums, driving bass, bright overdriven lead and rhythm electric guitars, warm synth/organ pads.",
+            "heard_motif_match": "Very strong match; lead guitar/synth closely tracks the ascending D-F-G-A motif phrasing from the reference MP3.",
+            "vocals_or_defects": "none (noticeable 100-400Hz warmth/thickness, no vocals or clipping)",
+            "ending_quality": "Ends on a resolved cadence that decays into 0.90s of dead silence (65.07 dB drop, 8.8 dB seam delta); not loop-ready."
+          },
+          "ai_eval_argon": null,
+          "rank": 4,
+          "shortlist_label": "rejected",
+          "notes": "Pilot Option B ElevenLabs music_v2"
+        },
+        {
+          "candidate_id": "music_w1_combat_cand_04",
+          "take_num": 4,
+          "provider": "elevenlabs",
+          "created_at": "2026-11-17T14:06:01.684535",
+          "suno_clip_id": "",
+          "suno_url": "",
+          "title_in_suno": "Homestead Scrap Skirmish",
+          "generation_group_id": "",
+          "prompt_used": "High-octane 80s analog blues-rock JRPG battle theme, 138 BPM, D minor. Overdriven resonator and lead electric guitar propelling Nova's ascending D-F-G-A battle hook, punchy live rock drum kit, fat gritty P-bass groove, rhythmic metallic clanks. Gritty working-class adrenaline, seamless loop. Recurring leitmotif DNA: Nova's Theme (The Spark) (D Minor -> D Major; progression Dm9-BbMaj7-C6-Dm9; lead resonator acoustic guitar, overdriven lead electric guitar); Zeke's Theme (Unbroken Iron) (E Minor; progression Em7-Em7-Am7-Bm7; lead Fender Rhodes electric piano, gritty P-bass). Begin immediately inside the musical groove with no slow intro; maintain consistent underscore flow and end cleanly on the same harmonic texture ready to loop seamlessly without fading out. Avoid: vocals, modern dubstep, serene ambient, singing.",
+          "credits_cost": 0,
+          "commercial_rights_verified": false,
+          "local_raw_path": "audio_studio/takes/music_w1_combat/take_04/raw.mp3",
+          "mastered_path": null,
+          "computational": {
+            "file": "raw.mp3",
+            "metrics": {
+              "sample_rate": 44100,
+              "channels": 2,
+              "frames": 3970944,
+              "duration_seconds": 90.0441,
+              "rms_dbfs": -14.64,
+              "peak_dbfs": -0.38,
+              "integrated_lufs": -12.15,
+              "true_peak_dbtp": -0.32,
+              "samples_at_full_scale": 0,
+              "first_second_rms_dbfs": -14.38,
+              "last_second_rms_dbfs": -45.32
+            },
+            "estimated_keys": [
+              {
+                "key": "D Minor",
+                "correlation": 0.799
+              },
+              {
+                "key": "D Major",
+                "correlation": 0.671
+              },
+              {
+                "key": "G Major",
+                "correlation": 0.41
+              }
+            ],
+            "tempo": {
+              "estimated_bpm": 137.8,
+              "raw_peak_bpm": 68.9,
+              "confidence": 0.909,
+              "delta_from_target": -0.2
+            },
+            "motif_alignment": {
+              "method": "pitch_class_chromagram_cosine_and_sliding_window",
+              "disclaimer": "Heuristic tonal/pitch-class alignment against MIDI motif; indicates harmonic and pitch-center kinship, not proof of note-for-note melodic transcription.",
+              "motifs": {
+                "motif_nova": {
+                  "exact_key_chroma_cosine": 0.843,
+                  "peak_passage_chroma_cosine": 0.855,
+                  "best_transposed_chroma_cosine": 0.843,
+                  "best_shift_semitones": 0
+                },
+                "motif_zeke": {
+                  "exact_key_chroma_cosine": 0.732,
+                  "peak_passage_chroma_cosine": 0.805,
+                  "best_transposed_chroma_cosine": 0.883,
+                  "best_shift_semitones": -2
+                }
+              }
+            },
+            "mix_and_loop": {
+              "crest_factor_db": 14.95,
+              "stereo_correlation": 0.707,
+              "stereo_width_ratio": 0.414,
+              "spectral_bands_pct": {
+                "sub_lt_100hz": 44.9,
+                "warmth_100_400hz": 33.3,
+                "mid_400_4khz": 18.5,
+                "air_gt_4khz": 3.3
+              },
+              "first_2s_rms_db": -15.53,
+              "last_2s_rms_db": -32.78,
+              "last_500ms_rms_db": -63.93,
+              "dead_tail_seconds": 0.5,
+              "end_fade_drop_db": 48.6,
+              "loop_seam_delta_db": 17.25,
+              "warnings": [
+                "Ending drops 48.6 dB below track RMS (possible fade-out ending)",
+                "Start/end loudness mismatch (17.2 dB)"
+              ]
+            },
+            "computational_score": {
+              "score_type": "computational_metrics_only",
+              "score": 75.0,
+              "highlights": [
+                "Tempo locked near target (137.8 BPM)",
+                "Moderate chroma alignment with target motif (0.84)"
+              ],
+              "warnings": [
+                "Ending drops 48.6 dB below track RMS (possible fade-out ending)",
+                "Start/end loudness mismatch (17.2 dB)"
+              ]
+            }
+          },
+          "ai_eval_hydrogen": {
+            "scores": {
+              "quality": 8,
+              "scene_fit": 8,
+              "identity": 8,
+              "motif_recognition": 8,
+              "instrumentation": 8,
+              "development": 8,
+              "endurance": 8,
+              "loop_potential": 4,
+              "cleanliness": 9
+            },
+            "heard_instruments": "Live rock drums, gritty bass, overdriven blues-rock lead and rhythm electric guitars, subtle organ/synth texture.",
+            "heard_motif_match": "Strong match; D-minor ascending hook is clearly recognizable in both the main section and upper-register lead.",
+            "vocals_or_defects": "none",
+            "ending_quality": "Conclusive final chord fades out into 0.5s dead silence (48.6 dB drop, 17.25 dB seam delta); requires trimming/rework to loop."
+          },
+          "ai_eval_argon": null,
+          "rank": 3,
+          "shortlist_label": "C",
+          "notes": "Pilot Option B ElevenLabs music_v2"
+        }
+      ],
+      "shortlist": {
+        "A": {
+          "candidate_id": "music_w1_combat_cand_02",
+          "take_num": 2,
+          "suno_url": "",
+          "rationale": "Best combination of gritty 80s rock battle punch, clear midrange guitar cut, strong Nova D-minor ascending motif presence, and a full-energy loop-ready ending with zero dead tail."
+        },
+        "B": {
+          "candidate_id": "music_w1_combat_cand_01",
+          "take_num": 1,
+          "suno_url": "",
+          "rationale": "Clean, high-energy 80s analog rock groove with zero defects and a seamless full-energy ending, though slightly more sub-heavy with less guitar bite and looser motif adherence than Take 2."
+        },
+        "C": {
+          "candidate_id": "music_w1_combat_cand_04",
+          "take_num": 4,
+          "suno_url": "",
+          "rationale": "Gritty dusty blues-rock guitar tone, expressive lead development, and strong D-minor motif match, but penalized for a conclusive fade-out ending that breaks raw looping."
+        }
+      },
+      "rejected_ids_preserved": [
+        {
+          "candidate_id": "music_w1_combat_cand_03",
+          "take_num": 3,
+          "suno_clip_id": "",
+          "suno_url": "",
+          "reason": "Catchy 80s JRPG rock lead with very clear motif alignment, but has the worst loop-breaking silence tail (0.9s, 65.1 dB drop), warmer/less gritty tone, and heavier low-mid buildup."
+        }
+      ]
+    },
+    "music_w1_boss_warden": {
+      "id": "music_w1_boss_warden",
+      "title": "The Iron Warden (Heavy Duty)",
+      "category": "boss",
+      "scope": "pilot",
+      "batch_id": "batch_0_pilot",
+      "recommended_provider": "suno",
+      "key": "C Minor / D Minor",
+      "bpm": 142,
+      "loop": true,
+      "motif_refs": [
+        "motif_nova",
+        "motif_vale"
+      ],
+      "reference_wav": "audio_studio/reference_audio/pilot_music_w1_boss_warden.wav",
+      "status": "ready_for_review",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [
+        {
+          "candidate_id": "music_w1_boss_warden_cand_01",
+          "take_num": 1,
+          "provider": "elevenlabs",
+          "created_at": "2026-11-17T14:09:38.235914",
+          "suno_clip_id": "",
+          "suno_url": "",
+          "title_in_suno": "The Iron Warden (Heavy Duty)",
+          "generation_group_id": "",
+          "prompt_used": "Heavy industrial hard-rock JRPG boss battle, 142 BPM, C minor. Crushing distorted guitar power chords, pounding anvil hits, screeching analog synth sirens, driving double-kick drums, defiant lead guitar quoting Nova's ascending hook. Overwhelming armored corporate enforcer, seamless loop. Recurring leitmotif DNA: D Minor -> D Major; progression Dm9-BbMaj7-C6-Dm9; lead resonator acoustic guitar, overdriven lead electric guitar; C Minor; progression Cm-Cm/B-Cm/Bb-Am7b5; lead cold high-register felt piano, colossal pipe organ. Begin immediately inside the musical groove with no slow intro; maintain consistent underscore flow and end cleanly on the same harmonic texture ready to loop seamlessly without fading out. Avoid: vocals, peaceful flute, jazz lounge, singing.",
+          "credits_cost": 0,
+          "commercial_rights_verified": false,
+          "local_raw_path": "audio_studio/takes/music_w1_boss_warden/take_01/raw.mp3",
+          "mastered_path": null,
+          "computational": {
+            "file": "raw.mp3",
+            "metrics": {
+              "sample_rate": 44100,
+              "channels": 2,
+              "frames": 5293440,
+              "duration_seconds": 120.0327,
+              "rms_dbfs": -14.77,
+              "peak_dbfs": -0.45,
+              "integrated_lufs": -11.86,
+              "true_peak_dbtp": -0.3,
+              "samples_at_full_scale": 0,
+              "first_second_rms_dbfs": -14.62,
+              "last_second_rms_dbfs": -14.7
+            },
+            "estimated_keys": [
+              {
+                "key": "C Major",
+                "correlation": 0.792
+              },
+              {
+                "key": "C Minor",
+                "correlation": 0.571
+              },
+              {
+                "key": "G Major",
+                "correlation": 0.546
+              }
+            ],
+            "tempo": {
+              "estimated_bpm": 141.6,
+              "raw_peak_bpm": 70.8,
+              "confidence": 0.852,
+              "delta_from_target": -0.4
+            },
+            "motif_alignment": {
+              "method": "pitch_class_chromagram_cosine_and_sliding_window",
+              "disclaimer": "Heuristic tonal/pitch-class alignment against MIDI motif; indicates harmonic and pitch-center kinship, not proof of note-for-note melodic transcription.",
+              "motifs": {
+                "motif_nova": {
+                  "exact_key_chroma_cosine": 0.726,
+                  "peak_passage_chroma_cosine": 0.763,
+                  "best_transposed_chroma_cosine": 0.793,
+                  "best_shift_semitones": -2
+                },
+                "motif_vale": {
+                  "exact_key_chroma_cosine": 0.866,
+                  "peak_passage_chroma_cosine": 0.913,
+                  "best_transposed_chroma_cosine": 0.866,
+                  "best_shift_semitones": 0
+                }
+              }
+            },
+            "mix_and_loop": {
+              "crest_factor_db": 15.39,
+              "stereo_correlation": 0.563,
+              "stereo_width_ratio": 0.529,
+              "spectral_bands_pct": {
+                "sub_lt_100hz": 51.0,
+                "warmth_100_400hz": 23.3,
+                "mid_400_4khz": 19.3,
+                "air_gt_4khz": 6.3
+              },
+              "first_2s_rms_db": -15.73,
+              "last_2s_rms_db": -15.84,
+              "last_500ms_rms_db": -16.3,
+              "dead_tail_seconds": 0.0,
+              "end_fade_drop_db": 0.46,
+              "loop_seam_delta_db": 0.11,
+              "warnings": []
+            },
+            "computational_score": {
+              "score_type": "computational_metrics_only",
+              "score": 98.0,
+              "highlights": [
+                "Tempo locked near target (141.6 BPM)",
+                "Strong chroma alignment with target motif (exact=0.87, passage=0.91)",
+                "Clean mix & loop boundaries"
+              ],
+              "warnings": []
+            }
+          },
+          "ai_eval_hydrogen": {
+            "scores": {
+              "quality": 8.5,
+              "scene_emotion": 9.0,
+              "starborn_identity": 8.0,
+              "motif_recognition": 6.0,
+              "orchestration_punch": 9.0,
+              "development": 8.0,
+              "replayability": 8.5,
+              "loop_ending_continuity": 9.0,
+              "defects_vocals": 9.5
+            },
+            "overall": 8.4,
+            "motif_vs_ref": "Tonal kinship in C minor (Vale chroma 0.866, Nova 0.726) and aggressive ascending/descending contours, but does not clearly quote the reference MP3's exact Vale chromatic descent or Nova defiance hook.",
+            "mix_loop": "Sub-heavy (<100Hz 51%) yet guitars/sirens cut cleanly; 0.0s dead tail, 0.46 dB end drop, 0.11 dB seam delta.",
+            "defects": "No vocals, no AI artifacts, no structural collapse."
+          },
+          "ai_eval_argon": null,
+          "rank": 1,
+          "shortlist_label": "A",
+          "notes": "Pilot cue 4 boss warden"
+        }
+      ],
+      "shortlist": {
+        "A": {
+          "candidate_id": "music_w1_boss_warden_cand_01",
+          "take_num": 1,
+          "suno_url": "",
+          "rationale": "Strong, clean heavy industrial hard-rock boss track at 141.6 BPM in C minor with crushing guitars, double-kick drive, metallic/anvil hits, synth sirens, and a tight full-energy loop seam (0.11 dB delta, 0s dead tail). Harmonies/pitch center align with Vale/Nova motifs, though literal melodic quotation of the reference MP3's chromatic descent and defiance hook is loose rather than explicit."
+        }
+      },
+      "rejected_ids_preserved": []
+    },
+    "music_w2_combat": {
+      "id": "music_w2_combat",
+      "title": "Swamp Ambush",
+      "category": "combat",
+      "scope": "primary_58",
+      "batch_id": "batch_4",
+      "recommended_provider": "suno",
+      "key": "A Dorian",
+      "bpm": 132,
+      "loop": true,
+      "motif_refs": [
+        "motif_orion",
+        "motif_nova"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_orion.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w2_boss_guardian": {
+      "id": "music_w2_boss_guardian",
+      "title": "The Source Beast (Canopy Apex)",
+      "category": "boss",
+      "scope": "primary_58",
+      "batch_id": "batch_4",
+      "recommended_provider": "suno",
+      "key": "D Minor / A Dorian",
+      "bpm": 140,
+      "loop": true,
+      "motif_refs": [
+        "motif_source",
+        "motif_orion"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_source.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w3_combat": {
+      "id": "music_w3_combat",
+      "title": "Spire Security Chase",
+      "category": "combat",
+      "scope": "primary_58",
+      "batch_id": "batch_4",
+      "recommended_provider": "suno",
+      "key": "C# Minor",
+      "bpm": 136,
+      "loop": true,
+      "motif_refs": [
+        "motif_zeke",
+        "motif_gh0st"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_zeke.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w3_boss_administrator": {
+      "id": "music_w3_boss_administrator",
+      "title": "The Administrator (Polite Annihilation)",
+      "category": "boss",
+      "scope": "extension_or_stinger",
+      "batch_id": "batch_7_extensions_and_stingers",
+      "recommended_provider": "suno",
+      "key": "Bb Minor",
+      "bpm": 142,
+      "loop": true,
+      "motif_refs": [
+        "motif_thorne"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_thorne.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w3_boss_phantom": {
+      "id": "music_w3_boss_phantom",
+      "title": "Phantom Prototype (Phase Blade Duel)",
+      "category": "boss",
+      "scope": "primary_58",
+      "batch_id": "batch_4",
+      "recommended_provider": "suno",
+      "key": "F# Minor",
+      "bpm": 146,
+      "loop": true,
+      "motif_refs": [
+        "motif_gh0st",
+        "motif_elara"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_gh0st.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w4_combat": {
+      "id": "music_w4_combat",
+      "title": "Foundry Line Battle",
+      "category": "combat",
+      "scope": "primary_58",
+      "batch_id": "batch_4",
+      "recommended_provider": "suno",
+      "key": "D Minor",
+      "bpm": 144,
+      "loop": true,
+      "motif_refs": [
+        "motif_nova",
+        "motif_gh0st"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w4_boss_titan": {
+      "id": "music_w4_boss_titan",
+      "title": "Titan Walker & Crucible (Molten Siege)",
+      "category": "boss",
+      "scope": "primary_58",
+      "batch_id": "batch_4",
+      "recommended_provider": "suno",
+      "key": "B Minor / D Minor",
+      "bpm": 150,
+      "loop": true,
+      "motif_refs": [
+        "motif_nova",
+        "motif_gh0st"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w5_combat": {
+      "id": "music_w5_combat",
+      "title": "Zero-G Skirmish",
+      "category": "combat",
+      "scope": "primary_58",
+      "batch_id": "batch_5",
+      "recommended_provider": "suno",
+      "key": "C Minor",
+      "bpm": 154,
+      "loop": true,
+      "motif_refs": [
+        "motif_vale",
+        "motif_gh0st"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_vale.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w5_boss_compliance": {
+      "id": "music_w5_boss_compliance",
+      "title": "Compliance Avatar (Orbital Lockdown)",
+      "category": "boss",
+      "scope": "extension_or_stinger",
+      "batch_id": "batch_7_extensions_and_stingers",
+      "recommended_provider": "suno",
+      "key": "C Minor",
+      "bpm": 148,
+      "loop": true,
+      "motif_refs": [
+        "motif_vale",
+        "motif_thorne"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_vale.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w6_combat": {
+      "id": "music_w6_combat",
+      "title": "Fracture Echo Battle",
+      "category": "combat",
+      "scope": "primary_58",
+      "batch_id": "batch_5",
+      "recommended_provider": "suno",
+      "key": "A Dorian / D Minor",
+      "bpm": 144,
+      "loop": true,
+      "motif_refs": [
+        "motif_source",
+        "motif_nova"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_source.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w6_boss_final": {
+      "id": "music_w6_boss_final",
+      "title": "Ascended Vale: The Soloist (Phase 1)",
+      "category": "boss",
+      "scope": "primary_58",
+      "batch_id": "batch_5",
+      "recommended_provider": "suno",
+      "key": "C Minor <-> D Minor",
+      "bpm": 152,
+      "loop": true,
+      "motif_refs": [
+        "motif_vale",
+        "motif_nova",
+        "motif_source"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_vale.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_w6_boss_vale_p2": {
+      "id": "music_w6_boss_vale_p2",
+      "title": "Ascended Silence (Final Climax Phase 2)",
+      "category": "boss",
+      "scope": "extension_or_stinger",
+      "batch_id": "batch_7_extensions_and_stingers",
+      "recommended_provider": "suno",
+      "key": "C Minor -> D Major",
+      "bpm": 158,
+      "loop": true,
+      "motif_refs": [
+        "motif_vale",
+        "motif_nova",
+        "motif_elara",
+        "motif_source"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_vale.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": false,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_intro_breach": {
+      "id": "music_intro_breach",
+      "title": "Sector 9 Breach (Cold Open)",
+      "category": "cinematic",
+      "scope": "primary_58",
+      "batch_id": "batch_5",
+      "recommended_provider": "elevenlabs",
+      "key": "A Dorian -> D Minor",
+      "bpm": 135,
+      "loop": false,
+      "motif_refs": [
+        "motif_orion",
+        "motif_source",
+        "motif_nova"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_orion.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_crash_flight": {
+      "id": "music_crash_flight",
+      "title": "Pod Trajectory & Shield Impact",
+      "category": "cinematic",
+      "scope": "primary_58",
+      "batch_id": "batch_5",
+      "recommended_provider": "elevenlabs",
+      "key": "D Minor",
+      "bpm": 140,
+      "loop": false,
+      "motif_refs": [
+        "motif_zeke",
+        "motif_nova"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_zeke.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_cinematic_prologue": {
+      "id": "music_cinematic_prologue",
+      "title": "The Launch & The Fall",
+      "category": "cinematic",
+      "scope": "primary_58",
+      "batch_id": "batch_5",
+      "recommended_provider": "elevenlabs",
+      "key": "D Minor",
+      "bpm": 78,
+      "loop": false,
+      "motif_refs": [
+        "motif_nova",
+        "motif_jed"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_cinematic_crash": {
+      "id": "music_cinematic_crash",
+      "title": "Planetary Impact",
+      "category": "cinematic",
+      "scope": "primary_58",
+      "batch_id": "batch_5",
+      "recommended_provider": "elevenlabs",
+      "key": "C Drone",
+      "bpm": 52,
+      "loop": false,
+      "motif_refs": [
+        "motif_source"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_source.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_epilogue": {
+      "id": "music_epilogue",
+      "title": "Morning in the Colony (Epilogue)",
+      "category": "cinematic",
+      "scope": "primary_58",
+      "batch_id": "batch_5",
+      "recommended_provider": "suno",
+      "key": "G Major / D Major",
+      "bpm": 70,
+      "loop": false,
+      "motif_refs": [
+        "motif_nova",
+        "motif_jed",
+        "motif_zeke"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_credits_ending": {
+      "id": "music_credits_ending",
+      "title": "The Great Frontier (End Credits Suite)",
+      "category": "cinematic",
+      "scope": "primary_58",
+      "batch_id": "batch_5",
+      "recommended_provider": "suno",
+      "key": "D Major",
+      "bpm": 106,
+      "loop": false,
+      "motif_refs": [
+        "motif_nova",
+        "motif_zeke",
+        "motif_orion",
+        "motif_elara"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_fishing_ambient": {
+      "id": "music_fishing_ambient",
+      "title": "Tideglass Angler (Fishing)",
+      "category": "activities",
+      "scope": "primary_58",
+      "batch_id": "batch_5",
+      "recommended_provider": "suno",
+      "key": "C Major",
+      "bpm": 72,
+      "loop": true,
+      "motif_refs": [
+        "motif_jed"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_jed.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_arcade_cabinet": {
+      "id": "music_arcade_cabinet",
+      "title": "Hyperion 1986 (Arcade Cabinet)",
+      "category": "activities",
+      "scope": "primary_58",
+      "batch_id": "batch_6",
+      "recommended_provider": "suno",
+      "key": "F Major",
+      "bpm": 134,
+      "loop": true,
+      "motif_refs": [
+        "motif_nova"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_tinkering_focus": {
+      "id": "music_tinkering_focus",
+      "title": "Workstation Flow (Tinkering)",
+      "category": "activities",
+      "scope": "primary_58",
+      "batch_id": "batch_6",
+      "recommended_provider": "suno",
+      "key": "G Major",
+      "bpm": 80,
+      "loop": true,
+      "motif_refs": [
+        "motif_jed"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_jed.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_cooking_kitchen": {
+      "id": "music_cooking_kitchen",
+      "title": "Mess Hall Stew (Cooking)",
+      "category": "activities",
+      "scope": "primary_58",
+      "batch_id": "batch_6",
+      "recommended_provider": "suno",
+      "key": "Bb Major",
+      "bpm": 112,
+      "loop": true,
+      "motif_refs": [
+        "motif_zeke"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_zeke.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    },
+    "music_shop_cozy": {
+      "id": "music_shop_cozy",
+      "title": "Frontier Exchange (Markets & Shops)",
+      "category": "activities",
+      "scope": "primary_58",
+      "batch_id": "batch_6",
+      "recommended_provider": "suno",
+      "key": "D Minor",
+      "bpm": 88,
+      "loop": true,
+      "motif_refs": [
+        "motif_zeke"
+      ],
+      "reference_wav": "audio_studio/reference_audio/motif_zeke.wav",
+      "status": "pending",
+      "approved_candidate_id": null,
+      "approved_take": null,
+      "commercial_rights_verified": false,
+      "commercial_use_flagged": false,
+      "in_game_verified": false,
+      "existing_live_asset": true,
+      "revision_notes": [],
+      "candidates": [],
+      "shortlist": {},
+      "rejected_ids_preserved": []
+    }
+  }
+}

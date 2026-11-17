@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_fishing_cast",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:40.762670",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "286d4a2cf3509e23782ad4898fbead3d193df96e5d65e9fb116a86944d6a6bea",
+  "bytes": 28778,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 59976,
+    "duration_seconds": 1.36,
+    "rms_dbfs": -18.43,
+    "peak_dbfs": -1.09,
+    "integrated_lufs": -12.91,
+    "true_peak_dbtp": -0.71,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -17.1,
+    "last_second_rms_dbfs": -22.62
+  },
+  "source_provenance": {
+    "cue_id": "sfx_fishing_cast",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:51.193995",
+    "source_filename": "sfx_fishing_cast.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "e0e84dc568d5df1bda41c40bb296765f2753a6aea55565d4e194434348936ffc",
+    "bytes": 23030,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 59976,
+      "duration_seconds": 1.36,
+      "rms_dbfs": -20.58,
+      "peak_dbfs": 0.0,
+      "integrated_lufs": -15.55,
+      "true_peak_dbtp": 1.04,
+      "samples_at_full_scale": 7,
+      "first_second_rms_dbfs": -19.24,
+      "last_second_rms_dbfs": -30.3
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Fishing rod whip cast and smooth spinning reel whir",
+      "duration_seconds": 1.4,
+      "prompt_influence": 0.45
+    }
+  }
+}

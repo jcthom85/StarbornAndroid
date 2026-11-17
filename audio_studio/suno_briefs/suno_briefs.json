@@ -1,0 +1,1321 @@
+{
+  "generated_at": "2026-11-17T13:44:25.469161",
+  "aesthetic": "Cassette-Age Space Opera",
+  "style_preferences": {
+    "version": "1.0.0",
+    "updated_at": "2026-11-17T13:44:25.468505",
+    "global_likes": [],
+    "global_dislikes": [
+      "vocals",
+      "singing"
+    ],
+    "category_likes": {},
+    "category_dislikes": {},
+    "recent_feedback": []
+  },
+  "motifs": {
+    "motif_nova": {
+      "name": "Nova's Theme (The Spark)",
+      "key": "D Minor -> D Major",
+      "bpm": 92,
+      "midi_file": "audio_studio/midi_motifs/motif_nova.mid",
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "lead_instruments": [
+        "resonator acoustic guitar",
+        "overdriven lead electric guitar",
+        "soaring strings unison"
+      ]
+    },
+    "motif_jed": {
+      "name": "Jed's Theme (The Fixer's Gift)",
+      "key": "G Major",
+      "bpm": 76,
+      "midi_file": "audio_studio/midi_motifs/motif_jed.mid",
+      "reference_wav": "audio_studio/reference_audio/motif_jed.wav",
+      "lead_instruments": [
+        "warm dusty harmonica",
+        "nylon acoustic guitar",
+        "mellow French horn"
+      ]
+    },
+    "motif_zeke": {
+      "name": "Zeke's Theme (Unbroken Iron)",
+      "key": "E Minor",
+      "bpm": 84,
+      "midi_file": "audio_studio/midi_motifs/motif_zeke.mid",
+      "reference_wav": "audio_studio/reference_audio/motif_zeke.wav",
+      "lead_instruments": [
+        "Fender Rhodes electric piano",
+        "gritty P-bass",
+        "slide electric blues guitar"
+      ]
+    },
+    "motif_orion": {
+      "name": "Orion's Theme (Memory of Aethel)",
+      "key": "A Dorian",
+      "bpm": 70,
+      "midi_file": "audio_studio/midi_motifs/motif_orion.mid",
+      "reference_wav": "audio_studio/reference_audio/motif_orion.wav",
+      "lead_instruments": [
+        "wooden flute",
+        "solo cello",
+        "Tibetan singing bowls",
+        "harp"
+      ]
+    },
+    "motif_gh0st": {
+      "name": "Gh0st's Theme (The Phantom Trace)",
+      "key": "F# Minor",
+      "bpm": 104,
+      "midi_file": "audio_studio/midi_motifs/motif_gh0st.mid",
+      "reference_wav": "audio_studio/reference_audio/motif_gh0st.wav",
+      "lead_instruments": [
+        "clean muted guitar with dotted-8th tape delay",
+        "analog sub pulse",
+        "pizzicato strings"
+      ]
+    },
+    "motif_elara": {
+      "name": "Elara's Song (The Pure Voice)",
+      "key": "F# Major",
+      "bpm": 84,
+      "midi_file": "audio_studio/midi_motifs/motif_elara.mid",
+      "reference_wav": "audio_studio/reference_audio/motif_elara.wav",
+      "lead_instruments": [
+        "glass celesta",
+        "vintage music box",
+        "fingerpicked acoustic",
+        "pure breathy soprano vocal (Tape 08 only)"
+      ]
+    },
+    "motif_thorne": {
+      "name": "Thorne's Theme (Closed Market)",
+      "key": "Bb Minor",
+      "bpm": 98,
+      "midi_file": "audio_studio/midi_motifs/motif_thorne.mid",
+      "reference_wav": "audio_studio/reference_audio/motif_thorne.wav",
+      "lead_instruments": [
+        "polished analog synth brass",
+        "glassy vibraphone/marimba",
+        "cold lounge Rhodes"
+      ]
+    },
+    "motif_vale": {
+      "name": "Vale's Theme (The Soloist)",
+      "key": "C Minor",
+      "bpm": 80,
+      "midi_file": "audio_studio/midi_motifs/motif_vale.mid",
+      "reference_wav": "audio_studio/reference_audio/motif_vale.wav",
+      "lead_instruments": [
+        "cold high-register felt piano",
+        "colossal pipe organ",
+        "unison orchestral strings & brass"
+      ]
+    },
+    "motif_source": {
+      "name": "The Source (Veyra's Current)",
+      "key": "A Dorian / Quartal Modal",
+      "bpm": 64,
+      "midi_file": "audio_studio/midi_motifs/motif_source.mid",
+      "reference_wav": "audio_studio/reference_audio/motif_source.wav",
+      "lead_instruments": [
+        "glass armonica",
+        "Tibetan singing bowls",
+        "wordless ethereal choir pad"
+      ]
+    }
+  },
+  "tracks": [
+    {
+      "id": "music_title_theme",
+      "title": "Starborn Main Title (The Spark in the Dark)",
+      "category": "core",
+      "recommended_provider": "suno",
+      "key": "D Minor -> D Major",
+      "bpm": 88,
+      "loop": true,
+      "duration_ms": 110000,
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid",
+        "audio_studio/midi_motifs/motif_source.mid"
+      ],
+      "style_prompt": "80s analog cassette sci-fi JRPG main title theme, 88 BPM, D minor opening into hopeful D major. Solo fingerpicked acoustic steel-string guitar states a memorable 5-note ascending theme, joined by warm Prophet-5 analog synth pads, lyrical solo cello, crystalline glass chimes, and a steady warm pulse. Nostalgic analog tape saturation, expansive cosmic wonder, seamless loop.",
+      "exclude_styles": "vocals, choir lyrics, trap beats, abrasive EDM drops, singing"
+    },
+    {
+      "id": "music_astra_common_room",
+      "title": "The Astra Lounge (Coffee & Cassettes)",
+      "category": "core",
+      "recommended_provider": "suno",
+      "key": "G Major",
+      "bpm": 76,
+      "loop": true,
+      "duration_ms": 96000,
+      "reference_wav": "audio_studio/reference_audio/pilot_music_astra_common_room.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid",
+        "audio_studio/midi_motifs/motif_jed.mid"
+      ],
+      "style_prompt": "Warm 80s analog cassette lo-fi folk-synthwave, 76 BPM, G major. Warm Fender Rhodes electric piano with chorus, gentle nylon/acoustic fingerpicking, mellow analog sub-bass, soft brushed kit, subtle tape hiss and cozy cabin intimacy. Safe harbor between space missions, relaxed, uncluttered mids for companion dialogue, seamless loop.",
+      "exclude_styles": "vocals, harsh distortion, cinematic brass climaxes, alarm sounds, singing"
+    },
+    {
+      "id": "music_astra_bridge",
+      "title": "Flight Bridge (Charting the Frontier)",
+      "category": "core",
+      "recommended_provider": "elevenlabs",
+      "key": "A Minor",
+      "bpm": 88,
+      "loop": true,
+      "duration_ms": 96000,
+      "reference_wav": "audio_studio/reference_audio/motif_orion.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_orion.mid",
+        "audio_studio/midi_motifs/motif_nova.mid"
+      ],
+      "style_prompt": "Warm analog space synthwave and downtempo navigation underscore, 88 BPM, A minor. Steady arpeggiated analog synth sequencer, clean muted electric guitar plucks with tape delay, subtle retro radar tones, gentle bass pulse, wide vintage stereo shimmer. Focused, hopeful, restrained for UI clarity, seamless loop.",
+      "exclude_styles": "vocals, combat drums, heavy metal guitars, loud risers, singing"
+    },
+    {
+      "id": "music_victory_standard",
+      "title": "Victory Fanfare (Battle Won)",
+      "category": "core",
+      "recommended_provider": "suno",
+      "key": "D Major",
+      "bpm": 126,
+      "loop": false,
+      "duration_ms": 20000,
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid"
+      ],
+      "style_prompt": "16-bit and 80s analog JRPG victory fanfare, 126 BPM, D major. Punchy brass-synth stabs quoting a bright ascending 5-note heroic hook, crisp electric guitar cadence, tight bass and rock drum groove settling into a celebratory loopable/clean ending cadence.",
+      "exclude_styles": "vocals, dark minor chords, ambient drone, singing"
+    },
+    {
+      "id": "music_victory_boss",
+      "title": "Major Victory (Breakthrough)",
+      "category": "core",
+      "recommended_provider": "suno",
+      "key": "D Major",
+      "bpm": 128,
+      "loop": false,
+      "duration_ms": 30000,
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid"
+      ],
+      "style_prompt": "Triumphant JRPG major boss victory fanfare evolving into uplifting analog synth-orchestral relief, 128 BPM, D major. Soaring electric guitar and warm brass-strings answering a heroic 5-note ascending cadence, resonant timpani, warm analog tape sheen.",
+      "exclude_styles": "vocals, tragic minor ending, singing"
+    },
+    {
+      "id": "music_game_over",
+      "title": "The Signal Fades (Defeat)",
+      "category": "core",
+      "recommended_provider": "elevenlabs",
+      "key": "D Minor",
+      "bpm": 60,
+      "loop": false,
+      "duration_ms": 24000,
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid"
+      ],
+      "style_prompt": "Poetic somber JRPG defeat cue, 60 BPM, D minor. Felt upright piano playing a slow fading broken motif, low cello sigh, soft cassette tape deceleration and quiet radio static tail. Reflective, fragile, never loud.",
+      "exclude_styles": "vocals, drums, cheerful major chords, harsh jump scare, singing"
+    },
+    {
+      "id": "music_nova_theme",
+      "title": "Nova's Theme (The Spark)",
+      "category": "character",
+      "recommended_provider": "suno",
+      "key": "D Minor -> D Major",
+      "bpm": 92,
+      "loop": true,
+      "duration_ms": 96000,
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid"
+      ],
+      "style_prompt": "Expressive JRPG character theme for a gritty 22-year-old mechanic, 92 BPM, D minor resolving to D major. Fingerpicked resonator acoustic guitar lead carrying a stubborn ascending 5-note melody, backed by warm cello, dusty brushed snare, upright bass, and subtle Juno synth warmth. Resilient, practical, quietly tender.",
+      "exclude_styles": "vocals, pompous royalty fanfare, modern EDM, singing"
+    },
+    {
+      "id": "music_jed_theme",
+      "title": "Jed's Theme (The Fixer's Gift)",
+      "category": "character",
+      "recommended_provider": "suno",
+      "key": "G Major",
+      "bpm": 76,
+      "loop": true,
+      "duration_ms": 90000,
+      "reference_wav": "audio_studio/reference_audio/motif_jed.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_jed.mid"
+      ],
+      "style_prompt": "Intimate warm frontier mentor theme, 76 BPM, G major. Solo nylon/steel acoustic guitar and dusty mellow harmonica playing a gentle falling plagal cadence, soft upright bass, subtle workbench room air and analog tape warmth. Unhurried, caring, blue-collar grace.",
+      "exclude_styles": "vocals, distortion, fast percussion, synthwave drops, singing"
+    },
+    {
+      "id": "music_zeke_theme",
+      "title": "Zeke's Theme (Unbroken Iron)",
+      "category": "character",
+      "recommended_provider": "suno",
+      "key": "E Minor",
+      "bpm": 84,
+      "loop": true,
+      "duration_ms": 90000,
+      "reference_wav": "audio_studio/reference_audio/motif_zeke.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_zeke.mid"
+      ],
+      "style_prompt": "Soulful working-class blues character theme, 84 BPM, E minor. Warm Fender Rhodes chords, gritty overdriven P-bass walking line, understated slide guitar fills, crisp dry rimshot groove, analog cassette warmth. Loyal, self-deprecating courage rising from nervous tension.",
+      "exclude_styles": "vocals, metal blast beats, glossy EDM, singing"
+    },
+    {
+      "id": "music_orion_theme",
+      "title": "Orion's Theme (Memory of Aethel)",
+      "category": "character",
+      "recommended_provider": "suno",
+      "key": "A Dorian",
+      "bpm": 70,
+      "loop": true,
+      "duration_ms": 96000,
+      "reference_wav": "audio_studio/reference_audio/motif_orion.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_orion.mid",
+        "audio_studio/midi_motifs/motif_source.mid"
+      ],
+      "style_prompt": "Ancient elegiac chamber-folk theme in 3/4 time, 70 BPM, A Dorian. Lyrical wooden flute and deep solo cello weaving over resonant Tibetan singing bowls, delicate harp arpeggios, and wide sacred reverb. Dignified grief softening into quiet guidance.",
+      "exclude_styles": "vocals, electronic drum beats, distorted guitars, singing"
+    },
+    {
+      "id": "music_gh0st_theme",
+      "title": "Gh0st's Theme (The Phantom Trace)",
+      "category": "character",
+      "recommended_provider": "suno",
+      "key": "F# Minor",
+      "bpm": 104,
+      "loop": true,
+      "duration_ms": 92000,
+      "reference_wav": "audio_studio/reference_audio/motif_gh0st.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_gh0st.mid",
+        "audio_studio/midi_motifs/motif_elara.mid"
+      ],
+      "style_prompt": "Solitary stealth cyber-noir theme, 104 BPM, F# minor. Clean muted electric guitar arpeggios through dark analog tape delay, deep fretless sub-bass, tight dry electronic rim clicks, faint warm glass celesta harmonic answer hinting at lost humanity. Restrained, watchful, protective.",
+      "exclude_styles": "vocals, loud metal guitars, festive brass, singing"
+    },
+    {
+      "id": "music_elaras_song",
+      "title": "Elara's Song (The Pure Voice)",
+      "category": "character",
+      "recommended_provider": "suno",
+      "key": "F# Major",
+      "bpm": 84,
+      "loop": false,
+      "duration_ms": 120000,
+      "reference_wav": "audio_studio/reference_audio/motif_elara.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_elara.mid"
+      ],
+      "style_prompt": "Heartbreaking 1980s 4-track cassette folk lullaby in 3/4 waltz time, 84 BPM, F# major. Fingerpicked acoustic guitar, delicate music box celesta, warm chorus bass, gentle tape flutter and hiss, with a soft breathy pure female soprano singing a tender wordless/short lullaby about starlight and keeping the door open.",
+      "exclude_styles": "heavy drums, club beat, operatic belting, modern autotune"
+    },
+    {
+      "id": "music_thorne_theme",
+      "title": "Thorne's Theme (Closed Market)",
+      "category": "character",
+      "recommended_provider": "suno",
+      "key": "Bb Minor",
+      "bpm": 98,
+      "loop": true,
+      "duration_ms": 90000,
+      "reference_wav": "audio_studio/reference_audio/motif_thorne.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_thorne.mid"
+      ],
+      "style_prompt": "Cold executive corporate noir theme, 98 BPM, Bb minor. Sleek muted analog synth brass, glassy marimba ostinato, crisp dry electronic hi-hats, deep sub-bass stride, polished sterile lounge reverb. Confident, calculating monopoly.",
+      "exclude_styles": "vocals, warm rustic acoustic guitar, heavy rock drums, singing"
+    },
+    {
+      "id": "music_vale_theme",
+      "title": "Vale's Theme (The Soloist)",
+      "category": "character",
+      "recommended_provider": "suno",
+      "key": "C Minor",
+      "bpm": 80,
+      "loop": true,
+      "duration_ms": 96000,
+      "reference_wav": "audio_studio/reference_audio/motif_vale.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_vale.mid"
+      ],
+      "style_prompt": "Hauntingly calm minimalist chamber theme, 80 BPM, C minor. High-register sterile solo piano playing a slow 4-note descending chromatic line (C-B-Bb-A), supported by cold sustained cello harmonics and distant low pipe organ swell. Merciless perfection, quiet ideological certainty.",
+      "exclude_styles": "vocals, blues groove, playful melodies, loud rock drums, singing"
+    },
+    {
+      "id": "music_theme_emotional",
+      "title": "Shared Ground (Emotional Theme)",
+      "category": "character",
+      "recommended_provider": "suno",
+      "key": "D Minor -> G Major",
+      "bpm": 68,
+      "loop": false,
+      "duration_ms": 90000,
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid",
+        "audio_studio/midi_motifs/motif_jed.mid"
+      ],
+      "style_prompt": "Tender bittersweet JRPG acoustic scene score, 68 BPM. Intimate fingerpicked acoustic guitar carrying Nova's warm melody answered by expressive solo cello and soft felt piano chords, subtle analog room warmth. Unspoken loyalty and quiet grief.",
+      "exclude_styles": "vocals, drums, electronic drops, singing"
+    },
+    {
+      "id": "stinger_motif_nova",
+      "title": "Motif Stinger: Nova's Spark",
+      "category": "stinger",
+      "recommended_provider": "elevenlabs",
+      "key": "D Minor",
+      "bpm": 92,
+      "loop": false,
+      "duration_ms": 6000,
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid"
+      ],
+      "style_prompt": "Short 6-second JRPG musical motif phrase, 92 BPM, D minor. Clean resonant acoustic guitar playing an ascending 5-note determined melody supported by a single warm synth swell, ending with natural clean decay.",
+      "exclude_styles": "vocals, drums, harsh distortion, singing"
+    },
+    {
+      "id": "stinger_motif_jed",
+      "title": "Motif Stinger: Jed's Workbench",
+      "category": "stinger",
+      "recommended_provider": "elevenlabs",
+      "key": "G Major",
+      "bpm": 76,
+      "loop": false,
+      "duration_ms": 6000,
+      "reference_wav": "audio_studio/reference_audio/motif_jed.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_jed.mid"
+      ],
+      "style_prompt": "Short 6-second warm acoustic guitar and soft harmonica musical phrase in G major, 76 BPM. Gentle falling plagal cadence, dusty workshop warmth, clean natural ring-out.",
+      "exclude_styles": "vocals, drums, synth bass, singing"
+    },
+    {
+      "id": "stinger_motif_elara",
+      "title": "Motif Stinger: Elara's Signal",
+      "category": "stinger",
+      "recommended_provider": "elevenlabs",
+      "key": "F# Major",
+      "bpm": 84,
+      "loop": false,
+      "duration_ms": 6000,
+      "reference_wav": "audio_studio/reference_audio/motif_elara.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_elara.mid"
+      ],
+      "style_prompt": "Short 6-second delicate glass celesta and music-box lullaby phrase in F# major 3/4 time with faint 80s tape flutter and distant crystalline reverb tail.",
+      "exclude_styles": "vocals, percussion, bass, singing"
+    },
+    {
+      "id": "stinger_motif_vale",
+      "title": "Motif Stinger: Soloist Signal",
+      "category": "stinger",
+      "recommended_provider": "elevenlabs",
+      "key": "C Minor",
+      "bpm": 80,
+      "loop": false,
+      "duration_ms": 6000,
+      "reference_wav": "audio_studio/reference_audio/motif_vale.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_vale.mid"
+      ],
+      "style_prompt": "Short 6-second chilling solo cold piano and low string chime in C minor playing a slow 4-note descending chromatic line, sterile hall decay.",
+      "exclude_styles": "vocals, warm guitar, rock drums, singing"
+    },
+    {
+      "id": "stinger_motif_source",
+      "title": "Motif Stinger: Echo Resonance",
+      "category": "stinger",
+      "recommended_provider": "elevenlabs",
+      "key": "A Dorian",
+      "bpm": 64,
+      "loop": false,
+      "duration_ms": 6500,
+      "reference_wav": "audio_studio/reference_audio/motif_source.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_source.mid"
+      ],
+      "style_prompt": "Short 6-second ethereal Tibetan singing bowl and glass armonica chord bloom in A Dorian, shimmering cosmic resonance, clean cathedral tail.",
+      "exclude_styles": "vocals, drums, distortion, singing"
+    },
+    {
+      "id": "music_w1_homestead_explore",
+      "title": "Stellarium Colony (Homestead & Trade Row)",
+      "category": "w1",
+      "recommended_provider": "suno",
+      "key": "D Minor",
+      "bpm": 86,
+      "loop": true,
+      "duration_ms": 96000,
+      "reference_wav": "audio_studio/reference_audio/pilot_music_w1_homestead_explore.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid",
+        "audio_studio/midi_motifs/motif_zeke.mid"
+      ],
+      "style_prompt": "Dusty industrial blues RPG exploration underscore, 86 BPM, D minor. Dry close-miked resonator steel-string guitar carrying Nova's restrained ascending D-F-G-A motif, subtle dusty harmonica and warm Rhodes harmony, muted metallic pipe percussion, warm P-bass, subtle analog tape grit. Working-class survival, restrained dynamics for dialogue, seamless loop.",
+      "exclude_styles": "vocals, huge cathedral reverb, epic brass, metal drums, singing"
+    },
+    {
+      "id": "music_w1_jed_workshop",
+      "title": "Jed's Workshop (Warm Steel & Grease)",
+      "category": "w1",
+      "recommended_provider": "suno",
+      "key": "G Major",
+      "bpm": 76,
+      "loop": true,
+      "duration_ms": 90000,
+      "reference_wav": "audio_studio/reference_audio/motif_jed.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_jed.mid"
+      ],
+      "style_prompt": "Intimate warm acoustic blues-folk workshop theme quoting Jed's Theme, 76 BPM, G major. Fingerpicked acoustic steel-string guitar, soft warm harmonica counter-phrase, gentle brushed percussion, subtle analog warmth. Safe, practical mentorship inside a dusty colony, seamless loop.",
+      "exclude_styles": "vocals, distortion, heavy drums, scary drone, singing"
+    },
+    {
+      "id": "music_w1_logistics_explore",
+      "title": "Logistics Sector (Quota & Concrete)",
+      "category": "w1",
+      "recommended_provider": "elevenlabs",
+      "key": "E Minor",
+      "bpm": 90,
+      "loop": true,
+      "duration_ms": 96000,
+      "reference_wav": "audio_studio/reference_audio/motif_zeke.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_zeke.mid",
+        "audio_studio/midi_motifs/motif_nova.mid"
+      ],
+      "style_prompt": "Industrial blues-noir RPG exploration underscore, 90 BPM, E minor. Dry muted electric guitar ostinato, low steady P-bass pulse, rhythmic pneumatic industrial clicks, distant Rhodes chords, dusty analog tape grain. Watchful, pressured corporate facility, uncluttered mids, seamless loop.",
+      "exclude_styles": "vocals, loud guitar solos, happy upbeat pop, singing"
+    },
+    {
+      "id": "music_w1_deep_mine",
+      "title": "Deep Mine & Echo Chamber (Sub-Level 4)",
+      "category": "w1",
+      "recommended_provider": "elevenlabs",
+      "key": "C Minor / A Modal",
+      "bpm": 72,
+      "loop": true,
+      "duration_ms": 96000,
+      "reference_wav": "audio_studio/reference_audio/motif_source.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_source.mid",
+        "audio_studio/midi_motifs/motif_nova.mid"
+      ],
+      "style_prompt": "Dark industrial subterranean exploration underscore, 72 BPM. Deep cavern bass pulse, slow metallic conduit clinks in cave reverb, sparse low acoustic guitar harmonics, and faint mysterious crystalline glass-chime echoes hinting at something ancient buried below. Ominous, restrained, seamless loop.",
+      "exclude_styles": "vocals, battle drums, bright brass, singing"
+    },
+    {
+      "id": "music_w2_sector9_explore",
+      "title": "Sector 9 Wilds (Wreckage in Bloom)",
+      "category": "w2",
+      "recommended_provider": "suno",
+      "key": "A Dorian",
+      "bpm": 76,
+      "loop": true,
+      "duration_ms": 96000,
+      "reference_wav": "audio_studio/reference_audio/motif_source.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_source.mid",
+        "audio_studio/midi_motifs/motif_nova.mid"
+      ],
+      "style_prompt": "Organic dark folk and atmospheric sci-fi jungle exploration, 76 BPM, A Dorian. 12-string acoustic guitar picking, breathy wooden flute melodies, bowed contrabass, soft hand frame drums, warm analog poly-synth swells. Lush, humid, mysterious nature reclaiming ruins, seamless loop.",
+      "exclude_styles": "vocals, heavy metal, EDM drops, singing"
+    },
+    {
+      "id": "music_w2_tideglass_beach",
+      "title": "Tideglass Beach (Glass Sand & Driftwood)",
+      "category": "w2",
+      "recommended_provider": "suno",
+      "key": "A Dorian / G Major",
+      "bpm": 72,
+      "loop": true,
+      "duration_ms": 96000,
+      "reference_wav": "audio_studio/reference_audio/motif_source.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_source.mid",
+        "audio_studio/midi_motifs/motif_orion.mid"
+      ],
+      "style_prompt": "Serene shimmering coastal ambient folk, 72 BPM, A Dorian. Warm nylon guitar arpeggios, soft Fender Rhodes swells, delicate glass chimes, solo cello warmth, ocean-like wide analog pad shimmer. Restful wonder and quiet camaraderie after the crash, seamless loop.",
+      "exclude_styles": "vocals, aggressive drums, scary horror noise, singing"
+    },
+    {
+      "id": "music_w2_ancient_gateway",
+      "title": "Sanctuary Ruins (Hall of Echoes)",
+      "category": "w2",
+      "recommended_provider": "suno",
+      "key": "A Dorian / F# Minor",
+      "bpm": 78,
+      "loop": true,
+      "duration_ms": 96000,
+      "reference_wav": "audio_studio/reference_audio/motif_orion.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_orion.mid",
+        "audio_studio/midi_motifs/motif_source.mid"
+      ],
+      "style_prompt": "Sacred ancient sci-fi ruins exploration theme, 78 BPM, A Dorian. Resonant singing bowls, kalimba/harp patterns, expressive wooden flute echoing Orion's motif, deep frame drum pulse, wide cathedral reverb. Reverent, uncanny, alive with ancient memory, seamless loop.",
+      "exclude_styles": "vocals, electric metal guitars, trap percussion, singing"
+    },
+    {
+      "id": "music_w2_stasis_sanctuary",
+      "title": "Stasis Chamber (The Sleeping Archive)",
+      "category": "w2",
+      "recommended_provider": "elevenlabs",
+      "key": "A Dorian",
+      "bpm": 66,
+      "loop": true,
+      "duration_ms": 90000,
+      "reference_wav": "audio_studio/reference_audio/motif_orion.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_orion.mid"
+      ],
+      "style_prompt": "Quiet icy-sacred stasis vault underscore, 66 BPM, A Dorian. High glass harmonic drones, sparse solo cello notes quoting Orion's motif, soft rhythmic cryogenic pulse, vast hushed stone acoustics, seamless loop.",
+      "exclude_styles": "vocals, heavy drums, fast tempos, singing"
+    },
+    {
+      "id": "music_w3_spire_explore",
+      "title": "Lower Spire (Neon Rain & Night Market)",
+      "category": "w3",
+      "recommended_provider": "suno",
+      "key": "C# Minor / E Minor",
+      "bpm": 100,
+      "loop": true,
+      "duration_ms": 96000,
+      "reference_wav": "audio_studio/reference_audio/motif_zeke.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_zeke.mid",
+        "audio_studio/midi_motifs/motif_nova.mid"
+      ],
+      "style_prompt": "Rain-slicked 80s cyber-noir jazz-synthwave exploration, 100 BPM, C# minor. Slick fretless bassline, warm Fender Rhodes chords, smoky muted saxophone phrases with tape delay, crisp brushed electronic snare, neon analog pads. Hustling, street-smart, covert, seamless loop.",
+      "exclude_styles": "vocals, loud dubstep drops, heavy metal, singing"
+    },
+    {
+      "id": "music_w3_the_static",
+      "title": "The Static & Safehouse (Signal Under the Rail)",
+      "category": "w3",
+      "recommended_provider": "suno",
+      "key": "E Minor",
+      "bpm": 86,
+      "loop": true,
+      "duration_ms": 90000,
+      "reference_wav": "audio_studio/reference_audio/motif_zeke.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_zeke.mid",
+        "audio_studio/midi_motifs/motif_gh0st.mid"
+      ],
+      "style_prompt": "Cozy underground cyberpunk safehouse lo-fi jazz-synth, 86 BPM, E minor. Warm upright/Rhodes chords, mellow muted guitar, faint vinyl/tape radio static, soft sub-pulse. Crew regrouping in a hidden apartment above the rail, intimate and loyal, seamless loop.",
+      "exclude_styles": "vocals, harsh alarms, battle drums, singing"
+    },
+    {
+      "id": "music_w3_upper_city",
+      "title": "Upper Spire (Glasswalk & Politeness)",
+      "category": "w3",
+      "recommended_provider": "suno",
+      "key": "Bb Minor",
+      "bpm": 98,
+      "loop": true,
+      "duration_ms": 96000,
+      "reference_wav": "audio_studio/reference_audio/motif_thorne.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_thorne.mid"
+      ],
+      "style_prompt": "Sleek minimalist cyber-luxury lounge & corporate espionage, 98 BPM, Bb minor. Crystal synthesizer arpeggios, glassy vibraphone chords, cool sterile string swells, deep polished bass pulse, polite clockwork hi-hats. Opulent yet quietly menacing, seamless loop.",
+      "exclude_styles": "vocals, dirty blues guitar, aggressive screams, singing"
+    },
+    {
+      "id": "music_w3_archive_stealth",
+      "title": "Spire Archive (Prism Vault Heist)",
+      "category": "w3",
+      "recommended_provider": "elevenlabs",
+      "key": "Bb Minor / F# Minor",
+      "bpm": 108,
+      "loop": true,
+      "duration_ms": 90000,
+      "reference_wav": "audio_studio/reference_audio/motif_thorne.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_thorne.mid",
+        "audio_studio/midi_motifs/motif_gh0st.mid"
+      ],
+      "style_prompt": "Taut high-stakes sci-fi stealth infiltration underscore, 108 BPM, Bb minor. Ticking precision analog sequencer, filtered sub-bass pulse, muted pizzicato strings, restrained glass synth pings. Clean, suspenseful heist focus without battle drums, seamless loop.",
+      "exclude_styles": "vocals, loud guitar solos, dramatic endings, singing"
+    },
+    {
+      "id": "music_w4_foundry_explore",
+      "title": "Slag Pits (Molten Channels)",
+      "category": "w4",
+      "recommended_provider": "suno",
+      "key": "D Minor",
+      "bpm": 112,
+      "loop": true,
+      "duration_ms": 96000,
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid",
+        "audio_studio/midi_motifs/motif_zeke.mid"
+      ],
+      "style_prompt": "Grinding industrial blues-rock exploration underscore, 112 BPM, D minor. Low chugging palm-muted guitars, heavy hydraulic machine rhythm, simmering analog bass drone, occasional dark slide harmonics. Oppressive furnace heat, relentless working machinery, seamless loop.",
+      "exclude_styles": "vocals, cheerful pop, bright bells, singing"
+    },
+    {
+      "id": "music_w4_power_core",
+      "title": "Assembly Line & Deep Forge",
+      "category": "w4",
+      "recommended_provider": "suno",
+      "key": "B Minor",
+      "bpm": 122,
+      "loop": true,
+      "duration_ms": 96000,
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid",
+        "audio_studio/midi_motifs/motif_vale.mid"
+      ],
+      "style_prompt": "Driven dark industrial rock & synth-metal exploration, 122 BPM, B minor. Mechanized conveyor rhythm, crunchy bass synth, sharp metallic percussion, tense electric guitar motifs and urgent analog arpeggios. Volatile reactor tension, seamless loop.",
+      "exclude_styles": "vocals, serene acoustic folk, singing"
+    },
+    {
+      "id": "music_w4_conditioning",
+      "title": "Conditioning Wing (Unit 734)",
+      "category": "w4",
+      "recommended_provider": "suno",
+      "key": "F# Minor",
+      "bpm": 94,
+      "loop": true,
+      "duration_ms": 90000,
+      "reference_wav": "audio_studio/reference_audio/motif_gh0st.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_gh0st.mid",
+        "audio_studio/midi_motifs/motif_elara.mid"
+      ],
+      "style_prompt": "Cold unsettling industrial-noir theme echoing Gh0st's Theme, 94 BPM, F# minor. Mechanical assembly clicks, dark tape-delayed clean guitar arpeggios, hollow cold synth choir hum, faint broken music-box celesta overtones. Personal reckoning with manufactured origins, seamless loop.",
+      "exclude_styles": "vocals, upbeat groove, heroic fanfare, singing"
+    },
+    {
+      "id": "music_w5_orbital_intrigue",
+      "title": "Grand Concourse (Borrowed Time)",
+      "category": "w5",
+      "recommended_provider": "elevenlabs",
+      "key": "C Minor",
+      "bpm": 80,
+      "loop": true,
+      "duration_ms": 96000,
+      "reference_wav": "audio_studio/reference_audio/motif_vale.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_vale.mid",
+        "audio_studio/midi_motifs/motif_zeke.mid"
+      ],
+      "style_prompt": "Restrained orbital espionage and uneasy human resolve, 80 BPM, C minor, 4/4 underscore. Warm analog sequencer eighth-notes, rounded low synth bass, light dry electronic ticks, narrow cold radar tones answering muted electric-piano chords, subtle C-B-Bb-A figure. Uncluttered mids for dialogue, seamless loop.",
+      "exclude_styles": "vocals, alarm sirens, battle drums, triumphant climax, singing"
+    },
+    {
+      "id": "music_w5_solarium",
+      "title": "Orbital Solarium (Artificial Paradise)",
+      "category": "w5",
+      "recommended_provider": "suno",
+      "key": "C Minor / Eb Major",
+      "bpm": 74,
+      "loop": true,
+      "duration_ms": 90000,
+      "reference_wav": "audio_studio/reference_audio/motif_thorne.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_thorne.mid",
+        "audio_studio/midi_motifs/motif_vale.mid"
+      ],
+      "style_prompt": "Uncanny pristine chamber waltz-ambient inside a gilded orbital cage, 74 BPM. Too-clean glass harp, cool celesta, delicate string quartet harmonics laced with subtle dissonant bass undertone. Artificial beauty masking trapped lives, seamless loop.",
+      "exclude_styles": "vocals, distortion, heavy drums, singing"
+    },
+    {
+      "id": "music_w5_security_hub",
+      "title": "Deep Ring Mainframe (Silent Surveillance)",
+      "category": "w5",
+      "recommended_provider": "elevenlabs",
+      "key": "G# Minor / C Minor",
+      "bpm": 84,
+      "loop": true,
+      "duration_ms": 96000,
+      "reference_wav": "audio_studio/reference_audio/motif_vale.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_vale.mid"
+      ],
+      "style_prompt": "Cold minimalist sci-fi chamber electronica, 84 BPM, C minor. High sterile felt piano notes echoing in server coldness, ticking clock percussion, pulsing square-wave sub, icy string sustains. Clinical surveillance pressure, seamless loop.",
+      "exclude_styles": "vocals, warm acoustic guitar, celebratory brass, singing"
+    },
+    {
+      "id": "music_w5_anchor_cathedral",
+      "title": "Anchor Containment & Command Deck (One Breath)",
+      "category": "w5",
+      "recommended_provider": "suno",
+      "key": "C Minor / F# Major tension",
+      "bpm": 72,
+      "loop": true,
+      "duration_ms": 96000,
+      "reference_wav": "audio_studio/reference_audio/motif_vale.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_vale.mid",
+        "audio_studio/midi_motifs/motif_elara.mid",
+        "audio_studio/midi_motifs/motif_gh0st.mid"
+      ],
+      "style_prompt": "Chilling neo-classical sci-fi suspense, 72 BPM, C minor. Sparse cold pipe organ drone and descending piano notes colliding with fragile high celesta harmonics and taut string tremolos. Approaching Vale's Tear while holding onto Elara, seamless loop.",
+      "exclude_styles": "vocals, dance beat, cozy lounge, singing"
+    },
+    {
+      "id": "music_w6_campfire",
+      "title": "The Gathering Fire (Still Ourselves)",
+      "category": "w6",
+      "recommended_provider": "suno",
+      "key": "D Minor / G Major",
+      "bpm": 68,
+      "loop": true,
+      "duration_ms": 90000,
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid",
+        "audio_studio/midi_motifs/motif_jed.mid"
+      ],
+      "style_prompt": "Intimate fragile acoustic hearth inside surreal cosmic emptiness, 68 BPM, D minor. Solo warm fingerpicked acoustic guitar and soft cello duet echoing Nova and Jed's warmth surrounded by faint distant glass harmonic breeze. Quiet refuge before walking into nightmares, seamless loop.",
+      "exclude_styles": "vocals, percussion, industrial metal, singing"
+    },
+    {
+      "id": "music_w6_nightmare_zeke",
+      "title": "Zeke's Nightmare (Endless Performance Review)",
+      "category": "w6",
+      "recommended_provider": "suno",
+      "key": "E Minor",
+      "bpm": 78,
+      "loop": true,
+      "duration_ms": 90000,
+      "reference_wav": "audio_studio/reference_audio/motif_zeke.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_zeke.mid",
+        "audio_studio/midi_motifs/motif_vale.mid"
+      ],
+      "style_prompt": "Warped surreal dark-jazz nightmare variation of Zeke's Rhodes theme, 78 BPM, E minor. Detuned tape-wobbly Fender Rhodes, oppressive ticking office clockwork, claustrophobic low bass drone, muffled checkpoint buzzer textures. Psychological bureaucracy nightmare, seamless loop.",
+      "exclude_styles": "vocals, triumphant rock, bright pop, singing"
+    },
+    {
+      "id": "music_w6_nightmare_gh0st",
+      "title": "Gh0st's Nightmare (Kill-Suite Loop)",
+      "category": "w6",
+      "recommended_provider": "suno",
+      "key": "F# Minor -> F# Major",
+      "bpm": 96,
+      "loop": true,
+      "duration_ms": 90000,
+      "reference_wav": "audio_studio/reference_audio/motif_gh0st.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_gh0st.mid",
+        "audio_studio/midi_motifs/motif_elara.mid"
+      ],
+      "style_prompt": "Haunting glitch-noir and fractured memory variation of Gh0st's Theme, 96 BPM, F# minor. Mechanical glitch stutters and dark delay guitar locked in a loop, pierced from underneath by a clear stubborn F# major celesta fragment of Elara's lullaby. Emotional defiance inside command noise, seamless loop.",
+      "exclude_styles": "vocals, happy funk, comedy, singing"
+    },
+    {
+      "id": "music_w6_nightmare_orion",
+      "title": "Orion's Nightmare (The Silent Shore)",
+      "category": "w6",
+      "recommended_provider": "suno",
+      "key": "A Dorian",
+      "bpm": 62,
+      "loop": true,
+      "duration_ms": 90000,
+      "reference_wav": "audio_studio/reference_audio/motif_orion.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_orion.mid",
+        "audio_studio/midi_motifs/motif_source.mid"
+      ],
+      "style_prompt": "Hollow surreal elegy in 3/4 time echoing Orion's Theme, 62 BPM, A Dorian. Distant bowed cello harmonics, reversed tape swells, lonely solo wood flute answers fading into vast empty ocean-cavern reverb. Grief tempting him to fade away, seamless loop.",
+      "exclude_styles": "vocals, drums, heavy metal, singing"
+    },
+    {
+      "id": "music_w6_source_explore",
+      "title": "World-Fracture & Memory Stair (Fragments)",
+      "category": "w6",
+      "recommended_provider": "suno",
+      "key": "A Modal / D Minor",
+      "bpm": 64,
+      "loop": true,
+      "duration_ms": 100000,
+      "reference_wav": "audio_studio/reference_audio/motif_source.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_source.mid",
+        "audio_studio/midi_motifs/motif_nova.mid",
+        "audio_studio/midi_motifs/motif_elara.mid"
+      ],
+      "style_prompt": "Surreal transcendental ambient-orchestral journey, 64 BPM, A Dorian/D minor. Ethereal wordless choral shimmer, glass armonica, fragmented acoustic guitar and celesta echoes drifting across reverse analog tape swells and deep sub-harmonic tides. Profound revelation, seamless loop.",
+      "exclude_styles": "modern EDM drops, upbeat pop, harsh synthwave, vocals, singing"
+    },
+    {
+      "id": "music_w6_the_center",
+      "title": "The White Shore (Heart of the Source)",
+      "category": "w6",
+      "recommended_provider": "suno",
+      "key": "D Modal / C Minor tension",
+      "bpm": 70,
+      "loop": true,
+      "duration_ms": 100000,
+      "reference_wav": "audio_studio/reference_audio/motif_source.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_source.mid",
+        "audio_studio/midi_motifs/motif_vale.mid"
+      ],
+      "style_prompt": "Monumental sacred choral and pipe organ underscore at the edge of reality, 70 BPM. Vast polyphonic wordless choir, cathedral pipe organ, crystalline singing bowls, taut low orchestral strings building suspended awe before the final confrontation, seamless loop.",
+      "exclude_styles": "drums, rock guitar, playful instruments, vocals, singing"
+    },
+    {
+      "id": "music_w6_new_world",
+      "title": "Beyond the Silence (Regional Opening)",
+      "category": "w6",
+      "recommended_provider": "suno",
+      "key": "D Major",
+      "bpm": 76,
+      "loop": true,
+      "duration_ms": 96000,
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid",
+        "audio_studio/midi_motifs/motif_jed.mid"
+      ],
+      "style_prompt": "Radiant grounded sunrise acoustic-orchestral resolution, 76 BPM, D major. Warm steel-string acoustic guitar playing Nova's resolved major motif, lush warm strings, gentle Rhodes, faint natural morning air. Human survival, openness, and quiet hope, seamless loop.",
+      "exclude_styles": "vocals, aggressive drums, ominous dissonance, singing"
+    },
+    {
+      "id": "music_w1_combat",
+      "title": "Homestead Scrap Skirmish",
+      "category": "combat",
+      "recommended_provider": "suno",
+      "key": "D Minor",
+      "bpm": 138,
+      "loop": true,
+      "duration_ms": 90000,
+      "reference_wav": "audio_studio/reference_audio/pilot_music_w1_combat.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid",
+        "audio_studio/midi_motifs/motif_zeke.mid"
+      ],
+      "style_prompt": "High-octane 80s analog blues-rock JRPG battle theme, 138 BPM, D minor. Overdriven resonator and lead electric guitar propelling Nova's ascending D-F-G-A battle hook, punchy live rock drum kit, fat gritty P-bass groove, rhythmic metallic clanks. Gritty working-class adrenaline, seamless loop.",
+      "exclude_styles": "vocals, modern dubstep, serene ambient, singing"
+    },
+    {
+      "id": "music_w2_combat",
+      "title": "Swamp Ambush",
+      "category": "combat",
+      "recommended_provider": "suno",
+      "key": "A Dorian",
+      "bpm": 132,
+      "loop": true,
+      "duration_ms": 90000,
+      "reference_wav": "audio_studio/reference_audio/motif_orion.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_orion.mid",
+        "audio_studio/midi_motifs/motif_nova.mid"
+      ],
+      "style_prompt": "Energetic organic folk-rock & tribal orchestral JRPG battle theme, 132 BPM, A Dorian. Driving taiko & frame drums, urgent bowed string ostinato, electric bass groove, wild wooden flute trills and crunchy rhythmic guitar. Primal jungle survival, seamless loop.",
+      "exclude_styles": "vocals, cheesy EDM, slow lullaby, singing"
+    },
+    {
+      "id": "music_w3_combat",
+      "title": "Spire Security Chase",
+      "category": "combat",
+      "recommended_provider": "suno",
+      "key": "C# Minor",
+      "bpm": 136,
+      "loop": true,
+      "duration_ms": 90000,
+      "reference_wav": "audio_studio/reference_audio/motif_zeke.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_zeke.mid",
+        "audio_studio/midi_motifs/motif_gh0st.mid"
+      ],
+      "style_prompt": "High-energy 80s darksynth-funk JRPG battle theme, 136 BPM, C# minor. Snapping fretless slap bass, pulsing analog saw leads, punchy retro electronic/rock drums, gritty organ/Rhodes stabs. Slick urban heist getaway under laser fire, seamless loop.",
+      "exclude_styles": "vocals, slow ambient, rustic banjo, singing"
+    },
+    {
+      "id": "music_w4_combat",
+      "title": "Foundry Line Battle",
+      "category": "combat",
+      "recommended_provider": "suno",
+      "key": "D Minor",
+      "bpm": 144,
+      "loop": true,
+      "duration_ms": 90000,
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid",
+        "audio_studio/midi_motifs/motif_gh0st.mid"
+      ],
+      "style_prompt": "Relentless industrial metal JRPG combat theme, 144 BPM, D minor. Down-tuned chugging metal guitars, pneumatic hammer percussion, ferocious double-kick rock drums, screaming analog synth bass, blazing lead guitar melody. Blistering molten combat, seamless loop.",
+      "exclude_styles": "vocals, calm ambient, soft jazz, singing"
+    },
+    {
+      "id": "music_w5_combat",
+      "title": "Zero-G Skirmish",
+      "category": "combat",
+      "recommended_provider": "suno",
+      "key": "C Minor",
+      "bpm": 154,
+      "loop": true,
+      "duration_ms": 90000,
+      "reference_wav": "audio_studio/reference_audio/motif_vale.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_vale.mid",
+        "audio_studio/midi_motifs/motif_gh0st.mid"
+      ],
+      "style_prompt": "Cold neo-classical chamber drum-and-bass / breakbeat JRPG battle, 154 BPM, C minor. Rapid clipped breakbeats, frantic chamber string ostinato, sharp harpsichord/piano runs, deep Reese bassline, clinical synth stabs. Surgical precision inside orbital security, seamless loop.",
+      "exclude_styles": "vocals, rustic blues, cozy jazz, singing"
+    },
+    {
+      "id": "music_w6_combat",
+      "title": "Fracture Echo Battle",
+      "category": "combat",
+      "recommended_provider": "suno",
+      "key": "A Dorian / D Minor",
+      "bpm": 144,
+      "loop": true,
+      "duration_ms": 96000,
+      "reference_wav": "audio_studio/reference_audio/motif_source.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_source.mid",
+        "audio_studio/midi_motifs/motif_nova.mid"
+      ],
+      "style_prompt": "Transcendental symphonic rock JRPG battle, 144 BPM, D minor. Soaring electric lead guitar and dramatic string orchestra, wordless choral swells, thunderous live drums, crystalline glass resonance hits. Battling living memories inside the Tear, seamless loop.",
+      "exclude_styles": "pop lyrics, comedic brass, vocals, singing"
+    },
+    {
+      "id": "music_w1_boss_warden",
+      "title": "The Iron Warden (Heavy Duty)",
+      "category": "boss",
+      "recommended_provider": "suno",
+      "key": "C Minor / D Minor",
+      "bpm": 142,
+      "loop": true,
+      "duration_ms": 120000,
+      "reference_wav": "audio_studio/reference_audio/pilot_music_w1_boss_warden.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid",
+        "audio_studio/midi_motifs/motif_vale.mid"
+      ],
+      "style_prompt": "Heavy industrial hard-rock JRPG boss battle, 142 BPM, C minor. Crushing distorted guitar power chords, pounding anvil hits, screeching analog synth sirens, driving double-kick drums, defiant lead guitar quoting Nova's ascending hook. Overwhelming armored corporate enforcer, seamless loop.",
+      "exclude_styles": "vocals, peaceful flute, jazz lounge, singing"
+    },
+    {
+      "id": "music_w2_boss_guardian",
+      "title": "The Source Beast (Canopy Apex)",
+      "category": "boss",
+      "recommended_provider": "suno",
+      "key": "D Minor / A Dorian",
+      "bpm": 140,
+      "loop": true,
+      "duration_ms": 120000,
+      "reference_wav": "audio_studio/reference_audio/motif_source.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_source.mid",
+        "audio_studio/midi_motifs/motif_orion.mid"
+      ],
+      "style_prompt": "Epic orchestral-rock JRPG boss theme, 140 BPM, D minor. Thunderous tribal war drums, relentless cello & violin ostinato, roaring brass stabs, shimmering resonant glass overtones and electric guitar counter-melody. Terrifying ancient predator warped by the Source, seamless loop.",
+      "exclude_styles": "vocals, funky slap bass, retro chiptune, singing"
+    },
+    {
+      "id": "music_w3_boss_administrator",
+      "title": "The Administrator (Polite Annihilation)",
+      "category": "boss",
+      "recommended_provider": "suno",
+      "key": "Bb Minor",
+      "bpm": 142,
+      "loop": true,
+      "duration_ms": 120000,
+      "reference_wav": "audio_studio/reference_audio/motif_thorne.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_thorne.mid"
+      ],
+      "style_prompt": "Sleek terrifying cyber-luxury JRPG boss theme, 142 BPM, Bb minor. Blistering glass synth arpeggios, cold analog brass stabs quoting Thorne's Bbm theme, razor-sharp electronic breakbeats, distorted sub-bass, soaring electric guitar duel. High-society security AI smiling while venting the room, seamless loop.",
+      "exclude_styles": "vocals, warm folk guitar, singing"
+    },
+    {
+      "id": "music_w3_boss_phantom",
+      "title": "Phantom Prototype (Phase Blade Duel)",
+      "category": "boss",
+      "recommended_provider": "suno",
+      "key": "F# Minor",
+      "bpm": 146,
+      "loop": true,
+      "duration_ms": 120000,
+      "reference_wav": "audio_studio/reference_audio/motif_gh0st.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_gh0st.mid",
+        "audio_studio/midi_motifs/motif_elara.mid"
+      ],
+      "style_prompt": "Hyper-kinetic darkwave synth-metal duel quoting Gh0st's F# minor motif, 146 BPM. Dueling phase-shifted electric guitars, blistering 16th-note analog arpeggios, tight breakbeat rock drums, ghostly celesta echoes flickering underneath. Facing a hollow copy built without a self, seamless loop.",
+      "exclude_styles": "vocals, slow ballads, singing"
+    },
+    {
+      "id": "music_w4_boss_titan",
+      "title": "Titan Walker & Crucible (Molten Siege)",
+      "category": "boss",
+      "recommended_provider": "suno",
+      "key": "B Minor / D Minor",
+      "bpm": 150,
+      "loop": true,
+      "duration_ms": 130000,
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid",
+        "audio_studio/midi_motifs/motif_gh0st.mid"
+      ],
+      "style_prompt": "Colossal industrial symphonic-metal boss battle, 150 BPM, B minor. Multi-ton hydraulic stomps, scorching twin electric guitar solos quoting Nova's defiant theme, blaring industrial brass horns, relentless double-kick drumming, molten analog synth sweeps. Fighting Commander Rylos's siege frame over a volcano vent, seamless loop.",
+      "exclude_styles": "vocals, delicate music box, singing"
+    },
+    {
+      "id": "music_w5_boss_compliance",
+      "title": "Compliance Avatar (Orbital Lockdown)",
+      "category": "boss",
+      "recommended_provider": "suno",
+      "key": "C Minor",
+      "bpm": 148,
+      "loop": true,
+      "duration_ms": 120000,
+      "reference_wav": "audio_studio/reference_audio/motif_vale.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_vale.mid",
+        "audio_studio/midi_motifs/motif_thorne.mid"
+      ],
+      "style_prompt": "Clinical authoritarian neo-classical synth-metal boss theme, 148 BPM, C minor. Rapid pipe organ and harpsichord ostinatos, chugging metal guitars, robotic snare precision, relentless 4-note C-B-Bb-A chromatic horn stabs. Vale's orbital compliance machine turning deadly, seamless loop.",
+      "exclude_styles": "vocals, warm country blues, singing"
+    },
+    {
+      "id": "music_w6_boss_final",
+      "title": "Ascended Vale: The Soloist (Phase 1)",
+      "category": "boss",
+      "recommended_provider": "suno",
+      "key": "C Minor <-> D Minor",
+      "bpm": 152,
+      "loop": true,
+      "duration_ms": 150000,
+      "reference_wav": "audio_studio/reference_audio/motif_vale.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_vale.mid",
+        "audio_studio/midi_motifs/motif_nova.mid",
+        "audio_studio/midi_motifs/motif_source.mid"
+      ],
+      "style_prompt": "Grand JRPG symphonic rock final boss Part 1, 152 BPM, C minor clashing against D minor. Massive church organ and cold unison choir pounding Vale's 4-note chromatic descent, answered defiantly by soaring lead electric guitar and passionate orchestral strings carrying Nova's rising motif. Ideological clash of wills, seamless loop.",
+      "exclude_styles": "pop vocals, lo-fi chill, vocals, singing"
+    },
+    {
+      "id": "music_w6_boss_vale_p2",
+      "title": "Ascended Silence (Final Climax Phase 2)",
+      "category": "boss",
+      "recommended_provider": "suno",
+      "key": "C Minor -> D Major",
+      "bpm": 158,
+      "loop": true,
+      "duration_ms": 160000,
+      "reference_wav": "audio_studio/reference_audio/motif_vale.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_vale.mid",
+        "audio_studio/midi_motifs/motif_nova.mid",
+        "audio_studio/midi_motifs/motif_elara.mid",
+        "audio_studio/midi_motifs/motif_source.mid"
+      ],
+      "style_prompt": "Towering all-out JRPG final boss climax symphony, 158 BPM, C minor erupting into blazing D major. Full 60-piece orchestra, dramatic wordless operatic choir, pipe organ, blistering electric guitar heroics, and glimmering celesta resonance uniting the whole crew's circuit against absolute silence, seamless loop.",
+      "exclude_styles": "modern EDM trap, dry minimalist silence, vocals, singing"
+    },
+    {
+      "id": "music_intro_breach",
+      "title": "Sector 9 Breach (Cold Open)",
+      "category": "cinematic",
+      "recommended_provider": "elevenlabs",
+      "key": "A Dorian -> D Minor",
+      "bpm": 135,
+      "loop": false,
+      "duration_ms": 32000,
+      "reference_wav": "audio_studio/reference_audio/motif_orion.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_orion.mid",
+        "audio_studio/midi_motifs/motif_source.mid",
+        "audio_studio/midi_motifs/motif_nova.mid"
+      ],
+      "style_prompt": "32-second high-stakes sci-fi JRPG cold-open cinematic score, 135 BPM. Urgent pulsing strings and containment breach tension (0-14s), dropping suddenly into shimmering sacred wide-stereo singing bowl & choir chord (14-22s), shocking dissonance impact (23s), resolving into solo acoustic guitar playing Nova's 5-note rising theme.",
+      "exclude_styles": "vocals, upbeat pop, singing"
+    },
+    {
+      "id": "music_crash_flight",
+      "title": "Pod Trajectory & Shield Impact",
+      "category": "cinematic",
+      "recommended_provider": "elevenlabs",
+      "key": "D Minor",
+      "bpm": 140,
+      "loop": false,
+      "duration_ms": 45000,
+      "reference_wav": "audio_studio/reference_audio/motif_zeke.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_zeke.mid",
+        "audio_studio/midi_motifs/motif_nova.mid"
+      ],
+      "style_prompt": "45-second escalating sci-fi escape pod crash score, 140 BPM, D minor. Accelerating urgent string ostinatos, analog alarm synths, rushing atmospheric wind roar, culminating in violent impact hit decaying into quiet rain.",
+      "exclude_styles": "vocals, joyful brass, singing"
+    },
+    {
+      "id": "music_cinematic_prologue",
+      "title": "The Launch & The Fall",
+      "category": "cinematic",
+      "recommended_provider": "elevenlabs",
+      "key": "D Minor",
+      "bpm": 78,
+      "loop": false,
+      "duration_ms": 45000,
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid",
+        "audio_studio/midi_motifs/motif_jed.mid"
+      ],
+      "style_prompt": "45-second emotional narrative cinematic cue, 78 BPM, D minor. Solo acoustic guitar evolving into warm French horn and urgent strings, abrupt radio crackle tension.",
+      "exclude_styles": "vocals, trap drums, singing"
+    },
+    {
+      "id": "music_cinematic_crash",
+      "title": "Planetary Impact",
+      "category": "cinematic",
+      "recommended_provider": "elevenlabs",
+      "key": "C Drone",
+      "bpm": 52,
+      "loop": false,
+      "duration_ms": 36000,
+      "reference_wav": "audio_studio/reference_audio/motif_source.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_source.mid"
+      ],
+      "style_prompt": "36-second atmospheric crash aftermath score, 52 BPM. Sub-bass impact shock, descending cello harmonics, ear-ringing glass frequency fading softly into humid jungle rain ambience.",
+      "exclude_styles": "vocals, fast percussion, singing"
+    },
+    {
+      "id": "music_epilogue",
+      "title": "Morning in the Colony (Epilogue)",
+      "category": "cinematic",
+      "recommended_provider": "suno",
+      "key": "G Major / D Major",
+      "bpm": 70,
+      "loop": false,
+      "duration_ms": 140000,
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid",
+        "audio_studio/midi_motifs/motif_jed.mid",
+        "audio_studio/midi_motifs/motif_zeke.mid"
+      ],
+      "style_prompt": "Heartfelt grounded JRPG epilogue piece, 70 BPM, G major into D major. Intimate fingerpicked acoustic guitar, warm Fender Rhodes chords, gentle nostalgic harmonica breath honoring Jed, soft warm strings, plus one faint delicate high glass harmonic echoing Nova's lasting tinnitus. Peaceful ordinary morning after survival.",
+      "exclude_styles": "vocals, loud rock drums, dark horror, singing"
+    },
+    {
+      "id": "music_credits_ending",
+      "title": "The Great Frontier (End Credits Suite)",
+      "category": "cinematic",
+      "recommended_provider": "suno",
+      "key": "D Major",
+      "bpm": 106,
+      "loop": false,
+      "duration_ms": 180000,
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid",
+        "audio_studio/midi_motifs/motif_zeke.mid",
+        "audio_studio/midi_motifs/motif_orion.mid",
+        "audio_studio/midi_motifs/motif_elara.mid"
+      ],
+      "style_prompt": "80s analog cassette end-credits soft-rock/synth-pop suite, 106 BPM, D major. Chiming 12-string acoustic guitar, warm Juno poly-synths, punchy 80s Simmons/acoustic drums, soulful saxophone solo, triumphant electric guitar reprise of Nova's rising hook. Warm joyful nostalgia looking toward open stars.",
+      "exclude_styles": "harsh screamo, modern trap, vocals, singing"
+    },
+    {
+      "id": "music_fishing_ambient",
+      "title": "Tideglass Angler (Fishing)",
+      "category": "activities",
+      "recommended_provider": "suno",
+      "key": "C Major",
+      "bpm": 72,
+      "loop": true,
+      "duration_ms": 80000,
+      "reference_wav": "audio_studio/reference_audio/motif_jed.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_jed.mid"
+      ],
+      "style_prompt": "Relaxing acoustic water folk & cassette lo-fi fishing theme, 72 BPM, C major. Warm nylon-string fingerpicking, gentle wooden kalimba chimes, upright bass, shimmering shoreline synth haze. Peaceful meditative flow, seamless loop.",
+      "exclude_styles": "vocals, heavy drums, distortion, singing"
+    },
+    {
+      "id": "music_arcade_cabinet",
+      "title": "Hyperion 1986 (Arcade Cabinet)",
+      "category": "activities",
+      "recommended_provider": "suno",
+      "key": "F Major",
+      "bpm": 134,
+      "loop": true,
+      "duration_ms": 75000,
+      "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_nova.mid"
+      ],
+      "style_prompt": "Authentic 1986 coin-op FM synth & 8-bit chiptune arcade shooter theme, 134 BPM, F major. Bouncy square-wave lead melody, punchy FM slap bass, crisp noise-snare chiptune percussion, energetic arpeggios. Retro CRT speaker character, seamless loop.",
+      "exclude_styles": "vocals, orchestral strings, modern trap, singing"
+    },
+    {
+      "id": "music_tinkering_focus",
+      "title": "Workstation Flow (Tinkering)",
+      "category": "activities",
+      "recommended_provider": "suno",
+      "key": "G Major",
+      "bpm": 80,
+      "loop": true,
+      "duration_ms": 80000,
+      "reference_wav": "audio_studio/reference_audio/motif_jed.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_jed.mid"
+      ],
+      "style_prompt": "Cozy mechanical lo-fi workshop groove quoting Jed's G major cadence, 80 BPM. Mellow Fender Rhodes chords, subtle rhythmic socket-wrench and brass clicks, muted guitar harmonics, warm analog bass. Focused creative tinkering, seamless loop.",
+      "exclude_styles": "vocals, loud guitars, alarms, singing"
+    },
+    {
+      "id": "music_cooking_kitchen",
+      "title": "Mess Hall Stew (Cooking)",
+      "category": "activities",
+      "recommended_provider": "suno",
+      "key": "Bb Major",
+      "bpm": 112,
+      "loop": true,
+      "duration_ms": 75000,
+      "reference_wav": "audio_studio/reference_audio/motif_zeke.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_zeke.mid"
+      ],
+      "style_prompt": "Playful upbeat acoustic gypsy-jazz & kitchen swing, 112 BPM, Bb major. Bouncy acoustic rhythm guitars, cheerful pizzicato strings, upright walking bass, subtle wooden spoon percussion. Warm camaraderie around shared food, seamless loop.",
+      "exclude_styles": "vocals, ominous synth, metal, singing"
+    },
+    {
+      "id": "music_shop_cozy",
+      "title": "Frontier Exchange (Markets & Shops)",
+      "category": "activities",
+      "recommended_provider": "suno",
+      "key": "D Minor",
+      "bpm": 88,
+      "loop": true,
+      "duration_ms": 80000,
+      "reference_wav": "audio_studio/reference_audio/motif_zeke.wav",
+      "midi_seeds": [
+        "audio_studio/midi_motifs/motif_zeke.mid"
+      ],
+      "style_prompt": "Warm eclectic frontier trader lo-fi groove, 88 BPM, D minor. Acoustic lute/guitar riff, warm Fender Rhodes backing, gentle hand percussion, intriguing analog synth flute hook, analog tape saturation. Curious, street-smart trading post vibe, seamless loop.",
+      "exclude_styles": "vocals, heavy combat drums, singing"
+    }
+  ]
+}

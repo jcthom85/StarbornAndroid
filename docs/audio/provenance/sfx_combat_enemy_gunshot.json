@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_combat_enemy_gunshot",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:32.660885",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "b7b523e3242a06ebb220e7109809bcdf4ebe029f85063532abb7c8f643c69df1",
+  "bytes": 18852,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 38808,
+    "duration_seconds": 0.88,
+    "rms_dbfs": -15.81,
+    "peak_dbfs": -1.06,
+    "integrated_lufs": -14.16,
+    "true_peak_dbtp": -0.53,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -15.81,
+    "last_second_rms_dbfs": -15.81
+  },
+  "source_provenance": {
+    "cue_id": "sfx_combat_enemy_gunshot",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:44.948339",
+    "source_filename": "sfx_combat_enemy_gunshot.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "a52bd5b46fb4f8d308e8f35a50d88c274c53469856c468577fab33c4595b967d",
+    "bytes": 15089,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 38808,
+      "duration_seconds": 0.88,
+      "rms_dbfs": -15.0,
+      "peak_dbfs": 0.0,
+      "integrated_lufs": -13.42,
+      "true_peak_dbtp": 1.43,
+      "samples_at_full_scale": 24,
+      "first_second_rms_dbfs": -15.0,
+      "last_second_rms_dbfs": -15.0
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Crisp Dominion tactical kinetic rifle single gunshot crack",
+      "duration_seconds": 0.9,
+      "prompt_influence": 0.45
+    }
+  }
+}

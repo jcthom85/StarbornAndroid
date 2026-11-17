@@ -1,0 +1,56 @@
+{
+  "cue_id": "quest_update_tick",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:19:01.183633",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -14.0,
+  "sha256": "7708ff1a8cc30b5835d3773940f2d6722e473c3373d1e303f26d8ae09cecd8be",
+  "bytes": 15195,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 29999,
+    "duration_seconds": 0.6802,
+    "rms_dbfs": -31.71,
+    "peak_dbfs": -9.7,
+    "integrated_lufs": -23.05,
+    "true_peak_dbtp": -8.37,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -31.71,
+    "last_second_rms_dbfs": -31.71
+  },
+  "source_provenance": {
+    "cue_id": "quest_update_tick",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:10:49.148676",
+    "source_filename": "quest_update_tick.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "9109b5df03fb4808a89768f594974996557d3334aca9c740e7e8e958d6cbfc65",
+    "bytes": 12163,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 29999,
+      "duration_seconds": 0.6802,
+      "rms_dbfs": -51.4,
+      "peak_dbfs": -30.0,
+      "integrated_lufs": -42.75,
+      "true_peak_dbtp": -29.63,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -51.4,
+      "last_second_rms_dbfs": -51.4
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Compact dry mechanical relay click followed by a gentle wooden chime tick, subtle quest log update",
+      "duration_seconds": 0.7,
+      "prompt_influence": 0.45
+    }
+  }
+}

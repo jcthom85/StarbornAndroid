@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_ui_confirm",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:47.383272",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -14.0,
+  "sha256": "6abe7e8e1b2b1a92ec3c6495c464d3507e4f58af951762d4fd18abc572e7ead4",
+  "bytes": 17284,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 35280,
+    "duration_seconds": 0.8,
+    "rms_dbfs": -15.69,
+    "peak_dbfs": -1.91,
+    "integrated_lufs": -13.98,
+    "true_peak_dbtp": -1.87,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -15.69,
+    "last_second_rms_dbfs": -15.69
+  },
+  "source_provenance": {
+    "cue_id": "sfx_ui_confirm",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:10:14.904577",
+    "source_filename": "sfx_ui_confirm.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "9a51e31c1241b75220a996395bb5130f91da135d1e54ce892d5b537715a1e70a",
+    "bytes": 13835,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 35280,
+      "duration_seconds": 0.8,
+      "rms_dbfs": -22.59,
+      "peak_dbfs": -3.61,
+      "integrated_lufs": -19.66,
+      "true_peak_dbtp": -3.6,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -22.59,
+      "last_second_rms_dbfs": -22.59
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Warm two-tone 80s FM synth confirmation chime, vintage sci-fi terminal positive beep, clean dry decay",
+      "duration_seconds": 0.8,
+      "prompt_influence": 0.45
+    }
+  }
+}

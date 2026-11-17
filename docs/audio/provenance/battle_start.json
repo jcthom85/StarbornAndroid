@@ -1,0 +1,56 @@
+{
+  "cue_id": "battle_start",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:16:22.219542",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "758526161b660dfc392ef84d42b340cb3a8a7d0ba0d99319b98c5091d887c451",
+  "bytes": 30868,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 65268,
+    "duration_seconds": 1.48,
+    "rms_dbfs": -11.95,
+    "peak_dbfs": -2.79,
+    "integrated_lufs": -11.46,
+    "true_peak_dbtp": -2.79,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -10.25,
+    "last_second_rms_dbfs": -16.58
+  },
+  "source_provenance": {
+    "cue_id": "battle_start",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:54.465696",
+    "source_filename": "battle_start.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "174b4fa48e60931b0940bac52b12ec8678f89d116a274cd5ec89cebdf21daa30",
+    "bytes": 24702,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 65268,
+      "duration_seconds": 1.48,
+      "rms_dbfs": -9.47,
+      "peak_dbfs": -0.31,
+      "integrated_lufs": -9.0,
+      "true_peak_dbtp": -0.3,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -7.76,
+      "last_second_rms_dbfs": -14.12
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Punchy dramatic JRPG battle engage sting, sharp analog synth brass stab and low kinetic impact",
+      "duration_seconds": 1.5,
+      "prompt_influence": 0.45
+    }
+  }
+}

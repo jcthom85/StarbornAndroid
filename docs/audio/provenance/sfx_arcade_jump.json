@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_arcade_jump",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:30.257740",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "e5857a090b049b64240c2bead7aefd3c0edad9f572f342a1e43abe7671b7bf4f",
+  "bytes": 11015,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 21168,
+    "duration_seconds": 0.48,
+    "rms_dbfs": -20.79,
+    "peak_dbfs": -1.85,
+    "integrated_lufs": -16.35,
+    "true_peak_dbtp": -1.85,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -20.79,
+    "last_second_rms_dbfs": -20.79
+  },
+  "source_provenance": {
+    "cue_id": "sfx_arcade_jump",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:13:05.924763",
+    "source_filename": "sfx_arcade_jump.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "df0f90defdf3f6060aa4e6cee4aa9402d144dadc4ab427454e511db68fc57705",
+    "bytes": 8820,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 21168,
+      "duration_seconds": 0.48,
+      "rms_dbfs": -31.45,
+      "peak_dbfs": -11.27,
+      "integrated_lufs": -27.05,
+      "true_peak_dbtp": -11.11,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -31.45,
+      "last_second_rms_dbfs": -31.45
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Retro 8-bit square-wave video game jump upward sweep",
+      "duration_seconds": 0.5,
+      "prompt_influence": 0.45
+    }
+  }
+}

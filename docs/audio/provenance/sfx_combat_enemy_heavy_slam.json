@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_combat_enemy_heavy_slam",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:33.100751",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "2a545b503659936be7c159801344d28bf791cf9336d2d960c20da977f6d09412",
+  "bytes": 30868,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 65268,
+    "duration_seconds": 1.48,
+    "rms_dbfs": -15.78,
+    "peak_dbfs": -1.79,
+    "integrated_lufs": -9.14,
+    "true_peak_dbtp": -1.55,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -15.25,
+    "last_second_rms_dbfs": -16.82
+  },
+  "source_provenance": {
+    "cue_id": "sfx_combat_enemy_heavy_slam",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:42.938749",
+    "source_filename": "sfx_combat_enemy_heavy_slam.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "c4d6692149f77fe8145cafbe72b88db448c7111a71fc22d8f4d94000e0294b6e",
+    "bytes": 24702,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 65268,
+      "duration_seconds": 1.48,
+      "rms_dbfs": -20.44,
+      "peak_dbfs": -3.03,
+      "integrated_lufs": -13.98,
+      "true_peak_dbtp": -2.83,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -20.05,
+      "last_second_rms_dbfs": -21.8
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Industrial loader piston crush slam with heavy pneumatic hiss",
+      "duration_seconds": 1.5,
+      "prompt_influence": 0.45
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "cue_id": "quest_new_stinger",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:19:00.624334",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -14.0,
+  "sha256": "0b25a59e6ad669ff00f1010c9c57eb76a0bafcb1a81313e4eaa3301aa5831589",
+  "bytes": 26166,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 54191,
+    "duration_seconds": 1.2288,
+    "rms_dbfs": -26.63,
+    "peak_dbfs": -6.65,
+    "integrated_lufs": -23.12,
+    "true_peak_dbtp": -6.64,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -25.74,
+    "last_second_rms_dbfs": -36.12
+  },
+  "source_provenance": {
+    "cue_id": "quest_new_stinger",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:10:44.667488",
+    "source_filename": "quest_new_stinger.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "50e31f83d22303c7e78110c231e9a46b665a14e203fb2aa955225ce13a4eacfe",
+    "bytes": 23030,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 59976,
+      "duration_seconds": 1.36,
+      "rms_dbfs": -46.58,
+      "peak_dbfs": -26.07,
+      "integrated_lufs": -42.61,
+      "true_peak_dbtp": -26.05,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -45.25,
+      "last_second_rms_dbfs": -60.71
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Short dusty sci-fi JRPG quest accepted stinger, warm acoustic guitar harmonic over a dry relay tick, upward interval",
+      "duration_seconds": 1.4,
+      "prompt_influence": 0.45
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_combat_enemy_screech",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:33.918744",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "ba2654a7d6824d6fd0e88d5428ad1620a5288fcd5066208195cf3c09ec9d4b34",
+  "bytes": 36615,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 77616,
+    "duration_seconds": 1.76,
+    "rms_dbfs": -12.5,
+    "peak_dbfs": -1.64,
+    "integrated_lufs": -6.49,
+    "true_peak_dbtp": -1.64,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -11.65,
+    "last_second_rms_dbfs": -12.28
+  },
+  "source_provenance": {
+    "cue_id": "sfx_combat_enemy_screech",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:27.516041",
+    "source_filename": "sfx_combat_enemy_screech.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "7f10bec8f19ef7e8759197b2ebc9f75ea62c0b3f2b1c78a4f5bcbaeac82b1c5a",
+    "bytes": 29300,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 77616,
+      "duration_seconds": 1.76,
+      "rms_dbfs": -11.05,
+      "peak_dbfs": 0.0,
+      "integrated_lufs": -5.02,
+      "true_peak_dbtp": 0.19,
+      "samples_at_full_scale": 2,
+      "first_second_rms_dbfs": -10.17,
+      "last_second_rms_dbfs": -10.8
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Eerie mutated jungle predator shriek and guttural insectoid hiss",
+      "duration_seconds": 1.8,
+      "prompt_influence": 0.45
+    }
+  }
+}

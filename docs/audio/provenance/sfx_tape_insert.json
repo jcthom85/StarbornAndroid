@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_tape_insert",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:45.520728",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "873d2750542ab47494b377adf63750c5bbc34d0f95a835b1335e01ca4f6db6f7",
+  "bytes": 23031,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 47684,
+    "duration_seconds": 1.0813,
+    "rms_dbfs": -24.67,
+    "peak_dbfs": -1.37,
+    "integrated_lufs": -18.49,
+    "true_peak_dbtp": -0.7,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -24.33,
+    "last_second_rms_dbfs": -24.34
+  },
+  "source_provenance": {
+    "cue_id": "sfx_tape_insert",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:08.036278",
+    "source_filename": "sfx_tape_insert.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "4c34da41d4ed606741e019fe2bc9b01a133ccc8f7106adedd14f2d387239afb9",
+    "bytes": 23030,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 59976,
+      "duration_seconds": 1.36,
+      "rms_dbfs": -30.18,
+      "peak_dbfs": -0.39,
+      "integrated_lufs": -22.79,
+      "true_peak_dbtp": -0.37,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -28.85,
+      "last_second_rms_dbfs": -32.45
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Physical VHS cassette pushed into 80s deck, spring carriage snap, mechanical play engagement click",
+      "duration_seconds": 1.4,
+      "prompt_influence": 0.45
+    }
+  }
+}

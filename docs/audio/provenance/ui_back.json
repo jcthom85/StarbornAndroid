@@ -1,0 +1,56 @@
+{
+  "cue_id": "ui_back",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:53.992012",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -14.0,
+  "sha256": "9a3247ab3e9e5a999acdb5aea8aa26241fe98c6a505177c40fcd1c439fc5edec",
+  "bytes": 6313,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 10970,
+    "duration_seconds": 0.2488,
+    "rms_dbfs": -24.07,
+    "peak_dbfs": -0.87,
+    "integrated_lufs": null,
+    "true_peak_dbtp": -0.27,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -24.07,
+    "last_second_rms_dbfs": -24.07
+  },
+  "source_provenance": {
+    "cue_id": "ui_back",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:10:34.494525",
+    "source_filename": "ui_back.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "6bb1fd474b81a2d4d3bdd326cadf14783b8535f01f9dd2e3043e1783f024413a",
+    "bytes": 8820,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 21168,
+      "duration_seconds": 0.48,
+      "rms_dbfs": -34.33,
+      "peak_dbfs": -7.22,
+      "integrated_lufs": -28.05,
+      "true_peak_dbtp": -6.54,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -34.33,
+      "last_second_rms_dbfs": -34.33
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Soft downward wooden mechanical toggle click, dry room tone, clean decay",
+      "duration_seconds": 0.5,
+      "prompt_influence": 0.45
+    }
+  }
+}

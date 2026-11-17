@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_door_unlock",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:40.228986",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "c59f6207417438c5c2f11b58fe4050bd235b02d0b20cb5d3818bd7c9be676e80",
+  "bytes": 25121,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 52388,
+    "duration_seconds": 1.1879,
+    "rms_dbfs": -26.73,
+    "peak_dbfs": -0.7,
+    "integrated_lufs": -16.93,
+    "true_peak_dbtp": -0.24,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -25.98,
+    "last_second_rms_dbfs": -25.98
+  },
+  "source_provenance": {
+    "cue_id": "sfx_door_unlock",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:10:56.204060",
+    "source_filename": "sfx_door_unlock.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "6e31e8cc13f2ead91fc10ba4e01b1e49e25517a42bc517464eb9169052b55a45",
+    "bytes": 20105,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 52920,
+      "duration_seconds": 1.2,
+      "rms_dbfs": -32.99,
+      "peak_dbfs": -2.85,
+      "integrated_lufs": -23.12,
+      "true_peak_dbtp": -2.12,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -32.2,
+      "last_second_rms_dbfs": -32.2
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Heavy solenoid deadbolt latch snapping open with green electronic relay chirp",
+      "duration_seconds": 1.2,
+      "prompt_influence": 0.45
+    }
+  }
+}

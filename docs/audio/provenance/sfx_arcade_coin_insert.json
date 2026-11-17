@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_arcade_coin_insert",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:29.747698",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "ae6041e051d06b3f7ac3dcc90573c344780cb4a762a0c6f18bfd22401fbdb561",
+  "bytes": 28778,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 59976,
+    "duration_seconds": 1.36,
+    "rms_dbfs": -23.01,
+    "peak_dbfs": -1.67,
+    "integrated_lufs": -15.27,
+    "true_peak_dbtp": -0.96,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -21.68,
+    "last_second_rms_dbfs": -42.36
+  },
+  "source_provenance": {
+    "cue_id": "sfx_arcade_coin_insert",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:13:03.490975",
+    "source_filename": "sfx_arcade_coin_insert.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "d548131e9781f27eaa088413cf7caeb0a6c8af49b1d946d4fadc11fb546d914d",
+    "bytes": 23030,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 59976,
+      "duration_seconds": 1.36,
+      "rms_dbfs": -31.89,
+      "peak_dbfs": -6.31,
+      "integrated_lufs": -23.79,
+      "true_peak_dbtp": -6.02,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -30.56,
+      "last_second_rms_dbfs": -53.9
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "1986 arcade cabinet metallic quarter drop triggering crisp 8-bit credit chirp",
+      "duration_seconds": 1.4,
+      "prompt_influence": 0.45
+    }
+  }
+}

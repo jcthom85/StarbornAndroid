@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_fishing_catch",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:41.462213",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "354a4e590c7dd0ca7c6a194b2f3766cb8c4dcc28babc862bf0c9ead888392511",
+  "bytes": 36615,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 77616,
+    "duration_seconds": 1.76,
+    "rms_dbfs": -19.57,
+    "peak_dbfs": -2.65,
+    "integrated_lufs": -12.08,
+    "true_peak_dbtp": -1.77,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -17.11,
+    "last_second_rms_dbfs": -50.02
+  },
+  "source_provenance": {
+    "cue_id": "sfx_fishing_catch",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:13:00.655521",
+    "source_filename": "sfx_fishing_catch.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "4149e3bc749c93c16484da9c3a9f716215816845df95cda8d034ac7f5cbde217",
+    "bytes": 29300,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 77616,
+      "duration_seconds": 1.76,
+      "rms_dbfs": -26.95,
+      "peak_dbfs": -4.5,
+      "integrated_lufs": -20.82,
+      "true_peak_dbtp": -4.39,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -24.5,
+      "last_second_rms_dbfs": -60.02
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Splashy catch pull paired with bright rewarding discovery chime",
+      "duration_seconds": 1.8,
+      "prompt_influence": 0.45
+    }
+  }
+}

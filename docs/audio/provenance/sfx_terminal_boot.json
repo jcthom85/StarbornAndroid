@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_terminal_boot",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:19:01.996034",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "b961760ada456341932c010570c9ed8fffa51467d430b85778156e41d905f4c3",
+  "bytes": 36615,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 77616,
+    "duration_seconds": 1.76,
+    "rms_dbfs": -12.95,
+    "peak_dbfs": -3.87,
+    "integrated_lufs": -36.64,
+    "true_peak_dbtp": -3.88,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -10.51,
+    "last_second_rms_dbfs": -29.85
+  },
+  "source_provenance": {
+    "cue_id": "sfx_terminal_boot",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:10:59.122571",
+    "source_filename": "sfx_terminal_boot.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "27c419b5d60d6caec7c0bd4a6c25301f4acc36b915b35092d30ba7934dde6c10",
+    "bytes": 29300,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 77616,
+      "duration_seconds": 1.76,
+      "rms_dbfs": -9.16,
+      "peak_dbfs": -0.24,
+      "integrated_lufs": -32.86,
+      "true_peak_dbtp": -0.02,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -6.72,
+      "last_second_rms_dbfs": -25.87
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Vintage 80s CRT monitor power-on degauss thump, phosphor hum, dry terminal boot chirps",
+      "duration_seconds": 1.8,
+      "prompt_influence": 0.45
+    }
+  }
+}

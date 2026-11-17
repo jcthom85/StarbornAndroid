@@ -1,0 +1,56 @@
+{
+  "cue_id": "ui_room_move",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:54.771536",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -14.0,
+  "sha256": "be864cbe00b0ab948906373e23f5be3d5bdca95eef12adc4e47229412876690d",
+  "bytes": 11015,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 21168,
+    "duration_seconds": 0.48,
+    "rms_dbfs": -13.59,
+    "peak_dbfs": -1.86,
+    "integrated_lufs": -18.85,
+    "true_peak_dbtp": -1.86,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -13.59,
+    "last_second_rms_dbfs": -13.59
+  },
+  "source_provenance": {
+    "cue_id": "ui_room_move",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:10:38.799798",
+    "source_filename": "ui_room_move.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "f3c2a0bd21b50bd1bfb17e072e59c6f9a2ed0c307725fab2674910ca3506c868",
+    "bytes": 8820,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 21168,
+      "duration_seconds": 0.48,
+      "rms_dbfs": -11.86,
+      "peak_dbfs": 0.0,
+      "integrated_lufs": -17.15,
+      "true_peak_dbtp": 0.11,
+      "samples_at_full_scale": 1,
+      "first_second_rms_dbfs": -11.86,
+      "last_second_rms_dbfs": -11.86
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Very short soft physical movement air whoosh with subtle cloth brush, grounded travel, no laser, no musical tone",
+      "duration_seconds": 0.5,
+      "prompt_influence": 0.45
+    }
+  }
+}

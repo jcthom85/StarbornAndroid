@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_combat_shield_deflect",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:36.173408",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "8342abf243d25a3b195d9c93bdabb330111a50609986482362d8819ab4a19685",
+  "bytes": 25121,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 52920,
+    "duration_seconds": 1.2,
+    "rms_dbfs": -28.03,
+    "peak_dbfs": -2.85,
+    "integrated_lufs": -22.59,
+    "true_peak_dbtp": -2.72,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -27.24,
+    "last_second_rms_dbfs": -44.76
+  },
+  "source_provenance": {
+    "cue_id": "sfx_combat_shield_deflect",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:22.794688",
+    "source_filename": "sfx_combat_shield_deflect.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "dcba19ca5faa91c9cf9f50936578d4f9d53e269f99226813fbdd43debf4c8a6a",
+    "bytes": 20105,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 52920,
+      "duration_seconds": 1.2,
+      "rms_dbfs": -39.6,
+      "peak_dbfs": -14.13,
+      "integrated_lufs": -34.11,
+      "true_peak_dbtp": -13.92,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -38.81,
+      "last_second_rms_dbfs": -56.5
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Kinetic energy barrier deflecting projectile, glassy metallic ricochet ping",
+      "duration_seconds": 1.2,
+      "prompt_influence": 0.45
+    }
+  }
+}

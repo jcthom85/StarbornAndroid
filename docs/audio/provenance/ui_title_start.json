@@ -1,0 +1,56 @@
+{
+  "cue_id": "ui_title_start",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:55.178738",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -14.0,
+  "sha256": "2889f90be9ddce9f41b44e9961268ecc1ea459077179aaa912001f4c16ab0e00",
+  "bytes": 49154,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 105840,
+    "duration_seconds": 2.4,
+    "rms_dbfs": -14.37,
+    "peak_dbfs": -1.06,
+    "integrated_lufs": -6.9,
+    "true_peak_dbtp": -0.99,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -11.18,
+    "last_second_rms_dbfs": -36.12
+  },
+  "source_provenance": {
+    "cue_id": "ui_title_start",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:10:40.562046",
+    "source_filename": "ui_title_start.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "4ca757dcab97ad8c12f56b27ced62cd55567a4d0393ffc1662e9c8f67963b545",
+    "bytes": 39331,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 105840,
+      "duration_seconds": 2.4,
+      "rms_dbfs": -21.09,
+      "peak_dbfs": -5.28,
+      "integrated_lufs": -13.6,
+      "true_peak_dbtp": -5.28,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -17.78,
+      "last_second_rms_dbfs": -43.8
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Sparkling analog crystal chime rising in pitch into a deep warm sub-bass wave swell, magical JRPG start confirm",
+      "duration_seconds": 2.4,
+      "prompt_influence": 0.45
+    }
+  }
+}

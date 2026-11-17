@@ -1,11 +1,15 @@
 package com.example.starborn.domain.audio
 
+import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import java.util.Locale
 
 @JsonClass(generateAdapter = true)
 data class AudioBindings(
     val music: Map<String, String> = emptyMap(),
+    @Json(name = "node_music") val nodeMusic: Map<String, String> = emptyMap(),
+    @Json(name = "room_music") val roomMusic: Map<String, String> = emptyMap(),
+    @Json(name = "combat_music") val combatMusic: Map<String, String> = emptyMap(),
     val ambience: Map<String, String> = emptyMap(),
     val weather: Map<String, String> = emptyMap(),
     val ui: Map<String, String> = emptyMap(),
@@ -32,6 +36,8 @@ class AudioRouter(
 ) {
 
     private var currentMusic: String? = null
+    private var currentMusicSuite: String? = null
+    private val lastSuiteTrack = mutableMapOf<String, String>()
     private var currentAmbient: String? = null
     private var currentAmbientLayers: Set<String> = emptySet()
     private var musicGain: Float = 1f
@@ -42,14 +48,22 @@ class AudioRouter(
         roomId: String?,
         weatherId: String? = null,
         tags: Set<String> = emptySet(),
-        suppressMusic: Boolean = false
+        suppressMusic: Boolean = false,
+        hubNodeId: String? = null,
+        worldId: String? = null
     ): List<AudioCommand> {
         val commands = mutableListOf<AudioCommand>()
 
-        var desiredMusic = if (suppressMusic) null else hubId?.let { bindings.music[it] }.normalize()
-        if (desiredMusic == null) {
-            desiredMusic = if (suppressMusic) null else findTracksByTags(tags, AudioCueType.MUSIC).firstOrNull()
+        val rawMusicBinding = if (suppressMusic) {
+            null
+        } else {
+            roomId?.let { bindings.roomMusic[it] }.normalize()
+                ?: hubNodeId?.let { bindings.nodeMusic[it] }.normalize()
+                ?: hubId?.let { bindings.music[it] }.normalize()
+                ?: worldId?.let { bindings.music[it] }.normalize()
+                ?: findTracksByTags(tags, AudioCueType.MUSIC).firstOrNull()
         }
+        val (resolvedSuiteId, desiredMusic) = resolveSuiteSelection(rawMusicBinding)
 
         val desiredAmbientLayers = parseCueLayers(
             roomId?.let { bindings.ambience[it] } ?: hubId?.let { bindings.ambience[it] }
@@ -71,16 +85,22 @@ class AudioRouter(
             }
             desiredMusic?.let { next ->
                 val meta = trackMetadata(next)
+                val suiteMeta = resolvedSuiteId?.let { catalog?.suite(it) }
                 commands += AudioCommand.Play(
                     AudioCueType.MUSIC,
                     next,
                     loop = meta?.loop ?: true,
-                    fadeMs = meta?.fadeInMs ?: defaultFadeMs,
-                    gain = meta?.gain ?: 1f
+                    fadeMs = suiteMeta?.fadeInMs ?: meta?.fadeInMs ?: defaultFadeMs,
+                    gain = meta?.gain ?: 1f,
+                    loopStartMs = meta?.loopStartMs,
+                    loopEndMs = meta?.loopEndMs
                 )
             }
             currentMusic = desiredMusic
+            currentMusicSuite = resolvedSuiteId
             musicGain = 1f
+        } else {
+            currentMusicSuite = resolvedSuiteId
         }
 
         if (desiredAmbientSet != currentAmbientLayers) {
@@ -147,6 +167,39 @@ class AudioRouter(
         return commands
     }
 
+    fun commandsForStinger(cueId: String): List<AudioCommand> {
+        val normalized = cueId.normalize() ?: return emptyList()
+        val meta = cueMetadata(normalized)
+        return listOf(
+            AudioCommand.Play(
+                AudioCueType.BATTLE,
+                normalized,
+                loop = false,
+                gain = meta?.gain ?: 0.9f,
+                fadeMs = meta?.fadeInMs ?: 0L,
+                triggerHaptic = false
+            )
+        )
+    }
+
+    fun resolveCombatMusicTrack(
+        enemyIds: List<String>,
+        worldId: String?,
+        isBoss: Boolean
+    ): String? {
+        for (rawEnemyId in enemyIds) {
+            val normalizedEnemy = rawEnemyId.normalize() ?: continue
+            bindings.combatMusic[normalizedEnemy]?.normalize()?.let { return it }
+        }
+        val normalizedWorld = worldId.normalize()
+        if (normalizedWorld != null) {
+            val worldKey = if (isBoss) "${normalizedWorld}_boss" else "${normalizedWorld}_combat"
+            bindings.combatMusic[worldKey]?.normalize()?.let { return it }
+            bindings.combatMusic[normalizedWorld]?.normalize()?.let { return it }
+        }
+        return null
+    }
+
     fun voiceoverPlan(cueId: String, duckLayers: Boolean = false): VoiceoverPlan? {
         val normalized = cueId.normalize() ?: return null
         val commands = mutableListOf<AudioCommand>()
@@ -195,6 +248,7 @@ class AudioRouter(
             commands += AudioCommand.Stop(AudioCueType.AMBIENT, cue, fadeMs = trackMetadata(cue)?.fadeOutMs ?: defaultFadeMs)
         }
         currentMusic = null
+        currentMusicSuite = null
         currentAmbient = null
         currentAmbientLayers = emptySet()
         musicGain = 1f
@@ -270,6 +324,7 @@ class AudioRouter(
                         trackMetadata(target)?.fadeOutMs ?: fadeMs
                     )
                     currentMusic = null
+                    currentMusicSuite = null
                     musicGain = 1f
                 }
             }
@@ -289,9 +344,12 @@ class AudioRouter(
                         loop = loop ?: meta?.loop ?: true,
                         fadeMs = meta?.fadeInMs ?: fadeMs,
                         gain = gain ?: meta?.gain ?: 1f,
-                        restartFromBeginning = restartFromBeginning
+                        restartFromBeginning = restartFromBeginning,
+                        loopStartMs = meta?.loopStartMs,
+                        loopEndMs = meta?.loopEndMs
                     )
                     currentMusic = normalized
+                    currentMusicSuite = null
                     musicGain = 1f
                 } else if (gain != null) {
                     adjustLayerGain(AudioCueType.MUSIC, gain, fadeMs)?.let { commands += it }
@@ -412,6 +470,25 @@ class AudioRouter(
 
     private fun trackMetadata(id: String?): AudioTrackMetadata? = catalog?.track(id)
     private fun cueMetadata(id: String?): AudioCueMetadata? = catalog?.cue(id)
+
+    private fun resolveSuiteSelection(rawBinding: String?): Pair<String?, String?> {
+        if (rawBinding == null) return null to null
+        if (!rawBinding.startsWith("suite:")) return null to rawBinding
+        val suiteId = rawBinding.removePrefix("suite:").normalize() ?: return null to null
+        if (currentMusicSuite == suiteId && currentMusic != null) {
+            return suiteId to currentMusic
+        }
+        val candidates = catalog?.suite(suiteId)?.tracks
+            ?.mapNotNull { it.normalize() }
+            ?.distinct()
+            .orEmpty()
+        if (candidates.isEmpty()) return null to null
+        val prev = lastSuiteTrack[suiteId]
+        val pool = if (candidates.size > 1 && prev != null) candidates.filterNot { it == prev } else candidates
+        val chosen = if (catalog?.suite(suiteId)?.shuffle != false) pool.random() else pool.first()
+        lastSuiteTrack[suiteId] = chosen
+        return suiteId to chosen
+    }
 
     private fun parseCueLayers(raw: String?): List<String> =
         raw?.split(',', '+', ';')

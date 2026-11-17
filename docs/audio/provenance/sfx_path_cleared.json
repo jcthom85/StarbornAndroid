@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_path_cleared",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:43.778793",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "f231771bb30200169b55be3c7137e94df4b08d3c12a36c6193c56c397e6bb109",
+  "bytes": 36615,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 77616,
+    "duration_seconds": 1.76,
+    "rms_dbfs": -15.01,
+    "peak_dbfs": -0.91,
+    "integrated_lufs": -8.96,
+    "true_peak_dbtp": -0.66,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -12.6,
+    "last_second_rms_dbfs": -21.4
+  },
+  "source_provenance": {
+    "cue_id": "sfx_path_cleared",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:17.215187",
+    "source_filename": "sfx_path_cleared.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "c14ebc02b109597170b18d45a2f2d929431d1947c20b7d549f956c03114a0279",
+    "bytes": 29300,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 77616,
+      "duration_seconds": 1.76,
+      "rms_dbfs": -14.3,
+      "peak_dbfs": 0.0,
+      "integrated_lufs": -7.96,
+      "true_peak_dbtp": 1.29,
+      "samples_at_full_scale": 110,
+      "first_second_rms_dbfs": -11.87,
+      "last_second_rms_dbfs": -22.41
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Heavy metal obstruction shifting aside with low scrape and clear air draft opening",
+      "duration_seconds": 1.8,
+      "prompt_influence": 0.45
+    }
+  }
+}

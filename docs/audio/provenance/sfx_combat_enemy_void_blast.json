@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_combat_enemy_void_blast",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:34.808514",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "ca90e2b1103ffd92bb4e9ea7f8b60e3b44bf89649dd6f1717d9593197d26c1d8",
+  "bytes": 33480,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 70560,
+    "duration_seconds": 1.6,
+    "rms_dbfs": -13.92,
+    "peak_dbfs": -1.39,
+    "integrated_lufs": -10.55,
+    "true_peak_dbtp": -1.37,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -11.88,
+    "last_second_rms_dbfs": -31.38
+  },
+  "source_provenance": {
+    "cue_id": "sfx_combat_enemy_void_blast",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:47.327492",
+    "source_filename": "sfx_combat_enemy_void_blast.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "451ea296ed79da7f879c78ae4578f246e74b4611671cd76722069984327b5bff",
+    "bytes": 26792,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 70560,
+      "duration_seconds": 1.6,
+      "rms_dbfs": -12.77,
+      "peak_dbfs": -0.01,
+      "integrated_lufs": -9.76,
+      "true_peak_dbtp": -0.01,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -10.73,
+      "last_second_rms_dbfs": -32.21
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Eerie dark cosmic phase-distortion blast with hollow void whoosh",
+      "duration_seconds": 1.6,
+      "prompt_influence": 0.45
+    }
+  }
+}

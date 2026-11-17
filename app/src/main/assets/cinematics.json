@@ -623,7 +623,8 @@
       },
       {
         "type": "dialogue",
-        "speaker": "???",
+        "speaker": "????",
+        "portrait": "images/characters/orion_portrait.png",
         "text": "Broadcast my identity. Get it away from them.",
         "caption_style": "dialogue",
         "image": "images/cinematics/intro_chime_launch_v1.webp",
@@ -665,7 +666,8 @@
       },
       {
         "type": "dialogue",
-        "speaker": "???",
+        "speaker": "????",
+        "portrait": "images/characters/orion_portrait.png",
         "text": "Mute the room. Seal me in.",
         "caption_style": "dialogue",
         "image": "images/cinematics/intro_orion_stasis_v1.webp",

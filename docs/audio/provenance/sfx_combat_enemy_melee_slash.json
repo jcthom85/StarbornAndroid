@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_combat_enemy_melee_slash",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:33.631872",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "d858a1822bc6f394a329588cc377b5875b35cac1f1ea565c9e67429c0b51a3cd",
+  "bytes": 23031,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 47628,
+    "duration_seconds": 1.08,
+    "rms_dbfs": -17.95,
+    "peak_dbfs": -1.78,
+    "integrated_lufs": -9.9,
+    "true_peak_dbtp": -1.19,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -17.62,
+    "last_second_rms_dbfs": -18.2
+  },
+  "source_provenance": {
+    "cue_id": "sfx_combat_enemy_melee_slash",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:31.497585",
+    "source_filename": "sfx_combat_enemy_melee_slash.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "2275520113765f7ab0b048de350a18d84d76366db25608a3cf3bde851ff0d06e",
+    "bytes": 18433,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 47628,
+      "duration_seconds": 1.08,
+      "rms_dbfs": -18.68,
+      "peak_dbfs": 0.0,
+      "integrated_lufs": -10.29,
+      "true_peak_dbtp": 0.17,
+      "samples_at_full_scale": 1,
+      "first_second_rms_dbfs": -18.35,
+      "last_second_rms_dbfs": -18.61
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Vicious sharp claw swipe slicing air and armor",
+      "duration_seconds": 1.1,
+      "prompt_influence": 0.45
+    }
+  }
+}

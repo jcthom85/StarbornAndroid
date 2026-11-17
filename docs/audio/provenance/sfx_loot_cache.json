@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_loot_cache",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:43.116075",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "f4f3bf41e1c072254e19c75b0e77041e82e0d2526ea17f82d8671d0209cd3e7d",
+  "bytes": 26688,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 56425,
+    "duration_seconds": 1.2795,
+    "rms_dbfs": -24.31,
+    "peak_dbfs": -2.44,
+    "integrated_lufs": -17.88,
+    "true_peak_dbtp": -1.33,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -24.62,
+    "last_second_rms_dbfs": -24.16
+  },
+  "source_provenance": {
+    "cue_id": "sfx_loot_cache",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:06.005045",
+    "source_filename": "sfx_loot_cache.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "9bedb939c17270667f36dfce5fb2fa5dcb67514970b5e166a3e8bbde160396ea",
+    "bytes": 24702,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 65268,
+      "duration_seconds": 1.48,
+      "rms_dbfs": -28.85,
+      "peak_dbfs": -1.6,
+      "integrated_lufs": -19.91,
+      "true_peak_dbtp": -1.2,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -27.57,
+      "last_second_rms_dbfs": -27.57
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Metallic supply locker unlatching with crisp gear rattle and subtle discovery chime",
+      "duration_seconds": 1.5,
+      "prompt_influence": 0.45
+    }
+  }
+}

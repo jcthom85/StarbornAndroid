@@ -1,0 +1,56 @@
+{
+  "cue_id": "ui_confirm",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:54.380450",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -14.0,
+  "sha256": "e9c5255d9a27c5a7f22a9511929e91dde1baca222b797ffe121fa9069eabb689",
+  "bytes": 17284,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 35280,
+    "duration_seconds": 0.8,
+    "rms_dbfs": -23.38,
+    "peak_dbfs": -5.84,
+    "integrated_lufs": -21.67,
+    "true_peak_dbtp": -5.82,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -23.38,
+    "last_second_rms_dbfs": -23.38
+  },
+  "source_provenance": {
+    "cue_id": "ui_confirm",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:10:32.570489",
+    "source_filename": "ui_confirm.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "90feb43a6c6e378d063bdd69b8f41d9a45a2a99f746a4821d6aba26a473c1c2b",
+    "bytes": 13835,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 35280,
+      "duration_seconds": 0.8,
+      "rms_dbfs": -34.93,
+      "peak_dbfs": -17.36,
+      "integrated_lufs": -33.27,
+      "true_peak_dbtp": -17.35,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -34.93,
+      "last_second_rms_dbfs": -34.93
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Clean warm acoustic wooden chime note with subtle analog synth overtone, 300ms natural decay",
+      "duration_seconds": 0.8,
+      "prompt_influence": 0.45
+    }
+  }
+}

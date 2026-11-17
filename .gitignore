@@ -118,3 +118,13 @@ scripts/.remote_device.json
 /starborn_audit_*.txt
 /gemini4output.txt
 /starborn_source_clean.zip
+
+# Audio Studio large staging audio binaries
+/audio_studio/incoming/
+/audio_studio/takes/
+/audio_studio/stems/
+/audio_studio/mastered/
+/audio_studio/sources/
+/audio_studio/evaluations/
+/audio_studio/reference_audio/
+/audio_studio/work/

@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_forage_gather",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:42.631221",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "032edff8d7fb1193bd1006977a09060c0cfbb40ef4f6e32651066c9e251b3d30",
+  "bytes": 22509,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 46697,
+    "duration_seconds": 1.0589,
+    "rms_dbfs": -26.69,
+    "peak_dbfs": -2.57,
+    "integrated_lufs": -20.1,
+    "true_peak_dbtp": -2.4,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -26.44,
+    "last_second_rms_dbfs": -26.81
+  },
+  "source_provenance": {
+    "cue_id": "sfx_forage_gather",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:12.753474",
+    "source_filename": "sfx_forage_gather.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "b76305d564f39c274808a71131b67e7c1f83c7f33daf1cc685eb346278f56828",
+    "bytes": 21358,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 56448,
+      "duration_seconds": 1.28,
+      "rms_dbfs": -39.11,
+      "peak_dbfs": -14.31,
+      "integrated_lufs": -31.69,
+      "true_peak_dbtp": -14.11,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -38.04,
+      "last_second_rms_dbfs": -51.49
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Organic plant leaves rustling and clean snap of harvesting wild frontier flora",
+      "duration_seconds": 1.3,
+      "prompt_influence": 0.45
+    }
+  }
+}

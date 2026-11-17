@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_combat_enemy_bite",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:31.859769",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "a6cef309c11ffe4a2fffe20e32a8673292a2d78d3592d2e8ee2096948c513111",
+  "bytes": 21464,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 44100,
+    "duration_seconds": 1.0,
+    "rms_dbfs": -17.4,
+    "peak_dbfs": -1.33,
+    "integrated_lufs": -10.83,
+    "true_peak_dbtp": -0.77,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -17.4,
+    "last_second_rms_dbfs": -17.4
+  },
+  "source_provenance": {
+    "cue_id": "sfx_combat_enemy_bite",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:12:33.391409",
+    "source_filename": "sfx_combat_enemy_bite.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "aea7fdb543508f186b91337e7161ae6e07966fe88d9eef9219e6e8af445905a7",
+    "bytes": 17179,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 44100,
+      "duration_seconds": 1.0,
+      "rms_dbfs": -17.8,
+      "peak_dbfs": 0.0,
+      "integrated_lufs": -11.65,
+      "true_peak_dbtp": 0.47,
+      "samples_at_full_scale": 13,
+      "first_second_rms_dbfs": -17.8,
+      "last_second_rms_dbfs": -17.8
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Feral creature snapping jaw bite with heavy bone crunch",
+      "duration_seconds": 1.0,
+      "prompt_influence": 0.45
+    }
+  }
+}

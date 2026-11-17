@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_loot_crate_open",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:43.438343",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "9268fc38c1750509d607f0aa95d5a32234d9592b2d697fa754b652a78183e6fb",
+  "bytes": 40795,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 87484,
+    "duration_seconds": 1.9838,
+    "rms_dbfs": -22.53,
+    "peak_dbfs": -1.11,
+    "integrated_lufs": -14.41,
+    "true_peak_dbtp": -0.26,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -25.5,
+    "last_second_rms_dbfs": -20.83
+  },
+  "source_provenance": {
+    "cue_id": "sfx_loot_crate_open",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:03.190794",
+    "source_filename": "sfx_loot_crate_open.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "e98a5ac843c4591cf1a2c1cfb9e38bf7a85754b797ae303d0496b32966d922db",
+    "bytes": 36405,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 97020,
+      "duration_seconds": 2.2,
+      "rms_dbfs": -31.36,
+      "peak_dbfs": -3.68,
+      "integrated_lufs": -21.9,
+      "true_peak_dbtp": -3.6,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -36.79,
+      "last_second_rms_dbfs": -28.54
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Heavy industrial cargo latches popping open with pneumatic release and hinged steel lid",
+      "duration_seconds": 2.2,
+      "prompt_influence": 0.45
+    }
+  }
+}

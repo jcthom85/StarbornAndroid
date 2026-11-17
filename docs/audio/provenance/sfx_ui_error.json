@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_ui_error",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:47.835634",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -14.0,
+  "sha256": "3942c49e36783825e9aa7ad24fbc68ef5e7e896396d98d028a12349b3ba27095",
+  "bytes": 18852,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 38808,
+    "duration_seconds": 0.88,
+    "rms_dbfs": -16.81,
+    "peak_dbfs": -1.17,
+    "integrated_lufs": -9.64,
+    "true_peak_dbtp": -0.92,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -16.81,
+    "last_second_rms_dbfs": -16.81
+  },
+  "source_provenance": {
+    "cue_id": "sfx_ui_error",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:10:18.993940",
+    "source_filename": "sfx_ui_error.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "7a397ba3470ff1e7a3568e4b390ffd30c62fc5741a7c77aa270ebd3980f15ca1",
+    "bytes": 15089,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 38808,
+      "duration_seconds": 0.88,
+      "rms_dbfs": -24.0,
+      "peak_dbfs": -6.45,
+      "integrated_lufs": -16.85,
+      "true_peak_dbtp": -6.09,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -24.0,
+      "last_second_rms_dbfs": -24.0
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Dry low-frequency double electromechanical buzzer, 1980s Dominion terminal access denied tone, short crisp tail",
+      "duration_seconds": 0.9,
+      "prompt_influence": 0.45
+    }
+  }
+}

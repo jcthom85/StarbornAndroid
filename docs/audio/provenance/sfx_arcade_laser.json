@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_arcade_laser",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:30.423682",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "8809c4942e4ef4fd0d1709248729e7a78389d0d8aa0da523316ba37772d592d9",
+  "bytes": 11015,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 21168,
+    "duration_seconds": 0.48,
+    "rms_dbfs": -13.94,
+    "peak_dbfs": -1.87,
+    "integrated_lufs": -10.45,
+    "true_peak_dbtp": -1.85,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -13.94,
+    "last_second_rms_dbfs": -13.94
+  },
+  "source_provenance": {
+    "cue_id": "sfx_arcade_laser",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:13:08.091768",
+    "source_filename": "sfx_arcade_laser.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "da0218f2cc180e25cfd59381a9a8c837599b97208f460612df63da23846a6260",
+    "bytes": 8820,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 21168,
+      "duration_seconds": 0.48,
+      "rms_dbfs": -15.17,
+      "peak_dbfs": -0.77,
+      "integrated_lufs": -11.65,
+      "true_peak_dbtp": -0.74,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -15.17,
+      "last_second_rms_dbfs": -15.17
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Punchy 1980s arcade space shooter 8-bit laser zap",
+      "duration_seconds": 0.5,
+      "prompt_influence": 0.45
+    }
+  }
+}

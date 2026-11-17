@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_door_airlock_open",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:40.002668",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "89cfc8deff24a38326745a215867db07da844579035259a6b39d5b3fb1a1939f",
+  "bytes": 56468,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 121716,
+    "duration_seconds": 2.76,
+    "rms_dbfs": -18.3,
+    "peak_dbfs": -1.51,
+    "integrated_lufs": -9.15,
+    "true_peak_dbtp": -0.83,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -13.98,
+    "last_second_rms_dbfs": -78.79
+  },
+  "source_provenance": {
+    "cue_id": "sfx_door_airlock_open",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:10:51.063870",
+    "source_filename": "sfx_door_airlock_open.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "e4be6832635674a21b36df0218abd3475c17fce688332c9231bb4f5573e55684",
+    "bytes": 45182,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 121716,
+      "duration_seconds": 2.76,
+      "rms_dbfs": -18.45,
+      "peak_dbfs": 0.0,
+      "integrated_lufs": -8.75,
+      "true_peak_dbtp": 0.8,
+      "samples_at_full_scale": 2,
+      "first_second_rms_dbfs": -14.08,
+      "last_second_rms_dbfs": -78.61
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Heavy industrial sci-fi airlock depressurizing hiss followed by motorized steel bulkhead sliding open",
+      "duration_seconds": 2.8,
+      "prompt_influence": 0.45
+    }
+  }
+}

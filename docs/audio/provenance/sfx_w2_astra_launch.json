@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_w2_astra_launch",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:48.658792",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "2081c809aad879e8364f0ab035a57ce799a21792bbf11edbdfe0fe58e684c368",
+  "bytes": 59080,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 127232,
+    "duration_seconds": 2.8851,
+    "rms_dbfs": -13.29,
+    "peak_dbfs": -1.96,
+    "integrated_lufs": -16.69,
+    "true_peak_dbtp": -1.96,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -14.51,
+    "last_second_rms_dbfs": -17.63
+  },
+  "source_provenance": {
+    "cue_id": "sfx_w2_astra_launch",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:40.929241",
+    "source_filename": "sfx_w2_astra_launch.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "550da5d4052ce4a297e08fc44b1d493c64de138c9817adc8fea5b73d3afc28a1",
+    "bytes": 48944,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 132300,
+      "duration_seconds": 3.0,
+      "rms_dbfs": -22.95,
+      "peak_dbfs": -9.36,
+      "integrated_lufs": -26.26,
+      "true_peak_dbtp": -9.36,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -24.14,
+      "last_second_rms_dbfs": -29.18
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Heavy battered starship thrusters spooling up, hull vibration rumble, lifting off jungle pad",
+      "duration_seconds": 3.0,
+      "prompt_influence": 0.45
+    }
+  }
+}

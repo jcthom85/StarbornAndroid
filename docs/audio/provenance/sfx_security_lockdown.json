@@ -1,0 +1,56 @@
+{
+  "cue_id": "sfx_security_lockdown",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-17T14:17:45.212490",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "d8835e5fcde0e89899767cdfe4caaf31b396ca3486fbee83d3c08802aae9a0ec",
+  "bytes": 40272,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 85357,
+    "duration_seconds": 1.9355,
+    "rms_dbfs": -15.63,
+    "peak_dbfs": -1.55,
+    "integrated_lufs": -15.72,
+    "true_peak_dbtp": -1.54,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -16.79,
+    "last_second_rms_dbfs": -14.95
+  },
+  "source_provenance": {
+    "cue_id": "sfx_security_lockdown",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-17T14:11:28.917343",
+    "source_filename": "sfx_security_lockdown.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "50086b97fdf6c99b2a55fc2b04c73b4c5e41708cc5dea2242d95d9b4b2ac568c",
+    "bytes": 33061,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 88200,
+      "duration_seconds": 2.0,
+      "rms_dbfs": -15.67,
+      "peak_dbfs": -0.08,
+      "integrated_lufs": -15.52,
+      "true_peak_dbtp": -0.08,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -17.34,
+      "last_second_rms_dbfs": -14.46
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Dry Dominion corridor lockdown blast door thud with brief urgent red alert klaxon pulse",
+      "duration_seconds": 2.0,
+      "prompt_influence": 0.45
+    }
+  }
+}
