@@ -1821,7 +1821,7 @@ class CombatController(
                     if (skillId != null && skillId.contains("drone")) {
                         playBattleCue("enemy_attack_drone")
                     } else {
-                        playCharacterAttackSound(entry.sourceId)
+                        playCharacterAttackSound(entry.sourceId, skillId)
                     }
                     val effectDelayMs = actionEffectDelayMs(currentAction)
                     if (entry.amount == 0 && entry.element == "miss") {
@@ -3889,15 +3889,56 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
         emitAudio(commands)
     }
 
-    private fun playCharacterAttackSound(sourceId: String) {
+    private fun playCharacterAttackSound(sourceId: String, skillId: String? = null) {
         val base = sourceId.substringBefore('#')
         val segment = base.substringAfterLast(':').substringAfterLast('/')
         val normalized = segment.lowercase(Locale.getDefault()).removePrefix("player_")
         val cue = when {
-            normalized.startsWith("nova") -> "wpn_nova_laser"
-            normalized.startsWith("zeke") -> "wpn_zeke_punch"
-            normalized.startsWith("orion") -> "wpn_orion_resonance"
-            normalized.startsWith("gh0st") || normalized.startsWith("ghost") -> "wpn_gh0st_slash"
+            normalized.startsWith("nova") -> when {
+                skillId == null -> "wpn_nova_laser"
+                skillId in setOf("nova_hydraulic_kick", "slide_kick", "nova_cheap_shot") -> "wpn_zeke_body_impact"
+                skillId in setOf(
+                    "nova_arc_tether",
+                    "nova_cryo_vent",
+                    "nova_plasma_burst",
+                    "nova_rend_round",
+                    "nova_blast_wave",
+                    "nova_pulse_grenade",
+                    "scrap_shot",
+                    "nova_smoke_bomb"
+                ) || skillId.startsWith("source_art_") -> "wpn_nova_resonance_shot"
+                else -> "wpn_nova_laser"
+            }
+            normalized.startsWith("zeke") -> when {
+                skillId != null && skillId in setOf(
+                    "zeke_shatter_blow",
+                    "zeke_quake_slam",
+                    "zeke_overload_fists",
+                    "zeke_synergy_pitch"
+                ) -> "wpn_zeke_body_impact"
+                else -> "wpn_zeke_punch"
+            }
+            normalized.startsWith("orion") -> when {
+                skillId != null && skillId in setOf(
+                    "orion_prism_lance",
+                    "orion_disruption_pulse",
+                    "orion_stasis_field",
+                    "orion_stasis_stitch",
+                    "orion_sunbeam"
+                ) -> "wpn_orion_bowl_resonance"
+                else -> "wpn_orion_resonance"
+            }
+            normalized.startsWith("gh0st") || normalized.startsWith("ghost") -> when {
+                skillId != null && skillId in setOf(
+                    "gh0st_venom_edge",
+                    "gh0st_shadow_flurry",
+                    "gh0st_phase_counter",
+                    "gh0st_intercept",
+                    "gh0st_system_crash"
+                ) -> "wpn_gh0st_wire_slash"
+                else -> "wpn_gh0st_slash"
+            }
+            normalized.startsWith("ollie") -> "wpn_zeke_body_impact"
             else -> resolveEnemyAttackCue(sourceId, base, normalized)
         }
         if (cue != null) {

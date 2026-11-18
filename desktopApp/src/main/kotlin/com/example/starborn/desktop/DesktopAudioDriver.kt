@@ -604,7 +604,8 @@ class DesktopAudioDriver(
             "voice_murmur_zeke_01", "voice_murmur_zeke_02", "voice_murmur_zeke_03", "voice_murmur_zeke_04",
             "voice_murmur_gh0st_01", "voice_murmur_gh0st_02", "voice_murmur_gh0st_03", "voice_murmur_gh0st_04",
             "voice_murmur_female_01", "voice_murmur_female_02", "voice_murmur_female_03", "voice_murmur_female_04",
-            "voice_murmur_male_01", "voice_murmur_male_02", "voice_murmur_male_03", "voice_murmur_male_04"
+            "voice_murmur_male_01", "voice_murmur_male_02", "voice_murmur_male_03", "voice_murmur_male_04",
+            "voice_murmur_machine_01", "voice_murmur_machine_02", "voice_murmur_machine_03", "voice_murmur_machine_04"
         )
     }
 }

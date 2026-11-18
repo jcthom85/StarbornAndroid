@@ -1689,6 +1689,7 @@ class ExplorationController(
             _uiState.update { it.copy(forceBlackScreen = true) }
         }
         if (actionId.equals("astra_launch_simulation", ignoreCase = true)) {
+            playUiCue("terminal_boot")
             _uiState.update { it.copy(isSimulationDeckVisible = true, availableSimulations = com.example.starborn.feature.exploration.presentation.AstraCatalog.availableSimulations(sessionStore.state.value)) }
         }
         if (actionId == "astra_recreation" && sessionStore.state.value.hubId == AstraTravel.HUB_ID) {
@@ -1700,6 +1701,9 @@ class ExplorationController(
         val facilityId = mapOf("astra_cargo_records" to "cargo", "astra_cargo_manifest" to "cargo", "astra_relic_array" to "relics",
             "astra_chime_archive" to "chime", "astra_crew_checkin" to "crew", "astra_crew_downtime" to "quarters")[actionId]
         if (facilityId != null && sessionStore.state.value.hubId == AstraTravel.HUB_ID) {
+            if (facilityId in setOf("cargo", "relics", "chime")) {
+                playUiCue("terminal_boot")
+            }
             val state = sessionStore.state.value
             val facility = com.example.starborn.feature.exploration.presentation.astraFacility(facilityId, state, inventoryService::itemDetail)
             _uiState.update { it.copy(astraFacility = facility) }
@@ -1719,6 +1723,7 @@ class ExplorationController(
             _uiState.update { it.copy(isCatchLogVisible = true, fishingJournal = fishingService.getJournal()) }
         }
         if (actionId.equals("astra_open_tape_deck", ignoreCase = true)) {
+            playUiCue("menu_open")
             _uiState.update { it.copy(isTapeDeckVisible = true) }
         }
         if (actionId.equals("astra_nav_console", ignoreCase = true)) {
@@ -1726,9 +1731,13 @@ class ExplorationController(
             if (firstAstraDeparturePending(flight)) {
                 if (flight.roomId == "astra_bridge" && "reboot_bridge_relic" in flight.questTasksCompleted["w2_mq05"].orEmpty()) {
                     startImmediateDialogue("line:w2_departure_entry")
-                } else postStatus("Restore the Astra's systems before plotting departure.")
+                } else {
+                    playUiCue("error")
+                    postStatus("Restore the Astra's systems before plotting departure.")
+                }
                 return
             }
+            playUiCue("terminal_boot")
             val dock = AstraTravel.dockingLocation(sessionStore.state.value, worldAssets.loadHubs(), worldAssets.loadHubNodes())
             _uiState.update { it.copy(
                 isAstraNavConsoleVisible = true,
@@ -1853,6 +1862,7 @@ class ExplorationController(
     }
 
     fun playTapeTrack(tapeId: String, trackCueId: String) {
+        playUiCue("tape_insert")
         _uiState.update { it.copy(playingTapeId = tapeId) }
         emitAudioCommands(audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = trackCueId, loop = true))
         postStatus("Great Frontier screening started.")
@@ -3282,6 +3292,7 @@ class ExplorationController(
         }
         dismissBlockedPrompt()
         if (actionHint?.locked == true) {
+            playUiCue("error")
             val message = actionHint.message?.takeIf { it.isNotBlank() }
                 ?: "That isn't available yet."
             showInspection(message)
@@ -3336,6 +3347,24 @@ class ExplorationController(
             action.`do`.orEmpty().any(::eventActionHasAudioCue) ||
             action.elseDo.orEmpty().any(::eventActionHasAudioCue)
 
+    private fun playToggleStateCue(stateKey: String, enable: Boolean) {
+        val normalized = stateKey.lowercase(Locale.getDefault())
+        val cue = when {
+            normalized in setOf("light_on", "lamp_on", "power_on") ||
+                normalized.contains("light") ||
+                normalized.contains("lamp") ||
+                normalized.contains("power") ||
+                normalized.contains("generator") -> if (enable) "sfx_bunk_light_on" else "sfx_bunk_light_off"
+            normalized.contains("door") ||
+                normalized.contains("gate") ||
+                normalized.contains("airlock") ||
+                normalized.contains("hatch") ||
+                normalized.contains("lock") -> if (enable) "door_open" else "door_close"
+            else -> "confirm"
+        }
+        playUiCue(cue)
+    }
+
     private fun handleToggleAction(action: ToggleAction) {
         val stateKey = action.stateKey
         if (stateKey.isBlank()) {
@@ -3373,9 +3402,17 @@ class ExplorationController(
                 suppressNextStateMessage = false
             }
             triggerPlayerAction(eventId)
-        } else if (applied != null && !shouldSuppressStateAnnouncement(stateKey)) {
-            val message = if (targetState) enableLabel else disableLabel
-            postStatus(message)
+            if (applied != null && !eventHasAudioCue(eventId) && !isStellariumGeneratorToggle(action)) {
+                playToggleStateCue(stateKey, targetState)
+            }
+        } else if (applied != null) {
+            if (!isStellariumGeneratorToggle(action)) {
+                playToggleStateCue(stateKey, targetState)
+            }
+            if (!shouldSuppressStateAnnouncement(stateKey)) {
+                val message = if (targetState) enableLabel else disableLabel
+                postStatus(message)
+            }
         }
         showGeneratorAnnouncementIfNeeded(action, targetState, title)
     }
@@ -3388,7 +3425,7 @@ class ExplorationController(
         } else {
             STELLARIUM_GENERATOR_OFF_MESSAGE
         }
-        playUiCue("sfx_bunk_light_on")
+        playUiCue(if (targetState) "sfx_bunk_light_on" else "sfx_bunk_light_off")
         showInspection(message)
     }
 
@@ -3407,6 +3444,7 @@ class ExplorationController(
         val prompt = _uiState.value.togglePrompt ?: return
         val currentState = _uiState.value.roomState[prompt.stateKey] ?: false
         if (enable == currentState) {
+            playUiCue("error")
             val message = if (enable) {
                 "${prompt.title} is already on."
             } else {
@@ -3432,10 +3470,14 @@ class ExplorationController(
                 suppressNextStateMessage = false
             }
             triggerPlayerAction(eventId)
+            if (!eventHasAudioCue(eventId)) {
+                playToggleStateCue(prompt.stateKey, enable)
+            }
         } else {
             val roomId = prompt.roomId ?: _uiState.value.currentRoom?.id
             val applied = setRoomStateValue(roomId, prompt.stateKey, enable)
             if (applied != null) {
+                playToggleStateCue(prompt.stateKey, enable)
                 if (!shouldSuppressStateAnnouncement(prompt.stateKey)) {
                     val message = if (enable) prompt.enableLabel else prompt.disableLabel
                     postStatus(message)
@@ -3943,6 +3985,7 @@ class ExplorationController(
     fun quickSave() {
         viewModelScope.launch(dispatchers.io) {
             val success = runCatching { saveRepository.quickSave() }.getOrElse { false }
+            playUiCue(if (success) "confirm" else "error")
             val message = if (success) "Quicksave complete." else "Unable to quicksave."
             postStatus(message)
         }
@@ -3951,8 +3994,13 @@ class ExplorationController(
     fun quickSaveAndReturnToTitle(onReturn: () -> Unit) {
         viewModelScope.launch(dispatchers.io) {
             val success = runCatching { saveRepository.quickSave() }.getOrDefault(false)
-            if (success) withContext(dispatchers.main) { onReturn() }
-            else postStatus("Unable to quicksave. Still in game; try saving again.")
+            if (success) {
+                playUiCue("confirm")
+                withContext(dispatchers.main) { onReturn() }
+            } else {
+                playUiCue("error")
+                postStatus("Unable to quicksave. Still in game; try saving again.")
+            }
         }
     }
 
@@ -3961,6 +4009,7 @@ class ExplorationController(
             SessionSaveRepository.QUICKSAVE_SLOT -> runCatching { saveRepository.quickSave() }.getOrDefault(false)
             else -> runCatching { saveRepository.save(slot) }.isSuccess
         }
+        playUiCue(if (success) "confirm" else "error")
         val label = if (slot == SessionSaveRepository.QUICKSAVE_SLOT) "quicksave" else "slot $slot"
         postStatus(if (success) "Saved to $label." else "Save failed. Try again.")
         success
@@ -4116,8 +4165,12 @@ class ExplorationController(
             .ifBlank { this }
 
     fun selectMenuTab(tab: MenuTab) {
+        val changed = _uiState.value.menuTab != tab
         lastMenuTab = tab
         _uiState.update { it.copy(menuTab = tab) }
+        if (changed) {
+            playUiCue("tab_switch")
+        }
         maybeShowInventoryTutorial(tab)
         if (tab == MenuTab.FIELD_KIT) {
             triggerPlayerAction("tinkering_screen_entered")
@@ -4837,10 +4890,12 @@ class ExplorationController(
         viewModelScope.launch(dispatchers.main) {
             when (val outcome = itemUseController.useItem(itemId, targetId, replaceMeal)) {
                 is ItemUseController.Result.Success -> {
+                    playUiCue("confirm")
                     postStatus(outcome.message)
                     emitEvent(ExplorationEvent.ItemUsed(outcome.result, outcome.message))
                 }
                 is ItemUseController.Result.Failure -> {
+                    playUiCue("error")
                     postStatus(outcome.message)
                 }
             }
@@ -4858,6 +4913,7 @@ class ExplorationController(
         }
         if (itemId.isNullOrBlank()) {
             sessionStore.setEquippedItem(normalizedSlot, null, characterId)
+            playUiCue("equip_item")
             telemetry.record("reward_equipped", mapOf("slot_id" to normalizedSlot, "item_id" to null, "character_id" to characterId))
             return
         }
@@ -4874,8 +4930,12 @@ class ExplorationController(
                 weaponType = normalizedType.takeIf { GearRules.isWeaponType(it) }
             )
         }
-        if (!GearRules.matchesSlot(equipment, normalizedSlot, characterId, entry.item.type)) return
+        if (!GearRules.matchesSlot(equipment, normalizedSlot, characterId, entry.item.type)) {
+            playUiCue("error")
+            return
+        }
         sessionStore.setEquippedItem(normalizedSlot, entry.item.id, characterId)
+        playUiCue("equip_item")
         telemetry.record("reward_equipped", mapOf("slot_id" to normalizedSlot, "item_id" to entry.item.id, "character_id" to characterId))
     }
 
@@ -4884,12 +4944,21 @@ class ExplorationController(
         val owner = characterId ?: sessionStore.state.value.partyMembers.firstOrNull() ?: sessionStore.state.value.playerId
             ?: return com.example.starborn.domain.inventory.ModEquipResult.Rejected("Select a party member.")
         val item = itemId?.let(inventoryService::catalogItem)
-        if (itemId != null && item == null) return com.example.starborn.domain.inventory.ModEquipResult.Rejected("Unknown mod.")
+        if (itemId != null && item == null) {
+            playUiCue("error")
+            return com.example.starborn.domain.inventory.ModEquipResult.Rejected("Unknown mod.")
+        }
         val result = sessionStore.tryEquipMod(com.example.starborn.domain.inventory.ModLocation(owner, slotId), item, source)
         when (result) {
-            is com.example.starborn.domain.inventory.ModEquipResult.Rejected -> postStatus(result.message)
-            com.example.starborn.domain.inventory.ModEquipResult.Success -> telemetry.record("reward_equipped",
-                mapOf("slot_id" to slotId, "item_id" to itemId, "character_id" to owner))
+            is com.example.starborn.domain.inventory.ModEquipResult.Rejected -> {
+                playUiCue("error")
+                postStatus(result.message)
+            }
+            com.example.starborn.domain.inventory.ModEquipResult.Success -> {
+                playUiCue("equip_item")
+                telemetry.record("reward_equipped",
+                    mapOf("slot_id" to slotId, "item_id" to itemId, "character_id" to owner))
+            }
             else -> Unit
         }
         return result
@@ -4905,16 +4974,22 @@ class ExplorationController(
         if (normalizedCharacter.isBlank()) return
         if (weaponId.isNullOrBlank()) {
             sessionStore.setEquippedWeapon(normalizedCharacter, null)
+            playUiCue("equip_item")
             telemetry.record("reward_equipped", mapOf("slot_id" to "weapon", "item_id" to null, "character_id" to normalizedCharacter))
             return
         }
         val item = inventoryService.itemDetail(weaponId) ?: return
         val resolvedWeaponId = item.id
-        if (!GearRules.matchesSlot(item.equipment, "weapon", normalizedCharacter, item.type)) return
+        if (!GearRules.matchesSlot(item.equipment, "weapon", normalizedCharacter, item.type)) {
+            playUiCue("error")
+            return
+        }
         if (!sessionStore.setEquippedWeapon(normalizedCharacter, resolvedWeaponId)) {
+            playUiCue("error")
             postStatus("No available copy of ${item.name}. Unequip it from another character to move it.")
             return
         }
+        playUiCue("equip_item")
         if (normalizedCharacter == "nova") completeOpeningEquipmentTutorial()
         telemetry.record("reward_equipped", mapOf("slot_id" to "weapon", "item_id" to resolvedWeaponId, "character_id" to normalizedCharacter))
     }
@@ -4924,16 +4999,22 @@ class ExplorationController(
         if (normalizedCharacter.isBlank()) return
         if (armorId.isNullOrBlank()) {
             sessionStore.setEquippedArmor(normalizedCharacter, null)
+            playUiCue("equip_item")
             telemetry.record("reward_equipped", mapOf("slot_id" to "armor", "item_id" to null, "character_id" to normalizedCharacter))
             return
         }
         val item = inventoryService.itemDetail(armorId) ?: return
         val resolvedArmorId = item.id
-        if (!GearRules.matchesSlot(item.equipment, "armor", normalizedCharacter, item.type)) return
+        if (!GearRules.matchesSlot(item.equipment, "armor", normalizedCharacter, item.type)) {
+            playUiCue("error")
+            return
+        }
         if (!sessionStore.setEquippedArmor(normalizedCharacter, resolvedArmorId)) {
+            playUiCue("error")
             postStatus("No available copy of ${item.name}. Unequip it from another character to move it.")
             return
         }
+        playUiCue("equip_item")
         if (normalizedCharacter == "nova") completeOpeningEquipmentTutorial()
         telemetry.record("reward_equipped", mapOf("slot_id" to "armor", "item_id" to resolvedArmorId, "character_id" to normalizedCharacter))
     }
@@ -4996,7 +5077,7 @@ class ExplorationController(
         val roomId = _uiState.value.currentRoom?.id ?: return
         val items = roomGroundItems[roomId] ?: return
         val quantity = items[itemId] ?: return
-        playUiCue("confirm")
+        playUiCue("item_pickup")
         inventoryService.addItem(itemId, quantity)
         val displayName = inventoryService.itemDisplayName(itemId)
         items.remove(itemId)
@@ -5015,7 +5096,7 @@ class ExplorationController(
         val roomId = _uiState.value.currentRoom?.id ?: return
         val items = roomGroundItems[roomId] ?: return
         if (items.isEmpty()) return
-        playUiCue("confirm")
+        playUiCue("item_pickup")
         val collectedItems = mutableListOf<String>()
         items.entries.toList().forEach { (itemId, quantity) ->
             inventoryService.addItem(itemId, quantity)
@@ -5755,16 +5836,19 @@ class ExplorationController(
     private fun handleTuningPuzzleAction(action: TuningPuzzleAction) {
         val puzzle = tuningPuzzlesById[action.puzzleId]
         if (puzzle == null) {
+            playUiCue("error")
             val message = action.conditionUnmetMessage?.takeIf { it.isNotBlank() }
                 ?: "The tuning interface is unavailable."
             showInspection(message)
             return
         }
         if (!eventManager.canHandleTrigger("player_action", EventPayload.Action(puzzle.successEvent))) {
+            playUiCue("error")
             showInspection(action.conditionUnmetMessage?.takeIf { it.isNotBlank() }
                 ?: "The tuning interface is not ready yet.")
             return
         }
+        playUiCue("terminal_boot")
         _uiState.update {
             it.copy(
                 tuningPuzzle = TuningPuzzleUi(
@@ -6008,9 +6092,11 @@ class ExplorationController(
                             }
                         }
                     } else {
+                        playUiCue("arcade_coin")
                         emitEvent(ExplorationEvent.OpenArcade(cabinetId))
                     }
                 } else {
+                    playUiCue("error")
                     showInspection(action.conditionUnmetMessage ?: "The cabinet is still awaiting restoration.")
                 }
             }
@@ -6021,6 +6107,7 @@ class ExplorationController(
                 val status = action.conditionUnmetMessage?.takeIf { it.isNotBlank() }
                     ?: if (action.type.equals("inspect", ignoreCase = true)) "Inspected ${action.name}." else "Triggered ${action.name}"
                 if (locked) {
+                    playUiCue("error")
                     showInspection(status)
                     return
                 }
@@ -6037,6 +6124,7 @@ class ExplorationController(
                 } else {
                     if (eventId in setOf("w3_scan_shield_gap", "w3_mq15_launch_astra") &&
                         !eventManager.canHandleTrigger("player_action", EventPayload.Action(eventId))) {
+                        playUiCue("error")
                         val state = sessionStore.state.value
                         val tasks = state.questTasksCompleted["w3_mq15"].orEmpty()
                         val message = when {
@@ -6059,6 +6147,7 @@ class ExplorationController(
                     val worldOne = _uiState.value.currentWorld?.id == "world_1"
                     if ((needsUnavailableFeedback || worldOne || authoredUnavailable != null) &&
                         !eventManager.canHandleTrigger("player_action", EventPayload.Action(eventId))) {
+                        playUiCue("error")
                         val message = authoredUnavailable ?: action.conditionUnmetMessage?.takeIf {
                             (!worldOne || needsUnavailableFeedback) &&
                             it.isNotBlank() && it != "Objective completed."
@@ -6066,25 +6155,38 @@ class ExplorationController(
                         showInspection(message)
                         return
                     }
-                    val actionNameLower = action.name.lowercase(Locale.getDefault())
-                    val eventLower = eventId.lowercase(Locale.getDefault())
-                    when {
-                        actionNameLower.contains("stash") || actionNameLower.contains("cache") ||
-                            actionNameLower.contains("chest") || actionNameLower.contains("crate") ||
-                            actionNameLower.contains("locker") || actionNameLower.contains("salvage") ||
-                            eventLower.contains("loot") || eventLower.contains("salvage") || eventLower.contains("cache") -> {
-                            emitAudioCommands(audioRouter.commandsForUi("sfx_loot_cache"))
-                        }
-                        actionNameLower.contains("forage") || actionNameLower.contains("gather") ||
-                            actionNameLower.contains("flora") || actionNameLower.contains("harvest") ||
-                            actionNameLower.contains("starleaf") || actionNameLower.contains("mushroom") ||
-                            actionNameLower.contains("meat") || eventLower.contains("forage") || eventLower.contains("gather") -> {
-                            emitAudioCommands(audioRouter.commandsForUi("sfx_forage_gather"))
-                        }
-                        actionNameLower.contains("datapad") || actionNameLower.contains("terminal") ||
-                            actionNameLower.contains("log") || actionNameLower.contains("audit") ||
-                            actionNameLower.contains("read") || eventLower.contains("datapad") || eventLower.contains("log") -> {
-                            emitAudioCommands(audioRouter.commandsForUi("sfx_datapad_read"))
+                    if (!eventHasAudioCue(eventId)) {
+                        val actionNameLower = action.name.lowercase(Locale.getDefault())
+                        val eventLower = eventId.lowercase(Locale.getDefault())
+                        when {
+                            actionNameLower.contains("scavenge") || actionNameLower.contains("scrap") ||
+                                actionNameLower.contains("salvage") || actionNameLower.contains("debris") ||
+                                actionNameLower.contains("wreck") || eventLower.contains("scavenge") ||
+                                eventLower.contains("salvage") -> {
+                                playUiCue("scavenge")
+                            }
+                            actionNameLower.contains("stash") || actionNameLower.contains("cache") ||
+                                actionNameLower.contains("chest") || actionNameLower.contains("crate") ||
+                                actionNameLower.contains("locker") ||
+                                eventLower.contains("loot") || eventLower.contains("cache") -> {
+                                emitAudioCommands(audioRouter.commandsForUi("sfx_loot_cache"))
+                            }
+                            actionNameLower.contains("forage") || actionNameLower.contains("gather") ||
+                                actionNameLower.contains("flora") || actionNameLower.contains("harvest") ||
+                                actionNameLower.contains("starleaf") || actionNameLower.contains("mushroom") ||
+                                actionNameLower.contains("meat") || eventLower.contains("forage") || eventLower.contains("gather") -> {
+                                emitAudioCommands(audioRouter.commandsForUi("sfx_forage_gather"))
+                            }
+                            actionNameLower.contains("terminal") || actionNameLower.contains("console") ||
+                                actionNameLower.contains("panel") || actionNameLower.contains("uplink") ||
+                                actionNameLower.contains("hack") || eventLower.contains("hack") -> {
+                                playUiCue("terminal_boot")
+                            }
+                            actionNameLower.contains("datapad") || actionNameLower.contains("log") ||
+                                actionNameLower.contains("audit") || actionNameLower.contains("read") ||
+                                actionNameLower.contains("manifest") || eventLower.contains("datapad") || eventLower.contains("log") -> {
+                                emitAudioCommands(audioRouter.commandsForUi("sfx_datapad_read"))
+                            }
                         }
                     }
                     // The authored event owns success feedback once eligible.
@@ -6277,11 +6379,16 @@ class ExplorationController(
         val stateKey = action.stateKey?.takeUnless { it.isBlank() }
         val alreadyOpen = stateKey?.let { _uiState.value.roomState[it] == true } ?: false
         if (alreadyOpen) {
+            playUiCue("error")
             val message = action.alreadyOpenMessage ?: "You've already searched ${action.name}."
             showInspection(message)
             return
         }
 
+        val actionEventId = action.actionEvent?.takeIf { it.isNotBlank() }
+        if (actionEventId == null || !eventHasAudioCue(actionEventId)) {
+            playUiCue("loot_open")
+        }
         action.discoveryMessage?.takeIf { it.isNotBlank() }?.let(::showInspection)
         stateKey?.let { setRoomStateValue(roomId, it, true) }
 

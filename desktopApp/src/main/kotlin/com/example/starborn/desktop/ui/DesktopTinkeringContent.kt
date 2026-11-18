@@ -38,7 +38,21 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
         services.audioDriver.executeAll(services.audioRouter.commandsForUi("tinkering_ratchet"))
     } }
     LaunchedEffect(runtime) { runtime.messages.collect { message ->
-        if (message.startsWith("Scrapped ")) services.audioDriver.executeAll(services.audioRouter.commandsForUi("tinkering_ratchet"))
+        val cue = when {
+            message.startsWith("Scrapped ") -> "tinkering_wrench"
+            message.startsWith("Learned ") -> "confirm"
+            message.startsWith("Unknown ") ||
+                message.startsWith("Learn the ") ||
+                message.startsWith("Missing ") ||
+                message.startsWith("Unable ") ||
+                message.startsWith("Select ") ||
+                message.startsWith("No craftable") ||
+                message.startsWith("This item cannot") ||
+                message.startsWith("You don't have") ||
+                message.startsWith("There is no room") -> "error"
+            else -> null
+        }
+        if (cue != null) services.audioDriver.executeAll(services.audioRouter.commandsForUi(cue))
     } }
     pendingScrap?.let { item ->
         AlertDialog(onDismissRequest = { pendingScrap = null },

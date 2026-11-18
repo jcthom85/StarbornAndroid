@@ -27,9 +27,24 @@ class DesktopFullAudioAndSaveAuditTest {
             val services = DesktopAppServices(saveDirectory = tempSaveDir)
             services.startNewGame()
 
-            // 1. Audio Driver Tests via AudioCommand
-            services.audioDriver.execute(AudioCommand.Play(AudioCueType.MUSIC, "ost_mining_pit_ambient", loop = true))
-            services.audioDriver.execute(AudioCommand.Play(AudioCueType.UI, "menu_click", loop = false))
+            // 1. Audio Driver & Router Tests via AudioCommand
+            services.audioDriver.execute(AudioCommand.Play(AudioCueType.MUSIC, "music_w1_homestead_explore", loop = true))
+            services.audioDriver.execute(AudioCommand.Play(AudioCueType.UI, "sfx_ui_button_click", loop = false))
+            listOf(
+                "tinkering_wrench", "turn_start", "action_retreat", "sfx_button_toggle",
+                "sfx_rest_chime", "sfx_bunk_light_on", "sfx_bunk_light_off",
+                "sfx_loot_cache", "sfx_forage_gather", "sfx_datapad_read",
+                "ui_title_start", "sfx_w3_shield_anchor"
+            ).forEach { eventId ->
+                assertFalse("UI event $eventId should resolve to a command", services.audioRouter.commandsForUi(eventId).isEmpty())
+            }
+            listOf(
+                "retreat", "wpn_nova_resonance_shot", "wpn_zeke_body_impact",
+                "wpn_gh0st_wire_slash", "wpn_orion_bowl_resonance"
+            ).forEach { battleId ->
+                assertFalse("Battle event $battleId should resolve to a command", services.audioRouter.commandsForBattle(battleId).isEmpty())
+            }
+            assertTrue(services.audioRouter.commandsForUi("undefined-event").isEmpty())
             services.audioDriver.setUserGain(AudioCueType.MUSIC, 0.75f)
 
             // 2. Save / Stasis Slot Tests

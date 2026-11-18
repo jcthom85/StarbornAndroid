@@ -145,7 +145,10 @@ fun DesktopCookingScreen(
                                         onPlayAudio("cooking_sizzle")
                                         result.message
                                     }
-                                    is ItemUseController.Result.Failure -> result.message
+                                    is ItemUseController.Result.Failure -> {
+                                        onPlayAudio("error")
+                                        result.message
+                                    }
                                 }
                                 feedback = message
                             } finally { preparing = false }
@@ -162,7 +165,7 @@ fun DesktopCookingScreen(
                 Button(onClick = {
                     val outcome = craftingService.cookMeal(recipe.id, selectedChef, if (snack) 1 else batch)
                     feedback = outcome.message
-                    if (outcome is CraftingOutcome.Success) onPlayAudio("cooking_sizzle")
+                    onPlayAudio(if (outcome is CraftingOutcome.Success) "cooking_sizzle" else "error")
                 }, enabled = canCook && !preparing,
                     modifier = Modifier.testTag("cook-${recipe.id}").fillMaxWidth().desktopPointerHover(canCook).heightIn(min = actionHeight),
                     colors = ButtonDefaults.buttonColors(containerColor = orange, contentColor = FieldMenuDesign.shell)) {

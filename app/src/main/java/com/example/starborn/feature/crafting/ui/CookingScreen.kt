@@ -635,7 +635,7 @@ fun CookingScreen(
                                             selectedRecipeId = recipe.id
                                             val outcome = craftingService.cookMeal(recipe.id, selectedChef, activeBatch)
                                             feedback = outcome.message
-                                            if (outcome is CraftingOutcome.Success) onPlayAudio("cooking_sizzle")
+                                            onPlayAudio(if (outcome is CraftingOutcome.Success) "cooking_sizzle" else "error")
                                         },
                                         enabled = canCook && !preparing,
                                         shape = RoundedCornerShape(10.dp),
@@ -890,7 +890,10 @@ fun CookingScreen(
                                                     onPlayAudio("cooking_sizzle")
                                                     result.message
                                                 }
-                                                is ItemUseController.Result.Failure -> result.message
+                                                is ItemUseController.Result.Failure -> {
+                                                    onPlayAudio("error")
+                                                    result.message
+                                                }
                                             }
                                             feedback = message
                                         }
@@ -936,7 +939,7 @@ fun CookingScreen(
                                     onClick = {
                                         val outcome = craftingService.cookMeal(recipe.id, selectedChef, batch)
                                         feedback = outcome.message
-                                        if (outcome is CraftingOutcome.Success) onPlayAudio("cooking_sizzle")
+                                        onPlayAudio(if (outcome is CraftingOutcome.Success) "cooking_sizzle" else "error")
                                     },
                                     enabled = canCook && !preparing,
                                     modifier = Modifier

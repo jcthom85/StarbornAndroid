@@ -540,7 +540,8 @@
     "steps": [
       {
         "type": "narration",
-        "text": "Nova seats the cracked circuit board in the isolated socket. Encrypted commands crowd the screen. She checks the disconnected network cable before touching the keys."
+        "text": "Nova seats the cracked circuit board in the isolated socket. Encrypted commands crowd the screen. She checks the disconnected network cable before touching the keys.",
+        "audio_cue": "sfx_terminal_boot"
       },
       {
         "type": "narration",
@@ -548,7 +549,8 @@
       },
       {
         "type": "narration",
-        "text": "ACCESS KEY WRITTEN TO REMOVABLE BOARD. NETWORK TRANSMISSION: NONE. Nova pulls the board. The recovered key clears from the terminal, leaving nothing on the network to follow her."
+        "text": "ACCESS KEY WRITTEN TO REMOVABLE BOARD. NETWORK TRANSMISSION: NONE. Nova pulls the board. The recovered key clears from the terminal, leaving nothing on the network to follow her.",
+        "audio_cue": "sfx_terminal_hack_success"
       }
     ]
   },
@@ -558,7 +560,8 @@
     "steps": [
       {
         "type": "narration",
-        "text": "The discarded datapad warms in Nova's hand. Its battery warning covers half a final shift log. She lowers the brightness to keep it alive."
+        "text": "The discarded datapad warms in Nova's hand. Its battery warning covers half a final shift log. She lowers the brightness to keep it alive.",
+        "audio_cue": "sfx_datapad_read"
       },
       {
         "type": "narration",
@@ -661,6 +664,7 @@
         "camera_end_x": 0.0,
         "camera_start_y": 10.0,
         "camera_end_y": -6.0,
+        "audio_cue": "sfx_intro_chorus_answer",
         "transition": "fade",
         "duration_seconds": 3.6
       },
@@ -1351,7 +1355,8 @@
         "type": "narration",
         "text": "The Titan’s hatch hangs open. Rylos reaches for a sidearm he can’t lift.",
         "duration_seconds": 4.3,
-        "image": "images/rooms/world_4/foundry_titan_dock.webp"
+        "image": "images/rooms/world_4/foundry_titan_dock.webp",
+        "audio_cue": "sfx_door_airlock_open"
       },
       {
         "type": "dialogue",
@@ -1573,7 +1578,8 @@
         "type": "narration",
         "text": "Three sets of footsteps reach the fire from different directions.",
         "duration_seconds": 4.2,
-        "image": "images/rooms/world_6/source_campfire.webp"
+        "image": "images/rooms/world_6/source_campfire.webp",
+        "audio_cue": "sfx_rest_chime"
       },
       {
         "type": "dialogue",
@@ -1591,7 +1597,8 @@
         "text": "Listen. I can hear all four of us.",
         "duration_seconds": 3.6,
         "caption_style": "dialogue",
-        "image": "images/rooms/world_6/source_campfire.webp"
+        "image": "images/rooms/world_6/source_campfire.webp",
+        "audio_cue": "sfx_chime_splice"
       },
       {
         "type": "narration",
@@ -1642,7 +1649,8 @@
     "steps": [
       {
         "type": "narration",
-        "text": "A repaired lead lies across the bench. Jed’s echo leans close to the new solder joint."
+        "text": "A repaired lead lies across the bench. Jed’s echo leans close to the new solder joint.",
+        "audio_cue": "sfx_tinkering_wrench"
       },
       {
         "type": "dialogue",
@@ -1656,7 +1664,8 @@
       },
       {
         "type": "narration",
-        "text": "Nova checks the switch and tugs the lead. The joint holds. She turns to show him; the place beside her is empty."
+        "text": "Nova checks the switch and tugs the lead. The joint holds. She turns to show him; the place beside her is empty.",
+        "audio_cue": "sfx_workshop_success"
       },
       {
         "type": "dialogue",

@@ -748,7 +748,8 @@ internal fun CampaignNavigationHost(
                     onBack = { navController.popBackStack() },
                     highContrastMode = userSettings.highContrastMode,
                     largeTouchTargets = userSettings.largeTouchTargets,
-                    voiceoverController = services.voiceoverController
+                    voiceoverController = services.voiceoverController,
+                    onPlayAudio = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) }
                 )
             } else {
                 navController.popBackStack()

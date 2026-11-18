@@ -216,7 +216,7 @@ fun DesktopArcadeScreen(services: DesktopAppServices, onClose: () -> Unit) {
                         val selected = AllCabinets.getOrNull(selectedIndex)
                         if (selected != null && session.arcadeProgress[selected.id]?.repaired == true) {
                             playing = selected.id
-                            cue("confirm")
+                            cue("arcade_coin")
                         }
                     }
                     KeyEvent.VK_ESCAPE -> {
@@ -324,7 +324,7 @@ fun DesktopArcadeScreen(services: DesktopAppServices, onClose: () -> Unit) {
                             },
                             onLaunchCabinet = { id ->
                                 playing = id
-                                cue("confirm")
+                                cue("arcade_coin")
                             },
                             modifier = Modifier
                                 .width(380.dp)
@@ -338,7 +338,7 @@ fun DesktopArcadeScreen(services: DesktopAppServices, onClose: () -> Unit) {
                             isRepaired = isSelectedRepaired,
                             onLaunch = {
                                 playing = selectedCabinet.id
-                                cue("confirm")
+                                cue("arcade_coin")
                             },
                             modifier = Modifier
                                 .weight(1f)
@@ -354,7 +354,7 @@ fun DesktopArcadeScreen(services: DesktopAppServices, onClose: () -> Unit) {
                         onPlayClick = {
                             if (isSelectedRepaired) {
                                 playing = selectedCabinet.id
-                                cue("confirm")
+                                cue("arcade_coin")
                             }
                         },
                         onCloseClick = onClose

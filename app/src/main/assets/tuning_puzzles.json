@@ -7,7 +7,7 @@
     "success_event": "w1_mq03_touch_relic",
     "success_message": "The cutter, suit ground, and operator loop lock into phase.",
     "failure_hint": "The signals beat against each other and the cold loop climbs. Adjust the sweep, coolant, and ground phase.",
-    "audio_cue": "ui_confirm",
+    "audio_cue": "sfx_chime_splice",
     "sliders": [
       {
         "id": "frequency",
@@ -49,7 +49,7 @@
     "success_event": "w6_mq30_tune_world",
     "success_message": "The Chorus keeps its separate voices and turns with Nova instead of against her.",
     "failure_hint": "That beat already carries a voice. Let it finish before Nova joins.",
-    "audio_cue": "ui_confirm",
+    "audio_cue": "sfx_chime_splice",
     "sliders": [
       {"id": "entry", "label": "Nova's entry", "min": -1, "max": 3, "initial": -1, "target": 2, "tolerance": 0}
     ]
@@ -61,7 +61,7 @@
     "success_event": "w2_relic_biolum_solved",
     "success_message": "The crystal lattice illuminates with resonant green light, revealing an ancient focus component.",
     "failure_hint": "Center the beam, tighten the fringe, and keep the receiver green rather than dim or overloaded.",
-    "audio_cue": "ui_confirm",
+    "audio_cue": "sfx_chime_splice",
     "sliders": [
       {
         "id": "angle",
@@ -103,7 +103,7 @@
     "success_event": "w3_relic_chrono_solved",
     "success_message": "The tachyon loop locks into crystalline harmony, expelling an overclocked core.",
     "failure_hint": "The coil dropped the signal. Use the readouts to bring each control into range.",
-    "audio_cue": "ui_confirm",
+    "audio_cue": "sfx_chime_splice",
     "sliders": [
       {
         "id": "damping",
@@ -144,7 +144,7 @@
     "prompt": "Use the pulse board and the grease marks to park the belt in a safe position.",
     "success_event": "w4_mq19_throw_override_paddle",
     "failure_hint": "The belt is still unsafe. Check the crusher clearance and the stop point.",
-    "audio_cue": "ui_confirm",
+    "audio_cue": "sfx_terminal_hack_success",
     "sliders": [
       {"id": "beat", "label": "Crusher beat", "min": -1, "max": 2, "initial": -1, "target": 2, "tolerance": 0},
       {"id": "stop", "label": "Belt stop", "min": -1, "max": 1, "initial": -1, "target": 0, "tolerance": 0}
@@ -157,7 +157,7 @@
     "prompt": "Assign a safeguard to each beat of the recorded cycle. The simulation won't move the live machinery.",
     "success_event": "w4_sq20_survive_waves",
     "failure_hint": "Review the highlighted beats, then run the test again.",
-    "audio_cue": "ui_confirm",
+    "audio_cue": "sfx_terminal_hack_success",
     "sliders": [
       {"id": "heat", "label": "Heat", "min": -1, "max": 2, "initial": -1, "target": 0, "tolerance": 0},
       {"id": "pressure", "label": "Pressure", "min": -1, "max": 2, "initial": -1, "target": 1, "tolerance": 0},
@@ -171,7 +171,7 @@
     "success_event": "w4_relic_magma_solved",
     "success_message": "Pressure stabilizes with a heavy hiss, releasing a pristine thermal armor plate.",
     "failure_hint": "The cradle is still under pressure. Bring any out-of-range controls back toward their operating range.",
-    "audio_cue": "ui_confirm",
+    "audio_cue": "sfx_chime_splice",
     "sliders": [
       {
         "id": "bleed",
@@ -213,7 +213,7 @@
     "success_event": "w5_relic_graviton_solved",
     "success_message": "The receiver catches the mass. Gravity settles around the Graviton Inertia Matrix.",
     "failure_hint": "The test mass missed the receiver.",
-    "audio_cue": "ui_confirm",
+    "audio_cue": "sfx_chime_splice",
     "sliders": [
       {"id": "deflection", "label": "Counter-field", "min": 0, "max": 2, "initial": 1, "target": 0, "tolerance": 0},
       {"id": "brake", "label": "Magnetic brake", "min": 0, "max": 1, "initial": 0, "target": 1, "tolerance": 0}

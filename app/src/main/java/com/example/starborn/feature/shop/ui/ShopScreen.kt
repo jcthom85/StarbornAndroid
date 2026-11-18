@@ -82,13 +82,18 @@ fun ShopRoute(
     onBack: () -> Unit,
     highContrastMode: Boolean,
     largeTouchTargets: Boolean,
-    voiceoverController: VoiceoverController
+    voiceoverController: VoiceoverController,
+    onPlayAudio: (String) -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
-        viewModel.messages.collectLatest { snackbarHostState.showSnackbar(it) }
+        viewModel.messages.collectLatest { message ->
+            val cue = if (message.startsWith("Purchased ") || message.startsWith("Sold ")) "confirm" else "error"
+            onPlayAudio(cue)
+            snackbarHostState.showSnackbar(message)
+        }
     }
 
     ShopScreen(
@@ -96,7 +101,10 @@ fun ShopRoute(
         snackbarHostState = snackbarHostState,
         onBuy = viewModel::buyItem,
         onSell = viewModel::sellItem,
-        onTabSelected = viewModel::switchTab,
+        onTabSelected = { tab ->
+            if (tab != state.activeTab) onPlayAudio("tab_switch")
+            viewModel.switchTab(tab)
+        },
         onBack = onBack,
         highContrastMode = highContrastMode,
         largeTouchTargets = largeTouchTargets,

@@ -285,4 +285,59 @@ class AudioRouterTest {
         assertEquals(false, stinger.loop)
         assertEquals(false, stinger.triggerHaptic)
     }
+
+    @Test
+    fun uiAndBattleBindingsResolveNewGameplayCuesAndPreserveUnknownEmpty() {
+        val bindings = AudioBindings(
+            ui = mapOf(
+                "tinkering_wrench" to "sfx_tinkering_wrench",
+                "turn_start" to "sfx_ui_confirm",
+                "action_retreat" to "ui_room_move",
+                "sfx_button_toggle" to "sfx_ui_button_click",
+                "sfx_rest_chime" to "sfx_rest_chime",
+                "sfx_bunk_light_on" to "sfx_bunk_light_on",
+                "sfx_loot_cache" to "sfx_loot_cache",
+                "sfx_forage_gather" to "sfx_forage_gather",
+                "sfx_datapad_read" to "sfx_datapad_read",
+                "ui_title_start" to "ui_title_start"
+            ),
+            battle = mapOf(
+                "retreat" to "ui_room_move",
+                "wpn_nova_resonance_shot" to "wpn_nova_resonance_shot",
+                "wpn_zeke_body_impact" to "wpn_zeke_body_impact",
+                "wpn_gh0st_wire_slash" to "wpn_gh0st_wire_slash",
+                "wpn_orion_bowl_resonance" to "wpn_orion_bowl_resonance"
+            )
+        )
+        val catalog = AudioCatalog(
+            cues = listOf(
+                AudioCueMetadata(id = "sfx_w3_shield_anchor", category = "stinger")
+            )
+        )
+        val router = AudioRouter(bindings, catalog)
+
+        fun playCueId(cmds: List<AudioCommand>) =
+            cmds.filterIsInstance<AudioCommand.Play>().single().cueId
+
+        assertEquals("sfx_tinkering_wrench", playCueId(router.commandsForUi("tinkering_wrench")))
+        assertEquals("sfx_ui_confirm", playCueId(router.commandsForUi("turn_start")))
+        assertEquals("ui_room_move", playCueId(router.commandsForUi("action_retreat")))
+        assertEquals("sfx_ui_button_click", playCueId(router.commandsForUi("sfx_button_toggle")))
+        assertEquals("sfx_rest_chime", playCueId(router.commandsForUi("sfx_rest_chime")))
+        assertEquals("sfx_bunk_light_on", playCueId(router.commandsForUi("sfx_bunk_light_on")))
+        assertEquals("sfx_loot_cache", playCueId(router.commandsForUi("sfx_loot_cache")))
+        assertEquals("sfx_forage_gather", playCueId(router.commandsForUi("sfx_forage_gather")))
+        assertEquals("sfx_datapad_read", playCueId(router.commandsForUi("sfx_datapad_read")))
+        assertEquals("ui_title_start", playCueId(router.commandsForUi("ui_title_start")))
+        assertEquals("sfx_w3_shield_anchor", playCueId(router.commandsForUi("sfx_w3_shield_anchor")))
+
+        assertEquals("ui_room_move", playCueId(router.commandsForBattle("retreat")))
+        assertEquals("wpn_nova_resonance_shot", playCueId(router.commandsForBattle("wpn_nova_resonance_shot")))
+        assertEquals("wpn_zeke_body_impact", playCueId(router.commandsForBattle("wpn_zeke_body_impact")))
+        assertEquals("wpn_gh0st_wire_slash", playCueId(router.commandsForBattle("wpn_gh0st_wire_slash")))
+        assertEquals("wpn_orion_bowl_resonance", playCueId(router.commandsForBattle("wpn_orion_bowl_resonance")))
+
+        assertTrue(router.commandsForUi("undefined-event").isEmpty())
+        assertTrue(router.commandsForBattle("undefined-battle-event").isEmpty())
+    }
 }

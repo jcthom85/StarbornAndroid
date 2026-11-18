@@ -1715,7 +1715,7 @@
       "gain": 0.82,
       "fade_in_ms": 0,
       "fade_out_ms": 110,
-      "duration_ms": 700
+      "duration_ms": 880
     },
     {
       "id": "wpn_zeke_body_impact",
@@ -1860,7 +1860,7 @@
       "gain": 0.88,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
-      "duration_ms": 1000
+      "duration_ms": 880
     },
     {
       "id": "sfx_cooking_sizzle",

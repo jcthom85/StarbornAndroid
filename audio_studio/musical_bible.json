@@ -1696,7 +1696,7 @@
         {"id": "sfx_tape_insert", "duration": 1.4, "prompt": "Physical VHS cassette pushed into 80s deck, spring carriage snap, mechanical play engagement click"},
         {"id": "sfx_scavenge_metal", "duration": 1.8, "prompt": "Gritty salvage rummaging through spare steel bolts, tools, and dry colony dust"},
         {"id": "sfx_forage_gather", "duration": 1.3, "prompt": "Organic plant leaves rustling and clean snap of harvesting wild frontier flora"},
-        {"id": "sfx_datapad_read", "duration": 1.0, "prompt": "Small handheld datapad screen waking with subtle static crackle and crisp data chirp"},
+        {"id": "sfx_datapad_read", "duration": 0.9, "prompt": "Soft sci-fi handheld glass tablet screen unlocking with clean electronic data chime and crisp digital telemetry chirp, no paper rustle, dry UI SFX"},
         {"id": "sfx_path_cleared", "duration": 1.8, "prompt": "Heavy metal obstruction shifting aside with low scrape and clear air draft opening"},
         {"id": "sfx_distant_gate_rumble", "duration": 2.8, "prompt": "Deep subterranean ancient stone and steel seal cracking open in the distance, resonant low rumble"},
         {"id": "sfx_bunk_light_on", "duration": 1.2, "prompt": "Dusty metal room toggle switch clicking on, tired fluorescent tube buzzing alive in cramped quarters"},
@@ -1742,7 +1742,8 @@
         {"id": "sfx_combat_enemy_heavy_slam", "duration": 1.5, "prompt": "Industrial loader piston crush slam with heavy pneumatic hiss"},
         {"id": "sfx_combat_enemy_gunshot", "duration": 0.9, "prompt": "Crisp Dominion tactical kinetic rifle single gunshot crack"},
         {"id": "sfx_combat_enemy_void_blast", "duration": 1.6, "prompt": "Eerie dark cosmic phase-distortion blast with hollow void whoosh"},
-        {"id": "sfx_combat_enemy_flamethrower", "duration": 1.5, "prompt": "Industrial military flamethrower roaring ignited gas burst"}
+        {"id": "sfx_combat_enemy_flamethrower", "duration": 1.5, "prompt": "Industrial military flamethrower roaring ignited gas burst"},
+        {"id": "wpn_nova_resonance_shot", "duration": 0.9, "prompt": "Punchy sci-fi resonance pulse pistol firing a bright crystalline harmonic laser blast with tight sub impact, clean RPG weapon attack SFX"}
       ]
     },
     "activities": {

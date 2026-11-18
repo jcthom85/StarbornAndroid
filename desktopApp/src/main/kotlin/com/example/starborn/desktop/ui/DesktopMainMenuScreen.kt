@@ -87,6 +87,11 @@ fun DesktopMainMenuScreen(
         services.playTitleMusic()
     }
 
+    val startGameWithAudio: () -> Unit = {
+        services.audioDriver.executeAll(services.audioRouter.commandsForUi("ui_title_start"))
+        onStartGame()
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -100,7 +105,7 @@ fun DesktopMainMenuScreen(
                                     loading = true
                                     val loaded = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { services.loadSlot(latestSlot!!) }
                                     loading = false
-                                    if (loaded) onStartGame()
+                                    if (loaded) startGameWithAudio()
                                 }
                                 true
                             } else if (keyEvent.key != Key.C) {
@@ -108,7 +113,7 @@ fun DesktopMainMenuScreen(
                                     showNewGameConfirm = true
                                 } else {
                                     services.startNewGame()
-                                    onStartGame()
+                                    startGameWithAudio()
                                 }
                                 true
                             } else false
@@ -118,7 +123,7 @@ fun DesktopMainMenuScreen(
                                 showNewGameConfirm = true
                             } else {
                                 services.startNewGame()
-                                onStartGame()
+                                startGameWithAudio()
                             }
                             true
                         }
@@ -264,7 +269,7 @@ fun DesktopMainMenuScreen(
                                         loading = true
                                         val loaded = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { services.loadSlot(slot) }
                                         loading = false
-                                        if (loaded) onStartGame()
+                                        if (loaded) startGameWithAudio()
                                     }
                                 }
                             )
@@ -304,7 +309,7 @@ fun DesktopMainMenuScreen(
                         }
                     }
                     if (newGamePlusUnlocked) AuthenticTitleButton(text = "New Game+ · Master Protocol", primary = false, onClick = {
-                        if (services.startNewGamePlus()) onStartGame()
+                        if (services.startNewGamePlus()) startGameWithAudio()
                     })
                     saveError?.let { Text(it, color = Color(0xFFFF8A80)) }
                     AuthenticTitleButton(
@@ -315,7 +320,7 @@ fun DesktopMainMenuScreen(
                                 showNewGameConfirm = true
                             } else {
                                 services.startNewGame()
-                                onStartGame()
+                                startGameWithAudio()
                             }
                         }
                     )
@@ -371,7 +376,7 @@ fun DesktopMainMenuScreen(
                         onClick = {
                             showNewGameConfirm = false
                             services.startNewGame()
-                            onStartGame()
+                            startGameWithAudio()
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = TitleGold, contentColor = Color(0xFF1B1608))
                     ) {
@@ -393,7 +398,7 @@ fun DesktopMainMenuScreen(
             DesktopDebugScenarioDialog(
                 onLaunch = { scenario ->
                     showDebugScenarios = false
-                    if (services.startDebugScenario(scenario.id)) onStartGame()
+                    if (services.startDebugScenario(scenario.id)) startGameWithAudio()
                     else debugScenarioError = "Unable to launch ${scenario.title}: its starting location is unavailable in the current game data."
                 },
                 onDismiss = { showDebugScenarios = false }
@@ -409,7 +414,7 @@ fun DesktopMainMenuScreen(
                 initialMode = SaveDialogMode.LOAD,
                 onLoadState = {
                     showLoadGame = false
-                    onStartGame()
+                    startGameWithAudio()
                 },
                 onDismiss = { showLoadGame = false }
             )

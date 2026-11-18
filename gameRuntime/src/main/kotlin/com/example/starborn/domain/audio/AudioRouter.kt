@@ -132,11 +132,17 @@ class AudioRouter(
     }
 
     fun commandsForUi(event: String): List<AudioCommand> {
-        val normalized = (bindings.ui[event] ?: when(event) {
-            "sfx_hub_node_select" -> bindings.ui["click"] ?: "sfx_ui_button_click"
-            "sfx_room_transition" -> "ui_room_move"
-            else -> null
-        }).normalize() ?: return emptyList()
+        val eventKey = event.normalize()
+        val mapped = bindings.ui[event]
+            ?: eventKey?.let { bindings.ui[it] }
+            ?: when (eventKey) {
+                "sfx_hub_node_select" -> bindings.ui["click"] ?: "sfx_ui_button_click"
+                "sfx_room_transition" -> "ui_room_move"
+                else -> eventKey?.takeIf { key ->
+                    catalog?.cue(key) != null || bindings.ui.values.any { it.normalize() == key }
+                }
+            }
+        val normalized = mapped.normalize() ?: return emptyList()
         val meta = cueMetadata(normalized)
         return listOf(
             AudioCommand.Play(
@@ -151,7 +157,13 @@ class AudioRouter(
     }
 
     fun commandsForBattle(event: String): List<AudioCommand> {
-        val normalized = bindings.battle[event].normalize() ?: return emptyList()
+        val eventKey = event.normalize()
+        val mapped = bindings.battle[event]
+            ?: eventKey?.let { bindings.battle[it] }
+            ?: eventKey?.takeIf { key ->
+                catalog?.cue(key) != null || bindings.battle.values.any { it.normalize() == key }
+            }
+        val normalized = mapped.normalize() ?: return emptyList()
         val commands = mutableListOf<AudioCommand>()
         val meta = cueMetadata(normalized)
         // Short battle cues must not latch the soundtrack into a quieter mix.

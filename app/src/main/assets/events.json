@@ -5188,6 +5188,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_terminal_hack_success",
+        "fade_ms": 0
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w3_mq12",
         "task_id": "hack_blueprints"
@@ -5421,6 +5427,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_workshop_success",
+        "fade_ms": 0
+      },
+      {
         "type": "take_item",
         "item_id": "neon_sign_core",
         "quantity": 1
@@ -5505,6 +5517,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_bunk_light_on",
+        "fade_ms": 0
+      },
       {
         "type": "set_quest_task_done",
         "quest_id": "w3_sq13",
@@ -5639,6 +5657,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_terminal_hack_success",
+        "fade_ms": 0
+      },
       {
         "type": "set_quest_task_done",
         "quest_id": "w3_mq13",
@@ -5898,6 +5922,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_chime_splice",
+        "fade_ms": 0
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w3_mq14",
         "task_id": "solve_light_puzzle"
@@ -5941,6 +5971,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_door_unlock",
+        "fade_ms": 0
+      },
       {
         "type": "set_quest_task_done",
         "quest_id": "w3_mq14",
@@ -6611,6 +6647,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_terminal_hack_success",
+        "fade_ms": 0
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w4_mq16",
         "task_id": "hack_cooling_vents"
@@ -6654,6 +6696,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_door_airlock_open",
+        "fade_ms": 0
+      },
       {
         "type": "set_quest_task_done",
         "quest_id": "w4_mq16",
@@ -6709,6 +6757,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_terminal_hack_success",
+        "fade_ms": 0
+      },
       {
         "type": "set_quest_task_done",
         "quest_id": "w4_mq17",
@@ -7172,6 +7226,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_terminal_hack_success",
+        "fade_ms": 0
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w4_mq18",
         "task_id": "overload_matrix"
@@ -7365,6 +7425,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_distant_gate_rumble",
+        "fade_ms": 0
+      },
+      {
         "type": "set_room_state",
         "room_id": "foundry_forge_scale_01",
         "state_key": "pistons_starved",
@@ -7421,6 +7487,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_door_unlock",
+        "fade_ms": 0
+      },
+      {
         "type": "set_room_state",
         "room_id": "foundry_forge_anvil",
         "state_key": "anvil_cradle_open",
@@ -7470,6 +7542,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_workshop_success",
+        "fade_ms": 0
+      },
       {
         "type": "set_quest_task_done",
         "quest_id": "w4_mq19",
@@ -7936,6 +8014,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_door_airlock_close",
+        "fade_ms": 0
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w5_mq21",
         "task_id": "force_dock"
@@ -7974,6 +8058,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_door_airlock_open",
+        "fade_ms": 0
+      },
       {
         "type": "set_quest_task_done",
         "quest_id": "w5_mq21",
@@ -8150,6 +8240,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_terminal_hack_success",
+        "fade_ms": 0
+      },
       {
         "type": "set_quest_task_done",
         "quest_id": "w5_mq22",
@@ -8392,6 +8488,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_door_airlock_close",
+        "fade_ms": 0
+      },
+      {
         "type": "start_quest",
         "quest_id": "w5_sq23"
       },
@@ -8469,6 +8571,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_terminal_hack_success",
+        "fade_ms": 0
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w5_mq23",
         "task_id": "firewall_alpha"
@@ -8508,6 +8616,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_terminal_hack_success",
+        "fade_ms": 0
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w5_mq23",
         "task_id": "firewall_beta"
@@ -8546,6 +8660,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_terminal_hack_success",
+        "fade_ms": 0
+      },
       {
         "type": "set_quest_task_done",
         "quest_id": "w5_mq23",
@@ -9060,6 +9180,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_door_unlock",
+        "fade_ms": 0
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w5_sq25",
         "task_id": "open_armory"
@@ -9539,6 +9665,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_path_cleared",
+        "fade_ms": 0
+      },
       {
         "type": "set_room_state",
         "room_id": "source_memory_bridge",
@@ -10100,6 +10232,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_chime_splice",
+        "fade_ms": 0
+      },
+      {
         "type": "set_room_state",
         "room_id": "source_memory_stair",
         "state_key": "ascent_open",
@@ -10504,6 +10642,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_chime_splice",
+        "fade_ms": 0
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w6_sq29",
         "task_id": "find_grave"
@@ -10615,6 +10759,12 @@
     ],
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_tinkering_wrench",
+        "fade_ms": 0
+      },
+      {
         "type": "set_quest_task_done",
         "quest_id": "w6_sq30",
         "task_id": "recover_hull"
@@ -10647,6 +10797,12 @@
       }
     ],
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_workshop_success",
+        "fade_ms": 0
+      },
       {
         "type": "set_quest_task_done",
         "quest_id": "w6_sq30",
@@ -15712,6 +15868,12 @@
     },
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_w3_shield_anchor",
+        "fade_ms": 0
+      },
+      {
         "type": "set_room_state",
         "room_id": "orbital_zero_g_junction",
         "state_key": "magnetic_anchor_engaged",
@@ -15736,6 +15898,12 @@
       "action": "w5_zero_g_anchor_disengaged"
     },
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_bunk_light_off",
+        "fade_ms": 0
+      },
       {
         "type": "set_room_state",
         "room_id": "orbital_zero_g_junction",
@@ -15820,6 +15988,12 @@
     },
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_terminal_hack_success",
+        "fade_ms": 0
+      },
+      {
         "type": "set_room_state",
         "room_id": "spire_donor_gallery",
         "state_key": "laser_grid_bypassed",
@@ -15845,6 +16019,12 @@
     },
     "actions": [
       {
+        "type": "audio_layer",
+        "layer": "ui",
+        "cue_id": "sfx_bunk_light_off",
+        "fade_ms": 0
+      },
+      {
         "type": "set_room_state",
         "room_id": "spire_donor_gallery",
         "state_key": "laser_grid_bypassed",
@@ -15865,6 +16045,12 @@
       "action": "w4_slag_bridge_solidified"
     },
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_path_cleared",
+        "fade_ms": 0
+      },
       {
         "type": "set_room_state",
         "room_id": "foundry_slag_stepping_stones",
@@ -15890,6 +16076,12 @@
       "action": "w4_slag_bridge_melted"
     },
     "actions": [
+      {
+        "type": "audio_layer",
+        "layer": "stinger",
+        "cue_id": "sfx_distant_gate_rumble",
+        "fade_ms": 0
+      },
       {
         "type": "set_room_state",
         "room_id": "foundry_slag_stepping_stones",

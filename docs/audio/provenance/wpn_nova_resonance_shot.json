@@ -1,0 +1,56 @@
+{
+  "cue_id": "wpn_nova_resonance_shot",
+  "kind": "sfx",
+  "source_take": "take_01",
+  "source_provider": "elevenlabs_sfx",
+  "mastered_at": "2026-11-18T10:19:01.823540",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -12.5,
+  "sha256": "44ed9a525c5f7b9e1222e1651cdf915b5d4bc1f684ee880cd4c0e21e8e450c36",
+  "bytes": 18852,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 38808,
+    "duration_seconds": 0.88,
+    "rms_dbfs": -11.95,
+    "peak_dbfs": -2.93,
+    "integrated_lufs": -14.59,
+    "true_peak_dbtp": -2.92,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -11.95,
+    "last_second_rms_dbfs": -11.95
+  },
+  "source_provenance": {
+    "cue_id": "wpn_nova_resonance_shot",
+    "take": 1,
+    "provider": "elevenlabs_sfx",
+    "ingested_at": "2026-11-18T10:18:35.003011",
+    "source_filename": "wpn_nova_resonance_shot.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "78c26a494d75847a1066372767aa930ea143620f80b1f9242f2625501619cbbc",
+    "bytes": 15089,
+    "notes": "",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 38808,
+      "duration_seconds": 0.88,
+      "rms_dbfs": -8.64,
+      "peak_dbfs": 0.0,
+      "integrated_lufs": -11.3,
+      "true_peak_dbtp": 0.39,
+      "samples_at_full_scale": 9,
+      "first_second_rms_dbfs": -8.64,
+      "last_second_rms_dbfs": -8.64
+    },
+    "endpoint": "https://api.elevenlabs.io/v1/sound-generation",
+    "request_payload": {
+      "text": "Punchy sci-fi resonance pulse pistol firing a bright crystalline harmonic laser blast with tight sub impact, clean RPG weapon attack SFX",
+      "duration_seconds": 0.9,
+      "prompt_influence": 0.45
+    }
+  }
+}

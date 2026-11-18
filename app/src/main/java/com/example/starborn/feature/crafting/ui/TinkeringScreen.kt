@@ -135,7 +135,19 @@ fun TinkeringRoute(
     LaunchedEffect(Unit) {
         launch {
             viewModel.messages.collectLatest { message ->
-                if (message.startsWith("Scrapped ")) onPlayAudio("tinkering_ratchet")
+                when {
+                    message.startsWith("Scrapped ") -> onPlayAudio("tinkering_wrench")
+                    message.startsWith("Learned ") -> onPlayAudio("confirm")
+                    message.startsWith("Unknown ") ||
+                        message.startsWith("Learn the ") ||
+                        message.startsWith("Missing ") ||
+                        message.startsWith("Unable ") ||
+                        message.startsWith("Select ") ||
+                        message.startsWith("No craftable") ||
+                        message.startsWith("This item cannot") ||
+                        message.startsWith("You don't have") ||
+                        message.startsWith("There is no room") -> onPlayAudio("error")
+                }
                 announcement = EventAnnouncementUi(
                     id = System.currentTimeMillis(),
                     title = null,

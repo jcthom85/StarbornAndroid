@@ -79,7 +79,8 @@ fun DesktopShopDialog(
     LaunchedEffect(runtime) {
         runtime.messages.collect { msg ->
             activeMessage = msg
-            cue("confirm")
+            val cueName = if (msg.startsWith("Purchased ") || msg.startsWith("Sold ")) "confirm" else "error"
+            cue(cueName)
         }
     }
 
@@ -95,19 +96,22 @@ fun DesktopShopDialog(
         if (pressed) {
             when (keyCode) {
                 KeyEvent.VK_1 -> {
+                    val changed = showChatTab || ui.activeTab != ShopTab.BUY
                     showChatTab = false
                     runtime.switchTab(ShopTab.BUY)
-                    cue("action_inspect")
+                    if (changed) cue("tab_switch")
                 }
                 KeyEvent.VK_2 -> {
+                    val changed = showChatTab || ui.activeTab != ShopTab.SELL
                     showChatTab = false
                     runtime.switchTab(ShopTab.SELL)
-                    cue("action_inspect")
+                    if (changed) cue("tab_switch")
                 }
                 KeyEvent.VK_3 -> {
                     if (ui.smalltalkTopics.isNotEmpty()) {
+                        val changed = !showChatTab
                         showChatTab = true
-                        cue("action_inspect")
+                        if (changed) cue("tab_switch")
                     }
                 }
                 KeyEvent.VK_ESCAPE -> {
@@ -274,9 +278,10 @@ fun DesktopShopDialog(
                             count = ui.itemsForSale.size,
                             isSelected = !showChatTab && ui.activeTab == ShopTab.BUY,
                             onClick = {
+                                val changed = showChatTab || ui.activeTab != ShopTab.BUY
                                 showChatTab = false
                                 runtime.switchTab(ShopTab.BUY)
-                                cue("action_inspect")
+                                if (changed) cue("tab_switch")
                             }
                         )
 
@@ -285,9 +290,10 @@ fun DesktopShopDialog(
                             count = ui.sellInventory.size,
                             isSelected = !showChatTab && ui.activeTab == ShopTab.SELL,
                             onClick = {
+                                val changed = showChatTab || ui.activeTab != ShopTab.SELL
                                 showChatTab = false
                                 runtime.switchTab(ShopTab.SELL)
-                                cue("action_inspect")
+                                if (changed) cue("tab_switch")
                             }
                         )
 
@@ -297,8 +303,9 @@ fun DesktopShopDialog(
                                 count = ui.smalltalkTopics.size,
                                 isSelected = showChatTab,
                                 onClick = {
+                                    val changed = !showChatTab
                                     showChatTab = true
-                                    cue("action_inspect")
+                                    if (changed) cue("tab_switch")
                                 }
                             )
                         }

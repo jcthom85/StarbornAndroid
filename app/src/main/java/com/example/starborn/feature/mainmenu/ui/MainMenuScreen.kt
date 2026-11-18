@@ -297,6 +297,7 @@ fun MainMenuScreen(
         }
         fadeOutAlpha.stop()
         fadeOutAlpha.snapTo(0f)
+        audioCuePlayer.execute(audioRouter.commandsForUi("ui_title_start"))
         audioCuePlayer.execute(
             audioRouter.commandsForLayerOverride(
                 layer = AudioCueType.MUSIC,
