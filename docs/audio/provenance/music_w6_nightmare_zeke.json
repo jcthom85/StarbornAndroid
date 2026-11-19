@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_w6_nightmare_zeke",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-19T11:23:49.401333",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -17.0,
+  "sha256": "44794c9d464c0ce3e9621440f81738b731d0857a7ca3256db5ca918c1e7c834e",
+  "bytes": 2132261,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 3914914,
+    "duration_seconds": 88.7736,
+    "rms_dbfs": -18.11,
+    "peak_dbfs": -3.38,
+    "integrated_lufs": -17.26,
+    "true_peak_dbtp": -3.38,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -25.56,
+    "last_second_rms_dbfs": -35.4
+  },
+  "source_provenance": {
+    "cue_id": "music_w6_nightmare_zeke",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-19T11:23:45.601912",
+    "source_filename": "music_w6_nightmare_zeke_v2.wav",
+    "raw_file": "raw.wav",
+    "sha256": "d5ff597ef3fe3045b1e69aa7f6c3e11a83150612d6ef1d38ff8a0c60f5671e3e",
+    "bytes": 17351876,
+    "notes": "suno_studio_wav:v2_bythebook",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 3985474,
+      "duration_seconds": 90.3736,
+      "rms_dbfs": -14.8,
+      "peak_dbfs": 0.0,
+      "integrated_lufs": -13.82,
+      "true_peak_dbtp": 0.01,
+      "samples_at_full_scale": 14,
+      "first_second_rms_dbfs": -22.21,
+      "last_second_rms_dbfs": -42.6
+    }
+  }
+}

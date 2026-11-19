@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_w2_stasis_sanctuary",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-19T09:46:56.619763",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -17.0,
+  "sha256": "d2c1812d900a9684c01189590f93f9a3e9adcae8c3ea45a3c9a9db4a194bc0ff",
+  "bytes": 2870168,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 5270832,
+    "duration_seconds": 119.52,
+    "rms_dbfs": -18.87,
+    "peak_dbfs": -4.88,
+    "integrated_lufs": -17.27,
+    "true_peak_dbtp": -4.88,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -23.78,
+    "last_second_rms_dbfs": -34.14
+  },
+  "source_provenance": {
+    "cue_id": "music_w2_stasis_sanctuary",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-19T09:46:51.657144",
+    "source_filename": "music_w2_stasis_sanctuary.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "2a90f2f7881c4b4aa3ef44c19bfe1e8502703461453d9225406aaa3aae2fea2b",
+    "bytes": 2674480,
+    "notes": "suno_mcp:bab7bcab-0480-4293-b634-e9c682e9e9b5",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 5341392,
+      "duration_seconds": 121.12,
+      "rms_dbfs": -18.62,
+      "peak_dbfs": -4.6,
+      "integrated_lufs": -16.92,
+      "true_peak_dbtp": -4.6,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -23.57,
+      "last_second_rms_dbfs": -42.61
+    }
+  }
+}

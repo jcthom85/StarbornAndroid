@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_w6_nightmare_orion",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-19T11:36:14.003412",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -17.0,
+  "sha256": "727484b46bfa3829e5ec5e37de83296de5f55a742c60847836bf09e361048af2",
+  "bytes": 2910292,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 5344920,
+    "duration_seconds": 121.2,
+    "rms_dbfs": -18.7,
+    "peak_dbfs": -2.16,
+    "integrated_lufs": -17.34,
+    "true_peak_dbtp": -2.16,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -18.46,
+    "last_second_rms_dbfs": -26.97
+  },
+  "source_provenance": {
+    "cue_id": "music_w6_nightmare_orion",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-19T11:36:07.171986",
+    "source_filename": "music_w6_nightmare_orion.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "c5d64a31d57d19fbd3a680143fdc24029ece4dd2fdb3cb5a996e3d287ca762c3",
+    "bytes": 2717664,
+    "notes": "suno_mcp:6a20d0c4-6ad2-4d9f-a6d9-24ec5313b916",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 5415480,
+      "duration_seconds": 122.8,
+      "rms_dbfs": -19.35,
+      "peak_dbfs": -3.23,
+      "integrated_lufs": -17.65,
+      "true_peak_dbtp": -3.23,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -20.18,
+      "last_second_rms_dbfs": -37.26
+    }
+  }
+}

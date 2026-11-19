@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_elaras_song",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-18T15:44:02.305593",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -16.5,
+  "sha256": "e04b7abe0f05468961d8e220b2e085a7bd44b093008e6f7841de391d754f326c",
+  "bytes": 2879572,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 5288472,
+    "duration_seconds": 119.92,
+    "rms_dbfs": -19.1,
+    "peak_dbfs": -4.85,
+    "integrated_lufs": -16.77,
+    "true_peak_dbtp": -4.85,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -21.19,
+    "last_second_rms_dbfs": -71.49
+  },
+  "source_provenance": {
+    "cue_id": "music_elaras_song",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-18T15:43:57.287792",
+    "source_filename": "music_elaras_song.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "a6e3de560436f9fbbaaa9c4d776c6020722b2ab0db7972689f176bc2e32ee3d9",
+    "bytes": 2617118,
+    "notes": "suno_mcp:d713a1be-5035-402d-989c-e93bbae88cfa",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 5288472,
+      "duration_seconds": 119.92,
+      "rms_dbfs": -17.99,
+      "peak_dbfs": -3.81,
+      "integrated_lufs": -15.66,
+      "true_peak_dbtp": -3.81,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -20.08,
+      "last_second_rms_dbfs": -69.89
+    }
+  }
+}

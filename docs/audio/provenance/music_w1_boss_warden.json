@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_w1_boss_warden",
+  "kind": "track",
+  "source_take": "take_02",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-18T14:22:12.004239",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "8f067bcb43945ee55021c600eea7d110edd3827f729d4f703cdfbb1e19279a12",
+  "bytes": 2718449,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 4992120,
+    "duration_seconds": 113.2,
+    "rms_dbfs": -16.18,
+    "peak_dbfs": -2.3,
+    "integrated_lufs": -13.74,
+    "true_peak_dbtp": -2.05,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -27.41,
+    "last_second_rms_dbfs": -21.66
+  },
+  "source_provenance": {
+    "cue_id": "music_w1_boss_warden",
+    "take": 2,
+    "provider": "suno",
+    "ingested_at": "2026-11-18T14:21:32.325071",
+    "source_filename": "music_w1_boss_warden_2ce01339.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "cb79bf76785234e48c64cc434b2edaabf6e63dc39fe49c4832e7d7946a86196f",
+    "bytes": 2533402,
+    "notes": "suno_mcp:custom_style_v6_v2:2ce01339",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 5062680,
+      "duration_seconds": 114.8,
+      "rms_dbfs": -19.82,
+      "peak_dbfs": -6.16,
+      "integrated_lufs": -17.34,
+      "true_peak_dbtp": -5.79,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -32.39,
+      "last_second_rms_dbfs": -44.3
+    }
+  }
+}

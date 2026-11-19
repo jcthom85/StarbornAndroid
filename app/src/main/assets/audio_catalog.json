@@ -4,14 +4,15 @@
       "id": "music_title_theme",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1500,
+      "fade_in_ms": 1200,
       "fade_out_ms": 1200,
       "gain": 0.85,
       "tags": [
         "title",
         "explore",
         "acoustic",
-        "orchestral"
+        "orchestral",
+        "nova"
       ]
     },
     {
@@ -22,7 +23,6 @@
       "fade_out_ms": 1200,
       "gain": 0.85,
       "tags": [
-        "title",
         "emotional",
         "acoustic",
         "cello"
@@ -39,7 +39,7 @@
         "character",
         "zeke",
         "blues",
-        "acoustic"
+        "rhodes"
       ]
     },
     {
@@ -102,13 +102,14 @@
       "id": "music_w1_combat",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1100,
-      "fade_out_ms": 1100,
+      "fade_in_ms": 250,
+      "fade_out_ms": 700,
       "gain": 1.0,
       "tags": [
         "world_1",
         "combat",
-        "rock"
+        "rock",
+        "blues"
       ]
     },
     {
@@ -142,13 +143,14 @@
       "id": "music_w2_combat",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1100,
-      "fade_out_ms": 1100,
+      "fade_in_ms": 250,
+      "fade_out_ms": 700,
       "gain": 1.0,
       "tags": [
         "world_2",
         "combat",
-        "tribal"
+        "tribal",
+        "orchestral"
       ]
     },
     {
@@ -169,13 +171,14 @@
       "id": "music_w3_combat",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1100,
-      "fade_out_ms": 1100,
+      "fade_in_ms": 250,
+      "fade_out_ms": 700,
       "gain": 1.0,
       "tags": [
         "world_3",
         "combat",
-        "synthwave"
+        "synthwave",
+        "funk"
       ]
     },
     {
@@ -196,13 +199,14 @@
       "id": "music_w4_combat",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1100,
-      "fade_out_ms": 1100,
+      "fade_in_ms": 250,
+      "fade_out_ms": 700,
       "gain": 1.0,
       "tags": [
         "world_4",
         "combat",
-        "metal"
+        "metal",
+        "industrial"
       ]
     },
     {
@@ -238,13 +242,14 @@
       "id": "music_w5_combat",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1100,
-      "fade_out_ms": 1100,
+      "fade_in_ms": 250,
+      "fade_out_ms": 700,
       "gain": 1.0,
       "tags": [
         "world_5",
         "combat",
-        "dnb"
+        "dnb",
+        "orchestral"
       ]
     },
     {
@@ -265,9 +270,9 @@
       "id": "music_w6_combat",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1100,
-      "fade_out_ms": 1100,
-      "gain": 1,
+      "fade_in_ms": 250,
+      "fade_out_ms": 700,
+      "gain": 1.0,
       "tags": [
         "world_6",
         "combat",
@@ -825,7 +830,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1100,
+      "fade_out_ms": 1000,
       "gain": 0.85,
       "tags": [
         "astra",
@@ -837,7 +842,7 @@
       "id": "music_victory_standard",
       "type": "music",
       "loop": false,
-      "fade_in_ms": 200,
+      "fade_in_ms": 150,
       "fade_out_ms": 800,
       "gain": 0.88,
       "tags": [
@@ -850,8 +855,8 @@
       "id": "music_game_over",
       "type": "music",
       "loop": false,
-      "fade_in_ms": 400,
-      "fade_out_ms": 1000,
+      "fade_in_ms": 300,
+      "fade_out_ms": 1200,
       "gain": 0.82,
       "tags": [
         "game_over",
@@ -893,7 +898,7 @@
       "loop": true,
       "fade_in_ms": 1200,
       "fade_out_ms": 1100,
-      "gain": 0.85,
+      "gain": 0.84,
       "tags": [
         "world_3",
         "explore",
@@ -920,7 +925,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1100,
+      "fade_out_ms": 1000,
       "gain": 0.8,
       "tags": [
         "world_5",
@@ -947,21 +952,22 @@
       "id": "music_w1_boss_warden",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1100,
-      "fade_out_ms": 1100,
+      "fade_in_ms": 200,
+      "fade_out_ms": 800,
       "gain": 1.0,
       "tags": [
         "world_1",
         "boss",
-        "metal"
+        "metal",
+        "industrial"
       ]
     },
     {
       "id": "music_w2_boss_guardian",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1100,
-      "fade_out_ms": 1100,
+      "fade_in_ms": 200,
+      "fade_out_ms": 800,
       "gain": 1.0,
       "tags": [
         "world_2",
@@ -973,11 +979,12 @@
       "id": "music_w3_boss_phantom",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1100,
-      "fade_out_ms": 1100,
+      "fade_in_ms": 200,
+      "fade_out_ms": 800,
       "gain": 1.0,
       "tags": [
         "world_3",
+        "world_4",
         "boss",
         "darkwave"
       ]
@@ -986,8 +993,8 @@
       "id": "music_w4_boss_titan",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1100,
-      "fade_out_ms": 1100,
+      "fade_in_ms": 200,
+      "fade_out_ms": 800,
       "gain": 1.0,
       "tags": [
         "world_4",
@@ -999,13 +1006,14 @@
       "id": "music_w6_boss_final",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1100,
-      "fade_out_ms": 1100,
+      "fade_in_ms": 200,
+      "fade_out_ms": 900,
       "gain": 1.0,
       "tags": [
         "world_6",
         "boss",
-        "symphonic"
+        "symphonic",
+        "vale"
       ]
     },
     {
@@ -1042,6 +1050,8 @@
       "fade_out_ms": 1200,
       "gain": 0.85,
       "tags": [
+        "character",
+        "elara",
         "tape",
         "vocal",
         "acoustic",
@@ -1079,7 +1089,7 @@
       "type": "music",
       "loop": true,
       "fade_in_ms": 1200,
-      "fade_out_ms": 1100,
+      "fade_out_ms": 1000,
       "gain": 0.85,
       "tags": [
         "fishing",
@@ -1092,8 +1102,8 @@
       "id": "music_arcade_cabinet",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1100,
-      "fade_out_ms": 1100,
+      "fade_in_ms": 600,
+      "fade_out_ms": 600,
       "gain": 0.88,
       "tags": [
         "arcade",
@@ -1106,8 +1116,8 @@
       "id": "music_tinkering_focus",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1100,
-      "fade_out_ms": 1100,
+      "fade_in_ms": 1000,
+      "fade_out_ms": 1000,
       "gain": 0.85,
       "tags": [
         "crafting",
@@ -1120,8 +1130,8 @@
       "id": "music_cooking_kitchen",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1100,
-      "fade_out_ms": 1100,
+      "fade_in_ms": 800,
+      "fade_out_ms": 800,
       "gain": 0.85,
       "tags": [
         "cooking",
@@ -1134,14 +1144,306 @@
       "id": "music_shop_cozy",
       "type": "music",
       "loop": true,
-      "fade_in_ms": 1100,
-      "fade_out_ms": 1100,
+      "fade_in_ms": 1000,
+      "fade_out_ms": 1000,
       "gain": 0.85,
       "tags": [
         "shop",
         "market",
         "world",
         "lofi"
+      ]
+    },
+    {
+      "id": "music_nova_theme",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1200,
+      "gain": 0.85,
+      "tags": [
+        "character",
+        "nova",
+        "acoustic",
+        "rock"
+      ]
+    },
+    {
+      "id": "music_jed_theme",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1200,
+      "gain": 0.85,
+      "tags": [
+        "character",
+        "jed",
+        "acoustic",
+        "harmonica"
+      ]
+    },
+    {
+      "id": "music_thorne_theme",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1100,
+      "fade_out_ms": 1100,
+      "gain": 0.83,
+      "tags": [
+        "character",
+        "thorne",
+        "corporate",
+        "noir"
+      ]
+    },
+    {
+      "id": "music_vale_theme",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1200,
+      "gain": 0.83,
+      "tags": [
+        "character",
+        "vale",
+        "piano",
+        "clinical"
+      ]
+    },
+    {
+      "id": "music_victory_boss",
+      "type": "music",
+      "loop": false,
+      "fade_in_ms": 200,
+      "fade_out_ms": 1000,
+      "gain": 0.9,
+      "tags": [
+        "combat",
+        "boss",
+        "victory",
+        "fanfare"
+      ]
+    },
+    {
+      "id": "music_w1_jed_workshop",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1000,
+      "gain": 0.84,
+      "tags": [
+        "world_1",
+        "workshop",
+        "jed",
+        "acoustic"
+      ]
+    },
+    {
+      "id": "music_w2_tideglass_beach",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1400,
+      "fade_out_ms": 1200,
+      "gain": 0.84,
+      "tags": [
+        "world_2",
+        "beach",
+        "explore",
+        "ambient"
+      ]
+    },
+    {
+      "id": "music_w2_stasis_sanctuary",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1400,
+      "fade_out_ms": 1200,
+      "gain": 0.83,
+      "tags": [
+        "world_2",
+        "stasis",
+        "orion",
+        "ambient"
+      ]
+    },
+    {
+      "id": "music_w3_the_static",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1100,
+      "gain": 0.84,
+      "tags": [
+        "world_3",
+        "safehouse",
+        "lofi",
+        "noir"
+      ]
+    },
+    {
+      "id": "music_w3_archive_stealth",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1000,
+      "fade_out_ms": 1000,
+      "gain": 0.84,
+      "tags": [
+        "world_3",
+        "stealth",
+        "heist",
+        "archive"
+      ]
+    },
+    {
+      "id": "music_w4_conditioning",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1100,
+      "gain": 0.84,
+      "tags": [
+        "world_4",
+        "gh0st",
+        "conditioning",
+        "industrial"
+      ]
+    },
+    {
+      "id": "music_w3_boss_administrator",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 200,
+      "fade_out_ms": 800,
+      "gain": 1.0,
+      "tags": [
+        "world_3",
+        "boss",
+        "darksynth",
+        "corporate"
+      ]
+    },
+    {
+      "id": "music_w6_nightmare_zeke",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1100,
+      "gain": 0.84,
+      "tags": [
+        "world_6",
+        "nightmare",
+        "zeke"
+      ]
+    },
+    {
+      "id": "music_w5_solarium",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1400,
+      "fade_out_ms": 1200,
+      "gain": 0.8,
+      "tags": [
+        "world_5",
+        "solarium",
+        "chamber",
+        "uncanny"
+      ]
+    },
+    {
+      "id": "music_w5_anchor_cathedral",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1400,
+      "fade_out_ms": 1200,
+      "gain": 0.83,
+      "tags": [
+        "world_5",
+        "anchor",
+        "vale",
+        "elara"
+      ]
+    },
+    {
+      "id": "music_w5_boss_compliance",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 200,
+      "fade_out_ms": 800,
+      "gain": 1.0,
+      "tags": [
+        "world_5",
+        "boss",
+        "orchestral",
+        "synth"
+      ]
+    },
+    {
+      "id": "music_w6_campfire",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1400,
+      "fade_out_ms": 1200,
+      "gain": 0.84,
+      "tags": [
+        "world_6",
+        "campfire",
+        "acoustic",
+        "reunion"
+      ]
+    },
+    {
+      "id": "music_w6_nightmare_gh0st",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1200,
+      "fade_out_ms": 1100,
+      "gain": 0.84,
+      "tags": [
+        "world_6",
+        "nightmare",
+        "gh0st",
+        "elara"
+      ]
+    },
+    {
+      "id": "music_w6_nightmare_orion",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1400,
+      "fade_out_ms": 1200,
+      "gain": 0.84,
+      "tags": [
+        "world_6",
+        "nightmare",
+        "orion"
+      ]
+    },
+    {
+      "id": "music_w6_new_world",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1500,
+      "fade_out_ms": 1400,
+      "gain": 0.85,
+      "tags": [
+        "world_6",
+        "new_world",
+        "peaceful",
+        "resolution"
+      ]
+    },
+    {
+      "id": "music_w6_boss_vale_p2",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 200,
+      "fade_out_ms": 1000,
+      "gain": 1.0,
+      "tags": [
+        "world_6",
+        "boss",
+        "symphonic",
+        "finale"
       ]
     }
   ],
@@ -2279,6 +2581,51 @@
       "category": "voice",
       "gain": 0.5,
       "duration_ms": 110
+    },
+    {
+      "id": "stinger_motif_nova",
+      "category": "stinger",
+      "priority": 6,
+      "gain": 0.9,
+      "fade_in_ms": 30,
+      "fade_out_ms": 400,
+      "duration_ms": 5211
+    },
+    {
+      "id": "stinger_motif_jed",
+      "category": "stinger",
+      "priority": 6,
+      "gain": 0.9,
+      "fade_in_ms": 30,
+      "fade_out_ms": 400,
+      "duration_ms": 9510
+    },
+    {
+      "id": "stinger_motif_elara",
+      "category": "stinger",
+      "priority": 6,
+      "gain": 0.9,
+      "fade_in_ms": 30,
+      "fade_out_ms": 500,
+      "duration_ms": 8172
+    },
+    {
+      "id": "stinger_motif_vale",
+      "category": "stinger",
+      "priority": 6,
+      "gain": 0.9,
+      "fade_in_ms": 20,
+      "fade_out_ms": 400,
+      "duration_ms": 7950
+    },
+    {
+      "id": "stinger_motif_source",
+      "category": "stinger",
+      "priority": 6,
+      "gain": 0.9,
+      "fade_in_ms": 30,
+      "fade_out_ms": 600,
+      "duration_ms": 6160
     }
   ]
 }

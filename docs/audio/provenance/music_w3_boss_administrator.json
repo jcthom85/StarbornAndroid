@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_w3_boss_administrator",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-19T10:37:48.460692",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "8ca007f1d39e2822a39a23f6d6a26ea7a05050dd27f20a481d2e7d108cdb5b7a",
+  "bytes": 2836314,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 5209092,
+    "duration_seconds": 118.12,
+    "rms_dbfs": -16.9,
+    "peak_dbfs": -2.6,
+    "integrated_lufs": -13.73,
+    "true_peak_dbtp": -2.58,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -21.19,
+    "last_second_rms_dbfs": -14.86
+  },
+  "source_provenance": {
+    "cue_id": "music_w3_boss_administrator",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-19T10:37:43.338477",
+    "source_filename": "music_w3_boss_administrator.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "f242e85a038e323cac65c5d701c2ff0909e710e3d3d974a7ad7ab6d2ba00a05a",
+    "bytes": 2926650,
+    "notes": "suno_mcp:3f0b8534-5a13-4512-a010-84e0a93a76b3",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 5279652,
+      "duration_seconds": 119.72,
+      "rms_dbfs": -18.78,
+      "peak_dbfs": -4.76,
+      "integrated_lufs": -15.6,
+      "true_peak_dbtp": -4.45,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -26.77,
+      "last_second_rms_dbfs": -53.5
+    }
+  }
+}

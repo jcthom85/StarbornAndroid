@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_astra_bridge",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-18T16:11:42.119947",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -17.0,
+  "sha256": "4aff62cab11b4e26355b178c0c19a3bc484ece3f0cf7fb4165e691a36c97de71",
+  "bytes": 2240095,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 4113388,
+    "duration_seconds": 93.2741,
+    "rms_dbfs": -18.95,
+    "peak_dbfs": -5.89,
+    "integrated_lufs": -17.26,
+    "true_peak_dbtp": -5.86,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -35.13,
+    "last_second_rms_dbfs": -40.11
+  },
+  "source_provenance": {
+    "cue_id": "music_astra_bridge",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-18T16:11:38.174359",
+    "source_filename": "music_astra_bridge.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "d3a2b17fa439040689341ec7de570ad77906437fde31bae8161b54078be7350c",
+    "bytes": 2214128,
+    "notes": "suno_mcp:165e0590-7297-4b39-9edf-47b706927960",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 4231836,
+      "duration_seconds": 95.96,
+      "rms_dbfs": -18.53,
+      "peak_dbfs": -5.35,
+      "integrated_lufs": -16.68,
+      "true_peak_dbtp": -5.3,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -34.72,
+      "last_second_rms_dbfs": -82.1
+    }
+  }
+}

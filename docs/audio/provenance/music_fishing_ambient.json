@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_fishing_ambient",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-18T16:25:35.270797",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -16.5,
+  "sha256": "5beec7a759bf3f250e5f461dfc37f4574bfbe17ae97882c769b22dc9caf669ab",
+  "bytes": 1878351,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 3448620,
+    "duration_seconds": 78.2,
+    "rms_dbfs": -18.15,
+    "peak_dbfs": -4.0,
+    "integrated_lufs": -16.77,
+    "true_peak_dbtp": -4.0,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -32.85,
+    "last_second_rms_dbfs": -32.06
+  },
+  "source_provenance": {
+    "cue_id": "music_fishing_ambient",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-18T16:25:31.779420",
+    "source_filename": "music_fishing_ambient.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "830b3d6159e20d87a037fed6fcbb681fec640f285b8688bd62c1966560e7c006",
+    "bytes": 1815122,
+    "notes": "suno_mcp:0da43f6e-ac17-40b4-b848-44238f454a6e",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 3519180,
+      "duration_seconds": 79.8,
+      "rms_dbfs": -17.11,
+      "peak_dbfs": -2.78,
+      "integrated_lufs": -15.58,
+      "true_peak_dbtp": -2.78,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -47.55,
+      "last_second_rms_dbfs": -31.55
+    }
+  }
+}

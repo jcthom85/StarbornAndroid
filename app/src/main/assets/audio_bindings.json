@@ -11,7 +11,7 @@
     "hub_9_orbital_ring": "music_w5_orbital_intrigue",
     "hub_10_deep_ring": "music_w5_security_hub",
     "hub_11_event_horizon": "music_w6_source_explore",
-    "hub_12_singularity": "music_w6_the_center",
+    "hub_12_singularity": "music_w6_source_explore",
     "hub_1": "music_w1_homestead_explore",
     "hub_2": "music_w1_logistics_explore",
     "vfx_sandbox": "music_w1_homestead_explore",
@@ -19,7 +19,23 @@
   },
   "node_music": {
     "deep_mine": "music_w1_deep_mine",
-    "echo_chamber": "music_w1_deep_mine"
+    "echo_chamber": "music_w1_deep_mine",
+    "workshop": "music_w1_jed_workshop",
+    "tideglass_beach": "music_w2_tideglass_beach",
+    "stasis_chamber": "music_w2_stasis_sanctuary",
+    "spire_the_static": "music_w3_the_static",
+    "spire_archive": "music_w3_archive_stealth",
+    "foundry_conditioning": "music_w4_conditioning",
+    "source_zeke_nightmare_node": "music_w6_nightmare_zeke",
+    "orbital_solarium": "music_w5_solarium",
+    "deep_anchor_chamber": "music_w5_anchor_cathedral",
+    "deep_throne_room": "music_w5_anchor_cathedral",
+    "deep_tear": "music_w5_anchor_cathedral",
+    "source_campfire_node": "music_w6_campfire",
+    "source_gh0st_nightmare_node": "music_w6_nightmare_gh0st",
+    "source_orion_nightmare_node": "music_w6_nightmare_orion",
+    "source_center_node": "music_w6_the_center",
+    "source_new_world_node": "music_w6_new_world"
   },
   "room_music": {
     "astra_bridge": "music_astra_bridge"
@@ -31,9 +47,10 @@
     "phantom_prototype": "music_w3_boss_phantom",
     "titan_walker_boss": "music_w4_boss_titan",
     "crucible_champion": "music_w4_boss_titan",
-    "compliance_avatar": "music_w5_combat",
+    "compliance_avatar": "music_w5_boss_compliance",
     "ascended_vale": "music_w6_boss_final",
-    "ascended_god": "music_w6_boss_final"
+    "ascended_god": "music_w6_boss_vale_p2",
+    "administrator_boss": "music_w3_boss_administrator"
   },
   "ambience": {
     "hub_1_homestead": "amb_colony_vent_crowd",

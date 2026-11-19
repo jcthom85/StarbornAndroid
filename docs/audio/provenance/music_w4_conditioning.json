@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_w4_conditioning",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-19T10:29:45.852938",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -17.0,
+  "sha256": "be75808c0fd645bb00ad86e8823827ddcbe14da0558f35956b77dd724b59bea5",
+  "bytes": 2192448,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 4026172,
+    "duration_seconds": 91.2964,
+    "rms_dbfs": -18.77,
+    "peak_dbfs": -6.05,
+    "integrated_lufs": -17.27,
+    "true_peak_dbtp": -6.05,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -23.79,
+    "last_second_rms_dbfs": -22.23
+  },
+  "source_provenance": {
+    "cue_id": "music_w4_conditioning",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-19T10:29:42.011965",
+    "source_filename": "music_w4_conditioning.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "892fe5f3a77e30c96b5b8aba276bfdef8830399cfaf26963eab6bab0b74466bb",
+    "bytes": 2175096,
+    "notes": "suno_mcp:480bee0d-5ec4-470d-8446-bec9d0dc6881",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 4108356,
+      "duration_seconds": 93.16,
+      "rms_dbfs": -17.13,
+      "peak_dbfs": -4.32,
+      "integrated_lufs": -15.57,
+      "true_peak_dbtp": -4.32,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -24.75,
+      "last_second_rms_dbfs": -49.15
+    }
+  }
+}

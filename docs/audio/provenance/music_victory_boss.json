@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_victory_boss",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-18T16:25:27.967247",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -17.0,
+  "sha256": "41290b6efb34f0b35a6bc4b3e34c9edfeffbbb3480b6bf6b52fe8768b7a9af2a",
+  "bytes": 749234,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 1374156,
+    "duration_seconds": 31.16,
+    "rms_dbfs": -20.54,
+    "peak_dbfs": -6.21,
+    "integrated_lufs": -17.24,
+    "true_peak_dbtp": -6.09,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -22.52,
+    "last_second_rms_dbfs": -24.37
+  },
+  "source_provenance": {
+    "cue_id": "music_victory_boss",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-18T16:25:26.486513",
+    "source_filename": "music_victory_boss.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "096a14dbe84473445535631fc572aba8aad4c46f440effd4d049140d262ee70b",
+    "bytes": 762266,
+    "notes": "suno_mcp:9c5723da-15d4-42c3-ac79-719f564b55e0",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 1374156,
+      "duration_seconds": 31.16,
+      "rms_dbfs": -18.79,
+      "peak_dbfs": -4.3,
+      "integrated_lufs": -15.5,
+      "true_peak_dbtp": -4.22,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -20.76,
+      "last_second_rms_dbfs": -22.62
+    }
+  }
+}

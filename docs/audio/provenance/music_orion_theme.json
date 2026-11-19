@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_orion_theme",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-18T15:43:49.572522",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -16.5,
+  "sha256": "6c0942ec09eaf5e9aa5bc34844610a07b70eef4e9d6395939e4572e651098b6f",
+  "bytes": 2200598,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 4040245,
+    "duration_seconds": 91.6155,
+    "rms_dbfs": -19.1,
+    "peak_dbfs": -4.7,
+    "integrated_lufs": -16.76,
+    "true_peak_dbtp": -4.7,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -21.46,
+    "last_second_rms_dbfs": -47.21
+  },
+  "source_provenance": {
+    "cue_id": "music_orion_theme",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-18T15:43:45.719892",
+    "source_filename": "music_orion_theme.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "28bd602ad60ecbb1d9d5371a9285b0213d0b61a081029fd6d970ddbf62e7a1f0",
+    "bytes": 2060600,
+    "notes": "suno_mcp:ee8c5f4e-bc40-44d8-b22a-6625ae2fff0e",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 4177152,
+      "duration_seconds": 94.72,
+      "rms_dbfs": -19.06,
+      "peak_dbfs": -4.52,
+      "integrated_lufs": -16.58,
+      "true_peak_dbtp": -4.52,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -21.27,
+      "last_second_rms_dbfs": -89.52
+    }
+  }
+}

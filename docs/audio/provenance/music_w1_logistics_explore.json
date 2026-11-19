@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_w1_logistics_explore",
+  "kind": "track",
+  "source_take": "take_02",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-19T11:23:38.089369",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -17.0,
+  "sha256": "6936ad6971500a08a70760f8b6b41c27c9cda5cbef8ac854a7ae1f85b6a3fe91",
+  "bytes": 2228183,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 4091619,
+    "duration_seconds": 92.7805,
+    "rms_dbfs": -18.81,
+    "peak_dbfs": -3.05,
+    "integrated_lufs": -17.27,
+    "true_peak_dbtp": -3.04,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -25.16,
+    "last_second_rms_dbfs": -36.25
+  },
+  "source_provenance": {
+    "cue_id": "music_w1_logistics_explore",
+    "take": 2,
+    "provider": "suno",
+    "ingested_at": "2026-11-19T11:23:33.919274",
+    "source_filename": "music_w1_logistics_explore_v2.wav",
+    "raw_file": "raw.wav",
+    "sha256": "d49ab4db35d459eb5db643a5366fa7d9f34133367b084eec1316e64cae5232b3",
+    "bytes": 18262776,
+    "notes": "suno_studio_wav:v2_bythebook",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 4194696,
+      "duration_seconds": 95.1178,
+      "rms_dbfs": -15.77,
+      "peak_dbfs": 0.0,
+      "integrated_lufs": -14.08,
+      "true_peak_dbtp": 0.0,
+      "samples_at_full_scale": 3,
+      "first_second_rms_dbfs": -22.07,
+      "last_second_rms_dbfs": -67.49
+    }
+  }
+}

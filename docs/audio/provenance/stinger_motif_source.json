@@ -1,0 +1,50 @@
+{
+  "cue_id": "stinger_motif_source",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-18T15:58:47.178201",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -15.0,
+  "sha256": "cf3012e288134aaa608f16e4728bc75294c56220497530a3e7d7b0d02356afa8",
+  "bytes": 149254,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 271656,
+    "duration_seconds": 6.16,
+    "rms_dbfs": -18.45,
+    "peak_dbfs": -4.49,
+    "integrated_lufs": -16.03,
+    "true_peak_dbtp": -4.49,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -19.74,
+    "last_second_rms_dbfs": -48.96
+  },
+  "source_provenance": {
+    "cue_id": "stinger_motif_source",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-18T15:58:46.637098",
+    "source_filename": "stinger_motif_source.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "4d7df86950cee3da0935490c914031ea0b77394c9aea51cd523e744bd52b6cd5",
+    "bytes": 168614,
+    "notes": "suno_mcp:b4434366-c515-4208-9c73-c155b5a31c6b",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 300476,
+      "duration_seconds": 6.8135,
+      "rms_dbfs": -19.04,
+      "peak_dbfs": -4.55,
+      "integrated_lufs": -16.04,
+      "true_peak_dbtp": -4.55,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -21.06,
+      "last_second_rms_dbfs": -60.3
+    }
+  }
+}

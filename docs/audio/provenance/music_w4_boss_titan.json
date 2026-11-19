@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_w4_boss_titan",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-19T10:37:29.722282",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -13.5,
+  "sha256": "cf899fcc58560aef9a8797a39497e6dfcabdb85cfabd13ccb37ddab4db675f55",
+  "bytes": 3072670,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 5643036,
+    "duration_seconds": 127.96,
+    "rms_dbfs": -16.35,
+    "peak_dbfs": -2.72,
+    "integrated_lufs": -13.74,
+    "true_peak_dbtp": -2.66,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -18.57,
+    "last_second_rms_dbfs": -16.36
+  },
+  "source_provenance": {
+    "cue_id": "music_w4_boss_titan",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-19T10:37:23.999750",
+    "source_filename": "music_w4_boss_titan.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "1514499574e4a9cd1546af126eff6655c6d971a234174c70f680b77c8b054e64",
+    "bytes": 3011961,
+    "notes": "suno_mcp:c16d0a74-6fd4-4159-8351-bab8120cdc1e",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 5713596,
+      "duration_seconds": 129.56,
+      "rms_dbfs": -18.49,
+      "peak_dbfs": -4.79,
+      "integrated_lufs": -15.85,
+      "true_peak_dbtp": -4.76,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -20.67,
+      "last_second_rms_dbfs": -63.21
+    }
+  }
+}

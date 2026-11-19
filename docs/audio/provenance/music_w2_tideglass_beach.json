@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_w2_tideglass_beach",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-19T09:46:39.270501",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -17.0,
+  "sha256": "fa3fdb47cc03507152a9c8733f33094e9d42b1ad17f00e4c2a2238ec6a67503d",
+  "bytes": 2814371,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 5168520,
+    "duration_seconds": 117.2,
+    "rms_dbfs": -19.12,
+    "peak_dbfs": -4.52,
+    "integrated_lufs": -17.27,
+    "true_peak_dbtp": -4.52,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -21.46,
+    "last_second_rms_dbfs": -27.8
+  },
+  "source_provenance": {
+    "cue_id": "music_w2_tideglass_beach",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-19T09:46:34.465118",
+    "source_filename": "music_w2_tideglass_beach.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "c58aa673c500428bd18833df000e9990df49615c4be864f57d40f5a9128bf648",
+    "bytes": 2647456,
+    "notes": "suno_mcp:3d8d6703-b8b1-4e40-ad28-c1966215ad29",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 5239080,
+      "duration_seconds": 118.8,
+      "rms_dbfs": -18.43,
+      "peak_dbfs": -3.8,
+      "integrated_lufs": -16.47,
+      "true_peak_dbtp": -3.79,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -20.79,
+      "last_second_rms_dbfs": -39.29
+    }
+  }
+}

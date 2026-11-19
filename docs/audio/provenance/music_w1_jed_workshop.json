@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_w1_jed_workshop",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-18T16:41:14.846611",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -17.0,
+  "sha256": "7ab5abe6b1d57d293682bc8008e0bce3572a48e773aad5956ef45a4db10fb546",
+  "bytes": 2344794,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 4305924,
+    "duration_seconds": 97.64,
+    "rms_dbfs": -19.18,
+    "peak_dbfs": -5.0,
+    "integrated_lufs": -17.26,
+    "true_peak_dbtp": -5.0,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -17.35,
+    "last_second_rms_dbfs": -48.01
+  },
+  "source_provenance": {
+    "cue_id": "music_w1_jed_workshop",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-18T16:41:10.464875",
+    "source_filename": "music_w1_jed_workshop.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "d764f08380a8a7f4b752d1824674a64a33ad79d6e2b51001d64c97af9ab5df04",
+    "bytes": 2307791,
+    "notes": "suno_mcp:6b45eab3-59e2-4e3d-be26-02d852c410e0",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 4376484,
+      "duration_seconds": 99.24,
+      "rms_dbfs": -17.83,
+      "peak_dbfs": -3.58,
+      "integrated_lufs": -15.84,
+      "true_peak_dbtp": -3.57,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -15.93,
+      "last_second_rms_dbfs": -72.01
+    }
+  }
+}

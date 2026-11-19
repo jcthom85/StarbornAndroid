@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_game_over",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-18T16:25:30.207000",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -17.0,
+  "sha256": "0c300922b439bca5cbee26d15e53c9cf916a9436e8816923c90fa9e28703f040",
+  "bytes": 566168,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 1037232,
+    "duration_seconds": 23.52,
+    "rms_dbfs": -19.91,
+    "peak_dbfs": -5.02,
+    "integrated_lufs": -17.3,
+    "true_peak_dbtp": -5.01,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -20.36,
+    "last_second_rms_dbfs": -42.66
+  },
+  "source_provenance": {
+    "cue_id": "music_game_over",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-18T16:25:28.619822",
+    "source_filename": "music_game_over.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "a2ea2fe442a9b8ec3e4c0cff6b1d2f557aa2134ea3691dce14cd6c09c3806adc",
+    "bytes": 511439,
+    "notes": "suno_mcp:7e590556-fc8b-4c18-bead-3a46f7dd6544",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 1037232,
+      "duration_seconds": 23.52,
+      "rms_dbfs": -20.54,
+      "peak_dbfs": -4.85,
+      "integrated_lufs": -17.56,
+      "true_peak_dbtp": -4.85,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -21.69,
+      "last_second_rms_dbfs": -48.9
+    }
+  }
+}

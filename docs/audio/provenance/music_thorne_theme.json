@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_thorne_theme",
+  "kind": "track",
+  "source_take": "take_02",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-18T16:02:50.293429",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -16.5,
+  "sha256": "e6a18349f285facd95ccde39f50fbf05ada013de6ffb5e22a30b4cfa8a02bb90",
+  "bytes": 2089630,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 3836305,
+    "duration_seconds": 86.991,
+    "rms_dbfs": -18.2,
+    "peak_dbfs": -5.51,
+    "integrated_lufs": -16.76,
+    "true_peak_dbtp": -5.51,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -20.88,
+    "last_second_rms_dbfs": -26.8
+  },
+  "source_provenance": {
+    "cue_id": "music_thorne_theme",
+    "take": 2,
+    "provider": "suno",
+    "ingested_at": "2026-11-18T16:02:46.625048",
+    "source_filename": "music_thorne_theme_v3.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "54012ad4ef89c835c5e81d282f90e80ba59f23cf579c17153ab4475086ffdb1e",
+    "bytes": 2244814,
+    "notes": "suno_mcp:979a33bc-41ea-4fdb-ba5a-f9aec368a8e3",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 3956652,
+      "duration_seconds": 89.72,
+      "rms_dbfs": -17.96,
+      "peak_dbfs": -5.13,
+      "integrated_lufs": -16.31,
+      "true_peak_dbtp": -5.13,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -20.52,
+      "last_second_rms_dbfs": -82.26
+    }
+  }
+}

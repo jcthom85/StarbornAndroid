@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_zeke_theme",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-18T15:58:42.657637",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -16.5,
+  "sha256": "d55bdd29e47c4746232e2f2531e242a364d8b6e6d012ef5f6bc460f36ab10a87",
+  "bytes": 2122230,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 3896676,
+    "duration_seconds": 88.36,
+    "rms_dbfs": -18.98,
+    "peak_dbfs": -4.75,
+    "integrated_lufs": -16.75,
+    "true_peak_dbtp": -4.76,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -18.57,
+    "last_second_rms_dbfs": -17.88
+  },
+  "source_provenance": {
+    "cue_id": "music_zeke_theme",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-18T15:58:38.727228",
+    "source_filename": "music_zeke_theme.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "597864128f6675d853ef1812408a4801a467fcb27f88e46407ce9553afa0cd94",
+    "bytes": 2242428,
+    "notes": "suno_mcp:70dfdd92-5935-4052-9c1d-6de3151b6cde",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 3967236,
+      "duration_seconds": 89.96,
+      "rms_dbfs": -18.03,
+      "peak_dbfs": -3.78,
+      "integrated_lufs": -15.78,
+      "true_peak_dbtp": -3.76,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -20.29,
+      "last_second_rms_dbfs": -23.39
+    }
+  }
+}

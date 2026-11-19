@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_w1_deep_mine",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-19T09:46:26.643913",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -17.0,
+  "sha256": "6fca7d9f73c69ea0cd03bd9de59b250b7eefcb129c1b2e76541b8a77c45b10a2",
+  "bytes": 2294012,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 4212432,
+    "duration_seconds": 95.52,
+    "rms_dbfs": -18.3,
+    "peak_dbfs": -6.12,
+    "integrated_lufs": -17.27,
+    "true_peak_dbtp": -6.12,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -16.39,
+    "last_second_rms_dbfs": -33.75
+  },
+  "source_provenance": {
+    "cue_id": "music_w1_deep_mine",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-19T09:46:22.792663",
+    "source_filename": "music_w1_deep_mine.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "43cb4a9e0941b90a8fd428bc8f5dadc4793ebb2f0c960c828df4eb4fa5739da7",
+    "bytes": 2060940,
+    "notes": "suno_mcp:c13ae9df-8a9b-4078-b940-9b82ba7b2297",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 4282992,
+      "duration_seconds": 97.12,
+      "rms_dbfs": -17.35,
+      "peak_dbfs": -5.15,
+      "integrated_lufs": -16.19,
+      "true_peak_dbtp": -5.15,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -15.41,
+      "last_second_rms_dbfs": -40.39
+    }
+  }
+}

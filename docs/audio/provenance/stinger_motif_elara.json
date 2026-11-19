@@ -1,0 +1,50 @@
+{
+  "cue_id": "stinger_motif_elara",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-18T15:58:45.428825",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -15.0,
+  "sha256": "c917cedaa6e19312b2b50006c7258e0ae3fe3cfdfad7db007ba9e243f01dd0b5",
+  "bytes": 197528,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 360408,
+    "duration_seconds": 8.1725,
+    "rms_dbfs": -18.3,
+    "peak_dbfs": -5.17,
+    "integrated_lufs": -15.27,
+    "true_peak_dbtp": -5.16,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -17.45,
+    "last_second_rms_dbfs": -50.04
+  },
+  "source_provenance": {
+    "cue_id": "stinger_motif_elara",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-18T15:58:44.886383",
+    "source_filename": "stinger_motif_elara.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "3660dba878657b5e76aaa46260fd3cb568fd90c9a9184db7888c97d7989fd6cf",
+    "bytes": 215752,
+    "notes": "suno_mcp:5a5d9308-aa37-4bee-b1a2-ef2d7f869027",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 388676,
+      "duration_seconds": 8.8135,
+      "rms_dbfs": -17.75,
+      "peak_dbfs": -4.29,
+      "integrated_lufs": -14.34,
+      "true_peak_dbtp": -4.29,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -16.82,
+      "last_second_rms_dbfs": -66.09
+    }
+  }
+}

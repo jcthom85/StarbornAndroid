@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_w5_anchor_cathedral",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-19T11:34:43.055417",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -17.0,
+  "sha256": "217b1577d8a2ba9ba7f69f8d3c31de1f8b2855f850a410ac08014b530ef1c47d",
+  "bytes": 2295265,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 4214196,
+    "duration_seconds": 95.56,
+    "rms_dbfs": -18.47,
+    "peak_dbfs": -5.47,
+    "integrated_lufs": -17.27,
+    "true_peak_dbtp": -5.47,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -26.68,
+    "last_second_rms_dbfs": -31.83
+  },
+  "source_provenance": {
+    "cue_id": "music_w5_anchor_cathedral",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-19T11:34:39.059965",
+    "source_filename": "music_w5_anchor_cathedral.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "80ddf0192e35f1cd1727614304dc1aa07397bd5654704157e8d6fd7655ee6fd4",
+    "bytes": 2177236,
+    "notes": "suno_mcp:dae9fae2-f07a-4346-8b69-46f6b876054b",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 4284756,
+      "duration_seconds": 97.16,
+      "rms_dbfs": -17.54,
+      "peak_dbfs": -4.51,
+      "integrated_lufs": -16.23,
+      "true_peak_dbtp": -4.51,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -26.15,
+      "last_second_rms_dbfs": -39.67
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_w6_combat",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-19T11:36:53.338728",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -14.0,
+  "sha256": "b7bfd93b3b0c7b7b2120d14c0232ef6fa44db048d468735d8e1db550c37ced2b",
+  "bytes": 2230691,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 4096008,
+    "duration_seconds": 92.88,
+    "rms_dbfs": -17.69,
+    "peak_dbfs": -2.59,
+    "integrated_lufs": -14.25,
+    "true_peak_dbtp": -2.5,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -21.5,
+    "last_second_rms_dbfs": -17.14
+  },
+  "source_provenance": {
+    "cue_id": "music_w6_combat",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-19T11:36:49.345706",
+    "source_filename": "music_w6_combat.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "f29cbc6f22ba9f8bf14c1ec6e321a332c4de9b209bcb29f23fd4aafe30c5b455",
+    "bytes": 2291893,
+    "notes": "suno_mcp:f8e12f6d-5a3d-4d7d-b591-e8ffdb71cfc6",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 4166568,
+      "duration_seconds": 94.48,
+      "rms_dbfs": -19.58,
+      "peak_dbfs": -4.52,
+      "integrated_lufs": -16.07,
+      "true_peak_dbtp": -4.36,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -24.17,
+      "last_second_rms_dbfs": -38.55
+    }
+  }
+}

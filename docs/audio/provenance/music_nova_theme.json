@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_nova_theme",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-18T15:43:38.429860",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -16.5,
+  "sha256": "e1985e8752bb182d9d149e7945ebf2d1a0b52c945d471d0a859b6ad0762959db",
+  "bytes": 2237587,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 4108356,
+    "duration_seconds": 93.16,
+    "rms_dbfs": -18.65,
+    "peak_dbfs": -4.85,
+    "integrated_lufs": -16.77,
+    "true_peak_dbtp": -4.72,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -18.06,
+    "last_second_rms_dbfs": -44.45
+  },
+  "source_provenance": {
+    "cue_id": "music_nova_theme",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-18T15:43:34.342599",
+    "source_filename": "music_nova_theme.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "8faa5a8ee5a28a6cefc2e78c360c6609749ff0a48a039bf4a8ad296564c7a596",
+    "bytes": 2252423,
+    "notes": "suno_mcp:e359e194-c4e8-46e7-af68-508570caed84",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 4178916,
+      "duration_seconds": 94.76,
+      "rms_dbfs": -19.2,
+      "peak_dbfs": -5.49,
+      "integrated_lufs": -17.22,
+      "true_peak_dbtp": -5.39,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -18.54,
+      "last_second_rms_dbfs": -77.03
+    }
+  }
+}

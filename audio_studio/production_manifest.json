@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "updated_at": "2026-11-17T14:19:30.908339",
+  "updated_at": "2026-11-18T14:03:55.226969",
   "suno_plan": {
     "tier": "premier_pending_verification",
     "monthly_credit_allowance": 10000,
@@ -85,7 +85,7 @@
         "motif_source"
       ],
       "reference_wav": "audio_studio/reference_audio/motif_nova.wav",
-      "status": "pending",
+      "status": "candidates_registered",
       "approved_candidate_id": null,
       "approved_take": null,
       "commercial_rights_verified": false,
@@ -93,7 +93,117 @@
       "in_game_verified": false,
       "existing_live_asset": true,
       "revision_notes": [],
-      "candidates": [],
+      "candidates": [
+        {
+          "candidate_id": "music_title_theme_cand_01",
+          "take_num": 1,
+          "provider": "suno",
+          "created_at": "2026-11-18T14:03:37.320865",
+          "suno_clip_id": "",
+          "suno_url": "",
+          "title_in_suno": "Starborn Main Title (The Spark in the Dark)",
+          "generation_group_id": "",
+          "prompt_used": "",
+          "credits_cost": 0,
+          "commercial_rights_verified": false,
+          "local_raw_path": "audio_studio/takes/music_title_theme/take_01/raw.mp3",
+          "mastered_path": null,
+          "computational": {
+            "file": "raw.mp3",
+            "metrics": {
+              "sample_rate": 44100,
+              "channels": 2,
+              "frames": 4842180,
+              "duration_seconds": 109.8,
+              "rms_dbfs": -19.07,
+              "peak_dbfs": -4.73,
+              "integrated_lufs": -16.42,
+              "true_peak_dbtp": -4.73,
+              "samples_at_full_scale": 0,
+              "first_second_rms_dbfs": -18.34,
+              "last_second_rms_dbfs": -78.92
+            },
+            "estimated_keys": [
+              {
+                "key": "D Minor",
+                "correlation": 0.805
+              },
+              {
+                "key": "D Major",
+                "correlation": 0.774
+              },
+              {
+                "key": "G Major",
+                "correlation": 0.522
+              }
+            ],
+            "tempo": {
+              "estimated_bpm": 90.7,
+              "raw_peak_bpm": 90.7,
+              "confidence": 0.412,
+              "delta_from_target": 2.7
+            },
+            "motif_alignment": {
+              "method": "pitch_class_chromagram_cosine_and_sliding_window",
+              "disclaimer": "Heuristic tonal/pitch-class alignment against MIDI motif; indicates harmonic and pitch-center kinship, not proof of note-for-note melodic transcription.",
+              "motifs": {
+                "motif_nova": {
+                  "exact_key_chroma_cosine": 0.863,
+                  "peak_passage_chroma_cosine": 0.969,
+                  "best_transposed_chroma_cosine": 0.863,
+                  "best_shift_semitones": 0
+                },
+                "motif_source": {
+                  "exact_key_chroma_cosine": 0.878,
+                  "peak_passage_chroma_cosine": 0.933,
+                  "best_transposed_chroma_cosine": 0.878,
+                  "best_shift_semitones": 0
+                }
+              }
+            },
+            "mix_and_loop": {
+              "crest_factor_db": 14.68,
+              "stereo_correlation": 0.85,
+              "stereo_width_ratio": 0.286,
+              "spectral_bands_pct": {
+                "sub_lt_100hz": 1.1,
+                "warmth_100_400hz": 76.2,
+                "mid_400_4khz": 22.5,
+                "air_gt_4khz": 0.1
+              },
+              "first_2s_rms_db": -19.67,
+              "last_2s_rms_db": -80.14,
+              "last_500ms_rms_db": -80.29,
+              "dead_tail_seconds": 3.95,
+              "end_fade_drop_db": 60.88,
+              "loop_seam_delta_db": 60.47,
+              "warnings": [
+                "Dead silence tail at end (3.95s) weakens raw loop",
+                "Ending drops 60.9 dB below track RMS (possible fade-out ending)",
+                "Start/end loudness mismatch (60.5 dB)"
+              ]
+            },
+            "computational_score": {
+              "score_type": "computational_metrics_only",
+              "score": 74.0,
+              "highlights": [
+                "Tempo locked near target (90.7 BPM)",
+                "Strong chroma alignment with target motif (exact=0.88, passage=0.97)"
+              ],
+              "warnings": [
+                "Dead silence tail at end (3.95s) weakens raw loop",
+                "Ending drops 60.9 dB below track RMS (possible fade-out ending)",
+                "Start/end loudness mismatch (60.5 dB)"
+              ]
+            }
+          },
+          "ai_eval_hydrogen": null,
+          "ai_eval_argon": null,
+          "rank": 1,
+          "shortlist_label": "A",
+          "notes": ""
+        }
+      ],
       "shortlist": {},
       "rejected_ids_preserved": []
     },
@@ -1685,6 +1795,113 @@
           "rank": 2,
           "shortlist_label": "B",
           "notes": "Pilot Option B ElevenLabs music_v2"
+        },
+        {
+          "candidate_id": "music_w1_homestead_explore_cand_05",
+          "take_num": 5,
+          "provider": "suno",
+          "created_at": "2026-11-18T14:03:46.380495",
+          "suno_clip_id": "",
+          "suno_url": "",
+          "title_in_suno": "Stellarium Colony (Homestead & Trade Row)",
+          "generation_group_id": "",
+          "prompt_used": "",
+          "credits_cost": 0,
+          "commercial_rights_verified": false,
+          "local_raw_path": "audio_studio/takes/music_w1_homestead_explore/take_05/raw.mp3",
+          "mastered_path": null,
+          "computational": {
+            "file": "raw.mp3",
+            "metrics": {
+              "sample_rate": 44100,
+              "channels": 2,
+              "frames": 4284756,
+              "duration_seconds": 97.16,
+              "rms_dbfs": -18.63,
+              "peak_dbfs": -4.43,
+              "integrated_lufs": -17.29,
+              "true_peak_dbtp": -4.43,
+              "samples_at_full_scale": 0,
+              "first_second_rms_dbfs": -16.26,
+              "last_second_rms_dbfs": -48.13
+            },
+            "estimated_keys": [
+              {
+                "key": "D Minor",
+                "correlation": 0.882
+              },
+              {
+                "key": "D Major",
+                "correlation": 0.752
+              },
+              {
+                "key": "G Major",
+                "correlation": 0.498
+              }
+            ],
+            "tempo": {
+              "estimated_bpm": 87.6,
+              "raw_peak_bpm": 87.6,
+              "confidence": 0.514,
+              "delta_from_target": 1.6
+            },
+            "motif_alignment": {
+              "method": "pitch_class_chromagram_cosine_and_sliding_window",
+              "disclaimer": "Heuristic tonal/pitch-class alignment against MIDI motif; indicates harmonic and pitch-center kinship, not proof of note-for-note melodic transcription.",
+              "motifs": {
+                "motif_nova": {
+                  "exact_key_chroma_cosine": 0.906,
+                  "peak_passage_chroma_cosine": 0.936,
+                  "best_transposed_chroma_cosine": 0.906,
+                  "best_shift_semitones": 0
+                },
+                "motif_zeke": {
+                  "exact_key_chroma_cosine": 0.696,
+                  "peak_passage_chroma_cosine": 0.89,
+                  "best_transposed_chroma_cosine": 0.948,
+                  "best_shift_semitones": -2
+                }
+              }
+            },
+            "mix_and_loop": {
+              "crest_factor_db": 14.5,
+              "stereo_correlation": 0.868,
+              "stereo_width_ratio": 0.266,
+              "spectral_bands_pct": {
+                "sub_lt_100hz": 40.7,
+                "warmth_100_400hz": 44.6,
+                "mid_400_4khz": 14.6,
+                "air_gt_4khz": 0.0
+              },
+              "first_2s_rms_db": -17.58,
+              "last_2s_rms_db": -47.74,
+              "last_500ms_rms_db": -57.25,
+              "dead_tail_seconds": 0.0,
+              "end_fade_drop_db": 38.32,
+              "loop_seam_delta_db": 30.16,
+              "warnings": [
+                "Ending drops 38.3 dB below track RMS (possible fade-out ending)",
+                "Start/end loudness mismatch (30.2 dB)"
+              ]
+            },
+            "computational_score": {
+              "score_type": "computational_metrics_only",
+              "score": 80.0,
+              "highlights": [
+                "Tempo locked near target (87.6 BPM)",
+                "Strong chroma alignment with target motif (exact=0.91, passage=0.94)"
+              ],
+              "warnings": [
+                "Ending drops 38.3 dB below track RMS (possible fade-out ending)",
+                "Start/end loudness mismatch (30.2 dB)"
+              ]
+            }
+          },
+          "ai_eval_hydrogen": null,
+          "ai_eval_argon": null,
+          "rank": 4,
+          "shortlist_label": "rejected",
+          "notes": ""
         }
       ],
       "shortlist": {
@@ -2897,6 +3114,111 @@
           "rank": 3,
           "shortlist_label": "C",
           "notes": "Pilot Option B ElevenLabs music_v2"
+        },
+        {
+          "candidate_id": "music_w1_combat_cand_05",
+          "take_num": 5,
+          "provider": "suno",
+          "created_at": "2026-11-18T14:03:55.226908",
+          "suno_clip_id": "",
+          "suno_url": "",
+          "title_in_suno": "Homestead Scrap Skirmish",
+          "generation_group_id": "",
+          "prompt_used": "",
+          "credits_cost": 0,
+          "commercial_rights_verified": false,
+          "local_raw_path": "audio_studio/takes/music_w1_combat/take_05/raw.mp3",
+          "mastered_path": null,
+          "computational": {
+            "file": "raw.mp3",
+            "metrics": {
+              "sample_rate": 44100,
+              "channels": 2,
+              "frames": 3965472,
+              "duration_seconds": 89.92,
+              "rms_dbfs": -19.22,
+              "peak_dbfs": -4.86,
+              "integrated_lufs": -16.33,
+              "true_peak_dbtp": -4.86,
+              "samples_at_full_scale": 0,
+              "first_second_rms_dbfs": -19.27,
+              "last_second_rms_dbfs": -32.11
+            },
+            "estimated_keys": [
+              {
+                "key": "D Major",
+                "correlation": 0.796
+              },
+              {
+                "key": "D Minor",
+                "correlation": 0.734
+              },
+              {
+                "key": "A Minor",
+                "correlation": 0.547
+              }
+            ],
+            "tempo": {
+              "estimated_bpm": 137.8,
+              "raw_peak_bpm": 68.9,
+              "confidence": 0.748,
+              "delta_from_target": -0.2
+            },
+            "motif_alignment": {
+              "method": "pitch_class_chromagram_cosine_and_sliding_window",
+              "disclaimer": "Heuristic tonal/pitch-class alignment against MIDI motif; indicates harmonic and pitch-center kinship, not proof of note-for-note melodic transcription.",
+              "motifs": {
+                "motif_nova": {
+                  "exact_key_chroma_cosine": 0.866,
+                  "peak_passage_chroma_cosine": 0.89,
+                  "best_transposed_chroma_cosine": 0.866,
+                  "best_shift_semitones": 0
+                },
+                "motif_zeke": {
+                  "exact_key_chroma_cosine": 0.793,
+                  "peak_passage_chroma_cosine": 0.859,
+                  "best_transposed_chroma_cosine": 0.885,
+                  "best_shift_semitones": -2
+                }
+              }
+            },
+            "mix_and_loop": {
+              "crest_factor_db": 14.85,
+              "stereo_correlation": 0.786,
+              "stereo_width_ratio": 0.346,
+              "spectral_bands_pct": {
+                "sub_lt_100hz": 33.6,
+                "warmth_100_400hz": 28.1,
+                "mid_400_4khz": 32.6,
+                "air_gt_4khz": 5.8
+              },
+              "first_2s_rms_db": -20.79,
+              "last_2s_rms_db": -19.07,
+              "last_500ms_rms_db": -39.42,
+              "dead_tail_seconds": 0.0,
+              "end_fade_drop_db": 19.71,
+              "loop_seam_delta_db": 1.72,
+              "warnings": [
+                "Ending drops 19.7 dB below track RMS (possible fade-out ending)"
+              ]
+            },
+            "computational_score": {
+              "score_type": "computational_metrics_only",
+              "score": 86.0,
+              "highlights": [
+                "Tempo locked near target (137.8 BPM)",
+                "Strong chroma alignment with target motif (exact=0.87, passage=0.89)"
+              ],
+              "warnings": [
+                "Ending drops 19.7 dB below track RMS (possible fade-out ending)"
+              ]
+            }
+          },
+          "ai_eval_hydrogen": null,
+          "ai_eval_argon": null,
+          "rank": 3,
+          "shortlist_label": "C",
+          "notes": ""
         }
       ],
       "shortlist": {

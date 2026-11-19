@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_w6_nightmare_gh0st",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-19T11:36:04.975336",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -17.0,
+  "sha256": "a2fb9c118d99aea47d545668c181850f992f7862b390062cd9700ae9c2f90363",
+  "bytes": 2073956,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 3807615,
+    "duration_seconds": 86.3405,
+    "rms_dbfs": -18.32,
+    "peak_dbfs": -5.83,
+    "integrated_lufs": -17.26,
+    "true_peak_dbtp": -5.83,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -26.87,
+    "last_second_rms_dbfs": -23.63
+  },
+  "source_provenance": {
+    "cue_id": "music_w6_nightmare_gh0st",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-19T11:36:01.328761",
+    "source_filename": "music_w6_nightmare_gh0st.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "531c841ef6fca6fcfae6413f631d396c04e7b20439e0b9f44c55089df8f98336",
+    "bytes": 2136663,
+    "notes": "suno_mcp:1cb39ab8-f1ab-41cd-b628-a53bf949b97d",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 3951360,
+      "duration_seconds": 89.6,
+      "rms_dbfs": -17.68,
+      "peak_dbfs": -5.05,
+      "integrated_lufs": -16.45,
+      "true_peak_dbtp": -5.05,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -26.3,
+      "last_second_rms_dbfs": -88.94
+    }
+  }
+}

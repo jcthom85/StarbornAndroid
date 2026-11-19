@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_tinkering_focus",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-18T16:25:45.004585",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -16.5,
+  "sha256": "ec888a3b77e3001009123e41ffe74bfaac18ac15aa4fb58626c393d7c7ffe519",
+  "bytes": 1941045,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 3563280,
+    "duration_seconds": 80.8,
+    "rms_dbfs": -17.84,
+    "peak_dbfs": -4.06,
+    "integrated_lufs": -16.75,
+    "true_peak_dbtp": -4.06,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -17.6,
+    "last_second_rms_dbfs": -31.45
+  },
+  "source_provenance": {
+    "cue_id": "music_tinkering_focus",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-18T16:25:41.558179",
+    "source_filename": "music_tinkering_focus.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "f4194f322b266b83ab79604a9666bfad36821a430bceebbef54ad8a7a92aa587",
+    "bytes": 1792681,
+    "notes": "suno_mcp:19b26b14-2599-43e1-8880-8af92b81313b",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 3633840,
+      "duration_seconds": 82.4,
+      "rms_dbfs": -17.95,
+      "peak_dbfs": -4.1,
+      "integrated_lufs": -16.73,
+      "true_peak_dbtp": -4.1,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -17.62,
+      "last_second_rms_dbfs": -42.16
+    }
+  }
+}

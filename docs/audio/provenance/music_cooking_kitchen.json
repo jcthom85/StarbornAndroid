@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_cooking_kitchen",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-18T16:25:49.607371",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -16.5,
+  "sha256": "431fb45688b4aa2a87dc4edcdefc0a5bd838331d6cbdb84ea848465e55b19bc5",
+  "bytes": 1748575,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 3210480,
+    "duration_seconds": 72.8,
+    "rms_dbfs": -18.36,
+    "peak_dbfs": -4.73,
+    "integrated_lufs": -16.76,
+    "true_peak_dbtp": -4.73,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -19.52,
+    "last_second_rms_dbfs": -17.44
+  },
+  "source_provenance": {
+    "cue_id": "music_cooking_kitchen",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-18T16:25:46.463833",
+    "source_filename": "music_cooking_kitchen.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "ed71869fea5d70a46e0f4745e4eda1a6dba6d909cdd5534b6d1bdd430e690a7d",
+    "bytes": 1821307,
+    "notes": "suno_mcp:6eaba7f1-5445-4cf6-b1ba-bb31ae9c6abd",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 3281040,
+      "duration_seconds": 74.4,
+      "rms_dbfs": -17.57,
+      "peak_dbfs": -3.87,
+      "integrated_lufs": -15.93,
+      "true_peak_dbtp": -3.86,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -19.8,
+      "last_second_rms_dbfs": -35.68
+    }
+  }
+}

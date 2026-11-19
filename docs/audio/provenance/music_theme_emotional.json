@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_theme_emotional",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-18T15:46:39.371835",
+  "loop_mode": "none",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -16.5,
+  "sha256": "090be8869de318a709a7b0f2e72a7d274e86d2dfac3515b073d1e6681ac24d7c",
+  "bytes": 1519115,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 2788884,
+    "duration_seconds": 63.24,
+    "rms_dbfs": -19.11,
+    "peak_dbfs": -4.92,
+    "integrated_lufs": -16.76,
+    "true_peak_dbtp": -4.92,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -20.6,
+    "last_second_rms_dbfs": -33.42
+  },
+  "source_provenance": {
+    "cue_id": "music_theme_emotional",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-18T15:46:36.529675",
+    "source_filename": "music_theme_emotional.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "583717486b1636703927610d74eb8d9134aa6a95ee80f645d3f516a30379dd28",
+    "bytes": 1438440,
+    "notes": "suno_mcp:ff24a571-e474-4d1a-a448-66b051ad9fcc",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 2788884,
+      "duration_seconds": 63.24,
+      "rms_dbfs": -19.07,
+      "peak_dbfs": -4.91,
+      "integrated_lufs": -16.73,
+      "true_peak_dbtp": -4.91,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -20.55,
+      "last_second_rms_dbfs": -33.38
+    }
+  }
+}

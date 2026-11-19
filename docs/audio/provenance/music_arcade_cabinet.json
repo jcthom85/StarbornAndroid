@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_arcade_cabinet",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-18T16:25:39.978908",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -16.5,
+  "sha256": "4eb3a1b9bcff4ec8d632302e03d18b94367b7ecb1b6276137424feab88ee71f2",
+  "bytes": 1739171,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 3192505,
+    "duration_seconds": 72.3924,
+    "rms_dbfs": -19.15,
+    "peak_dbfs": -5.4,
+    "integrated_lufs": -16.76,
+    "true_peak_dbtp": -5.39,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -20.59,
+    "last_second_rms_dbfs": -18.94
+  },
+  "source_provenance": {
+    "cue_id": "music_arcade_cabinet",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-18T16:25:36.774631",
+    "source_filename": "music_arcade_cabinet.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "8502cbbf1e697dfe542aa273f2c2d08ed9d6e94e35a16ce324bcf0b6f71452e6",
+    "bytes": 1669283,
+    "notes": "suno_mcp:09223c5e-fd5a-40b2-9f30-a200334c5434",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 3296916,
+      "duration_seconds": 74.76,
+      "rms_dbfs": -18.0,
+      "peak_dbfs": -4.18,
+      "integrated_lufs": -15.5,
+      "true_peak_dbtp": -4.17,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -20.38,
+      "last_second_rms_dbfs": -60.5
+    }
+  }
+}

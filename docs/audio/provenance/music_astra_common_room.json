@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_astra_common_room",
+  "kind": "track",
+  "source_take": "take_05",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-18T14:21:36.233504",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -17.0,
+  "sha256": "cc6f5e97c1b0d9d5694a5e814f48c962ef1f6fbdd0fb0cf9de4a45773ab24005",
+  "bytes": 2238214,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 4110120,
+    "duration_seconds": 93.2,
+    "rms_dbfs": -18.72,
+    "peak_dbfs": -4.89,
+    "integrated_lufs": -17.26,
+    "true_peak_dbtp": -4.81,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -18.5,
+    "last_second_rms_dbfs": -29.11
+  },
+  "source_provenance": {
+    "cue_id": "music_astra_common_room",
+    "take": 5,
+    "provider": "suno",
+    "ingested_at": "2026-11-18T14:21:30.351868",
+    "source_filename": "music_astra_common_room_3dbb4fd9.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "c6d60e2945da7ac9060f06a4bef07bf2980d07804123cb81488a5b0511d8be98",
+    "bytes": 2187590,
+    "notes": "suno_mcp:ref_audio_v6_v2:3dbb4fd9",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 4180680,
+      "duration_seconds": 94.8,
+      "rms_dbfs": -18.39,
+      "peak_dbfs": -4.67,
+      "integrated_lufs": -16.81,
+      "true_peak_dbtp": -4.6,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -18.05,
+      "last_second_rms_dbfs": -43.73
+    }
+  }
+}

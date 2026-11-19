@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_w5_orbital_intrigue",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-19T10:37:21.384100",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -17.0,
+  "sha256": "0e5d2b45328ccece71a5d783f5cd752aa4463c4b28f03907867fcb4f2a0839a2",
+  "bytes": 2350436,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 4315913,
+    "duration_seconds": 97.8665,
+    "rms_dbfs": -18.54,
+    "peak_dbfs": -5.36,
+    "integrated_lufs": -17.26,
+    "true_peak_dbtp": -5.35,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -18.97,
+    "last_second_rms_dbfs": -35.98
+  },
+  "source_provenance": {
+    "cue_id": "music_w5_orbital_intrigue",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-19T10:37:17.263266",
+    "source_filename": "music_w5_orbital_intrigue.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "d3510d2806f312ff22b364a4bc89d336cb9cede57ca4c46a6456288ab3361434",
+    "bytes": 2340292,
+    "notes": "suno_mcp:1d42698c-e0a6-4d81-9dfc-a47a4602410d",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 4392360,
+      "duration_seconds": 99.6,
+      "rms_dbfs": -18.53,
+      "peak_dbfs": -5.27,
+      "integrated_lufs": -17.13,
+      "true_peak_dbtp": -5.27,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -18.91,
+      "last_second_rms_dbfs": -43.76
+    }
+  }
+}

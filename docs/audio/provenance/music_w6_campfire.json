@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_w6_campfire",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-19T11:35:34.309879",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -17.0,
+  "sha256": "b0bda6b02ff54549289a33b9d056c34a5581fbf6b83abc3e0554f6c6c1666f5d",
+  "bytes": 2070821,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 3801812,
+    "duration_seconds": 86.2089,
+    "rms_dbfs": -19.05,
+    "peak_dbfs": -4.54,
+    "integrated_lufs": -17.31,
+    "true_peak_dbtp": -4.54,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -18.99,
+    "last_second_rms_dbfs": -35.08
+  },
+  "source_provenance": {
+    "cue_id": "music_w6_campfire",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-19T11:35:29.382343",
+    "source_filename": "music_w6_campfire.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "beac8e1b2c66ac3d2aaf9cb53f163441fddf99c891156fd9c53cae4b12925749",
+    "bytes": 2037947,
+    "notes": "suno_mcp:958b2cad-9a63-43c7-a7d0-76afd50aa5dc",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 3939012,
+      "duration_seconds": 89.32,
+      "rms_dbfs": -18.47,
+      "peak_dbfs": -3.43,
+      "integrated_lufs": -16.35,
+      "true_peak_dbtp": -3.43,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -17.16,
+      "last_second_rms_dbfs": -89.35
+    }
+  }
+}

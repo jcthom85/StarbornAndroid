@@ -1,0 +1,50 @@
+{
+  "cue_id": "music_shop_cozy",
+  "kind": "track",
+  "source_take": "take_01",
+  "source_provider": "suno",
+  "mastered_at": "2026-11-18T16:41:08.590305",
+  "loop_mode": "wrap",
+  "loop_start_ms": null,
+  "loop_end_ms": null,
+  "target_lufs": -16.5,
+  "sha256": "590327d4d04cc44157627f9e9feaed1b144a4673fe5add2b6f71bc9869978bf8",
+  "bytes": 1870828,
+  "metrics": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 3434720,
+    "duration_seconds": 77.8848,
+    "rms_dbfs": -18.02,
+    "peak_dbfs": -4.2,
+    "integrated_lufs": -16.76,
+    "true_peak_dbtp": -4.2,
+    "samples_at_full_scale": 0,
+    "first_second_rms_dbfs": -20.72,
+    "last_second_rms_dbfs": -24.02
+  },
+  "source_provenance": {
+    "cue_id": "music_shop_cozy",
+    "take": 1,
+    "provider": "suno",
+    "ingested_at": "2026-11-18T16:41:05.126664",
+    "source_filename": "music_shop_cozy.mp3",
+    "raw_file": "raw.mp3",
+    "sha256": "5bd60423998294a4a8e105372e05fa5e051ff6c242d5d957aff9a5bd17c47af1",
+    "bytes": 1959952,
+    "notes": "suno_mcp:70c4c279-1d4c-4a20-a995-48e79d839cbd",
+    "metrics": {
+      "sample_rate": 44100,
+      "channels": 2,
+      "frames": 3526236,
+      "duration_seconds": 79.96,
+      "rms_dbfs": -17.77,
+      "peak_dbfs": -3.79,
+      "integrated_lufs": -16.37,
+      "true_peak_dbtp": -3.72,
+      "samples_at_full_scale": 0,
+      "first_second_rms_dbfs": -19.67,
+      "last_second_rms_dbfs": -40.94
+    }
+  }
+}
