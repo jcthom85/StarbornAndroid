@@ -120,7 +120,9 @@
         "name": "shift ration tin",
         "type": "container",
         "state_key": "shift_ration_tin_opened",
-        "items": ["starbar_crunch"],
+        "items": [
+          "starbar_crunch"
+        ],
         "popup_title": "Shift Rations",
         "already_open_message": "The ration tin is empty."
       },
@@ -2871,9 +2873,9 @@
         "type": "container",
         "state_key": "w1_munitions_cache_opened",
         "items": [
-          "thermite_core_mod",
+          "impact_node",
           "scrap_metal",
-          "pure_iron"
+          "power_cell"
         ],
         "already_open_message": "The munitions cache stands open, its thermal locks burned through.",
         "popup_title": "Dominion Munitions Cache"
@@ -5807,7 +5809,7 @@
     "weather": "dust",
     "title": "Obsidian Overlook",
     "background_image": "images/rooms/world_4/foundry_obsidian_overlook.webp",
-    "description": "A cracked overlook juts above the Foundry basin. The whole sector glows below: slag rivers, intake pistons, and the factory spine Vale designed to supply Thorne’s Harmony project. Shield window telemetry flickers on the crew's flight display.",
+    "description": "A cracked overlook juts above the Foundry basin. The whole sector glows below: slag rivers, intake pistons, and the factory spine Vale designed to supply Thorne’s Harmony project. Shield window telemetry flickers on the crew's flight display. A weather-sealed [action:foundry requisition terminal|Foundry supply terminal] blinks beside the landing beacon.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -5837,6 +5839,11 @@
         "name": "shield window telemetry",
         "type": "generic",
         "condition_unmet_message": "The Lens telemetry still flickers with the Shield window. Astra survived the slip, but not cleanly enough to climb to the Orbital Ring."
+      },
+      {
+        "name": "foundry requisition terminal",
+        "type": "shop",
+        "shop_id": "foundry_welder_shop"
       }
     ]
   },
@@ -9370,7 +9377,7 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Compliance Avatar has lost cohesion. Spatial shear around the reality breach pulls at every loose fragment of the Ring, and music exists here without air, speakers, or permission.",
+        "description": "The Compliance Avatar has lost cohesion. Spatial shear around the reality breach pulls at every loose fragment of the Ring, and music exists here without air, speakers, or permission. Point of No Return: crossing the reality breach seals the way back to the Astra and all shops until the Source is resolved — stock up on Medkits, Neural Stabilizers, and cooking ingredients before stepping through.",
         "requires_milestones": [
           "ms_w5_avatar_defeated"
         ]
@@ -9381,7 +9388,8 @@
         "name": "reality breach",
         "type": "generic",
         "action_event": "w5_mq25_enter_tear",
-        "condition_unmet_message": "The Compliance Avatar still anchors Vale's control of the breach."
+        "condition_unmet_message": "The Compliance Avatar still anchors Vale's control of the breach.",
+        "description": "Step into the Source (Point of No Return until finale — stock up on supplies before crossing)."
       },
       {
         "id": "inspect_spatial_distortion",
@@ -9514,7 +9522,7 @@
     "weather": "resonance",
     "title": "The Campfire",
     "background_image": "images/rooms/world_6/source_campfire.webp",
-    "description": "The song-fire burns again, rebuilt from blue waveforms on an island of memory. Three unstable paths pull away from the flame, each tuned to a missing crew member. Zeke's cubicles lie west, Gh0st's war corridor north, and Orion's shore east through Blue Ash Circle. The mine echo opens south. Each path can be retraced to this fire.",
+    "description": "The song-fire burns again, rebuilt from blue waveforms on an island of memory. Three unstable paths pull away from the flame, each tuned to a missing crew member. Zeke's cubicles lie west, Gh0st's war corridor north, and Orion's shore east through Blue Ash Circle. The mine echo opens south. Each path can be retraced to this fire. Beside the fire sit a [action:crew supply cache|crew supply pack] and a shimmering [action:ether pool|ether pool] deep enough for a line.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -9549,6 +9557,31 @@
         "type": "rest_stop",
         "cook_source": "Source Campfire",
         "message": "The crew sets pots beside the blue flame."
+      },
+      {
+        "name": "ether pool",
+        "activity_title": "Singularity Ether Pool",
+        "type": "fishing",
+        "zone_id": "singularity_ether_well",
+        "message": "Luminous memory-water eddies at the rim of the island—deep enough to drop a line."
+      },
+      {
+        "name": "crew supply cache",
+        "type": "container",
+        "items": [
+          "medkit_plus",
+          "medkit_plus",
+          "medkit_plus",
+          "painkillers",
+          "painkillers",
+          "frequency_tetra",
+          "stellarium_eel",
+          "fiery_pepper",
+          "herb",
+          "herb"
+        ],
+        "empty_message": "The emergency pack beside the fire is empty.",
+        "open_message": "You unpack the crew's emergency rations, Medkit+, Neural Stabilizers, and feast ingredients."
       }
     ],
     "description_variants": [
@@ -9556,7 +9589,7 @@
         "requires_milestones": [
           "ms_w6_mq26_complete"
         ],
-        "description": "The song-fire burns steady now. Zeke, Gh0st, and Orion are back in the circuit, and the Key waits in Nova's hand like a warm star with sharp edges. Zeke's cubicles lie west, Gh0st's war corridor north, and Orion's shore east through Blue Ash Circle. The mine echo opens south. Each path can be retraced to this fire."
+        "description": "The song-fire burns steady now. Zeke, Gh0st, and Orion are back in the circuit, and the Key waits in Nova's hand like a warm star with sharp edges. Zeke's cubicles lie west, Gh0st's war corridor north, and Orion's shore east through Blue Ash Circle. The mine echo opens south. Each path can be retraced to this fire. Beside the fire sit a [action:crew supply cache|crew supply pack] and a shimmering [action:ether pool|ether pool] deep enough for a line."
       }
     ]
   },
@@ -11356,7 +11389,7 @@
         "state_key": "w2_wetlands_locker_opened",
         "items": [
           "antidote_flask",
-          "pure_iron",
+          "wiring_bundle",
           "chemical_catalyst"
         ],
         "already_open_message": "The emergency locker stands open, draining brackish water into the sedge.",
@@ -11439,7 +11472,7 @@
         "activity_title": "Falls Ember Hearth",
         "type": "rest_stop",
         "cook_source": "Campfire",
-        "message": "A dry recess behind the falls stays warm and sheltered. Preparing hot broth over the flame restores focus."
+        "message": "David keeps a clean fire going. Tip: eating a cooked meal outside combat grants 3 battles of party-wide Well-Fed bonuses plus the serving crew member's perk."
       },
       {
         "name": "recess shelter",
@@ -11695,7 +11728,7 @@
         "state_key": "w2_sunken_vault_chest_opened",
         "items": [
           "tidal_resonator_mod",
-          "astral_thread",
+          "focusing_lens",
           "bioluminescent_lure"
         ],
         "already_open_message": "The reliquary is open, its ancient brass seals broken.",
@@ -11902,7 +11935,7 @@
         "state_key": "w2_beach_crates_opened",
         "items": [
           "scrap_metal",
-          "composite_plate",
+          "armor_plate",
           "hydraulic_fluid",
           "nano_filament"
         ],
@@ -13603,7 +13636,7 @@
         "items": [
           "rapid_capacitor",
           "wiring_bundle",
-          "pure_iron"
+          "power_cell"
         ],
         "already_open_message": "The toolbox has been cleared of spare components.",
         "popup_title": "Technician Toolbox",
@@ -14010,7 +14043,7 @@
         "type": "container",
         "state_key": "w2_relic_coffer_opened",
         "items": [
-          "astral_thread",
+          "power_cell",
           "relic_mod_biolum_focus",
           "energy_core"
         ],
@@ -15369,7 +15402,7 @@
     "weather": "industrial",
     "title": "Astra Cargo Bay",
     "background_image": "images/rooms/astra/cargo_bay.webp",
-    "description": "Cargo nets, sealed crates, and replacement conduits crowd the lower deck. The repair bench stands beside a [action:cargo records|records terminal] for shared supplies, the Catch Log, and the shielded relic archive. The [action:disembark|cargo ramp] leads back outside; the common room is through the east hatch.",
+    "description": "Cargo nets, sealed crates, and replacement conduits crowd the lower deck. The repair bench stands beside a [action:cargo records|records terminal] for shared supplies, the Catch Log, and the shielded relic archive, next to the [action:armory requisition|armory locker] for crew weapons, suits, and field gear. The [action:disembark|cargo ramp] leads back outside; the common room is through the east hatch.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -15388,6 +15421,11 @@
         "action_event": "astra_cargo_records"
       },
       {
+        "name": "armory requisition",
+        "type": "shop",
+        "shop_id": "astra_armory"
+      },
+      {
         "name": "disembark",
         "type": "generic",
         "action_event": "astra_disembark"
@@ -15398,7 +15436,7 @@
         "requires_milestones": [
           "ms_w4_engine_stolen"
         ],
-        "description": "Cargo nets, sealed crates, and replacement conduits crowd the lower deck. The repair bench stands beside a [action:cargo records|records terminal] for shared supplies, the Catch Log, and the shielded relic archive. The [action:disembark|cargo ramp] leads back outside; the common room is through the east hatch. Fresh conduits carry the Deep-Core engine's steady power through the lower deck."
+        "description": "Cargo nets, sealed crates, and replacement conduits crowd the lower deck. The repair bench stands beside a [action:cargo records|records terminal] for shared supplies, the Catch Log, and the shielded relic archive, next to the [action:armory requisition|armory locker] for crew weapons, suits, and field gear. The [action:disembark|cargo ramp] leads back outside; the common room is through the east hatch. Fresh conduits carry the Deep-Core engine's steady power through the lower deck."
       }
     ]
   },
@@ -17979,7 +18017,10 @@
         "inspection_completion_event": "w4_mq19_throw_override_paddle",
         "type": "tuning_puzzle",
         "puzzle_id": "w4_conveyor_override",
-        "requires_milestones": ["ms_w4_pulse_board_read", "ms_w4_grease_route_read"],
+        "requires_milestones": [
+          "ms_w4_pulse_board_read",
+          "ms_w4_grease_route_read"
+        ],
         "condition_unmet_message": "Check the pulse board in Timing Tower and the grease marks in Roller Underpass before parking the belt."
       }
     ]

@@ -1853,7 +1853,7 @@ class ExplorationController(
             return
         }
         dismissSimulationDeck()
-        setRecoverableEncounter(EncounterDescriptor(enemyIds.map { EncounterEnemyInstance(enemyId = it) }))
+        setRecoverableEncounter(EncounterDescriptor(enemyIds.map { EncounterEnemyInstance(enemyId = it, apReward = 0) }))
         emitEvent(ExplorationEvent.EnterCombat(enemyIds))
     }
 

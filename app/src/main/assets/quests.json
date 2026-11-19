@@ -89,6 +89,10 @@
         "type": "item",
         "item_id": "medkit_i",
         "quantity": 1
+      },
+      {
+        "type": "credits",
+        "amount": 80
       }
     ]
   },
@@ -155,6 +159,10 @@
         "type": "item",
         "item_id": "ration_pack",
         "quantity": 2
+      },
+      {
+        "type": "credits",
+        "amount": 120
       }
     ]
   },
@@ -249,6 +257,15 @@
         "type": "item",
         "item_id": "ration_pack",
         "quantity": 2
+      },
+      {
+        "type": "credits",
+        "amount": 150
+      },
+      {
+        "type": "item",
+        "item_id": "stability_gyro",
+        "quantity": 1
       }
     ]
   },
@@ -686,6 +703,10 @@
       {
         "type": "xp",
         "amount": 150
+      },
+      {
+        "type": "credits",
+        "amount": 150
       }
     ]
   },
@@ -722,6 +743,15 @@
       {
         "type": "xp",
         "amount": 200
+      },
+      {
+        "type": "credits",
+        "amount": 200
+      },
+      {
+        "type": "item",
+        "item_id": "lucky_talisman",
+        "quantity": 1
       }
     ]
   },
@@ -1133,6 +1163,10 @@
       {
         "type": "xp",
         "amount": 400
+      },
+      {
+        "type": "credits",
+        "amount": 250
       }
     ]
   },
@@ -1344,6 +1378,15 @@
       {
         "type": "xp",
         "amount": 500
+      },
+      {
+        "type": "credits",
+        "amount": 300
+      },
+      {
+        "type": "item",
+        "item_id": "vital_signet",
+        "quantity": 1
       }
     ]
   },
@@ -1573,6 +1616,10 @@
         "type": "item",
         "item_id": "heat_liner",
         "quantity": 1
+      },
+      {
+        "type": "credits",
+        "amount": 400
       }
     ]
   },

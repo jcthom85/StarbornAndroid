@@ -1,185 +1,212 @@
 [
-    {
-        "id": "movement",
-        "steps": [
-            {
-                "message": "Swipe toward any open exit to move. The minimap pips and connecting lines show nearby routes.",
-                "context": "Exploration"
-            }
-        ]
-    },
-    {
-        "id": "npc_talk",
-        "steps": [
-            {
-                "message": "Tap a highlighted character name to start a conversation.",
-                "context": "Exploration"
-            },
-            {
-                "message": "Tap the dialogue card to continue the conversation and advance the story.",
-                "context": "Exploration",
-                "delay_ms": 2000
-            }
-        ]
-    },
-    {
-        "id": "hotspot_actions",
-        "steps": [
-            {
-                "message": "Highlighted room details are interactive. Tap one to inspect it or use its available action.",
-                "context": "Exploration"
-            }
-        ]
-    },
-    {
-        "id": "scene_tinkering_tutorial",
-        "steps": [
-            {
-                "message": "Open Tinker and choose the Workbench. Tap the Broken Cryo-Inductor in the tray to place it in the Base socket.",
-                "context": "Tinker"
-            },
-            {
-                "message": "Tap Scrap Metal in the tray to add the replacement part, then press Synthesize when the repair is ready.",
-                "context": "Tinker",
-                "delay_ms": 2500
-            }
-        ]
-    },
-    {
-        "id": "scene_market_locator",
-        "steps": [
-            {
-                "message": "Head out of the Pit toward Jed's Workshop. Tap highlighted exits or swipe toward open connections to keep moving.",
-                "context": "Navigation"
-            }
-        ]
-    },
-    {
-        "id": "scene_market_journal",
-        "steps": [
-            {
-                "message": "Open your journal from the menu to track active errands and choose which quest to follow.",
-                "context": "Market Plaza"
-            },
-            {
-                "message": "Use the journal tabs to review active quests, completed quests, and recent updates.",
-                "context": "Market Plaza",
-                "delay_ms": 2000
-            }
-        ]
-    },
-    {
-        "id": "bag_basics",
-        "steps": [
-            {
-                "message": "Use the Supplies, Gear, and Key Items tabs across the top to inspect items, equip weapons and armor, or use consumables.",
-                "context": "Inventory"
-            }
-        ]
-    },
-    {
-        "id": "menu_save",
-        "steps": [
-            {
-                "message": "Open the menu to save your progress. Tap the Save icon in the top-right corner for a quick checkpoint, or open Settings > Save Game to choose a manual save slot.",
-                "context": "Save"
-            }
-        ]
-    },
-    {
-        "id": "rest_recovery",
-        "steps": [
-            {
-                "message": "Beds aboard the Astra restore the party. Use Nova's bed when the crew needs to recover between missions.",
-                "context": "Astra Quarters"
-            }
-        ]
-    },
-    {
-        "id": "source_art_unlock",
-        "steps": [
-            {
-                "message": "Source Art unlocked: Blast Wave. It hits all enemies, breaks Guard, and applies Stun; cooldown four turns.",
-                "context": "Source Art"
-            }
-        ]
-    },
-    {
-        "id": "party_basics",
-        "steps": [
-            {
-                "message": "Tap a portrait to switch the active character. Each party member has unique abilities.",
-                "context": "Combat"
-            }
-        ]
-    },
-    {
-        "id": "world2_debuffs",
-        "steps": [
-            {
-                "message": "Enemies can disrupt more than HP. If a status chip appears on a party member, slow down and read it before choosing the next action.",
-                "context": "Combat"
-            },
-            {
-                "message": "Debuffs are temporary. Guard, use a Snack, or switch tactics while they fade; focus controller enemies before they stack more pressure.",
-                "context": "Combat",
-                "delay_ms": 2200
-            }
-        ]
-    },
-    {
-        "id": "link_unlock",
-        "steps": [
-            {
-                "message": "Link connects party members through the Bridge circuit. A physical ground carries excess current safely away.",
-                "context": "Source Art"
-            },
-            {
-                "message": "Use Link to restore party HP and apply Regen through the Bridge ground. Damage and status effects remain separate.",
-                "context": "Combat",
-                "delay_ms": 1800
-            }
-        ]
-    },
-    {
-        "id": "snack_slot",
-        "steps": [
-            {
-                "message": "Snacks are reusable combat tools. Use them like abilities - they recharge after a cooldown.",
-                "context": "Combat"
-            }
-        ]
-    },
-    {
-        "id": "gear_equip_basics",
-        "steps": [
-            {
-                "message": "Open Party and select Nova's Weapon and Armor slots to equip her Mining Pistol and Flux Liner.",
-                "context": "Equipment"
-            }
-        ]
-    },
-    {
-        "id": "mod_slots_basics",
-        "steps": [
-            {
-                "message": "Weapon Mod slots are now unlocked in Party. Combine Scrap Metal, Ballistic Weave, Focusing Lenses, or Batteries on the Tinker Workbench to craft mods and Pulse Grenades.",
-                "context": "Tinker"
-            }
-        ]
-    },
-    {
-        "id": "combat_basics_opener",
-        "steps": [
-            {
-                "message": "When your turn bar fills, choose an action. Basic attacks build Momentum to Overcharge abilities with increased power, cooldown refunds, and elemental infusion.",
-                "context": "Combat"
-            },
-            {
-                "message": "Enemies with cracked relays or exposed circuits are weak to Shock. Exploit weaknesses to crack Stability and stun them!",
-                "context": "Combat",
-                "delay_ms": 2500
-            }
-        ]
-    }
+  {
+    "id": "movement",
+    "steps": [
+      {
+        "message": "Swipe toward any open exit to move. The minimap pips and connecting lines show nearby routes.",
+        "context": "Exploration"
+      }
+    ]
+  },
+  {
+    "id": "npc_talk",
+    "steps": [
+      {
+        "message": "Tap a highlighted character name to start a conversation.",
+        "context": "Exploration"
+      },
+      {
+        "message": "Tap the dialogue card to continue the conversation and advance the story.",
+        "context": "Exploration",
+        "delay_ms": 2000
+      }
+    ]
+  },
+  {
+    "id": "hotspot_actions",
+    "steps": [
+      {
+        "message": "Highlighted room details are interactive. Tap one to inspect it or use its available action.",
+        "context": "Exploration"
+      }
+    ]
+  },
+  {
+    "id": "scene_tinkering_tutorial",
+    "steps": [
+      {
+        "message": "Open Tinker and choose the Workbench. Tap the Broken Cryo-Inductor in the tray to place it in the Base socket.",
+        "context": "Tinker"
+      },
+      {
+        "message": "Tap Scrap Metal in the tray to add the replacement part, then press Synthesize when the repair is ready.",
+        "context": "Tinker",
+        "delay_ms": 2500
+      }
+    ]
+  },
+  {
+    "id": "scene_market_locator",
+    "steps": [
+      {
+        "message": "Head out of the Pit toward Jed's Workshop. Tap highlighted exits or swipe toward open connections to keep moving.",
+        "context": "Navigation"
+      }
+    ]
+  },
+  {
+    "id": "scene_market_journal",
+    "steps": [
+      {
+        "message": "Open your journal from the menu to track active errands and choose which quest to follow.",
+        "context": "Market Plaza"
+      },
+      {
+        "message": "Use the journal tabs to review active quests, completed quests, and recent updates.",
+        "context": "Market Plaza",
+        "delay_ms": 2000
+      }
+    ]
+  },
+  {
+    "id": "bag_basics",
+    "steps": [
+      {
+        "message": "Use the Supplies, Gear, and Key Items tabs across the top to inspect items, equip weapons and armor, or use consumables.",
+        "context": "Inventory"
+      }
+    ]
+  },
+  {
+    "id": "menu_save",
+    "steps": [
+      {
+        "message": "Open the menu to save your progress. Tap the Save icon in the top-right corner for a quick checkpoint, or open Settings > Save Game to choose a manual save slot.",
+        "context": "Save"
+      }
+    ]
+  },
+  {
+    "id": "rest_recovery",
+    "steps": [
+      {
+        "message": "Beds aboard the Astra restore the party. Use Nova's bed when the crew needs to recover between missions.",
+        "context": "Astra Quarters"
+      }
+    ]
+  },
+  {
+    "id": "source_art_unlock",
+    "steps": [
+      {
+        "message": "Source Art unlocked: Blast Wave. It hits all enemies, breaks Guard, and applies Stun; cooldown four turns.",
+        "context": "Source Art"
+      }
+    ]
+  },
+  {
+    "id": "party_basics",
+    "steps": [
+      {
+        "message": "Tap a portrait to switch the active character. Each party member has unique abilities.",
+        "context": "Combat"
+      }
+    ]
+  },
+  {
+    "id": "world2_debuffs",
+    "steps": [
+      {
+        "message": "Enemies can disrupt more than HP. If a status chip appears on a party member, slow down and read it before choosing the next action.",
+        "context": "Combat"
+      },
+      {
+        "message": "Debuffs are temporary. Guard, use a Snack, or switch tactics while they fade; focus controller enemies before they stack more pressure.",
+        "context": "Combat",
+        "delay_ms": 2200
+      }
+    ]
+  },
+  {
+    "id": "link_unlock",
+    "steps": [
+      {
+        "message": "Link connects party members through the Bridge circuit. A physical ground carries excess current safely away.",
+        "context": "Source Art"
+      },
+      {
+        "message": "Use Link to restore party HP and apply Regen through the Bridge ground. Damage and status effects remain separate.",
+        "context": "Combat",
+        "delay_ms": 1800
+      }
+    ]
+  },
+  {
+    "id": "snack_slot",
+    "steps": [
+      {
+        "message": "Snacks are reusable combat tools. Use them like abilities - they recharge after a cooldown.",
+        "context": "Combat"
+      }
+    ]
+  },
+  {
+    "id": "gear_equip_basics",
+    "steps": [
+      {
+        "message": "Open Party and select Nova's Weapon and Armor slots to equip her Mining Pistol and Flux Liner.",
+        "context": "Equipment"
+      }
+    ]
+  },
+  {
+    "id": "mod_slots_basics",
+    "steps": [
+      {
+        "message": "Weapon Mod slots are now unlocked in Party. Combine Scrap Metal, Ballistic Weave, Focusing Lenses, or Batteries on the Tinker Workbench to craft mods and Pulse Grenades.",
+        "context": "Tinker"
+      }
+    ]
+  },
+  {
+    "id": "combat_basics_opener",
+    "steps": [
+      {
+        "message": "When your turn bar fills, choose an action. Basic attacks build Momentum to Overcharge abilities with increased power, cooldown refunds, and elemental infusion.",
+        "context": "Combat"
+      },
+      {
+        "message": "Enemies with cracked relays or exposed circuits are weak to Shock. Exploit weaknesses to crack Stability and stun them!",
+        "context": "Combat",
+        "delay_ms": 2500
+      }
+    ]
+  },
+  {
+    "id": "combat_momentum",
+    "steps": [
+      {
+        "title": "Momentum & Burst",
+        "message": "Landing basic attacks builds up to 3 Momentum. Spending Momentum on a Skill boosts power (1.25x / 1.5x / 1.8x), refunds 1 turn of cooldown at 2 stacks, and guarantees a Critical Hit at 3 stacks."
+      }
+    ]
+  },
+  {
+    "id": "campfire_meals",
+    "steps": [
+      {
+        "title": "Well-Fed Meals",
+        "message": "Cooked meals can be eaten outside combat to grant the entire crew 3 battles of stat bonuses plus the serving companion's perk (Zeke: +25 Max HP & +3 Stability, Nova: +3 Focus, Gh0st: +2 Speed & +10% Resist, Orion: +4% Crit)."
+      }
+    ]
+  },
+  {
+    "id": "equipped_snacks",
+    "steps": [
+      {
+        "title": "Equipped Snacks",
+        "message": "Snacks are permanent gear equipped in each crew member's Snack slot. They grant passive stats and a reusable combat boost on a 5-turn cooldown—they are never consumed."
+      }
+    ]
+  }
 ]

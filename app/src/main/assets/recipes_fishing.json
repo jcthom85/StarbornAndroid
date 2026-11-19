@@ -22,8 +22,8 @@
       "id": "carbon_rod",
       "name": "Carbon Thread Rod",
       "description": "A tuned carbon rod that handles sudden glow-water surges.",
-      "fishing_power": 1.55,
-      "stability": 1.55
+      "fishing_power": 2.05,
+      "stability": 2.0
     },
     {
       "id": "reinforced_resin_rod",
@@ -186,7 +186,7 @@
       },
       {
         "item": "chime_minnow",
-        "weight": 5,
+        "weight": 11,
         "rarity": "rare",
         "behavior_id": "erratic_burst"
       },

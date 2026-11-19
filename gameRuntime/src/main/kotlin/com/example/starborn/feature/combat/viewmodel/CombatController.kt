@@ -2989,6 +2989,7 @@ class CombatController(
         val focus: Int = 0,
         val luck: Int = 0,
         val speed: Int = 0,
+        val stability: Int = 0,
         val accuracyBonus: Double = 0.0,
         val evasionBonus: Double = 0.0,
         val critBonus: Double = 0.0,
@@ -3008,6 +3009,7 @@ class CombatController(
         var focus = 0
         var luck = 0
         var speed = 0
+        var stability = 0
         var accuracyBonus = 0.0
         var evasionBonus = 0.0
         var critBonus = 0.0
@@ -3029,6 +3031,7 @@ class CombatController(
                             "focus" -> focus += value
                             "luck" -> luck += value
                             "speed" -> speed += value
+                            "stability" -> stability += value
                             "accuracy" -> accuracyBonus += value
                             "evasion" -> evasionBonus += value
                             "crit_rate" -> critBonus += value
@@ -3067,6 +3070,7 @@ class CombatController(
                     "focus" -> focus += value
                     "luck" -> luck += value
                     "speed" -> speed += value
+                    "stability" -> stability += value
                     "accuracy" -> accuracyBonus += value
                     "evasion" -> evasionBonus += value
                     "crit_rate" -> critBonus += value
@@ -3093,6 +3097,7 @@ class CombatController(
             focus = focus,
             luck = luck,
             speed = speed,
+            stability = stability,
             accuracyBonus = accuracyBonus,
             evasionBonus = evasionBonus,
             critBonus = critBonus,
@@ -3106,9 +3111,10 @@ class CombatController(
             "str", "atk", "attack" -> "strength"
             "vit" -> "vitality"
             "agi" -> "agility"
-            "foc", "int", "psi" -> "focus"
+            "foc", "int", "psi", "tech" -> "focus"
             "lck" -> "luck"
             "spd" -> "speed"
+            "stab", "stability" -> "stability"
             "acc" -> "accuracy"
             "eva" -> "evasion"
             "crit", "crit_chance" -> "crit_rate"
@@ -3124,11 +3130,18 @@ class CombatController(
         mealBuff: com.example.starborn.domain.session.ActiveMealBuff? = null
     ): Combatant =
         run {
+            val session = sessionStore.state.value
+            val normalizedId = id.trim().lowercase(Locale.getDefault())
+            val resolvedLevel = session.partyMemberLevels[normalizedId]
+                ?: session.partyMemberLevels[id]
+                ?: session.playerLevel.takeIf { normalizedId == session.playerId?.trim()?.lowercase(Locale.getDefault()) }
+                ?: level
+            val levelGrowth = com.example.starborn.domain.leveling.LevelStatGrowth.forLevel(normalizedId, resolvedLevel)
             val bonuses = equipmentBonuses(id, equippedItems, equippedWeapons, equippedArmors)
-            val adjustedStrength = (strength + bonuses.strength + (mealBuff?.strengthBonus ?: 0)).coerceAtLeast(0)
-            val adjustedVitality = (vitality + bonuses.vitality).coerceAtLeast(0)
-            val adjustedAgility = (agility + bonuses.agility + (mealBuff?.agilityBonus ?: 0)).coerceAtLeast(0)
-            val adjustedFocus = (focus + bonuses.focus + (mealBuff?.focusBonus ?: 0)).coerceAtLeast(0)
+            val adjustedStrength = (strength + levelGrowth.strength + bonuses.strength + (mealBuff?.strengthBonus ?: 0)).coerceAtLeast(0)
+            val adjustedVitality = (vitality + levelGrowth.vitality + bonuses.vitality).coerceAtLeast(0)
+            val adjustedAgility = (agility + levelGrowth.agility + bonuses.agility + (mealBuff?.agilityBonus ?: 0)).coerceAtLeast(0)
+            val adjustedFocus = (focus + levelGrowth.focus + bonuses.focus + (mealBuff?.focusBonus ?: 0)).coerceAtLeast(0)
             val adjustedLuck = (luck + bonuses.luck + (mealBuff?.luckBonus ?: 0)).coerceAtLeast(0)
             val mealSpeedBonus = mealBuff?.speedBonus ?: 0
             val adjustedSpeed = CombatFormulas.speed(bonuses.speed + mealSpeedBonus, adjustedAgility).roundToInt().coerceAtLeast(0)
@@ -3142,14 +3155,14 @@ class CombatController(
             name = name,
             side = CombatSide.PLAYER,
             stats = StatBlock(
-                maxHp = com.example.starborn.domain.combat.PartyHealth.maxHp(this, sessionStore.state.value, itemCatalog::findItem, skillNodesById),
+                maxHp = com.example.starborn.domain.combat.PartyHealth.maxHp(this, session, itemCatalog::findItem, skillNodesById),
                 strength = adjustedStrength,
                 vitality = adjustedVitality,
                 agility = adjustedAgility,
                 focus = adjustedFocus,
                 luck = adjustedLuck,
                 speed = adjustedSpeed,
-                stability = 100 + mealStabilityBonus,
+                stability = 100 + bonuses.stability + mealStabilityBonus,
                 accuracyBonus = bonuses.accuracyBonus + (mealBuff?.accuracyBonus ?: 0).toDouble(),
                 evasionBonus = bonuses.evasionBonus + (mealBuff?.evasionBonus ?: 0).toDouble(),
                 critBonus = bonuses.critBonus + mealCritBonus,
@@ -3390,6 +3403,11 @@ class CombatController(
                     statChanges += com.example.starborn.domain.leveling.StatDeltaSummary(
                         label = "Level",
                         value = "+${newLevel - previousLevel}"
+                    )
+                    statChanges += com.example.starborn.domain.leveling.LevelStatGrowth.deltaSummary(
+                        characterId = member.id,
+                        fromLevel = previousLevel,
+                        toLevel = newLevel
                     )
                 }
                 if (newLevel > previousLevel) {

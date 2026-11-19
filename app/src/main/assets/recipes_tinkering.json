@@ -75,7 +75,7 @@
     "result": "orion_driftweave_cloak",
     "description": "Build a light cloak for Orion. It trades Focus and Accuracy for Speed and Evasion.",
     "success_message": "You stitch the weave into loose panels and wire the board to the cloak's vents.",
-    "discovery_hint": "Combine Ballistic Weave and a Circuit Board. The Foundry Seal Backroom technician locker contains both."
+    "discovery_hint": "Combine Ballistic Weave (sold at Sector 9 camps or found in Foundry Service Airlock) with a Circuit Board."
   },
   {
     "id": "repair_deep_mine_cabinet",
@@ -236,7 +236,7 @@
     "description": "Mold reinforced weave and scrap into an equippable grip that improves accuracy.",
     "success_message": "You mold an Ergonomic Grip that feels perfect in the hand.",
     "salvage": {
-      "scrap_metal": 1
+      "ballistic_weave": 1
     },
     "discovery_hint": "Start with ballistic weave. Try scrap metal."
   },
@@ -547,7 +547,7 @@
     "salvage": {
       "pure_iron": 1
     },
-    "discovery_hint": "Shape pure iron with wiring bundle, circuit board."
+    "discovery_hint": "Salvage the Foundry Service Airlock to obtain this schematic, then shape pure iron with wiring bundle and circuit board."
   },
   {
     "id": "mod_orbital_deflector",
@@ -571,7 +571,7 @@
     "salvage": {
       "composite_plate": 1
     },
-    "discovery_hint": "Shape composite plate with nano filament, wiring bundle."
+    "discovery_hint": "Dock at the Orbital Ring Executive Dock to obtain this schematic, then shape composite plate with nano filament and wiring bundle."
   },
   {
     "id": "mod_astral_weave",
@@ -595,6 +595,6 @@
     "salvage": {
       "astral_thread": 1
     },
-    "discovery_hint": "Shape astral thread with source resin, nano filament."
+    "discovery_hint": "Enter the Echo Mines in the Source to obtain this schematic, then weave astral thread with source resin and nano filament."
   }
 ]

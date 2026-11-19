@@ -311,7 +311,7 @@
         "scrap_metal",
         "wiring_bundle",
         "focusing_lens",
-        "foundry_smoked_brisket"
+        "ration_soup"
       ],
       "rules": {
         "types_in": [],
@@ -451,7 +451,11 @@
         "focus_conduit",
         "phase_rounds",
         "orbital_glimmer_tonic",
-        "foundry_smoked_brisket"
+        "foundry_smoked_brisket",
+        "painkillers",
+        "nano_filament",
+        "nova_helioguard_plate",
+        "orion_ward_coat"
       ],
       "rules": {
         "types_in": [],
@@ -517,7 +521,10 @@
         "wiring_bundle",
         "beast_meat",
         "fiery_pepper",
-        "herb"
+        "herb",
+        "ballistic_weave",
+        "orion_halo_array",
+        "orion_driftweave_cloak"
       ],
       "rules": {
         "types_in": [],
@@ -629,7 +636,9 @@
         "iron_biscuit",
         "black_coffee",
         "void_jerky",
-        "ration_pack"
+        "ration_pack",
+        "gh0st_splitter_edge",
+        "gh0st_killer_harness"
       ],
       "rules": {
         "types_in": [],
@@ -684,7 +693,10 @@
         "heavy_gear",
         "hydraulic_fluid",
         "rapid_capacitor",
-        "medkit_plus"
+        "medkit_plus",
+        "nova_rocket_launcher",
+        "zeke_maul_gauntlet",
+        "zeke_bulwark_plate"
       ],
       "rules": {
         "types_in": [],
@@ -741,7 +753,12 @@
         "astral_thread",
         "pulse_grenade",
         "composite_plate",
-        "adrenaline"
+        "adrenaline",
+        "painkillers",
+        "nano_filament",
+        "orion_stasis_core",
+        "gh0st_void_fang",
+        "gh0st_nullguard_coat"
       ],
       "rules": {
         "types_in": [],
@@ -795,14 +812,19 @@
         "basic_lure",
         "fiberglass_rod",
         "shiny_lure",
-        "foundry_smoked_brisket",
+        "tideglass_delight",
         "black_coffee",
         "ration_pack",
         "herbal_poultice",
         "antidote_flask",
         "medkit_i",
         "medkit",
-        "battery_pack"
+        "battery_pack",
+        "ballistic_weave",
+        "nova_plasma_shotgun",
+        "zeke_quake_knuckles",
+        "nova_starline_jacket",
+        "zeke_brawler_rig"
       ],
       "rules": {
         "types_in": [],
@@ -842,6 +864,150 @@
       ],
       "trade_label": "Browse camp provisions",
       "leave_label": "Step back to the fire"
+    }
+  },
+  "astra_armory": {
+    "name": "Astra Armory & Requisition",
+    "portrait": "images/portraits/astra_armory.webp",
+    "greeting": "Crew armory locker online. Requisitioned weapons, suits, and field gear scale with your sector clearance.",
+    "pricing": {
+      "sell_markup": 1.2,
+      "buy_markdown": 0.4
+    },
+    "sells": {
+      "items": [
+        "nova_laser_blaster",
+        "zeke_shock_fists",
+        "orion_prism_focus",
+        "gh0st_whisperblade",
+        "nova_plasma_shotgun",
+        "zeke_quake_knuckles",
+        "orion_halo_array",
+        "gh0st_splitter_edge",
+        "nova_rocket_launcher",
+        "zeke_maul_gauntlet",
+        "orion_stasis_core",
+        "gh0st_void_fang",
+        "nova_starline_jacket",
+        "zeke_brawler_rig",
+        "orion_driftweave_cloak",
+        "gh0st_killer_harness",
+        "nova_helioguard_plate",
+        "zeke_bulwark_plate",
+        "orion_ward_coat",
+        "gh0st_nullguard_coat",
+        "precision_sight",
+        "stability_gyro",
+        "lucky_talisman",
+        "vital_signet",
+        "kinetic_bracelet",
+        "focus_conduit"
+      ],
+      "rules": {
+        "types_in": [],
+        "subtypes_in": []
+      },
+      "gates": {
+        "nova_plasma_shotgun": {
+          "milestones": [
+            "ms_w1_mq05_complete"
+          ]
+        },
+        "zeke_quake_knuckles": {
+          "milestones": [
+            "ms_w1_mq05_complete"
+          ]
+        },
+        "orion_halo_array": {
+          "milestones": [
+            "ms_w1_mq05_complete"
+          ]
+        },
+        "gh0st_splitter_edge": {
+          "milestones": [
+            "ms_w1_mq05_complete"
+          ]
+        },
+        "nova_starline_jacket": {
+          "milestones": [
+            "ms_w1_mq05_complete"
+          ]
+        },
+        "zeke_brawler_rig": {
+          "milestones": [
+            "ms_w1_mq05_complete"
+          ]
+        },
+        "orion_driftweave_cloak": {
+          "milestones": [
+            "ms_w1_mq05_complete"
+          ]
+        },
+        "gh0st_killer_harness": {
+          "milestones": [
+            "ms_w1_mq05_complete"
+          ]
+        },
+        "nova_rocket_launcher": {
+          "milestones": [
+            "ms_w3_mq15_complete"
+          ]
+        },
+        "zeke_maul_gauntlet": {
+          "milestones": [
+            "ms_w3_mq15_complete"
+          ]
+        },
+        "orion_stasis_core": {
+          "milestones": [
+            "ms_w3_mq15_complete"
+          ]
+        },
+        "gh0st_void_fang": {
+          "milestones": [
+            "ms_w3_mq15_complete"
+          ]
+        },
+        "nova_helioguard_plate": {
+          "milestones": [
+            "ms_w3_mq15_complete"
+          ]
+        },
+        "zeke_bulwark_plate": {
+          "milestones": [
+            "ms_w3_mq15_complete"
+          ]
+        },
+        "orion_ward_coat": {
+          "milestones": [
+            "ms_w3_mq15_complete"
+          ]
+        },
+        "gh0st_nullguard_coat": {
+          "milestones": [
+            "ms_w3_mq15_complete"
+          ]
+        },
+        "vital_signet": {
+          "milestones": [
+            "ms_w2_mq05_complete"
+          ]
+        },
+        "kinetic_bracelet": {
+          "milestones": [
+            "ms_w2_mq05_complete"
+          ]
+        },
+        "focus_conduit": {
+          "milestones": [
+            "ms_w2_mq05_complete"
+          ]
+        }
+      }
+    },
+    "buys": {
+      "accept_types": [],
+      "blacklist": []
     }
   }
 }

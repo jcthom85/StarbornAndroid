@@ -1110,6 +1110,10 @@
           {
             "type": "start_dialogue",
             "npc": "Jed"
+          },
+          {
+            "type": "give_reward",
+            "credits": 80
           }
         ]
       }
@@ -2523,6 +2527,15 @@
           {
             "type": "unlock_node",
             "node_id": "launch_bay"
+          },
+          {
+            "type": "give_reward",
+            "credits": 150
+          },
+          {
+            "type": "give_item",
+            "item_id": "stability_gyro",
+            "quantity": 1
           }
         ]
       }
@@ -3658,6 +3671,10 @@
       {
         "type": "show_message",
         "message": "Quest Complete: A Strange Coast\n\nWith Zeke's suit sealed and the Chime recovered, the wreck stops being shelter and starts being a signal flare. The glow-water carries a clean pulse east, deep into Sector 9."
+      },
+      {
+        "type": "give_reward",
+        "credits": 150
       }
     ]
   },
@@ -3813,6 +3830,15 @@
       {
         "type": "show_message",
         "message": "Quest Complete: The Signal\n\nThe Chime answers the distress pulse. Dust shakes from the lintel as the stone slabs withdraw into the cliff. Cool air moves through the opening; a dry passage leads east into Sanctuary."
+      },
+      {
+        "type": "give_reward",
+        "credits": 200
+      },
+      {
+        "type": "give_item",
+        "item_id": "lucky_talisman",
+        "quantity": 1
       }
     ]
   },
@@ -4095,6 +4121,17 @@
       {
         "type": "set_milestone",
         "milestone": "ms_w2_beast_defeated"
+      },
+      {
+        "type": "if_milestone_not_set",
+        "milestone": "ms_w2_sq03_tideglass_gathered",
+        "do": [
+          {
+            "type": "give_item",
+            "item_id": "schematic_source_resin",
+            "quantity": 1
+          }
+        ]
       }
     ]
   },
@@ -4942,6 +4979,10 @@
       {
         "type": "show_message",
         "message": "With Zeke grounding the terminal and checking the room's wiring, Orion folds a quiet Source shield around the borrowed apartment. Outside, the Spire keeps listening to itself. Inside, the crew has a room the city cannot own. Zeke names the next problem: the Upper City can only be reached through workers, schedules, badges, and people the rich refuse to see."
+      },
+      {
+        "type": "give_reward",
+        "credits": 250
       }
     ]
   },
@@ -5737,6 +5778,15 @@
       {
         "type": "show_message",
         "message": "The service chute spits Nova and Gh0st past the scanners while Zeke and Orion keep the grid blind. The crew has fooled the Upper City by becoming the people it refuses to see. The Archive opens ahead, and every second now has teeth."
+      },
+      {
+        "type": "give_reward",
+        "credits": 300
+      },
+      {
+        "type": "give_item",
+        "item_id": "vital_signet",
+        "quantity": 1
       }
     ]
   },
@@ -6723,6 +6773,10 @@
       {
         "type": "show_message",
         "message": "The service airlock cycles open. You have a route inside, a heat liner that might keep your skin attached, and Zeke's engine ping buried deeper in the factory."
+      },
+      {
+        "type": "give_reward",
+        "credits": 400
       }
     ]
   },

@@ -1967,9 +1967,20 @@
       "nature_heal"
     ],
     "flavor": "An unstoppable pursuit chassis that rebuilds itself faster than conventional damage can accumulate.",
-    "xp_reward": 0,
-    "credit_reward": 0,
-    "drops": [],
+    "xp_reward": 550,
+    "credit_reward": 350,
+    "drops": [
+      {
+        "id": "composite_plate",
+        "chance": 1.0,
+        "quantity": 2
+      },
+      {
+        "id": "medkit_plus",
+        "chance": 1.0,
+        "quantity": 1
+      }
+    ],
     "description": "Heavy Dominion pursuit automaton built to run down fugitives with seismic slams and self-repair routines. Stasis locks its actuators cold.",
     "portrait": "images/enemies/hk_droid_combat.png",
     "sprite": [
@@ -2110,17 +2121,17 @@
     "strength": 23,
     "vitality": 20,
     "agility": 16,
-    "focus": 29,
+    "focus": 24,
     "luck": 10,
     "speed": 15,
     "stability": 250,
     "broken_turns": 2,
     "element": "source",
     "resistances": {
-      "physical": 20,
-      "burn": 20,
-      "shock": 10,
-      "source": 35
+      "physical": 10,
+      "burn": 10,
+      "shock": -15,
+      "source": 20
     },
     "tags": [
       "digital",
@@ -2651,11 +2662,11 @@
     "tier": "boss",
     "combat_behavior": "boss",
     "combat_role": "boss",
-    "hp": 350,
-    "strength": 12,
-    "vitality": 12,
+    "hp": 540,
+    "strength": 16,
+    "vitality": 14,
     "agility": 16,
-    "focus": 14,
+    "focus": 19,
     "luck": 12,
     "speed": 12,
     "stability": 140,
@@ -2719,11 +2730,11 @@
     "tier": "boss",
     "combat_behavior": "boss",
     "combat_role": "boss",
-    "hp": 500,
-    "strength": 18,
-    "vitality": 16,
+    "hp": 740,
+    "strength": 20,
+    "vitality": 17,
     "agility": 16,
-    "focus": 18,
+    "focus": 22,
     "luck": 14,
     "speed": 12,
     "stability": 200,

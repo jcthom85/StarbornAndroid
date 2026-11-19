@@ -1503,7 +1503,7 @@
     "description": "High-tensile conductive thread spun for precision weapon mods, insulated armor weaves, and high-test fishing lines.",
     "type": "component",
     "value": 10,
-    "buy_price": 20,
+    "buy_price": 420,
     "resale_value": 5,
     "rarity": "common"
   },
@@ -1783,7 +1783,7 @@
     "description": "High-density carbon-fiber mesh scavenged from surveyor pressure suits. Resists shrapnel and piercing rounds.",
     "type": "component",
     "value": 24,
-    "buy_price": 48,
+    "buy_price": 200,
     "rarity": "common"
   },
   {
@@ -2471,14 +2471,19 @@
   {
     "id": "painkillers",
     "name": "Neural Stabilizer",
-    "description": "Medical-grade stabilizer. Reduces neural noise and restores focus.",
+    "description": "A fast-acting neural dampener. Restores 35 HP and clears Silence, Confuse, and Jammed from one ally in combat.",
     "type": "medicine",
     "value": 15,
     "buy_price": 35,
     "rarity": "common",
     "effect": {
-      "restore_hp": 25,
-      "target": "self"
+      "restore_hp": 35,
+      "target": "ally",
+      "cleanses": [
+        "silence",
+        "confuse",
+        "jammed"
+      ]
     }
   },
   {
@@ -3048,13 +3053,14 @@
     "description": "An experimental targeting accessory recovered from executive security. Equip it for +2 Agility and +2 Focus.",
     "type": "accessory",
     "value": 700,
-    "buy_price": 1400,
+    "buy_price": 650,
     "rarity": "epic",
     "equipment": {
       "slot": "accessory",
       "stat_mods": {
-        "agility": 2,
-        "focus": 2
+        "agility": 3,
+        "focus": 3,
+        "crit_rate": 3
       }
     }
   },
@@ -3064,7 +3070,7 @@
     "description": "Insulated Foundry armor. Grants +6 Defense, +20 max HP, and +2 Vitality.",
     "type": "armor",
     "value": 600,
-    "buy_price": 1200,
+    "buy_price": 650,
     "rarity": "rare",
     "equipment": {
       "slot": "armor",
@@ -3149,13 +3155,13 @@
     "description": "A heat-stabilized ammunition accessory. Grants +2 Strength and +1 Focus.",
     "type": "accessory",
     "value": 900,
-    "buy_price": 1800,
+    "buy_price": 700,
     "rarity": "epic",
     "equipment": {
       "slot": "accessory",
       "stat_mods": {
-        "strength": 2,
-        "focus": 1
+        "strength": 4,
+        "focus": 2
       }
     }
   },
@@ -3567,11 +3573,12 @@
   {
     "id": "item_arcade_token",
     "name": "Arcade Token",
-    "description": "A shiny brass token stamped with the Astra flight insignia. Redeemable through the Simulation Deck recreation console.",
+    "description": "A stamped Hyperion arcade token earned from high-score runs. Sell at the Arcade Prize Dispenser for 100 credits each toward prizes and supplies.",
     "type": "consumable",
-    "value": 25,
+    "value": 100,
     "buy_price": 50,
-    "rarity": "uncommon"
+    "rarity": "uncommon",
+    "resale_value": 200
   },
   {
     "id": "relic_retro_overclock",
@@ -3666,9 +3673,9 @@
     "equipment": {
       "slot": "accessory",
       "stat_mods": {
-        "vitality": 3,
+        "vitality": 2,
         "stability": 4,
-        "focus": 3
+        "focus": 2
       }
     }
   },
@@ -3682,10 +3689,10 @@
     "equipment": {
       "slot": "accessory",
       "stat_mods": {
-        "focus": 5,
-        "stability": 5,
-        "vitality": 4,
-        "accuracy": 4
+        "focus": 3,
+        "stability": 4,
+        "vitality": 2,
+        "accuracy": 3
       }
     }
   },
@@ -3700,8 +3707,8 @@
       "slot": "accessory",
       "stat_mods": {
         "stability": 4,
-        "vitality": 3,
-        "defense": 3
+        "vitality": 2,
+        "defense": 2
       }
     }
   },
@@ -3715,8 +3722,8 @@
     "equipment": {
       "slot": "accessory",
       "stat_mods": {
-        "defense": 4,
-        "vitality": 4,
+        "defense": 2,
+        "vitality": 2,
         "stability": 4
       }
     }
@@ -3731,10 +3738,10 @@
     "equipment": {
       "slot": "accessory",
       "stat_mods": {
-        "vitality": 5,
+        "vitality": 3,
         "stability": 4,
-        "defense": 4,
-        "focus": 3
+        "defense": 3,
+        "focus": 2
       }
     }
   },
@@ -3748,8 +3755,8 @@
     "equipment": {
       "slot": "accessory",
       "stat_mods": {
-        "focus": 4,
-        "vitality": 4,
+        "focus": 3,
+        "vitality": 2,
         "stability": 3
       }
     }
@@ -3764,9 +3771,9 @@
     "equipment": {
       "slot": "accessory",
       "stat_mods": {
-        "stability": 5,
-        "defense": 4,
-        "agility": 3
+        "stability": 4,
+        "defense": 3,
+        "agility": 2
       }
     }
   },
@@ -3784,6 +3791,10 @@
         "stability": 3
       },
       "duration": 3
+    },
+    "effect": {
+      "restore_hp": 60,
+      "target": "party"
     }
   },
   {
@@ -3796,9 +3807,9 @@
     "equipment": {
       "slot": "accessory",
       "stat_mods": {
-        "stability": 5,
-        "vitality": 3,
-        "defense": 4
+        "stability": 4,
+        "vitality": 2,
+        "defense": 3
       }
     }
   },
@@ -3812,9 +3823,9 @@
     "equipment": {
       "slot": "accessory",
       "stat_mods": {
-        "focus": 5,
-        "tech": 4,
-        "defense": 3
+        "focus": 3,
+        "tech": 2,
+        "defense": 2
       }
     }
   },
@@ -3828,9 +3839,9 @@
     "equipment": {
       "slot": "accessory",
       "stat_mods": {
-        "agility": 4,
-        "vitality": 3,
-        "focus": 3
+        "agility": 3,
+        "vitality": 2,
+        "focus": 2
       }
     }
   },

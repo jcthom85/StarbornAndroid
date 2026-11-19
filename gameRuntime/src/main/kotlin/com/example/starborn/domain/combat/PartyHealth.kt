@@ -10,8 +10,12 @@ object PartyHealth {
     fun maxHp(player: Player, state: GameSessionState, item: (String) -> Item?,
               nodes: Map<String, SkillTreeNode>): Int {
         val owner = player.id.trim().lowercase()
-        var vitality = player.vitality
-        var bonus = state.activeMealBuff?.hpBonus ?: 0
+        val resolvedLevel = state.partyMemberLevels[owner]
+            ?: state.playerLevel.takeIf { owner == state.playerId?.trim()?.lowercase() }
+            ?: player.level
+        val levelGrowth = com.example.starborn.domain.leveling.LevelStatGrowth.forLevel(owner, resolvedLevel)
+        var vitality = player.vitality + levelGrowth.vitality
+        var bonus = (state.activeMealBuff?.hpBonus ?: 0) + levelGrowth.hpBonus
         val owned = state.unlockedSkills + if (com.example.starborn.domain.leveling.CrewBuildPrototype.isEnabled(state)) state.purchasedSkillNodes.keys else emptySet()
         owned.filter { it.startsWith("${player.id}_") }.forEach { id ->
             val effect = nodes[id]?.effect

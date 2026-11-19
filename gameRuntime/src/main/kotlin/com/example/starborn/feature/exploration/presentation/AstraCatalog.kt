@@ -53,7 +53,7 @@ object AstraCatalog {
         SimulationProgramDefinition("Crucible II: Corporate Strike Team", "THE RESONANCE CRUCIBLE", listOf("riot_guard", "corporate_assassin", "heavy_mech"), "Coordinated suppression assault. Prioritize high-threat targets.", 0xFFFF5252L),
         SimulationProgramDefinition("Crucible III: Void Security Overdrive", "THE RESONANCE CRUCIBLE", listOf("elite_guard", "void_turret", "hk_droid"), "Dominion supreme hunter-killer droid with 900 HP chassis.", 0xFFFF5252L),
         SimulationProgramDefinition("Crucible IV: Twin Titans of Steel", "THE RESONANCE CRUCIBLE", listOf("the_iron_warden", "titan_walker_boss"), "Simultaneous dual-boss encounter testing ultimate defensive survival.", 0xFFFF5252L),
-        SimulationProgramDefinition("Crucible Omega: The Ascended God", "THE RESONANCE CRUCIBLE", listOf("ascended_god"), "The supreme combat challenge. 1,800 HP cosmic singularity testing build perfection.", 0xFFFF1744L)
+        SimulationProgramDefinition("Crucible Omega: The Ascended God", "THE RESONANCE CRUCIBLE", listOf("ascended_god"), "The supreme combat challenge. Cosmic singularity and paired anchors testing build perfection.", 0xFFFF1744L)
     )
 
 

@@ -1115,7 +1115,11 @@ class CombatActionProcessor(
             defenseMultiplier(target)).roundToInt()
         val variance = random.nextInt(PHYSICAL_VARIANCE_MIN, PHYSICAL_VARIANCE_MAX + 1)
         val weaponDamage = rollWeaponDamage(attacker)
-        val unarmedBonus = if (attacker.combatant.weapon == null) kotlin.math.max(3, attacker.effectiveStat("strength")) else 0
+        val unarmedBonus = if (attacker.combatant.weapon == null && attacker.combatant.side != CombatSide.ENEMY) {
+            kotlin.math.max(3, attacker.effectiveStat("strength"))
+        } else {
+            0
+        }
         return (attack + weaponDamage + unarmedBonus + variance - (defense / 2)).coerceAtLeast(1)
     }
 
