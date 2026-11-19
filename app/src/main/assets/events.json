@@ -2146,14 +2146,6 @@
         "milestone": "ms_mine_power_on"
       },
       {
-        "type": "show_message",
-        "message": "The generator hums back to life, unlocking the northern gate."
-      },
-      {
-        "type": "show_message",
-        "message": "Some vents open deeper in the mines."
-      },
-      {
         "type": "play_cinematic",
         "scene_id": "scene_mine_restore"
       }
@@ -3202,10 +3194,6 @@
               {
                 "type": "track_quest",
                 "quest_id": "w2_mq01"
-              },
-              {
-                "type": "show_message",
-                "message": "The pod is down in Sector 9. Zeke is injured, and the wreck still has live circuits."
               }
             ]
           }
@@ -16253,10 +16241,6 @@
       {
         "type": "complete_quest",
         "quest_id": "w1_sq04"
-      },
-      {
-        "type": "show_message",
-        "message": "The access key copies to the cracked circuit board, then erases itself from the terminal."
       }
     ]
   },

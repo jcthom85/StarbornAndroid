@@ -1198,6 +1198,18 @@
     ]
   },
   {
+    "id": "jax_w3_sq11_active_reminder",
+    "speaker": "Jax",
+    "condition": "quest_active:w3_sq11,quest_task_not_done:w3_sq11:get_core",
+    "text": "Still need that sign core. Check the Upper City Sentinels in the private booths beyond the Exec Lounge when your route takes you upstairs."
+  },
+  {
+    "id": "jax_w3_default_talk",
+    "speaker": "Jax",
+    "condition": "quest_completed:w3_sq11",
+    "text": "The sign’s holding steady and the patrols walked right past the front glass. Keep the stairs clear and the bar stays open."
+  },
+  {
     "id": "w3_sq12_ghost_intro",
     "speaker": "Gh0st",
     "condition": "quest_not_started:w3_sq12,quest_completed:w3_mq11,milestone_not_set:ms_w3_mq15_complete",
@@ -1214,13 +1226,6 @@
         "exit": true
       }
     ]
-  },
-  {
-    "id": "w3_sq12_ghost_terminal",
-    "speaker": "System",
-    "condition": "quest_active:w3_sq12,quest_task_not_done:w3_sq12:access_terminal",
-    "text": "Downloading Spire security archives... deleted transfer chain recovered. Elara was not lost. She was routed.",
-    "trigger": "player_action:w3_sq12_access_terminal"
   },
   {
     "id": "w3_sq13_mika_intro",
@@ -1251,13 +1256,6 @@
         "trigger": "player_action:w3_sq13_fix_market_lights"
       }
     ]
-  },
-  {
-    "id": "w3_mq12_workstation_dialogue",
-    "speaker": "System",
-    "condition": "quest_active:w3_mq12,quest_task_done:w3_mq12:talk_jax,quest_task_done:w3_mq12:map_patrols,quest_task_done:w3_mq12:interrogate_guard,quest_task_done:w3_mq12:copy_badges,quest_task_done:w3_mq12:source_disguises,quest_task_not_done:w3_mq12:hack_blueprints",
-    "text": "The workstation matches the copied badges and uniforms to a freight clearance. Work order: scheduled Skypark air-filter inspection. Emergency repairs require an incident number. Guest deliveries go through the public concierge.",
-    "trigger": "player_action:w3_mq12_hack_blueprints"
   },
   {
     "id": "w3_mq12_planning_table_dialogue",
@@ -1356,7 +1354,7 @@
     "id": "vale_w3_mq15_override",
     "speaker": "Vale",
     "condition": "quest_active:w3_mq15,quest_task_not_done:w3_mq15:defeat_administrator",
-    "text": "Recovery access accepted. Seal the roof. Authorize lethal force. I’ve heard what the Lens carries when every voice has its own way out. I’m closing those exits.",
+    "text": "Recovery access accepted. Seal the roof. Authorize lethal force. You leased Harmony like a product, Director; I’ve heard what the Lens carries when every voice has its own way out, and I’m closing those exits.",
     "next": "thorne_w3_mq14_trap_vale",
     "music": "music_vale_theme"
   },
@@ -1652,6 +1650,12 @@
     "trigger": "player_action:w5_sq22_realign_mirrors"
   },
   {
+    "id": "maintenance_bot_w5_sq22_complete",
+    "speaker": "Maintenance Bot",
+    "condition": "quest_completed:w5_sq22",
+    "text": "SOLAR ARRAY ALIGNED. HORTICULTURAL CANOPY WITHIN NOMINAL LIGHT PARAMETERS."
+  },
+  {
     "id": "thorne_w5_mq22_intro",
     "speaker": "Thorne",
     "condition": "quest_active:w5_mq22,quest_task_done:w5_mq22:access_mainframe,quest_task_not_done:w5_mq22:find_thorne",
@@ -1673,12 +1677,33 @@
     "music": "music_thorne_theme"
   },
   {
+    "id": "thorne_w5_post_mq23_idle",
+    "speaker": "Thorne",
+    "condition": "quest_completed:w5_mq22,milestone_not_set:ms_w5_soloist_witnessed",
+    "text": "The coolant branches lead straight to the Anchor Chamber. Get the Anchor out before Vale finishes routing the Ring through the Throne Room.",
+    "music": "music_thorne_theme"
+  },
+  {
     "id": "elara_w5_mq24_reunion",
     "speaker": "Elara",
     "condition": "quest_active:w5_mq24,quest_task_done:w5_mq24:enter_chamber,quest_task_not_done:w5_mq24:find_elara",
     "text": "734. You’re late. I can hold the firewall long enough to open the cradle. Take the Anchor, brother.",
     "music": "music_elaras_song",
     "next": "gh0st_w5_elara_lamp"
+  },
+  {
+    "id": "elara_w5_take_anchor_prompt",
+    "speaker": "Elara",
+    "condition": "quest_active:w5_mq24,quest_task_done:w5_mq24:find_elara,quest_task_not_done:w5_mq24:take_anchor",
+    "text": "The cradle lock is open. Lift the Anchor out before the Hunter-Killer reaches the tank.",
+    "music": "music_elaras_song"
+  },
+  {
+    "id": "elara_w5_post_mq24_idle",
+    "speaker": "Elara",
+    "condition": "quest_completed:w5_mq24,milestone_not_set:ms_w5_mq25_complete",
+    "text": "Follow the cable east to the Throne Room. I can hold the door open from inside the tank.",
+    "music": "music_elaras_song"
   },
   {
     "id": "vale_w5_mq25_soloist",
@@ -3280,7 +3305,7 @@
     "id": "vance_confession_admission",
     "speaker": "Director Sorrell",
     "text": "[Sorrell sets his passkey on the table.] I took the coolant from my rig. I put it in his glass. Leave the recorder running. I’ll tell security where to find the contracts.",
-    "trigger": "give_xp:450,give_item:cyano_coolant_injector,give_item:skyline_master_passkey,complete_quest:w3_sq16,set_milestone:ms_w3_sq16_complete",
+    "trigger": "set_quest_task_done:w3_sq16:expose_vance,give_xp:450,give_item:cyano_coolant_injector,give_item:skyline_master_passkey,complete_quest:w3_sq16,set_milestone:ms_w3_sq16_complete",
     "next": "vance_security_aftermath"
   },
   {
@@ -4129,12 +4154,12 @@
     "options": [
       {
         "id": "correct",
-        "text": "His badge entered the Syndicate Booth at 21:14.",
+        "text": "Your badge entered the Syndicate Booth at 21:14.",
         "next": "vance_confession_1"
       },
       {
         "id": "case_coolant_time",
-        "text": "His comms unit vented coolant at 21:12.",
+        "text": "Your comms unit vented coolant at 21:12.",
         "next": "w3_case_remote_rebuttal"
       },
       {
@@ -4167,12 +4192,12 @@
     "options": [
       {
         "id": "correct",
-        "text": "Coolant in the glass matches the missing core in his comms rig.",
+        "text": "Coolant in the glass matches the missing core in your comms rig.",
         "next": "vance_confession_2"
       },
       {
         "id": "case_badge_again",
-        "text": "The badge timestamp repeats his name.",
+        "text": "The badge timestamp repeats your name.",
         "next": "w3_case_same_record_rebuttal"
       },
       {

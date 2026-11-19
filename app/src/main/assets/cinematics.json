@@ -123,16 +123,6 @@
     ]
   },
   {
-    "id": "scene_complete_gather_broken_gear",
-    "title": "Mission Complete",
-    "steps": [
-      {
-        "type": "narration",
-        "text": "All three broken units are back on Jed's bench."
-      }
-    ]
-  },
-  {
     "id": "camera_gallery_demo",
     "title": "Camera Gallery",
     "steps": [
@@ -307,57 +297,6 @@
     ]
   },
   {
-    "id": "scene_jed_tinkering_prompt",
-    "title": "Tinkering Bench",
-    "steps": [
-      {
-        "type": "narration",
-        "text": "Jed taps the bench twice. Nova reaches for the power switch before he can remind her. He shifts the housing closer, leaving her room to work."
-      }
-    ]
-  },
-  {
-    "id": "scene_jed_tinkering_wrapup",
-    "title": "Repair Complete",
-    "steps": [
-      {
-        "type": "narration",
-        "text": "The cutter settles to a steady idle. Jed checks the gauge twice. Nova catches him doing it; he gives her the small nod she was waiting for.",
-        "audio_cue": "stinger_motif_jed"
-      }
-    ]
-  },
-  {
-    "id": "scene_return_display",
-    "title": "Display Returned",
-    "steps": [
-      {
-        "type": "narration",
-        "text": "The shattered display slides onto Jed's bench, another broken thing waiting for stubborn hands."
-      }
-    ]
-  },
-  {
-    "id": "scene_return_grinder",
-    "title": "Grinder Returned",
-    "steps": [
-      {
-        "type": "narration",
-        "text": "The grinder lands with a heavy clunk, smelling of dust, old grease, and useful trouble."
-      }
-    ]
-  },
-  {
-    "id": "scene_return_projector",
-    "title": "Projector Returned",
-    "steps": [
-      {
-        "type": "narration",
-        "text": "The cracked projector lens catches the work light, splitting it into tired little rainbows."
-      }
-    ]
-  },
-  {
     "id": "shake_demo",
     "title": "Camera Shake",
     "steps": [
@@ -450,30 +389,58 @@
   {
     "id": "scene_relic_sync",
     "title": "Calibration Handshake",
+    "presentation": "illustrated",
+    "backdrop": "black",
+    "skippable": true,
     "steps": [
       {
         "type": "narration",
         "text": "Phase sweep: 87 kHz. Cold loop: 68%. Ground phase: 180 degrees. The three diagnostic bands settle together. For a breath, Nova feels the cutter stop fighting her.",
-        "music_cue": "music_orion_theme"
+        "music_cue": "music_orion_theme",
+        "image": "images/cinematics/w1_relic_sync_lock_v1.webp",
+        "camera_start_scale": 1.0,
+        "camera_end_scale": 1.05,
+        "transition": "fade",
+        "duration_seconds": 6.4
       },
       {
         "type": "narration",
         "text": "The damaged cradle closes its circuit through cutter, suit, and operator. The grip turns hot. Nova tries to pull away; her fingers won't open.",
-        "audio_cue": "stinger_motif_source"
+        "audio_cue": "stinger_motif_source",
+        "image": "images/cinematics/w1_relic_sync_lock_v1.webp",
+        "camera_start_scale": 1.05,
+        "camera_end_scale": 1.11,
+        "transition": "cut",
+        "duration_seconds": 5.6
       },
       {
         "type": "narration",
         "text": "The functional Cryo-Inductor fuses with a sharp pop. Its last charge is spent; the burned core stays sealed inside the cradle. The Flux Liner carries the discharge into the floor, burning its sacrificial ground strip open. Nova's knees strike the stone.",
-        "audio_cue": "sfx_combat_plasma_arc"
+        "audio_cue": "sfx_combat_plasma_arc",
+        "image": "images/cinematics/w1_relic_sync_discharge_v1.webp",
+        "camera_start_scale": 1.0,
+        "camera_end_scale": 1.06,
+        "transition": "cut",
+        "duration_seconds": 7.6
       },
       {
         "type": "narration",
-        "text": "Pain rings through her teeth and left hand. Her suit clock skips half a second. Beneath the fading hum, another pulse keeps time with her breathing."
+        "text": "Pain rings through her teeth and left hand. Her suit clock skips half a second. Beneath the fading hum, another pulse keeps time with her breathing.",
+        "image": "images/cinematics/w1_relic_sync_discharge_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.11,
+        "transition": "cut",
+        "duration_seconds": 5.6
       },
       {
         "type": "narration",
         "text": "Nova lets the cutter fall. Her hand won't stop trembling. The Fork lifts free of its cradle. Above the mine, a Harmony sensor registers the Architect handshake and turns red.",
-        "audio_cue": "wpn_orion_bowl_resonance"
+        "audio_cue": "wpn_orion_bowl_resonance",
+        "image": "images/cinematics/w1_relic_sync_fork_v1.webp",
+        "camera_start_scale": 1.0,
+        "camera_end_scale": 1.08,
+        "transition": "fade",
+        "duration_seconds": 6.8
       }
     ]
   },
@@ -522,7 +489,8 @@
       {
         "type": "narration",
         "text": "The navigation console arcs and goes dark. Zeke grips the frame beside Nova as the pod rolls into the storm. Rain hammers the hull. The thrusters sputter out.",
-        "duration_seconds": 6.5
+        "duration_seconds": 6.5,
+        "image": "images/rooms/world_1/launch_pod.webp"
       },
       {
         "type": "narration",
@@ -730,96 +698,192 @@
   {
     "id": "scene_cutter_surge",
     "title": "Live Cutter Test",
+    "presentation": "illustrated",
+    "backdrop": "black",
+    "skippable": true,
     "steps": [
       {
         "type": "narration",
-        "text": "Nova clamps the Flux Liner's ground strip to the floor bus. Cold loop: 68%. She opens the governor bypass. Jed keeps one hand beside the cut-off."
+        "text": "Nova clamps the Flux Liner's ground strip to the floor bus. Cold loop: 68%. She opens the governor bypass. Jed keeps one hand beside the cut-off.",
+        "image": "images/rooms/world_1/workshop_floor_v3.webp",
+        "camera_start_scale": 1.0,
+        "camera_end_scale": 1.05,
+        "transition": "fade",
+        "duration_seconds": 5.8
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
-        "text": "One sweep. I'm watching the heat."
+        "text": "One sweep. I'm watching the heat.",
+        "caption_style": "dialogue",
+        "image": "images/rooms/world_1/workshop_floor_v3.webp",
+        "camera_start_scale": 1.05,
+        "camera_end_scale": 1.08,
+        "transition": "cut",
+        "duration_seconds": 3.4
       },
       {
         "type": "narration",
         "text": "The cutter fires. Its phase sweep catches the buried conduit under Jed's bench. The breaker slams open. Dust falls into Nova's hair; the hum keeps climbing.",
-        "audio_cue": "sfx_combat_plasma_arc"
+        "audio_cue": "sfx_combat_plasma_arc",
+        "image": "images/cinematics/w1_cutter_surge_arc_v1.webp",
+        "camera_start_scale": 1.0,
+        "camera_end_scale": 1.06,
+        "transition": "cut",
+        "duration_seconds": 6.0
       },
       {
         "type": "dialogue",
         "speaker": "Jed",
-        "text": "Kill it, Nova!"
+        "text": "Kill it, Nova!",
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w1_cutter_surge_arc_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.1,
+        "transition": "cut",
+        "duration_seconds": 2.8
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
         "emote": "worried",
         "text": "I have. Jed... it's still answering.",
-        "music_cue": "music_nova_theme"
+        "music_cue": "music_nova_theme",
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w1_cutter_surge_steady_v1.webp",
+        "camera_start_scale": 1.0,
+        "camera_end_scale": 1.05,
+        "transition": "fade",
+        "duration_seconds": 4.2
       },
       {
         "type": "narration",
         "text": "A terminal stamps CUTTER FAULT 4C-117 beside NOVA VANCE. Jed reaches past the report to steady her hand. Far below the workshop, an old chamber seal cracks.",
-        "audio_cue": "sfx_distant_gate_rumble"
+        "audio_cue": "sfx_distant_gate_rumble",
+        "image": "images/cinematics/w1_cutter_surge_steady_v1.webp",
+        "camera_start_scale": 1.05,
+        "camera_end_scale": 1.11,
+        "transition": "cut",
+        "duration_seconds": 6.5
       }
     ]
   },
   {
     "id": "scene_anchor_drill",
     "title": "Anchor Drill",
+    "presentation": "illustrated",
+    "backdrop": "black",
+    "skippable": true,
     "steps": [
       {
         "type": "dialogue",
         "speaker": "Gh0st",
-        "text": "The order’s still in my head. I lowered the rifle anyway."
+        "text": "The order’s still in my head. I lowered the rifle anyway.",
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w2_anchor_drill_truce_v1.webp",
+        "camera_start_scale": 1.0,
+        "camera_end_scale": 1.03,
+        "transition": "fade",
+        "duration_seconds": 4.4
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
-        "text": "You can come with us. The rifle stays off our backs."
+        "text": "You can come with us. The rifle stays off our backs.",
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w2_anchor_drill_truce_v1.webp",
+        "camera_start_scale": 1.03,
+        "camera_end_scale": 1.06,
+        "transition": "cut",
+        "duration_seconds": 4.0
       },
       {
         "type": "dialogue",
         "speaker": "Gh0st",
-        "text": "Agreed. If we find another receiver, I want to check it."
+        "text": "Agreed. If we find another receiver, I want to check it.",
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w2_anchor_drill_truce_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.09,
+        "transition": "cut",
+        "duration_seconds": 4.2
       },
       {
         "type": "dialogue",
         "speaker": "Orion",
-        "text": "Then stay here a moment. Nova, wait for the others before you open it."
+        "text": "Then stay here a moment. Nova, wait for the others before you open it.",
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w2_anchor_drill_truce_v1.webp",
+        "camera_start_scale": 1.09,
+        "camera_end_scale": 1.12,
+        "transition": "cut",
+        "duration_seconds": 4.6
       },
       {
         "type": "narration",
         "text": "Nova opens the Bridge alone. Heat climbs her arm and her knees buckle.",
         "audio_cue": "sfx_combat_plasma_arc",
-        "music_cue": "music_w2_ancient_gateway"
+        "music_cue": "music_w2_ancient_gateway",
+        "image": "images/cinematics/w2_anchor_drill_buckle_v1.webp",
+        "camera_start_scale": 1.0,
+        "camera_end_scale": 1.04,
+        "transition": "cut",
+        "duration_seconds": 4.8
       },
       {
         "type": "dialogue",
         "speaker": "Orion",
         "emote": "worried",
-        "text": "Close it. Zeke, get a ground on her bracer. Gh0st, can you take her other hand?"
+        "text": "Close it. Zeke, get a ground on her bracer. Gh0st, can you take her other hand?",
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w2_anchor_drill_buckle_v1.webp",
+        "camera_start_scale": 1.04,
+        "camera_end_scale": 1.07,
+        "transition": "cut",
+        "duration_seconds": 5.0
       },
       {
         "type": "narration",
-        "text": "Zeke clips a ground lead to Nova's bracer. Gh0st checks the empty command channel, then offers his armored hand."
+        "text": "Zeke clips a ground lead to Nova's bracer. Gh0st checks the empty command channel, then offers his armored hand.",
+        "image": "images/cinematics/w2_anchor_drill_buckle_v1.webp",
+        "camera_start_scale": 1.07,
+        "camera_end_scale": 1.1,
+        "transition": "cut",
+        "duration_seconds": 5.2
       },
       {
         "type": "dialogue",
         "speaker": "Gh0st",
         "emote": "confident",
-        "text": "I’ve got her. Go ahead."
+        "text": "I’ve got her. Go ahead.",
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w2_anchor_drill_buckle_v1.webp",
+        "camera_start_scale": 1.1,
+        "camera_end_scale": 1.12,
+        "transition": "cut",
+        "duration_seconds": 3.2
       },
       {
         "type": "narration",
         "text": "Orion holds the counter-tone. The current divides across four willing contacts, and Nova's shaking hand steadies.",
-        "audio_cue": "wpn_orion_bowl_resonance"
+        "audio_cue": "wpn_orion_bowl_resonance",
+        "image": "images/cinematics/w2_anchor_drill_circuit_v1.webp",
+        "camera_start_scale": 1.0,
+        "camera_end_scale": 1.05,
+        "transition": "fade",
+        "duration_seconds": 5.6
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
         "emote": "confident",
-        "text": "My hand’s stopped shaking. Can you both still feel the current?"
+        "text": "My hand’s stopped shaking. Can you both still feel the current?",
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w2_anchor_drill_circuit_v1.webp",
+        "camera_start_scale": 1.05,
+        "camera_end_scale": 1.09,
+        "transition": "cut",
+        "duration_seconds": 4.6
       }
     ]
   },
@@ -1289,6 +1353,7 @@
         "type": "narration",
         "text": "The shutters meet. Jed’s end of the radio goes quiet.",
         "duration_seconds": 3.2,
+        "image": "images/rooms/world_1/launch_lift.webp",
         "audio_cue": "sfx_door_airlock_close",
         "transition": "cut"
       },
@@ -1298,7 +1363,9 @@
         "portrait": "images/characters/emotes/zeke_idle.png",
         "text": "Nova. I’m still here. Follow my light.",
         "duration_seconds": 3.8,
-        "caption_style": "dialogue"
+        "image": "images/rooms/world_1/launch_lift.webp",
+        "caption_style": "dialogue",
+        "audio_cue": "stinger_motif_jed"
       }
     ],
     "presentation": "illustrated",
@@ -1565,6 +1632,9 @@
         "type": "narration",
         "text": "For a second, four hands hold. Then the grip breaks.",
         "duration_seconds": 3.2,
+        "image": "images/cinematics/w5_tear_hands_v2.webp",
+        "camera_start_scale": 1.04,
+        "camera_end_scale": 1.12,
         "transition": "fade"
       },
       {
@@ -1657,33 +1727,64 @@
   {
     "id": "scene_w6_jed_echo_lesson",
     "title": "At the Bench",
+    "presentation": "illustrated",
+    "backdrop": "black",
+    "skippable": true,
     "steps": [
       {
         "type": "narration",
         "text": "A repaired lead lies across the bench. Jed’s echo leans close to the new solder joint.",
         "audio_cue": "sfx_tinkering_wrench",
-        "music_cue": "music_jed_theme"
+        "music_cue": "music_jed_theme",
+        "image": "images/cinematics/w6_jed_echo_bench_v1.webp",
+        "camera_start_scale": 1.0,
+        "camera_end_scale": 1.04,
+        "transition": "fade",
+        "duration_seconds": 5.2
       },
       {
         "type": "dialogue",
         "speaker": "Jed",
-        "text": "Looks sound. How will you check?"
+        "text": "Looks sound. How will you check?",
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w6_jed_echo_bench_v1.webp",
+        "camera_start_scale": 1.04,
+        "camera_end_scale": 1.07,
+        "transition": "cut",
+        "duration_seconds": 3.4
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
-        "text": "Power off. Then pull the lead. A joint can look good and still come loose."
+        "text": "Power off. Then pull the lead. A joint can look good and still come loose.",
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w6_jed_echo_bench_v1.webp",
+        "camera_start_scale": 1.07,
+        "camera_end_scale": 1.1,
+        "transition": "cut",
+        "duration_seconds": 5.0
       },
       {
         "type": "narration",
         "text": "Nova checks the switch and tugs the lead. The joint holds. She turns to show him; the place beside her is empty.",
-        "audio_cue": "sfx_workshop_success"
+        "audio_cue": "sfx_workshop_success",
+        "image": "images/cinematics/w6_jed_echo_holds_v1.webp",
+        "camera_start_scale": 1.0,
+        "camera_end_scale": 1.06,
+        "transition": "fade",
+        "duration_seconds": 6.0
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
         "text": "It holds.",
-        "audio_cue": "stinger_motif_jed"
+        "audio_cue": "stinger_motif_jed",
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w6_jed_echo_holds_v1.webp",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.1,
+        "transition": "cut",
+        "duration_seconds": 3.4
       }
     ]
   }

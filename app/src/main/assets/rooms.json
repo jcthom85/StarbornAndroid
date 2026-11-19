@@ -7964,7 +7964,7 @@
       {
         "name": "compliance greeting",
         "type": "generic",
-        "condition_unmet_message": "Vale's voice is warm, precise, and already edited to remove the possibility of refusal."
+        "condition_unmet_message": "Vale's voice loops from the hidden speakers, warm and edited to remove refusal: \"Welcome to the Ring. Director Thorne is unavailable. Orbital Compliance is acting command. For your safety, remain where you are.\""
       },
       {
         "id": "inspect_airlock_manifest",
@@ -8752,8 +8752,16 @@
     "title": "Mainframe Nave",
     "background_image": "images/rooms/world_5/deep_mainframe_nave.webp",
     "description": "Server columns form a cold cathedral around the mainframe terminal and its quantum core lattice. Harmony's directory tree overlays older Architect notation like a luxury label pasted on a weapon. A buried signal is labeled Thorne trace.",
-    "npcs": [
-      "thorne"
+    "npcs": [],
+    "npc_presence": [
+      {
+        "npc": "thorne",
+        "requires_milestones": [],
+        "forbidden_milestones": [
+          "ms_w5_soloist_witnessed",
+          "ms_w5_mq25_complete"
+        ]
+      }
     ],
     "items": [],
     "enemies": [],
@@ -9121,8 +9129,15 @@
     "title": "Anchor Chamber",
     "background_image": "images/rooms/world_5/deep_anchor_chamber.webp",
     "description": "A tank of conductive fluid hangs inside a cathedral of cables. Elara floats at its center, wired into the Ring as a living processor while the Anchor relic turns beside her. A graviton well bends the light beneath the tank. The cleared entrance west returns through the Server Farm toward the upper Ring; the Throne Room lies east. The cleared access lift runs up to Firewall Gamma and back down to the chamber.",
-    "npcs": [
-      "elara"
+    "npcs": [],
+    "npc_presence": [
+      {
+        "npc": "elara",
+        "requires_milestones": [],
+        "forbidden_milestones": [
+          "ms_w5_mq25_complete"
+        ]
+      }
     ],
     "items": [],
     "enemies": [
@@ -9231,8 +9246,16 @@
     "title": "Throne Room",
     "background_image": "images/rooms/world_5/deep_throne_room.webp",
     "description": "A glass observation deck looks down on the planet and its failing Shield. Thorne's containment field faces a command dais where Vale waits without blinking. The director's desk stands beside the executive armory.",
-    "npcs": [
-      "vale"
+    "npcs": [],
+    "npc_presence": [
+      {
+        "npc": "vale",
+        "requires_milestones": [],
+        "forbidden_milestones": [
+          "ms_w5_soloist_witnessed",
+          "ms_w5_mq25_complete"
+        ]
+      }
     ],
     "items": [],
     "enemies": [
@@ -11221,7 +11244,8 @@
         "name": "power conduits",
         "type": "generic",
         "action_event": "w2_mq05_collect_conduits",
-        "condition_unmet_message": "Salvaging power conduits from the pod wreckage...",
+        "condition_unmet_message": "Thick superconducting power conduits run beneath the sheared pod panel.",
+        "unavailable_message": "Thick power conduits run through the crashed pod frame. Inspect the dark Astra in Hangar Bay before stripping them.",
         "requires_milestone_not_set": "ms_w2_conduits_collected",
         "show_when_quest_active": "w2_mq05",
         "show_when_milestone": "ms_w2_astra_inspected",
@@ -11817,7 +11841,8 @@
         "name": "tideglass growth",
         "type": "generic",
         "action_event": "w2_sq03_gather_tideglass",
-        "condition_unmet_message": "Glowing tideglass skewers are harvested from the shore.",
+        "condition_unmet_message": "Translucent tideglass clusters line the glowing tidal shelf.",
+        "unavailable_message": "Translucent tideglass clusters line the tidal shelf. Talk to Orion before harvesting samples for Source Resin.",
         "requires_milestone_not_set": "ms_w2_tideglass_gathered",
         "show_when_quest_active": "w2_sq03",
         "hide_when_event_completed": "w2_sq03_gather",
@@ -12097,7 +12122,8 @@
         "name": "drifting spores",
         "type": "generic",
         "action_event": "w2_sq01_scan_spores",
-        "condition_unmet_message": "The razor-vine spores vibrate with high energy.",
+        "condition_unmet_message": "Razor-vine spores drift through the canopy light.",
+        "unavailable_message": "Razor-vine spores drift through the canopy light. Start Zeke's botanical scan before sampling them.",
         "show_when_quest_active": "w2_sq01",
         "hide_when_event_completed": "w2_sq01_scan_spores"
       },
@@ -12903,7 +12929,8 @@
         "action_event": "w2_mq04_beast_ambush",
         "show_when_state": "hunter_confronted",
         "hide_when_state": "beast_defeated",
-        "condition_unmet_message": "The Beast tears through the brush while Gh0st's trigger channel remains empty."
+        "condition_unmet_message": "Heavy brush breaks along the ridge perimeter.",
+        "unavailable_message": "Confront the stalker on Canopy Ridge first."
       },
       {
         "name": "Anchor Drill",
@@ -13212,7 +13239,8 @@
         "type": "generic",
         "action_event": "w2_sq04_crystal_west",
         "requires_milestone_not_set": "ms_w2_crystal_west_seated",
-        "condition_unmet_message": "A violet crystal stores the low harmony missing from the stasis mural."
+        "condition_unmet_message": "A violet harmonic crystal rests in the west alcove.",
+        "unavailable_message": "A violet harmonic crystal rests in the west alcove. Speak with Orion about the stasis murals before tuning it."
       }
     ]
   },
@@ -13247,7 +13275,8 @@
         "type": "generic",
         "action_event": "w2_sq04_crystal_east",
         "requires_milestone_not_set": "ms_w2_crystal_east_seated",
-        "condition_unmet_message": "A cyan crystal holds the answering harmonic from the facility east wing."
+        "condition_unmet_message": "A cyan harmonic crystal hums in the east alcove.",
+        "unavailable_message": "A cyan harmonic crystal hums in the east alcove. Speak with Orion about the stasis murals before tuning it."
       }
     ]
   },
@@ -13752,7 +13781,8 @@
         "type": "generic",
         "action_event": "w2_sq04_crystal_north",
         "requires_milestone_not_set": "ms_w2_crystal_north_seated",
-        "condition_unmet_message": "A gold crystal vibrates at the mural alignment frequency."
+        "condition_unmet_message": "A gold harmonic crystal vibrates inside the acoustic rack.",
+        "unavailable_message": "A gold harmonic crystal vibrates inside the acoustic rack. Speak with Orion about the stasis murals before tuning it."
       }
     ],
     "enemy_parties": [

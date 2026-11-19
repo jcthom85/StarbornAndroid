@@ -6138,7 +6138,8 @@ class ExplorationController(
                         return
                     }
                     val roomId = _uiState.value.currentRoom?.id.orEmpty()
-                    val needsUnavailableFeedback = roomId.startsWith("spire_") ||
+                    val needsUnavailableFeedback = roomId.startsWith("sector9_") ||
+                        roomId.startsWith("spire_") ||
                         roomId.startsWith("foundry_") || roomId.startsWith("orbital_") ||
                         roomId.startsWith("deep_") || roomId.startsWith("source_") ||
                         eventId == "w2_sq02_trace_cliffs" || status == "Objective completed."
