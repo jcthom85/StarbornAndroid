@@ -322,7 +322,8 @@
     "steps": [
       {
         "type": "narration",
-        "text": "The cutter settles to a steady idle. Jed checks the gauge twice. Nova catches him doing it; he gives her the small nod she was waiting for."
+        "text": "The cutter settles to a steady idle. Jed checks the gauge twice. Nova catches him doing it; he gives her the small nod she was waiting for.",
+        "audio_cue": "stinger_motif_jed"
       }
     ]
   },
@@ -457,7 +458,8 @@
       },
       {
         "type": "narration",
-        "text": "The damaged cradle closes its circuit through cutter, suit, and operator. The grip turns hot. Nova tries to pull away; her fingers won't open."
+        "text": "The damaged cradle closes its circuit through cutter, suit, and operator. The grip turns hot. Nova tries to pull away; her fingers won't open.",
+        "audio_cue": "stinger_motif_source"
       },
       {
         "type": "narration",
@@ -752,7 +754,8 @@
         "type": "dialogue",
         "speaker": "Nova",
         "emote": "worried",
-        "text": "I have. Jed... it's still answering."
+        "text": "I have. Jed... it's still answering.",
+        "music_cue": "music_nova_theme"
       },
       {
         "type": "narration",
@@ -864,7 +867,8 @@
         "transition": "cut",
         "image": "images/cinematics/w6_ending_circuit_v1.webp",
         "camera_start_scale": 1.09,
-        "camera_end_scale": 1.11
+        "camera_end_scale": 1.11,
+        "audio_cue": "stinger_motif_nova"
       },
       {
         "type": "dialogue",
@@ -957,7 +961,8 @@
         "image": "images/cinematics/w6_ending_crossing_v1.webp",
         "camera_start_scale": 1.06,
         "camera_end_scale": 1.09,
-        "caption_style": "dialogue"
+        "caption_style": "dialogue",
+        "music_cue": "music_nova_theme"
       },
       {
         "type": "dialogue",
@@ -983,7 +988,8 @@
         "type": "narration",
         "text": "A hand reaches back through the corridor. Gh0st catches it. “I’ve got you, Elara.”",
         "duration_seconds": 5.8,
-        "image": "images/cinematics/w6_ending_crossing_v1.webp"
+        "image": "images/cinematics/w6_ending_crossing_v1.webp",
+        "audio_cue": "stinger_motif_elara"
       },
       {
         "type": "narration",
@@ -1413,7 +1419,8 @@
         "text": "Commander Rylos, bring up the ownership register. Director Thorne’s signature is no longer valid.",
         "duration_seconds": 6.7,
         "caption_style": "dialogue",
-        "image": "images/cinematics/w4_coup_display_v2.webp"
+        "image": "images/cinematics/w4_coup_display_v2.webp",
+        "audio_cue": "stinger_motif_vale"
       },
       {
         "type": "dialogue",
@@ -1439,7 +1446,8 @@
         "text": "It includes the authorization you gave me at the Spire. I’ve extended it to the Ring. All sectors, lock down.",
         "duration_seconds": 7.4,
         "caption_style": "dialogue",
-        "image": "images/cinematics/w4_coup_display_v2.webp"
+        "image": "images/cinematics/w4_coup_display_v2.webp",
+        "music_cue": "music_vale_theme"
       },
       {
         "type": "dialogue",
@@ -1508,7 +1516,8 @@
         "text": "I can feel the glass. The tank still has me. Follow the cable to the Throne Room. I’ll keep the door open.",
         "duration_seconds": 7.5,
         "caption_style": "dialogue",
-        "image": "images/cinematics/w5_stasis_elara_v2.webp"
+        "image": "images/cinematics/w5_stasis_elara_v2.webp",
+        "audio_cue": "stinger_motif_elara"
       }
     ],
     "presentation": "illustrated",
@@ -1563,7 +1572,8 @@
         "text": "Nova wakes beside the fire and reaches into empty air.",
         "duration_seconds": 4.2,
         "image": "images/rooms/world_6/source_campfire.webp",
-        "transition": "fade"
+        "transition": "fade",
+        "audio_cue": "stinger_motif_source"
       }
     ],
     "presentation": "illustrated",
@@ -1636,7 +1646,8 @@
         "text": "Stay together. Check your gear before we go again.",
         "duration_seconds": 4,
         "caption_style": "dialogue",
-        "image": "images/rooms/world_6/source_center.webp"
+        "image": "images/rooms/world_6/source_center.webp",
+        "music_cue": "music_nova_theme"
       }
     ],
     "presentation": "illustrated",
@@ -1650,7 +1661,8 @@
       {
         "type": "narration",
         "text": "A repaired lead lies across the bench. Jed’s echo leans close to the new solder joint.",
-        "audio_cue": "sfx_tinkering_wrench"
+        "audio_cue": "sfx_tinkering_wrench",
+        "music_cue": "music_jed_theme"
       },
       {
         "type": "dialogue",
@@ -1670,7 +1682,8 @@
       {
         "type": "dialogue",
         "speaker": "Nova",
-        "text": "It holds."
+        "text": "It holds.",
+        "audio_cue": "stinger_motif_jed"
       }
     ]
   }

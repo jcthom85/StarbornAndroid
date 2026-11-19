@@ -3809,7 +3809,25 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
     }
 
     private fun playBattleCue(key: String) {
-        emitAudio(audioRouter.commandsForBattle(key))
+        val commands = audioRouter.commandsForBattle(key)
+        val shouldVaryPitch = key.startsWith("wpn_") ||
+            key.startsWith("enemy_attack_") ||
+            key == "shield_block" ||
+            key == "shield_break"
+        if (!shouldVaryPitch) {
+            emitAudio(commands)
+            return
+        }
+        val pitchJitter = 0.94f + kotlin.random.Random.nextFloat() * 0.12f
+        emitAudio(
+            commands.map { cmd ->
+                if (cmd is com.example.starborn.domain.audio.AudioCommand.Play && cmd.type == AudioCueType.BATTLE) {
+                    cmd.copy(pitch = pitchJitter)
+                } else {
+                    cmd
+                }
+            }
+        )
     }
 
     private var audioStarted = false
@@ -3827,13 +3845,16 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
         }
     }
 
-    private fun playCombatMusic() {
-        val worldId = sessionStore.state.value.worldId ?: "world_1"
-        val hasBoss = enemyDefinitions.values.any { it.tier.equals("boss", ignoreCase = true) } ||
+    private fun isBossEncounter(): Boolean =
+        enemyDefinitions.values.any { it.tier.equals("boss", ignoreCase = true) } ||
             enemyDefinitions.keys.any { key ->
                 val norm = key.lowercase(Locale.getDefault())
                 norm.contains("boss") || norm.contains("warden") || norm.contains("beast")
             }
+
+    private fun playCombatMusic() {
+        val worldId = sessionStore.state.value.worldId ?: "world_1"
+        val hasBoss = isBossEncounter()
         val trackId = audioRouter.resolveCombatMusicTrack(
             enemyIds = encounterEnemyIdList,
             worldId = worldId,
@@ -3843,7 +3864,7 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
                 "world_2" -> "music_w2_boss_guardian"
                 "world_3" -> "music_w3_boss_phantom"
                 "world_4" -> "music_w4_boss_titan"
-                "world_5" -> "music_w5_combat"
+                "world_5" -> "music_w5_boss_compliance"
                 "world_6" -> "music_w6_boss_final"
                 else -> "music_w1_boss_warden"
             }
@@ -3879,10 +3900,11 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
 
     fun playVictoryMusic() {
         if (encounterEnemyIdList == listOf("ascended_vale")) return
+        val victoryCue = if (isBossEncounter()) "music_victory_boss" else "music_victory_standard"
         val commands = mutableListOf<com.example.starborn.domain.audio.AudioCommand>()
         commands += audioRouter.commandsForLayerOverride(
             layer = AudioCueType.MUSIC,
-            cueId = "music_victory_standard",
+            cueId = victoryCue,
             fadeMs = 200L,
             loop = false
         )

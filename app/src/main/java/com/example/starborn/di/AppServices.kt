@@ -147,7 +147,18 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
     fun cinematicStateFlow() = cinematicCoordinator.state
     private val audioBindings: AudioBindings = assetReader.readObject<AudioBindings>("audio_bindings.json") ?: AudioBindings()
     private val audioCatalog: AudioCatalog = assetReader.readObject<AudioCatalog>("audio_catalog.json") ?: AudioCatalog()
-    val audioCuePlayer = AudioCuePlayer(context, preloadCueIds = audioCatalog.cues.map { it.id })
+    val audioCuePlayer = AudioCuePlayer(
+        context,
+        preloadCueIds = audioCatalog.cues
+            .map { it.id }
+            .filter { id ->
+                id.startsWith("sfx_ui_") ||
+                    id.startsWith("ui_") ||
+                    id.startsWith("voice_murmur_") ||
+                    id.startsWith("battle_") ||
+                    id.startsWith("wpn_")
+            }
+    )
     val audioRouter = AudioRouter(audioBindings, audioCatalog)
     val uiFxBus = UiFxBus()
     val uiEventBus = UiEventBus()

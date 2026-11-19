@@ -1405,7 +1405,7 @@ fun ExplorationScreen(
                 onAdvance = { viewModel.advanceDialogue() },
                 onChoice = { viewModel.onDialogueChoiceSelected(it) },
                 onPlayVoice = { viewModel.onDialogueVoiceRequested(it) },
-                onPlayMurmur = { cueId ->
+                onPlayMurmur = { cueId, pitch ->
                     audioCuePlayer.execute(
                         listOf(
                             AudioCommand.Play(
@@ -1413,7 +1413,8 @@ fun ExplorationScreen(
                                 cueId,
                                 loop = false,
                                 fadeMs = 0L,
-                                gain = 0.85f
+                                gain = 0.50f,
+                                pitch = pitch
                             )
                         )
                     )
@@ -7689,7 +7690,7 @@ fun CinematicOverlay(
                 onAdvance = advanceOnce,
                 onChoice = { advanceOnce() },
                 onPlayVoice = {},
-                onPlayMurmur = { cue ->
+                onPlayMurmur = { cue, pitch ->
                     audioCuePlayer?.execute(
                         listOf(
                             AudioCommand.Play(
@@ -7697,7 +7698,8 @@ fun CinematicOverlay(
                                 cue,
                                 loop = false,
                                 fadeMs = 0L,
-                                gain = 0.85f
+                                gain = 0.50f,
+                                pitch = pitch
                             )
                         )
                     )
@@ -7756,14 +7758,16 @@ fun CinematicOverlay(
                     revealFinished = true
                 }
             },
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.BottomCenter
     ) {
         CinematicNarrationCard(
             fullText = fullText,
             displayedText = displayedText,
             revealFinished = revealFinished,
             isLastStep = state.stepIndex + 1 >= state.stepCount,
-            modifier = Modifier.safeDrawingPadding()
+            modifier = Modifier
+                .navigationBarsPadding()
+                .padding(start = 28.dp, end = 28.dp, bottom = 54.dp)
         )
     }
 }
@@ -8367,7 +8371,6 @@ private fun IllustratedCinematicOverlay(
         }
 
         if (state.step.captionStyle != CinematicCaptionStyle.NONE) {
-            val isDialogue = state.step.captionStyle == CinematicCaptionStyle.DIALOGUE
             val captionEntrance = remember(stepKey) { CoreAnimatable(if (isIntroPrologue) 1f else 0f) }
             LaunchedEffect(stepKey) {
                 captionEntrance.animateTo(1f, tween(durationMillis = 150))
@@ -8380,12 +8383,9 @@ private fun IllustratedCinematicOverlay(
                 audioCuePlayer = audioCuePlayer,
                 modifier = Modifier
                     .graphicsLayer { alpha = captionEntrance.value * dimAlpha }
-                    .align(if (isDialogue) Alignment.BottomCenter else Alignment.Center)
-                    .then(
-                        if (isDialogue) Modifier.navigationBarsPadding()
-                            .padding(start = 28.dp, end = 28.dp, bottom = 54.dp)
-                        else Modifier.safeDrawingPadding().padding(28.dp)
-                    )
+                    .align(Alignment.BottomCenter)
+                    .navigationBarsPadding()
+                    .padding(start = 28.dp, end = 28.dp, bottom = 54.dp)
             )
         }
 
@@ -8449,9 +8449,9 @@ private fun IllustratedCinematicCaption(
             onChoice = { onAdvance() },
             onPlayVoice = {},
             canDismissByTap = !isIntro,
-            onPlayMurmur = { cue ->
+            onPlayMurmur = { cue, pitch ->
                 audioCuePlayer?.execute(
-                    listOf(AudioCommand.Play(AudioCueType.VOICE, cue, loop = false, fadeMs = 0L))
+                    listOf(AudioCommand.Play(AudioCueType.VOICE, cue, loop = false, fadeMs = 0L, gain = 0.50f, pitch = pitch))
                 )
             },
             onRevealFinished = onRevealFinished,

@@ -238,7 +238,8 @@
     "speaker": "Jed",
     "text": "You look like you slept inside the ventilation shaft. Sit. I've saved you the chair that doesn't bite.",
     "condition": "quest_active:w1_mq01,milestone_not_set:ms_w1_mq01_jed_talked",
-    "next": "jed_w1_mq01_intro_2"
+    "next": "jed_w1_mq01_intro_2",
+    "music": "music_jed_theme"
   },
   {
     "id": "jed_w1_mq01_intro_2",
@@ -1343,7 +1344,8 @@
     "speaker": "Thorne",
     "condition": "quest_completed:w3_mq14,quest_active:w3_mq15",
     "text": "You’ve taken the Lens. I’ve opened an audit and given Vale recovery access. Administrator, contain the crew. I want the Lens back intact.",
-    "next": "vale_w3_mq15_override"
+    "next": "vale_w3_mq15_override",
+    "music": "music_thorne_theme"
   },
   {
     "id": "thorne_w3_mq14_trap_vale",
@@ -1355,7 +1357,8 @@
     "speaker": "Vale",
     "condition": "quest_active:w3_mq15,quest_task_not_done:w3_mq15:defeat_administrator",
     "text": "Recovery access accepted. Seal the roof. Authorize lethal force. I’ve heard what the Lens carries when every voice has its own way out. I’m closing those exits.",
-    "next": "thorne_w3_mq14_trap_vale"
+    "next": "thorne_w3_mq14_trap_vale",
+    "music": "music_vale_theme"
   },
   {
     "id": "upper_city_lounge_shop_intro",
@@ -1554,7 +1557,8 @@
     "condition": "quest_completed:w4_mq20,milestone_set:ms_w5_access_unlocked",
     "text": "Commander Rylos, bring up the ownership register. Director Thorne’s signature is no longer valid.",
     "scripted_only": true,
-    "next": "vale_w4_mq20_coup_beat_1"
+    "next": "vale_w4_mq20_coup_beat_1",
+    "music": "music_vale_theme"
   },
   {
     "id": "zeke_w4_post_airlock_idle",
@@ -1652,7 +1656,8 @@
     "speaker": "Thorne",
     "condition": "quest_active:w5_mq22,quest_task_done:w5_mq22:access_mainframe,quest_task_not_done:w5_mq22:find_thorne",
     "text": "I sold Harmony by the seat. The Foundry supplied the hardware, and I signed the orders that kept the seats filled. Vale copied my command cipher while your Lens was still warm. Now I can’t open my own doors.",
-    "next": "thorne_w5_mq22_intro_beat_1"
+    "next": "thorne_w5_mq22_intro_beat_1",
+    "music": "music_thorne_theme"
   },
   {
     "id": "vale_w5_compliance_greeting",
@@ -1664,7 +1669,8 @@
     "id": "thorne_w5_mq23_core",
     "speaker": "Thorne",
     "condition": "quest_active:w5_mq23,quest_task_not_done:w5_mq23:navigate_maze",
-    "text": "The coolant pulse still tells you which branch is live. Follow it through Alpha, Beta, and Gamma. Vale changed the locks while I was inside."
+    "text": "The coolant pulse still tells you which branch is live. Follow it through Alpha, Beta, and Gamma. Vale changed the locks while I was inside.",
+    "music": "music_thorne_theme"
   },
   {
     "id": "elara_w5_mq24_reunion",
@@ -1679,7 +1685,8 @@
     "speaker": "Vale",
     "condition": "quest_active:w5_mq25,quest_task_done:w5_mq25:reach_throne,quest_task_not_done:w5_mq25:witness_soloist",
     "text": "[A worker’s voice crackles through the dais. “My sister is still down there.” The voice breaks on the last word. Vale steadies it until it holds a single note.] Do you hear how quiet it can be?",
-    "next": "vale_w5_mq25_soloist_beat_1"
+    "next": "vale_w5_mq25_soloist_beat_1",
+    "music": "music_vale_theme"
   },
   {
     "id": "zeke_w5_post_docking_idle",
@@ -1778,7 +1785,8 @@
     "condition": "quest_active:w6_mq30,quest_task_not_done:w6_mq30:confront_vale",
     "text": "Thorne charged for every voice she let into Harmony. I can reach every room in the Colony at once. No parent will have to tell a child why someone isn’t coming home.",
     "trigger": "music_silence_persist",
-    "next": "nova_w6_final_jed"
+    "next": "nova_w6_final_jed",
+    "music": "music_vale_theme"
   },
   {
     "id": "nova_w6_final_answer",
@@ -4608,7 +4616,8 @@
     "speaker": "Nova",
     "text": "We’re getting them out. We’re not restoring your access.",
     "scripted_only": true,
-    "next": "thorne_w5_route_terms"
+    "next": "thorne_w5_route_terms",
+    "music": "music_nova_theme"
   },
   {
     "id": "thorne_w5_route_terms",

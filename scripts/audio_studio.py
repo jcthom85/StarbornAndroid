@@ -980,6 +980,28 @@ def master_take(
             check=True,
             capture_output=True,
         )
+        # Apply post-loudnorm micro-edge ramp so MP3 encoding never leaves a
+        # non-zero boundary discontinuity or loop seam pop while preserving attacks.
+        norm_pcm = decode_audio_to_float(norm_wav)
+        if len(norm_pcm) >= 256:
+            if mode in ("wrap", "intro") or effective_loop:
+                fi = min(int(0.005 * SAMPLE_RATE), len(norm_pcm) // 8)
+                fo = min(int(0.005 * SAMPLE_RATE), len(norm_pcm) // 8)
+            else:
+                fi = min(int(0.0025 * SAMPLE_RATE), len(norm_pcm) // 8)
+                fo = min(int(0.012 * SAMPLE_RATE), len(norm_pcm) // 4)
+            if fi > 4 and float(np.max(np.abs(norm_pcm[0]))) > 0.01:
+                t_in = np.linspace(0.0, 1.0, fi)[:, None]
+                norm_pcm[:fi] *= (0.5 - 0.5 * np.cos(math.pi * t_in))
+            if fo > 4 and float(np.max(np.abs(norm_pcm[-1]))) > 0.01:
+                t_out = np.linspace(0.0, 1.0, fo)[:, None]
+                norm_pcm[-fo:] *= (0.5 + 0.5 * np.cos(math.pi * t_out))
+            with wave.open(str(norm_wav), "wb") as w:
+                w.setnchannels(2)
+                w.setsampwidth(2)
+                w.setframerate(SAMPLE_RATE)
+                pcm16 = np.clip(norm_pcm * 32767.0, -32768, 32767).astype(np.int16)
+                w.writeframes(pcm16.tobytes())
         subprocess.run(
             [
                 ffmpeg,

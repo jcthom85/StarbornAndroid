@@ -5,8 +5,12 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
 import android.media.AudioAttributes
+import android.media.AudioFocusRequest
+import android.media.AudioManager
 import android.media.SoundPool
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.Log
@@ -14,8 +18,8 @@ import androidx.annotation.OptIn
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.media3.datasource.RawResourceDataSource
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.RawResourceDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import com.example.starborn.core.platform.AudioDriver
 import java.util.EnumMap
@@ -25,6 +29,9 @@ import kotlin.math.sin
 
 private const val TAG = "AudioCuePlayer"
 private const val MISSING_SOUND_ID = -1
+private const val MICRO_FADE_MS = 20L
+private const val SHORT_STOP_FADE_MS = 16L
+private const val MAX_TRACKED_STREAMS_PER_CUE = 4
 
 private data class PendingShortCue(
     val type: AudioCueType,
@@ -32,11 +39,20 @@ private data class PendingShortCue(
     val command: AudioCommand.Play
 )
 
+private data class ActiveShortStream(
+    val streamId: Int,
+    val baseGain: Float,
+    val loop: Boolean
+)
+
 @OptIn(UnstableApi::class)
 class AudioCuePlayer(
     private val context: Context,
     preloadCueIds: Collection<String> = emptyList()
 ) : AudioDriver {
+
+    private val audioManager: AudioManager? =
+        context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
 
     private val soundPool: SoundPool = SoundPool.Builder()
         .setAudioAttributes(
@@ -48,13 +64,19 @@ class AudioCuePlayer(
         .setMaxStreams(16)
         .build()
 
+    /**
+     * Disable ExoPlayer's internal per-player audio focus handling so that dual-deck
+     * music crossfades (musicPlayer + standbyMusicPlayer) never steal focus from each
+     * other and hard-pause the outgoing deck mid-fade. AudioFocus is managed once at
+     * the AudioCuePlayer level below.
+     */
     private fun createMusicExoPlayer(): ExoPlayer = ExoPlayer.Builder(context)
         .setAudioAttributes(
             androidx.media3.common.AudioAttributes.Builder()
-                .setContentType(androidx.media3.common.C.AUDIO_CONTENT_TYPE_MUSIC)
-                .setUsage(androidx.media3.common.C.USAGE_GAME)
+                .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
+                .setUsage(C.USAGE_GAME)
                 .build(),
-            true
+            /* handleAudioFocus = */ false
         )
         .build()
         .apply {
@@ -67,21 +89,58 @@ class AudioCuePlayer(
             })
         }
 
+    private fun createAmbientExoPlayer(): ExoPlayer = ExoPlayer.Builder(context)
+        .setAudioAttributes(
+            androidx.media3.common.AudioAttributes.Builder()
+                .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
+                .setUsage(C.USAGE_GAME)
+                .build(),
+            /* handleAudioFocus = */ false
+        )
+        .build()
+
+    private fun createStingerExoPlayer(): ExoPlayer = ExoPlayer.Builder(context)
+        .setAudioAttributes(
+            androidx.media3.common.AudioAttributes.Builder()
+                .setContentType(C.AUDIO_CONTENT_TYPE_SONIFICATION)
+                .setUsage(C.USAGE_GAME)
+                .build(),
+            /* handleAudioFocus = */ false
+        )
+        .build()
+
+    private val mainHandler = Handler(Looper.getMainLooper())
     private var musicPlayer: ExoPlayer = createMusicExoPlayer()
     private var standbyMusicPlayer: ExoPlayer = createMusicExoPlayer()
     private var outgoingMusicAnimator: ValueAnimator? = null
+    private var stingerPlayer: ExoPlayer? = null
+    private var stingerCueId: String? = null
+    private var stingerType: AudioCueType = AudioCueType.UI
+    private var stingerBaseGain: Float = 1f
+    private var stingerAnimator: ValueAnimator? = null
+    private var resumeStingerAfterBackground: Boolean = false
     private val ambientPlayers = ConcurrentHashMap<String, ExoPlayer>()
+    private val ambientBaseGains = ConcurrentHashMap<String, Float>()
+    private val ambientAnimators = ConcurrentHashMap<String, ValueAnimator>()
 
     private val soundCache = ConcurrentHashMap<String, Int>()
     private val pendingShortCues = ConcurrentHashMap<Int, MutableList<PendingShortCue>>()
-    private val activeStreams = ConcurrentHashMap<Pair<AudioCueType, String>, Int>()
+    private val activeShortStreams = ConcurrentHashMap<Pair<AudioCueType, String>, MutableList<ActiveShortStream>>()
+    private val streamFadeAnimators = ConcurrentHashMap<Int, ValueAnimator>()
     private val fadeAnimators = EnumMap<AudioCueType, ValueAnimator>(AudioCueType::class.java)
+    private val layerGains = EnumMap<AudioCueType, Float>(AudioCueType::class.java).apply {
+        AudioCueType.values().forEach { put(it, 1f) }
+    }
+
     private var currentMusicCue: String? = null
     private var currentMusicLoopStartMs: Long? = null
     private var currentMusicInLoopBodyOnly: Boolean = false
     private val musicTrackPositions = ConcurrentHashMap<String, Long>()
     private var musicGain: Float = 1f
     private var ambientGain: Float = 1f
+    private var focusDuckMultiplier: Float = 1f
+    private var hasAudioFocus: Boolean = false
+    private var pausedByFocusLoss: Boolean = false
     private var userMusicGain: Float = 1f
     private var userSfxGain: Float = 1f
     private var userVoiceGain: Float = 1f
@@ -91,6 +150,48 @@ class AudioCuePlayer(
     private var resumeAmbientAfterBackground: Boolean = false
     private val vibrator: Vibrator? = context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
 
+    private val audioFocusChangeListener = AudioManager.OnAudioFocusChangeListener { focusChange ->
+        when (focusChange) {
+            AudioManager.AUDIOFOCUS_LOSS,
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
+                pausedByFocusLoss = true
+                musicPlayer.pause()
+                standbyMusicPlayer.pause()
+                stingerPlayer?.pause()
+                ambientPlayers.values.forEach { it.pause() }
+            }
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
+                focusDuckMultiplier = 0.3f
+                applyStreamingVolumes()
+            }
+            AudioManager.AUDIOFOCUS_GAIN -> {
+                focusDuckMultiplier = 1f
+                applyStreamingVolumes()
+                if (pausedByFocusLoss && !pausedForBackground) {
+                    pausedByFocusLoss = false
+                    if (currentMusicCue != null) {
+                        musicPlayer.play()
+                    }
+                    ambientPlayers.values.forEach { it.play() }
+                }
+            }
+        }
+    }
+
+    private val audioFocusRequest: AudioFocusRequest? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+            .setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_GAME)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build()
+            )
+            .setOnAudioFocusChangeListener(audioFocusChangeListener)
+            .build()
+    } else {
+        null
+    }
+
     init {
         soundPool.setOnLoadCompleteListener { _, sampleId, status ->
             val pending = pendingShortCues.remove(sampleId).orEmpty()
@@ -98,14 +199,64 @@ class AudioCuePlayer(
                 pending.forEach { Log.d(TAG, "Unable to load audio cue '${it.cueId}'") }
                 return@setOnLoadCompleteListener
             }
-            pending.forEach { playLoadedShort(sampleId, it.type, it.cueId, it.command) }
+            if (pending.isNotEmpty()) {
+                mainHandler.post {
+                    pending.forEach { playLoadedShort(sampleId, it.type, it.cueId, it.command) }
+                }
+            }
         }
         preloadCueIds.forEach { cueId ->
             cueId.trim()
                 .lowercase()
                 .replace('-', '_')
-                .takeIf { it.isNotBlank() }
+                .takeIf { it.isNotBlank() && !shouldStreamShortCue(it) }
                 ?.let(::ensureSound)
+        }
+    }
+
+    private fun ensureAppAudioFocus() {
+        if (hasAudioFocus) return
+        val manager = audioManager ?: return
+        val result = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && audioFocusRequest != null) {
+            manager.requestAudioFocus(audioFocusRequest)
+        } else {
+            @Suppress("DEPRECATION")
+            manager.requestAudioFocus(
+                audioFocusChangeListener,
+                AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN
+            )
+        }
+        hasAudioFocus = (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
+    }
+
+    private fun abandonAppAudioFocus() {
+        if (!hasAudioFocus) return
+        val manager = audioManager ?: return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && audioFocusRequest != null) {
+            manager.abandonAudioFocusRequest(audioFocusRequest)
+        } else {
+            @Suppress("DEPRECATION")
+            manager.abandonAudioFocus(audioFocusChangeListener)
+        }
+        hasAudioFocus = false
+        pausedByFocusLoss = false
+        focusDuckMultiplier = 1f
+    }
+
+    private fun effectiveMusicVolume(gain: Float): Float =
+        (gain * userMusicGain * focusDuckMultiplier).coerceIn(0f, 1f)
+
+    private fun applyStreamingVolumes() {
+        musicPlayer.volume = effectiveMusicVolume(musicGain)
+        if (stingerAnimator == null) {
+            stingerPlayer?.volume = effectiveStingerVolume()
+        }
+        ambientPlayers.forEach { (cueId, player) ->
+            if (!ambientAnimators.containsKey(cueId)) {
+                val base = ambientBaseGains[cueId] ?: ambientGain
+                player.volume = effectiveMusicVolume(base * ambientGain)
+            }
         }
     }
 
@@ -143,23 +294,115 @@ class AudioCuePlayer(
             AudioCueType.MUSIC -> stopStreaming(musicPlayer, AudioCueType.MUSIC, command.fadeMs)
             AudioCueType.AMBIENT -> stopAmbientStreaming(normalized, command.fadeMs)
             else -> {
-                val key = command.type to normalized
-                val stopAction: () -> Unit = {
-                    activeStreams.remove(key)?.let { streamId ->
-                        soundPool.stop(streamId)
-                    }
-                    Unit
+                if (shouldStreamShortCue(normalized)) {
+                    stopStingerStreaming(normalized, command.fadeMs)
+                    return
                 }
-                if (command.fadeMs > 0) {
-                    scheduleGain(command.type, 0f, command.fadeMs, stopAction)
-                } else {
-                    stopAction()
+                val key = command.type to normalized
+                val streams = activeShortStreams.remove(key).orEmpty()
+                val fadeDuration = if (command.fadeMs > 0L) command.fadeMs else SHORT_STOP_FADE_MS
+                streams.forEach { stream ->
+                    fadeOutAndStopShortStream(command.type, stream, fadeDuration)
                 }
             }
         }
     }
 
+    private fun shouldStreamShortCue(cueId: String): Boolean =
+        cueId.startsWith("stinger_")
+
+    private fun effectiveStingerVolume(): Float {
+        val layerGain = layerGains[stingerType] ?: 1f
+        val userGain = userGainForShort(stingerType)
+        return (stingerBaseGain * layerGain * userGain * focusDuckMultiplier).coerceIn(0f, 1f)
+    }
+
+    private fun playStingerStreaming(type: AudioCueType, cueId: String, command: AudioCommand.Play) {
+        val uri = resolveRawResourceUri(cueId) ?: return
+        ensureAppAudioFocus()
+        stingerAnimator?.cancel()
+        stingerAnimator = null
+        val player = stingerPlayer ?: createStingerExoPlayer().also { stingerPlayer = it }
+        stingerCueId = cueId
+        stingerType = type
+        stingerBaseGain = command.gain.coerceIn(0f, 1f)
+        player.stop()
+        player.repeatMode = if (command.loop) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
+        player.setMediaItem(MediaItem.fromUri(uri))
+        player.prepare()
+        val targetVol = effectiveStingerVolume()
+        if (command.fadeMs > 0L) {
+            player.volume = 0f
+            player.play()
+            val anim = ValueAnimator.ofFloat(0f, targetVol).apply {
+                duration = command.fadeMs
+                addUpdateListener { a ->
+                    stingerPlayer?.volume = (a.animatedValue as Float).coerceIn(0f, 1f)
+                }
+                addListener(object : AnimatorListenerAdapter() {
+                    private var cancelled = false
+                    override fun onAnimationCancel(animation: Animator) {
+                        cancelled = true
+                        if (stingerAnimator === animation) stingerAnimator = null
+                    }
+                    override fun onAnimationEnd(animation: Animator) {
+                        if (stingerAnimator === animation) stingerAnimator = null
+                        if (!cancelled) stingerPlayer?.volume = effectiveStingerVolume()
+                    }
+                })
+            }
+            stingerAnimator = anim
+            anim.start()
+        } else {
+            player.volume = targetVol
+            player.play()
+        }
+        triggerHapticIfNeeded(command)
+    }
+
+    private fun stopStingerStreaming(cueId: String, fadeMs: Long) {
+        val player = stingerPlayer ?: return
+        if (stingerCueId != cueId) return
+        stingerAnimator?.cancel()
+        stingerAnimator = null
+        val effectiveFadeMs = if (fadeMs > 0L) fadeMs else if (player.volume > 0.001f) SHORT_STOP_FADE_MS else 0L
+        if (effectiveFadeMs > 0L) {
+            val startVol = player.volume.coerceIn(0f, 1f)
+            val anim = ValueAnimator.ofFloat(startVol, 0f).apply {
+                duration = effectiveFadeMs
+                addUpdateListener { a ->
+                    stingerPlayer?.volume = (a.animatedValue as Float).coerceIn(0f, 1f)
+                }
+                addListener(object : AnimatorListenerAdapter() {
+                    private var cancelled = false
+                    override fun onAnimationCancel(animation: Animator) {
+                        cancelled = true
+                        if (stingerAnimator === animation) stingerAnimator = null
+                    }
+                    override fun onAnimationEnd(animation: Animator) {
+                        if (stingerAnimator === animation) stingerAnimator = null
+                        if (!cancelled) {
+                            player.volume = 0f
+                            player.stop()
+                            if (stingerCueId == cueId) stingerCueId = null
+                        }
+                    }
+                })
+            }
+            stingerAnimator = anim
+            anim.start()
+        } else {
+            player.volume = 0f
+            player.stop()
+            stingerCueId = null
+        }
+    }
+
     private fun playShort(type: AudioCueType, cueId: String, command: AudioCommand.Play) {
+        if (shouldStreamShortCue(cueId)) {
+            playStingerStreaming(type, cueId, command)
+            return
+        }
         val soundId = ensureSound(cueId) ?: return
         playLoadedShort(soundId, type, cueId, command)
     }
@@ -171,14 +414,18 @@ class AudioCuePlayer(
         command: AudioCommand.Play
     ) {
         val key = type to cueId
-        activeStreams.remove(key)?.let { soundPool.stop(it) }
+        // Only choke/replace an existing stream of the same cue if it is looping.
+        // One-shot SFX and rapid retriggers (UI clicks, voice murmurs, combat hits)
+        // play polyphonically through SoundPool so active waveforms are never hard-cut mid-cycle.
+        if (command.loop) {
+            val previous = activeShortStreams.remove(key).orEmpty()
+            previous.forEach { fadeOutAndStopShortStream(type, it, SHORT_STOP_FADE_MS) }
+        }
         val loopMode = if (command.loop) -1 else 0
         val baseGain = command.gain.coerceIn(0f, 1f)
-        val userGain = when (type) {
-            AudioCueType.VOICE -> userVoiceGain
-            else -> userSfxGain
-        }
-        val scaledGain = (baseGain * userGain).coerceIn(0f, 1f)
+        val layerGain = layerGains[type] ?: 1f
+        val userGain = userGainForShort(type)
+        val scaledGain = (baseGain * layerGain * userGain).coerceIn(0f, 1f)
         val streamPriority = when (type) {
             AudioCueType.VOICE -> 3
             AudioCueType.BATTLE, AudioCueType.UI -> 2
@@ -190,9 +437,53 @@ class AudioCuePlayer(
             queuePendingShort(soundId, type, cueId, command)
             return
         }
-        activeStreams[key] = streamId
-        setLayerGainImmediate(type, baseGain)
+        activeShortStreams.compute(key) { _, existing ->
+            val list = existing ?: mutableListOf()
+            list += ActiveShortStream(streamId = streamId, baseGain = baseGain, loop = command.loop)
+            while (list.size > MAX_TRACKED_STREAMS_PER_CUE) {
+                list.removeAt(0)
+            }
+            list
+        }
         triggerHapticIfNeeded(command)
+    }
+
+    private fun fadeOutAndStopShortStream(
+        type: AudioCueType,
+        stream: ActiveShortStream,
+        fadeMs: Long
+    ) {
+        streamFadeAnimators.remove(stream.streamId)?.cancel()
+        val startVol = (stream.baseGain * (layerGains[type] ?: 1f) * userGainForShort(type)).coerceIn(0f, 1f)
+        if (fadeMs <= 0L || startVol <= 0.001f) {
+            soundPool.stop(stream.streamId)
+            return
+        }
+        val animator = ValueAnimator.ofFloat(startVol, 0f).apply {
+            duration = fadeMs
+            addUpdateListener { anim ->
+                val v = (anim.animatedValue as Float).coerceIn(0f, 1f)
+                soundPool.setVolume(stream.streamId, v, v)
+            }
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    streamFadeAnimators.remove(stream.streamId)
+                    soundPool.stop(stream.streamId)
+                }
+
+                override fun onAnimationCancel(animation: Animator) {
+                    streamFadeAnimators.remove(stream.streamId)
+                    soundPool.stop(stream.streamId)
+                }
+            })
+        }
+        streamFadeAnimators[stream.streamId] = animator
+        animator.start()
+    }
+
+    private fun userGainForShort(type: AudioCueType): Float = when (type) {
+        AudioCueType.VOICE -> userVoiceGain
+        else -> userSfxGain
     }
 
     private fun queuePendingShort(
@@ -219,21 +510,24 @@ class AudioCuePlayer(
 
     private fun playStreaming(player: ExoPlayer, type: AudioCueType, cueId: String, command: AudioCommand.Play) {
         val uri = resolveRawResourceUri(cueId) ?: return
+        ensureAppAudioFocus()
         cancelFade(type)
         if (type == AudioCueType.MUSIC) {
             val previousCue = currentMusicCue
+            val wasPlaying = musicPlayer.isPlaying || musicPlayer.playWhenReady
             if (previousCue != null && previousCue != cueId) {
                 musicTrackPositions[previousCue] = absoluteMusicPosition(musicPlayer)
-                if (command.fadeMs > 0L && (musicPlayer.isPlaying || musicPlayer.playWhenReady)) {
-                    handOffMusicToStandbyFade(command.fadeMs)
-                } else {
-                    musicPlayer.stop()
-                }
+            }
+            if (previousCue != null && wasPlaying && musicPlayer.volume > 0.001f) {
+                val outFadeMs = if (command.fadeMs > 0L) command.fadeMs else MICRO_FADE_MS
+                handOffMusicToStandbyFade(outFadeMs)
             } else {
+                musicPlayer.volume = 0f
                 musicPlayer.stop()
             }
             currentMusicCue = cueId
         } else {
+            player.volume = 0f
             player.stop()
         }
 
@@ -294,7 +588,8 @@ class AudioCuePlayer(
             activePlayer.repeatMode = if (command.loop) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
         }
 
-        setLayerGainImmediate(type, if (command.fadeMs > 0L) 0f else command.gain)
+        val effectiveInFadeMs = if (command.fadeMs > 0L) command.fadeMs else 0L
+        setLayerGainImmediate(type, if (effectiveInFadeMs > 0L) 0f else command.gain)
         activePlayer.prepare()
         if (type == AudioCueType.MUSIC && command.loop) {
             val ls = loopStartMs ?: 0L
@@ -303,12 +598,13 @@ class AudioCuePlayer(
         }
         activePlayer.playWhenReady = !pausedForBackground
         if (pausedForBackground) resumeMusicAfterBackground = true
-        if (command.fadeMs > 0L) scheduleGain(type, command.gain, command.fadeMs)
+        if (effectiveInFadeMs > 0L) scheduleGain(type, command.gain, effectiveInFadeMs)
     }
 
     private fun handOffMusicToStandbyFade(fadeMs: Long) {
         outgoingMusicAnimator?.cancel()
         outgoingMusicAnimator = null
+        standbyMusicPlayer.volume = 0f
         standbyMusicPlayer.stop()
         standbyMusicPlayer.clearMediaItems()
 
@@ -318,6 +614,7 @@ class AudioCuePlayer(
 
         val startVol = outgoingDeck.volume
         if (fadeMs <= 0L || startVol <= 0.001f) {
+            outgoingDeck.volume = 0f
             outgoingDeck.stop()
             outgoingDeck.clearMediaItems()
             return
@@ -330,10 +627,19 @@ class AudioCuePlayer(
                 outgoingDeck.volume = (startVol * curve).coerceIn(0f, 1f)
             }
             addListener(object : AnimatorListenerAdapter() {
+                private var cancelled = false
+                override fun onAnimationCancel(animation: Animator) {
+                    cancelled = true
+                }
                 override fun onAnimationEnd(animation: Animator) {
-                    outgoingMusicAnimator = null
-                    outgoingDeck.stop()
-                    outgoingDeck.clearMediaItems()
+                    if (outgoingMusicAnimator === animation) {
+                        outgoingMusicAnimator = null
+                    }
+                    if (!cancelled) {
+                        outgoingDeck.volume = 0f
+                        outgoingDeck.stop()
+                        outgoingDeck.clearMediaItems()
+                    }
                 }
             })
             start()
@@ -344,8 +650,10 @@ class AudioCuePlayer(
         cancelFade(AudioCueType.MUSIC)
         outgoingMusicAnimator?.cancel()
         outgoingMusicAnimator = null
+        musicPlayer.volume = 0f
         musicPlayer.stop()
         musicPlayer.clearMediaItems()
+        standbyMusicPlayer.volume = 0f
         standbyMusicPlayer.stop()
         standbyMusicPlayer.clearMediaItems()
         currentMusicCue = null
@@ -355,14 +663,22 @@ class AudioCuePlayer(
 
     private fun playAmbientStreaming(cueId: String, command: AudioCommand.Play) {
         val uri = resolveRawResourceUri(cueId) ?: return
-        val player = ambientPlayers.getOrPut(cueId) { ExoPlayer.Builder(context).build() }
+        ensureAppAudioFocus()
+        ambientAnimators.remove(cueId)?.cancel()
+        val player = ambientPlayers.getOrPut(cueId) { createAmbientExoPlayer() }
+        player.volume = 0f
         player.stop()
         player.setMediaItem(MediaItem.fromUri(uri))
         player.repeatMode = if (command.loop) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
-        ambientGain = command.gain.coerceIn(0f, 1f)
-        player.volume = ambientGain * userMusicGain
+        val baseGain = command.gain.coerceIn(0f, 1f)
+        ambientBaseGains[cueId] = baseGain
+        val targetVol = effectiveMusicVolume(baseGain * ambientGain)
+        val fadeInMs = if (command.fadeMs > 0L) command.fadeMs else MICRO_FADE_MS
+        player.volume = 0f
         player.prepare()
-        player.playWhenReady = true
+        player.playWhenReady = !pausedForBackground
+        if (pausedForBackground) resumeAmbientAfterBackground = true
+        scheduleAmbientCueGain(cueId, player, targetVol, fadeInMs, equalPowerIn = true)
     }
 
     private fun stopStreaming(player: ExoPlayer, type: AudioCueType, fadeMs: Long) {
@@ -371,9 +687,11 @@ class AudioCuePlayer(
             currentMusicCue?.let { cue ->
                 musicTrackPositions[cue] = absoluteMusicPosition(musicPlayer)
             }
-            if (fadeMs > 0 && (musicPlayer.isPlaying || musicPlayer.playWhenReady)) {
-                handOffMusicToStandbyFade(fadeMs)
+            val effectiveFadeMs = if (fadeMs > 0L) fadeMs else if (musicPlayer.volume > 0.001f) MICRO_FADE_MS else 0L
+            if (effectiveFadeMs > 0L && (musicPlayer.isPlaying || musicPlayer.playWhenReady)) {
+                handOffMusicToStandbyFade(effectiveFadeMs)
             } else {
+                musicPlayer.volume = 0f
                 musicPlayer.stop()
             }
             currentMusicCue = null
@@ -382,11 +700,14 @@ class AudioCuePlayer(
             musicGain = 0f
             return
         }
-        if (fadeMs > 0) {
-            scheduleGain(type, 0f, fadeMs) {
+        val effectiveFadeMs = if (fadeMs > 0L) fadeMs else if (player.volume > 0.001f) MICRO_FADE_MS else 0L
+        if (effectiveFadeMs > 0L) {
+            scheduleGain(type, 0f, effectiveFadeMs) {
+                player.volume = 0f
                 player.stop()
             }
         } else {
+            player.volume = 0f
             player.stop()
             setLayerGainImmediate(type, 0f)
         }
@@ -394,35 +715,53 @@ class AudioCuePlayer(
 
     private fun stopAmbientStreaming(cueId: String, fadeMs: Long) {
         val player = ambientPlayers[cueId] ?: return
-        if (fadeMs > 0) {
-            scheduleAmbientCueGain(cueId, player, 0f, fadeMs) {
+        ambientAnimators.remove(cueId)?.cancel()
+        val effectiveFadeMs = if (fadeMs > 0L) fadeMs else if (player.volume > 0.001f) MICRO_FADE_MS else 0L
+        if (effectiveFadeMs > 0L) {
+            scheduleAmbientCueGain(cueId, player, 0f, effectiveFadeMs, equalPowerIn = false) {
+                player.volume = 0f
                 player.stop()
                 player.release()
                 ambientPlayers.remove(cueId)
+                ambientBaseGains.remove(cueId)
             }
         } else {
+            player.volume = 0f
             player.stop()
             player.release()
             ambientPlayers.remove(cueId)
+            ambientBaseGains.remove(cueId)
         }
     }
 
     override fun release() {
+        abandonAppAudioFocus()
+        streamFadeAnimators.values.forEach(ValueAnimator::cancel)
+        streamFadeAnimators.clear()
         soundPool.release()
         outgoingMusicAnimator?.cancel()
         outgoingMusicAnimator = null
         musicPlayer.release()
         standbyMusicPlayer.release()
+        stingerAnimator?.cancel()
+        stingerAnimator = null
+        stingerPlayer?.stop()
+        stingerPlayer?.release()
+        stingerPlayer = null
+        stingerCueId = null
+        ambientAnimators.values.forEach(ValueAnimator::cancel)
+        ambientAnimators.clear()
         ambientPlayers.values.forEach { player ->
             player.stop()
             player.release()
         }
         ambientPlayers.clear()
+        ambientBaseGains.clear()
         fadeAnimators.values.forEach(ValueAnimator::cancel)
         fadeAnimators.clear()
         soundCache.clear()
         pendingShortCues.clear()
-        activeStreams.clear()
+        activeShortStreams.clear()
     }
 
     fun pauseForBackground() {
@@ -430,24 +769,34 @@ class AudioCuePlayer(
         pausedForBackground = true
         resumeMusicAfterBackground = musicPlayer.playWhenReady && currentMusicCue != null
         resumeAmbientAfterBackground = ambientPlayers.values.any { it.playWhenReady }
+        resumeStingerAfterBackground = stingerPlayer?.isPlaying == true
         musicPlayer.pause()
         standbyMusicPlayer.pause()
+        stingerPlayer?.pause()
         ambientPlayers.values.forEach { it.pause() }
         soundPool.autoPause()
+        abandonAppAudioFocus()
     }
 
     fun resumeFromBackground() {
         if (!pausedForBackground) return
         pausedForBackground = false
+        if ((resumeMusicAfterBackground && currentMusicCue != null) || resumeAmbientAfterBackground || resumeStingerAfterBackground) {
+            ensureAppAudioFocus()
+        }
         if (resumeMusicAfterBackground && currentMusicCue != null) {
             musicPlayer.play()
         }
         if (resumeAmbientAfterBackground) {
             ambientPlayers.values.forEach { it.play() }
         }
+        if (resumeStingerAfterBackground) {
+            stingerPlayer?.play()
+        }
         soundPool.autoResume()
         resumeMusicAfterBackground = false
         resumeAmbientAfterBackground = false
+        resumeStingerAfterBackground = false
     }
 
     private fun scheduleGain(type: AudioCueType, targetGain: Float, durationMs: Long, onComplete: (() -> Unit)? = null) {
@@ -478,14 +827,23 @@ class AudioCuePlayer(
                 setLayerGainImmediate(type, gain)
             }
             addListener(object : AnimatorListenerAdapter() {
+                private var cancelled = false
+
                 override fun onAnimationEnd(animation: Animator) {
-                    fadeAnimators.remove(type)
-                    setLayerGainImmediate(type, clampedTarget)
-                    onComplete?.invoke()
+                    if (fadeAnimators[type] === animation) {
+                        fadeAnimators.remove(type)
+                    }
+                    if (!cancelled) {
+                        setLayerGainImmediate(type, clampedTarget)
+                        onComplete?.invoke()
+                    }
                 }
 
                 override fun onAnimationCancel(animation: Animator) {
-                    fadeAnimators.remove(type)
+                    cancelled = true
+                    if (fadeAnimators[type] === animation) {
+                        fadeAnimators.remove(type)
+                    }
                 }
             })
         }
@@ -501,27 +859,35 @@ class AudioCuePlayer(
     private fun currentGain(type: AudioCueType): Float = when (type) {
         AudioCueType.MUSIC -> musicGain
         AudioCueType.AMBIENT -> ambientGain
-        else -> 1f
+        else -> layerGains[type] ?: 1f
     }
 
     private fun setLayerGainImmediate(type: AudioCueType, gain: Float) {
         val clamped = gain.coerceIn(0f, 1f)
+        layerGains[type] = clamped
         when (type) {
             AudioCueType.MUSIC -> {
                 musicGain = clamped
-                musicPlayer.volume = clamped * userMusicGain
+                musicPlayer.volume = effectiveMusicVolume(clamped)
             }
             AudioCueType.AMBIENT -> {
                 ambientGain = clamped
-                ambientPlayers.values.forEach { it.volume = clamped * userMusicGain }
-            }
-            else -> activeStreams.forEach { (key, streamId) ->
-                if (key.first == type) {
-                    val scaled = when (type) {
-                        AudioCueType.VOICE -> clamped * userVoiceGain
-                        else -> clamped * userSfxGain
+                ambientPlayers.forEach { (cueId, player) ->
+                    if (!ambientAnimators.containsKey(cueId)) {
+                        val base = ambientBaseGains[cueId] ?: 1f
+                        player.volume = effectiveMusicVolume(base * clamped)
                     }
-                    soundPool.setVolume(streamId, scaled, scaled)
+                }
+            }
+            else -> activeShortStreams.forEach { (key, streams) ->
+                if (key.first == type) {
+                    val userGain = userGainForShort(type)
+                    streams.forEach { stream ->
+                        if (!streamFadeAnimators.containsKey(stream.streamId)) {
+                            val scaled = (stream.baseGain * clamped * userGain).coerceIn(0f, 1f)
+                            soundPool.setVolume(stream.streamId, scaled, scaled)
+                        }
+                    }
                 }
             }
         }
@@ -557,56 +923,94 @@ class AudioCuePlayer(
         return RawResourceDataSource.buildRawResourceUri(resId)
     }
 
+    private fun perceptualGain(sliderValue: Float): Float {
+        val clamped = sliderValue.coerceIn(0f, 1f)
+        return clamped * clamped
+    }
+
     fun setUserMusicGain(gain: Float) {
-        userMusicGain = gain.coerceIn(0f, 1f)
-        musicPlayer.volume = musicGain * userMusicGain
-        ambientPlayers.values.forEach { it.volume = ambientGain * userMusicGain }
+        userMusicGain = perceptualGain(gain)
+        applyStreamingVolumes()
     }
 
     private fun scheduleAmbientCueGain(
         cueId: String,
         player: ExoPlayer,
-        targetGain: Float,
+        targetVolume: Float,
         durationMs: Long,
+        equalPowerIn: Boolean,
         onComplete: (() -> Unit)? = null
     ) {
-        val clampedTarget = targetGain.coerceIn(0f, 1f)
-        val start = player.volume
-        if (durationMs <= 0L) {
-            player.volume = clampedTarget * userMusicGain
+        val clampedTarget = targetVolume.coerceIn(0f, 1f)
+        val start = player.volume.coerceIn(0f, 1f)
+        if (durationMs <= 0L || start == clampedTarget) {
+            player.volume = clampedTarget
             onComplete?.invoke()
             return
         }
-        val animator = ValueAnimator.ofFloat(start, clampedTarget * userMusicGain).apply {
+        val animator = ValueAnimator.ofFloat(0f, 1f).apply {
             duration = durationMs
             addUpdateListener { animation ->
-                val gain = (animation.animatedValue as Float).coerceIn(0f, 1f)
-                ambientPlayers[cueId]?.volume = gain
+                val frac = (animation.animatedValue as Float).coerceIn(0f, 1f)
+                val curve = if (equalPowerIn) {
+                    sin(frac.toDouble() * Math.PI / 2.0).toFloat()
+                } else {
+                    (1.0 - cos(frac.toDouble() * Math.PI / 2.0)).toFloat()
+                }
+                val vol = (start + (clampedTarget - start) * curve).coerceIn(0f, 1f)
+                ambientPlayers[cueId]?.volume = vol
             }
             addListener(object : AnimatorListenerAdapter() {
+                private var cancelled = false
+                override fun onAnimationCancel(animation: Animator) {
+                    cancelled = true
+                    ambientAnimators.remove(cueId, animation)
+                }
                 override fun onAnimationEnd(animation: Animator) {
-                    onComplete?.invoke()
+                    ambientAnimators.remove(cueId, animation)
+                    if (!cancelled) {
+                        ambientPlayers[cueId]?.volume = clampedTarget
+                        onComplete?.invoke()
+                    }
                 }
             })
         }
+        ambientAnimators[cueId] = animator
         animator.start()
     }
 
     fun setUserSfxGain(gain: Float) {
-        userSfxGain = gain.coerceIn(0f, 1f)
-        activeStreams.forEach { (key, streamId) ->
-            if (key.first != AudioCueType.MUSIC && key.first != AudioCueType.AMBIENT) {
-                val layerGain = if (key.first == AudioCueType.VOICE) userVoiceGain else userSfxGain
-                soundPool.setVolume(streamId, layerGain, layerGain)
+        userSfxGain = perceptualGain(gain)
+        if (stingerType != AudioCueType.VOICE && stingerAnimator == null) {
+            stingerPlayer?.volume = effectiveStingerVolume()
+        }
+        activeShortStreams.forEach { (key, streams) ->
+            if (key.first != AudioCueType.MUSIC && key.first != AudioCueType.AMBIENT && key.first != AudioCueType.VOICE) {
+                val layerGain = layerGains[key.first] ?: 1f
+                streams.forEach { stream ->
+                    if (!streamFadeAnimators.containsKey(stream.streamId)) {
+                        val scaled = (stream.baseGain * layerGain * userSfxGain).coerceIn(0f, 1f)
+                        soundPool.setVolume(stream.streamId, scaled, scaled)
+                    }
+                }
             }
         }
     }
 
     fun setUserVoiceGain(gain: Float) {
-        userVoiceGain = gain.coerceIn(0f, 1f)
-        activeStreams.forEach { (key, streamId) ->
+        userVoiceGain = perceptualGain(gain)
+        if (stingerType == AudioCueType.VOICE && stingerAnimator == null) {
+            stingerPlayer?.volume = effectiveStingerVolume()
+        }
+        activeShortStreams.forEach { (key, streams) ->
             if (key.first == AudioCueType.VOICE) {
-                soundPool.setVolume(streamId, userVoiceGain, userVoiceGain)
+                val layerGain = layerGains[AudioCueType.VOICE] ?: 1f
+                streams.forEach { stream ->
+                    if (!streamFadeAnimators.containsKey(stream.streamId)) {
+                        val scaled = (stream.baseGain * layerGain * userVoiceGain).coerceIn(0f, 1f)
+                        soundPool.setVolume(stream.streamId, scaled, scaled)
+                    }
+                }
             }
         }
     }

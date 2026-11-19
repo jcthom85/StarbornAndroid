@@ -347,6 +347,7 @@
     "enemy_screech": "sfx_combat_enemy_screech",
     "robot_stomp": "sfx_combat_robot_stomp",
     "victory": "music_victory_standard",
+    "victory_boss": "music_victory_boss",
     "defeat": "music_game_over",
     "wpn_nova_laser": "sfx_combat_blaster_fire",
     "wpn_nova_resonance_shot": "wpn_nova_resonance_shot",

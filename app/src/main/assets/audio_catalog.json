@@ -287,7 +287,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.85,
+      "gain": 0.42,
       "tags": [
         "industrial"
       ]
@@ -298,7 +298,7 @@
       "loop": true,
       "fade_in_ms": 500,
       "fade_out_ms": 700,
-      "gain": 0.38,
+      "gain": 0.26,
       "tags": [
         "intro",
         "sector_9",
@@ -378,7 +378,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.76,
+      "gain": 0.24,
       "tags": [
         "world_1",
         "server",
@@ -508,7 +508,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.76,
+      "gain": 0.34,
       "tags": [
         "world_2",
         "sector9",
@@ -552,7 +552,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.76,
+      "gain": 0.85,
       "tags": [
         "world_3",
         "spire",
@@ -667,6 +667,7 @@
     },
     {
       "id": "music_intro_breach",
+      "type": "music",
       "title": "Sector 9 Breach",
       "category": "exploration",
       "loop": false,
@@ -1451,7 +1452,7 @@
     {
       "id": "sfx_intro_door_buckle",
       "category": "battle",
-      "gain": 1.0,
+      "gain": 0.5,
       "tags": [
         "intro",
         "containment",
@@ -1472,7 +1473,7 @@
     {
       "id": "sfx_intro_beast_strike",
       "category": "battle",
-      "gain": 1.0,
+      "gain": 0.5,
       "tags": [
         "intro",
         "beast",
@@ -1502,7 +1503,7 @@
     {
       "id": "sfx_intro_stasis_lock",
       "category": "battle",
-      "gain": 0.88,
+      "gain": 0.62,
       "tags": [
         "intro",
         "stasis",
@@ -1525,7 +1526,7 @@
       "id": "ui_room_move",
       "category": "ui",
       "priority": 1,
-      "gain": 0.62,
+      "gain": 0.32,
       "fade_in_ms": 0,
       "fade_out_ms": 80,
       "duration_ms": 480
@@ -1552,7 +1553,7 @@
       "id": "ui_error",
       "category": "ui",
       "priority": 1,
-      "gain": 0.9,
+      "gain": 0.45,
       "fade_in_ms": 0,
       "fade_out_ms": 180,
       "duration_ms": 680
@@ -1579,7 +1580,7 @@
       "id": "quest_complete_stinger",
       "category": "ui",
       "priority": 4,
-      "gain": 0.86,
+      "gain": 0.56,
       "fade_in_ms": 0,
       "fade_out_ms": 360,
       "duration_ms": 2200
@@ -1615,7 +1616,7 @@
       "id": "sfx_terminal_boot",
       "category": "sfx",
       "priority": 5,
-      "gain": 0.88,
+      "gain": 0.52,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
       "duration_ms": 1760
@@ -1624,7 +1625,7 @@
       "id": "sfx_workshop_success",
       "category": "ui",
       "priority": 3,
-      "gain": 0.82,
+      "gain": 1.0,
       "fade_in_ms": 0,
       "fade_out_ms": 220,
       "duration_ms": 1195
@@ -1687,7 +1688,7 @@
       "id": "battle_start",
       "category": "battle",
       "priority": 5,
-      "gain": 1,
+      "gain": 0.62,
       "fade_in_ms": 0,
       "fade_out_ms": 400,
       "duration_ms": 1480
@@ -1757,7 +1758,7 @@
       "id": "ui_title_start",
       "category": "ui",
       "priority": 5,
-      "gain": 1,
+      "gain": 0.46,
       "fade_in_ms": 0,
       "fade_out_ms": 400,
       "duration_ms": 2400
@@ -2041,7 +2042,7 @@
       "id": "wpn_gh0st_wire_slash",
       "category": "battle",
       "priority": 3,
-      "gain": 0.86,
+      "gain": 1.0,
       "fade_in_ms": 0,
       "fade_out_ms": 100,
       "duration_ms": 650
@@ -2086,7 +2087,7 @@
       "id": "sfx_w3_shield_anchor",
       "category": "battle",
       "priority": 5,
-      "gain": 0.88,
+      "gain": 0.55,
       "fade_in_ms": 0,
       "fade_out_ms": 300,
       "duration_ms": 2000
@@ -2123,7 +2124,7 @@
       "id": "sfx_distant_gate_rumble",
       "category": "ambient",
       "priority": 5,
-      "gain": 0.9,
+      "gain": 0.55,
       "fade_in_ms": 0,
       "fade_out_ms": 500,
       "duration_ms": 2645
@@ -2132,7 +2133,7 @@
       "id": "sfx_path_cleared",
       "category": "battle",
       "priority": 5,
-      "gain": 0.95,
+      "gain": 0.62,
       "fade_in_ms": 0,
       "fade_out_ms": 400,
       "duration_ms": 1760
@@ -2195,7 +2196,7 @@
       "id": "sfx_ui_confirm",
       "category": "ui",
       "priority": 5,
-      "gain": 0.9,
+      "gain": 0.48,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
       "duration_ms": 800
@@ -2213,7 +2214,7 @@
       "id": "sfx_ui_error",
       "category": "ui",
       "priority": 5,
-      "gain": 0.9,
+      "gain": 0.52,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
       "duration_ms": 880
@@ -2240,7 +2241,7 @@
       "id": "sfx_ui_item_pickup",
       "category": "ui",
       "priority": 5,
-      "gain": 0.9,
+      "gain": 0.62,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
       "duration_ms": 1000
@@ -2267,7 +2268,7 @@
       "id": "sfx_terminal_hack_success",
       "category": "sfx",
       "priority": 5,
-      "gain": 0.9,
+      "gain": 0.52,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
       "duration_ms": 2200
@@ -2357,7 +2358,7 @@
       "id": "sfx_combat_enemy_screech",
       "category": "battle",
       "priority": 5,
-      "gain": 0.95,
+      "gain": 0.68,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
       "duration_ms": 1760
@@ -2447,7 +2448,7 @@
       "id": "sfx_arcade_laser",
       "category": "ui",
       "priority": 5,
-      "gain": 0.9,
+      "gain": 0.55,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
       "duration_ms": 480
@@ -2456,7 +2457,7 @@
       "id": "sfx_arcade_game_over",
       "category": "ui",
       "priority": 5,
-      "gain": 0.9,
+      "gain": 0.5,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
       "duration_ms": 2200
@@ -2546,7 +2547,7 @@
       "id": "sfx_combat_enemy_flamethrower",
       "category": "battle",
       "priority": 5,
-      "gain": 0.95,
+      "gain": 0.65,
       "fade_in_ms": 0,
       "fade_out_ms": 200,
       "duration_ms": 1480

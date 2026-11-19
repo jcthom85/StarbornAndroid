@@ -96,7 +96,7 @@ fun DialogueOverlay(
     onAdvance: () -> Unit,
     onChoice: (String) -> Unit,
     onPlayVoice: (String) -> Unit,
-    onPlayMurmur: (String) -> Unit = {},
+    onPlayMurmur: (String, Float) -> Unit = { _, _ -> },
     onRevealFinished: () -> Unit = {},
     revealAllRequest: Int = 0,
     canDismissByTap: Boolean = true,
@@ -143,7 +143,7 @@ fun DialogueOverlay(
             revealedCount = index + 1
             val char = fullText[index]
             if (voiceProfile != DialogueVoiceProfile.NONE && shouldPlayMurmur(fullText, index)) {
-                latestOnPlayMurmur(voiceProfile.randomCue(random))
+                latestOnPlayMurmur(voiceProfile.randomCue(random), voiceProfile.randomPitch(random))
             }
             delay(revealDelayMs(char))
         }
@@ -539,20 +539,28 @@ private fun String.toChoiceTag(): ChoiceTag? = when (this.lowercase(Locale.getDe
     else -> null
 }
 
-internal enum class DialogueVoiceProfile(private val cuePrefix: String?) {
-    NOVA("voice_murmur_female"),
-    ORION("voice_murmur_male"),
-    ZEKE("voice_murmur_male"),
-    GH0ST("voice_murmur_male"),
-    FEMALE("voice_murmur_female"),
-    MALE("voice_murmur_male"),
-    MACHINE("voice_murmur_machine"),
-    NONE(null);
+internal enum class DialogueVoiceProfile(
+    private val cuePrefix: String?,
+    private val basePitch: Float = 1.0f
+) {
+    NOVA("voice_murmur_female", 1.06f),
+    ORION("voice_murmur_male", 0.94f),
+    ZEKE("voice_murmur_male", 0.85f),
+    GH0ST("voice_murmur_male", 1.14f),
+    FEMALE("voice_murmur_female", 1.00f),
+    MALE("voice_murmur_male", 0.96f),
+    MACHINE("voice_murmur_machine", 1.00f),
+    NONE(null, 1.0f);
 
     fun randomCue(random: Random): String {
         val prefix = cuePrefix ?: return ""
         val variant = random.nextInt(1, 5)
         return "${prefix}_${variant.toString().padStart(2, '0')}"
+    }
+
+    fun randomPitch(random: Random): Float {
+        val jitter = (random.nextFloat() * 2f - 1f) * 0.04f
+        return (basePitch + jitter).coerceIn(0.75f, 1.35f)
     }
 
     companion object {

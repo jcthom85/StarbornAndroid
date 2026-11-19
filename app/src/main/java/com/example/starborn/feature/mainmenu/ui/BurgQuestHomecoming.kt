@@ -56,8 +56,8 @@ internal fun BurgQuestHomecoming(audioCuePlayer: AudioCuePlayer, onComplete: () 
                 onPlayVoice = {},
                 onRevealFinished = { revealed = true },
                 revealAllRequest = revealRequest,
-                onPlayMurmur = { cue -> audioCuePlayer.execute(listOf(
-                    AudioCommand.Play(AudioCueType.VOICE, cue, loop = false, fadeMs = 0L, gain = 0.85f)
+                onPlayMurmur = { cue, pitch -> audioCuePlayer.execute(listOf(
+                    AudioCommand.Play(AudioCueType.VOICE, cue, loop = false, fadeMs = 0L, gain = 0.50f, pitch = pitch)
                 )) }
             )
             Surface(shape = MaterialTheme.shapes.large, modifier = Modifier.padding(horizontal = 16.dp)) {
