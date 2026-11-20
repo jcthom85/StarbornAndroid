@@ -50,14 +50,16 @@ class AudioRouter(
         tags: Set<String> = emptySet(),
         suppressMusic: Boolean = false,
         hubNodeId: String? = null,
-        worldId: String? = null
+        worldId: String? = null,
+        musicOverride: String? = null
     ): List<AudioCommand> {
         val commands = mutableListOf<AudioCommand>()
 
         val rawMusicBinding = if (suppressMusic) {
             null
         } else {
-            roomId?.let { bindings.roomMusic[it] }.normalize()
+            musicOverride.normalize()
+                ?: roomId?.let { bindings.roomMusic[it] }.normalize()
                 ?: hubNodeId?.let { bindings.nodeMusic[it] }.normalize()
                 ?: hubId?.let { bindings.music[it] }.normalize()
                 ?: worldId?.let { bindings.music[it] }.normalize()

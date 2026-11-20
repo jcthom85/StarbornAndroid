@@ -28,7 +28,7 @@ object DebugCampaignScenarios {
         entry("campaign_w1_mq03", "w1_mq03", "MQ03: The Echo", "World 1: The Mines", DebugScenarioCategory.STORY, "checkpoint_booth",
             "Zeke’s Booth after Shift Clearance; badge acquired and The Echo active.",
             listOf("Enter Logistics and report to Boggs; complete Guard Break certification in the Security Post.",
-                "Return to Boggs, plan mine descent, and enter Deep Mine from the Logistics map.",
+                "Return to Boggs, then head west to the Elevator Lobby and take the north lift into Deep Mine.",
                 "Defeat the first mine encounter, restore junction power, and reach The Heart.",
                 "Counter-tune pulse spacing, cooling, and opposing phase; verify Fork acquisition and Red Alert."),
             listOf("Target behavior completes through production controls; rewards and journal remain consistent after reload."),

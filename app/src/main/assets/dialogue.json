@@ -492,7 +492,7 @@
     "emote": "scared",
     "text": "Mandatory retirement. Asset liability exceeds projected value. Disposition: recycle. Nova, don't put your badge back in the reader.",
     "next": "zeke_w1_mq02_override_5",
-    "music": "music_w1_deep_mine"
+    "music": "music_w3_archive_stealth"
   },
   {
     "id": "zeke_w1_mq02_override_5",
@@ -517,6 +517,7 @@
       {
         "id": "zeke_w1_mq02_choose_grid_instability",
         "text": "Grid Instability",
+        "trigger": "music_persist:music_w1_logistics_explore",
         "next": "zeke_w1_mq02_override_7"
       },
       {

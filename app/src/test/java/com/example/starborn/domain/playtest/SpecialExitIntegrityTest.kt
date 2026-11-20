@@ -66,10 +66,8 @@ class SpecialExitIntegrityTest {
                 room.connections.keys.containsAll(room.specialExits.keys))
             assertTrue("${room.id} exceptional connections must have labels",
                 room.specialExits.keys.containsAll(room.connections.keys.filterNot { it in cardinal }))
-            // The mine lift uses a named cardinal action to explain hub travel.
             val cardinalLabels = room.specialExits.keys.filter { it in cardinal }.toSet()
-            assertEquals("${room.id} unexpected cardinal travel label",
-                if (room.id == "admin_elevator") setOf("north") else emptySet<String>(), cardinalLabels)
+            assertEquals("${room.id} unexpected cardinal travel label", emptySet<String>(), cardinalLabels)
             assertEquals(
                 "${room.id} travel labels must be unique",
                 room.specialExits.values.size,

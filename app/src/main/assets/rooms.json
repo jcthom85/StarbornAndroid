@@ -2219,10 +2219,7 @@
         "type": "generic",
         "condition_unmet_message": "Thick, grease-covered bundles of braided steel."
       }
-    ],
-    "special_exits": {
-      "north": "Plan mine descent"
-    }
+    ]
   },
   {
     "id": "admin_security",

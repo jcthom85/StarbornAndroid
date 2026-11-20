@@ -875,6 +875,7 @@ class ExplorationController(
         }
         val hubNodeId = roomId?.let { nodeIdByRoomId[it] }
         val worldId = sessionStore.state.value.worldId
+        val musicOverride = resolveRoomMusicOverride(hubNodeId)
         emitAudioCommands(
             audioRouter.commandsForRoom(
                 hubId = hubId,
@@ -883,9 +884,17 @@ class ExplorationController(
                 tags = tags,
                 suppressMusic = suppressMusic,
                 hubNodeId = hubNodeId,
-                worldId = worldId
+                worldId = worldId,
+                musicOverride = musicOverride
             )
         )
+    }
+
+    private fun resolveRoomMusicOverride(hubNodeId: String?): String? {
+        if (hubNodeId == "admin_gate" && "ms_w1_mq02_complete" in sessionStore.state.value.completedMilestones) {
+            return "music_w1_logistics_explore"
+        }
+        return null
     }
 
     private fun shouldSuppressRoomMusic(room: Room?): Boolean {
@@ -2697,21 +2706,6 @@ class ExplorationController(
         val destinationNodeId = nodeIdByRoomId[nextRoomId]
         val discoveringDestination = destinationNodeId != null &&
             destinationNodeId !in sessionStore.state.value.visitedNodes
-        // Give the first authorized descent a map reveal before entering the mine.
-        // Keep the current room until the player chooses a destination, including
-        // across saves; subsequent crossings retain the continuous room route.
-        val descentSession = sessionStore.state.value
-        if (currentRoom.id == "admin_elevator" && nextRoomId == "mine_landing" &&
-            "ms_w1_mq03_bogs_talked" in descentSession.completedMilestones &&
-            "deep_mine" !in descentSession.visitedNodes &&
-            descentSession.roomStates["admin_elevator"]?.get("mine_map_reveal_seen") != true
-        ) {
-            sessionStore.revealNode("deep_mine")
-            sessionStore.unlockNode("deep_mine")
-            sessionStore.setRoomState("admin_elevator", "mine_map_reveal_pending", true)
-            emitEvent(ExplorationEvent.ReturnToHub)
-            return
-        }
         val nextRoomIsDark = isRoomDark(nextRoom)
         val nextTheme = themeByRoomId[nextRoom.id]
         val nextThemeStyle = themeStyleByRoomId[nextRoom.id]
@@ -6817,12 +6811,7 @@ class ExplorationController(
             val normalized = direction.lowercase(Locale.getDefault())
             label.takeIf { it.isNotBlank() }
                 ?.takeIf { visibleConnections(room).containsKey(normalized) }
-                ?.let {
-                    val travelLabel = if (room.id == "admin_elevator" && normalized == "north" &&
-                        "deep_mine" in sessionStore.state.value.visitedNodes
-                    ) "Ride mine lift" else it
-                    TravelAction(name = travelLabel, direction = normalized)
-                }
+                ?.let { TravelAction(name = it, direction = normalized) }
         }
         val prototypes = if (room.id == "astra_simulation_deck" &&
             "ms_debug_combat_prototypes" in sessionStore.state.value.completedMilestones) listOf(
