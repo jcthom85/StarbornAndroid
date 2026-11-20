@@ -970,7 +970,7 @@
       {
         "type": "narration",
         "text": "Nova opens a regional corridor, drops Vale's forced links, and releases root access. Her Source connection burns out as the network closes.",
-        "audio_cue": "wpn_orion_resonance",
+        "audio_cue": "battle_stability_shatter",
         "duration_seconds": 7.9,
         "transition": "cut",
         "image": "images/cinematics/w6_ending_circuit_v1.webp",
@@ -1489,6 +1489,7 @@
         "duration_seconds": 6.7,
         "caption_style": "dialogue",
         "image": "images/cinematics/w4_coup_display_v2.webp",
+        "music_cue": "silence",
         "audio_cue": "stinger_motif_vale"
       },
       {
@@ -1662,8 +1663,7 @@
         "type": "narration",
         "text": "Three sets of footsteps reach the fire from different directions.",
         "duration_seconds": 4.2,
-        "image": "images/rooms/world_6/source_campfire.webp",
-        "audio_cue": "sfx_rest_chime"
+        "image": "images/rooms/world_6/source_campfire.webp"
       },
       {
         "type": "dialogue",
