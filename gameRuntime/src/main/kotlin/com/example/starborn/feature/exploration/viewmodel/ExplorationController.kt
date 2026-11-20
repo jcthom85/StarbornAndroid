@@ -1397,6 +1397,22 @@ class ExplorationController(
         return if (hasMerchant) services + MinimapService.SHOP else services
     }
 
+    private fun proximityRoomIds(currentRoom: Room): Set<String> = buildSet {
+        add(currentRoom.id)
+        currentRoom.connections.values.forEach { dest ->
+            if (!dest.isNullOrBlank()) add(dest)
+        }
+    }
+
+    private fun roomHasNearbyPatrol(currentRoom: Room, candidate: Room): Boolean {
+        val manager = enemyMovementManager ?: return false
+        if (candidate.id !in proximityRoomIds(currentRoom)) return false
+        return manager.partiesInRoom(candidate.id, sessionStore.state.value).isNotEmpty()
+    }
+
+    private fun roomIsPatrolRoute(room: Room): Boolean =
+        enemyMovementManager?.isRoomOnActivePatrolRoute(room.id, sessionStore.state.value) == true
+
     private fun buildMinimapState(currentRoom: Room): MinimapUiState {
         return MapStateBuilder.buildMinimapState(
             nodeExits = { nodeExitResolver.exits(it, sessionStore.state.value) },
@@ -1408,7 +1424,9 @@ class ExplorationController(
             isRoomDark = ::isRoomDark,
             roomHasEnemies = { roomEnemyParties(it).isNotEmpty() },
             computeBlockedDirections = ::computeBlockedDirections,
-            parseRoomServices = ::mapServicesForRoom
+            parseRoomServices = ::mapServicesForRoom,
+            roomHasNearbyPatrol = { roomHasNearbyPatrol(currentRoom, it) },
+            roomIsPatrolRoute = ::roomIsPatrolRoute
         )
     }
 
@@ -1423,7 +1441,9 @@ class ExplorationController(
             isRoomDark = ::isRoomDark,
             roomHasEnemies = { roomEnemyParties(it).isNotEmpty() },
             computeBlockedDirections = ::computeBlockedDirections,
-            parseRoomServices = ::mapServicesForRoom
+            parseRoomServices = ::mapServicesForRoom,
+            roomHasNearbyPatrol = { roomHasNearbyPatrol(currentRoom, it) },
+            roomIsPatrolRoute = ::roomIsPatrolRoute
         )
     }
 
@@ -4594,6 +4614,9 @@ class ExplorationController(
                 directionIndicators = buildDirectionIndicators(displayRoom, current.nearbyThreatDirection),
                 visualEnemyParties = finalVisuals
             )
+        }
+        if (events.isNotEmpty()) {
+            updateMinimap(baseRoom)
         }
     }
 

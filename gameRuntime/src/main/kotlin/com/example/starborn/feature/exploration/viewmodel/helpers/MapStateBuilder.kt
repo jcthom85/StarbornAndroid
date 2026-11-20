@@ -21,7 +21,9 @@ object MapStateBuilder {
         computeBlockedDirections: (Room) -> Set<String>,
         parseRoomServices: (Room) -> Set<MinimapService>,
         nodeExits: (Room) -> List<MapNodeExitUi> = { emptyList() },
-        hubExit: (Room) -> MapHubExitUi? = { null }
+        hubExit: (Room) -> MapHubExitUi? = { null },
+        roomHasNearbyPatrol: (Room) -> Boolean = { false },
+        roomIsPatrolRoute: (Room) -> Boolean = { false }
     ): MinimapUiState {
         val currentPos = roomPosition(currentRoom)
         val currentBlocked = computeBlockedDirections(currentRoom)
@@ -70,6 +72,8 @@ object MapStateBuilder {
                 discovered = discoveredRooms.contains(room.id),
                 isCurrent = room.id == currentRoom.id,
                 hasEnemies = !isRoomDark(room) && !isPreview && roomHasEnemies(room),
+                hasNearbyPatrol = !isRoomDark(room) && !isPreview && roomHasNearbyPatrol(room),
+                isPatrolRoute = !isRoomDark(room) && visitedRooms.contains(room.id) && roomIsPatrolRoute(room),
                 blockedDirections = blocked,
                 connections = connections,
                 pathHints = pathHints,
@@ -101,7 +105,9 @@ object MapStateBuilder {
         computeBlockedDirections: (Room) -> Set<String>,
         parseRoomServices: (Room) -> Set<MinimapService>,
         nodeExits: (Room) -> List<MapNodeExitUi> = { emptyList() },
-        hubExit: (Room) -> MapHubExitUi? = { null }
+        hubExit: (Room) -> MapHubExitUi? = { null },
+        roomHasNearbyPatrol: (Room) -> Boolean = { false },
+        roomIsPatrolRoute: (Room) -> Boolean = { false }
     ): FullMapUiState {
         val currentPos = roomPosition(currentRoom)
         val cells = roomsInContext.mapNotNull { room ->
@@ -125,6 +131,8 @@ object MapStateBuilder {
                 discovered = discoveredRooms.contains(room.id),
                 isCurrent = room.id == currentRoom.id,
                 hasEnemies = !isRoomDark(room) && roomHasEnemies(room),
+                hasNearbyPatrol = !isRoomDark(room) && roomHasNearbyPatrol(room),
+                isPatrolRoute = !isRoomDark(room) && visitedRooms.contains(room.id) && roomIsPatrolRoute(room),
                 blockedDirections = blocked,
                 connections = connections,
                 services = if (!isRoomDark(room)) services else emptySet(),

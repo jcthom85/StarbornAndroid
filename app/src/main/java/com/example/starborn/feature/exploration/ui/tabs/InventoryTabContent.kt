@@ -1,12 +1,24 @@
 package com.example.starborn.feature.exploration.ui.tabs
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,8 +40,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -46,6 +61,7 @@ import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.model.ItemEffect
 import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuLargeTargets
 import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuHighContrast
+import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuReducedMotion
 import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 import com.example.starborn.feature.exploration.ui.menu.LocalModernFieldMenu
 import com.example.starborn.feature.exploration.ui.MenuSectionCard
@@ -513,105 +529,341 @@ fun InventoryItemDetailsContent(
     onUse: (() -> Unit)?,
     modifier: Modifier = Modifier
 ) {
-        Surface(
-            modifier = modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(18.dp),
-            color = if (LocalModernFieldMenu.current) FieldMenuDesign.panel else Color(0xF0061018),
-            border = BorderStroke(1.dp, if (LocalModernFieldMenu.current) Color.White.copy(alpha = 0.10f) else accentColor.copy(alpha = 0.48f)),
-            shadowElevation = if (LocalModernFieldMenu.current) 0.dp else 16.dp
-        ) {
-            Column(
-                modifier = Modifier
-                    .background(
-                        Brush.verticalGradient(
-                            listOf(
-                                accentColor.copy(alpha = 0.16f),
-                                Color.Transparent,
-                                Color.Black.copy(alpha = 0.12f)
-                            )
-                        )
-                    )
-                    .padding(18.dp),
-                verticalArrangement = Arrangement.spacedBy(14.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalAlignment = Alignment.Top
-                ) {
-                    Image(
-                        painter = rememberItemIconPainter(item.id, item.type),
-                        contentDescription = null,
-                        modifier = Modifier.size(52.dp)
-                    )
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = item.name,
-                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                            color = Color.White,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        FlowRow(
-                            verticalArrangement = Arrangement.spacedBy(6.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Text(
-                                text = (if (item.combatOnly) "Combat Consumable" else item.type.readableInventoryLabel()).uppercase(Locale.getDefault()),
-                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                color = accentColor.copy(alpha = 0.9f)
-                            )
+    val reducedMotion = LocalFieldMenuReducedMotion.current
+    val highContrast = LocalFieldMenuHighContrast.current
+    val stageTint = remember(item.id, item.type, item.equipment) {
+        when {
+            item.equipment != null || item.type.equals("weapon", true) ||
+                item.type.equals("armor", true) || item.type.equals("accessory", true) -> FieldMenuDesign.gold
+            item.isCombatSnack() || item.isCookedMeal() || item.type.equals("medicine", true) ||
+                item.type.equals("consumable", true) -> FieldMenuDesign.mint
+            item.isCraftingComponent() || item.isIngredientOrFish() -> FieldMenuDesign.ember
+            else -> FieldMenuDesign.cyan
+        }
+    }
+    var scanNonce by remember(item.id) { mutableIntStateOf(0) }
+    val entryScale = remember(item.id) { Animatable(if (reducedMotion) 1f else 0.82f) }
+    val scanSweep = remember(item.id) { Animatable(if (reducedMotion) 1f else 0f) }
 
+    LaunchedEffect(item.id, scanNonce, reducedMotion) {
+        if (reducedMotion) {
+            entryScale.snapTo(1f)
+            scanSweep.snapTo(1f)
+            return@LaunchedEffect
+        }
+        if (scanNonce > 0) {
+            entryScale.snapTo(1.08f)
+        }
+        entryScale.animateTo(
+            targetValue = 1f,
+            animationSpec = spring(dampingRatio = 0.62f, stiffness = Spring.StiffnessMediumLow)
+        )
+    }
+    LaunchedEffect(item.id, scanNonce, reducedMotion) {
+        if (reducedMotion) return@LaunchedEffect
+        scanSweep.snapTo(0f)
+        scanSweep.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = 580, easing = LinearEasing)
+        )
+    }
+
+    val floatPhase = if (reducedMotion) {
+        0f
+    } else {
+        val infinite = rememberInfiniteTransition(label = "specimenFloat")
+        infinite.animateFloat(
+            initialValue = -1f,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = 2200, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "specimenFloatPhase"
+        ).value
+    }
+
+    val categoryLabel = (if (item.combatOnly) "Combat Consumable" else item.type.readableInventoryLabel())
+        .uppercase(Locale.getDefault())
+
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp),
+        color = if (LocalModernFieldMenu.current) FieldMenuDesign.panel else Color(0xF0061018),
+        border = BorderStroke(
+            1.dp,
+            if (highContrast) Color.White
+            else if (LocalModernFieldMenu.current) stageTint.copy(alpha = 0.28f)
+            else accentColor.copy(alpha = 0.48f)
+        ),
+        shadowElevation = if (LocalModernFieldMenu.current) 0.dp else 16.dp
+    ) {
+        Column(
+            modifier = Modifier
+                .background(
+                    Brush.verticalGradient(
+                        listOf(
+                            stageTint.copy(alpha = if (highContrast) 0f else 0.12f),
+                            Color.Transparent,
+                            Color.Black.copy(alpha = 0.12f)
+                        )
+                    )
+                )
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            // Holographic Specimen Bay — large bespoke icon showcase with zero-G float & tap-to-rescan
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(176.dp)
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(if (highContrast) Color.Black else FieldMenuDesign.deepCard)
+                    .border(
+                        width = 1.dp,
+                        color = if (highContrast) Color.White else stageTint.copy(alpha = 0.34f),
+                        shape = RoundedCornerShape(14.dp)
+                    )
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = { scanNonce += 1 }
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Canvas(modifier = Modifier.fillMaxSize()) {
+                    // Subtle tactical grid
+                    if (!highContrast) {
+                        val gridStep = 22.dp.toPx()
+                        val gridColor = stageTint.copy(alpha = 0.06f)
+                        var gx = gridStep
+                        while (gx < size.width) {
+                            drawLine(gridColor, Offset(gx, 0f), Offset(gx, size.height), 1.dp.toPx())
+                            gx += gridStep
+                        }
+                        var gy = gridStep
+                        while (gy < size.height) {
+                            drawLine(gridColor, Offset(0f, gy), Offset(size.width, gy), 1.dp.toPx())
+                            gy += gridStep
                         }
                     }
-                }
-                Text(
-                    text = item.description?.takeIf { it.isNotBlank() } ?: "No field description is available for this item.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White.copy(alpha = 0.82f)
-                )
-                HorizontalDivider(color = borderColor.copy(alpha = 0.24f))
-                PreviewDetailRow("Quantity", "x${item.quantity}", accentColor)
-                item.effect?.let { effect ->
-                    HorizontalDivider(color = borderColor.copy(alpha = 0.24f))
-                    Text(
-                        text = "EFFECTS",
-                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                        color = accentColor
+
+                    // Radial specimen halo
+                    val center = Offset(size.width / 2f, size.height * 0.47f)
+                    if (!highContrast) {
+                        drawCircle(
+                            brush = Brush.radialGradient(
+                                colors = listOf(
+                                    stageTint.copy(alpha = 0.26f),
+                                    stageTint.copy(alpha = 0.08f),
+                                    Color.Transparent
+                                ),
+                                center = center,
+                                radius = size.minDimension * 0.62f
+                            ),
+                            radius = size.minDimension * 0.62f,
+                            center = center
+                        )
+                    }
+
+                    // Breathing ground contact pedestal glow (inversely linked to float height)
+                    val glowScale = 1f - (floatPhase * 0.08f)
+                    val glowAlpha = 0.24f - (floatPhase * 0.06f)
+                    val ovalW = 92.dp.toPx() * glowScale
+                    val ovalH = 14.dp.toPx() * glowScale
+                    drawOval(
+                        brush = Brush.radialGradient(
+                            colors = listOf(
+                                stageTint.copy(alpha = glowAlpha),
+                                Color.Transparent
+                            ),
+                            center = Offset(size.width / 2f, size.height - 20.dp.toPx()),
+                            radius = ovalW * 0.6f
+                        ),
+                        topLeft = Offset(size.width / 2f - ovalW / 2f, size.height - 20.dp.toPx() - ovalH / 2f),
+                        size = Size(ovalW, ovalH)
                     )
-                    previewEffectRows(effect).forEach { (label, value) ->
-                        PreviewDetailRow(label, value, accentColor)
+
+                    // Precision corner HUD brackets
+                    val pad = 10.dp.toPx()
+                    val arm = 12.dp.toPx()
+                    val stroke = 1.5.dp.toPx()
+                    val bracketColor = stageTint.copy(alpha = 0.62f)
+                    // Top-left
+                    drawLine(bracketColor, Offset(pad, pad), Offset(pad + arm, pad), stroke)
+                    drawLine(bracketColor, Offset(pad, pad), Offset(pad, pad + arm), stroke)
+                    // Top-right
+                    drawLine(bracketColor, Offset(size.width - pad, pad), Offset(size.width - pad - arm, pad), stroke)
+                    drawLine(bracketColor, Offset(size.width - pad, pad), Offset(size.width - pad, pad + arm), stroke)
+                    // Bottom-left
+                    drawLine(bracketColor, Offset(pad, size.height - pad), Offset(pad + arm, size.height - pad), stroke)
+                    drawLine(bracketColor, Offset(pad, size.height - pad), Offset(pad, size.height - pad - arm), stroke)
+                    // Bottom-right
+                    drawLine(bracketColor, Offset(size.width - pad, size.height - pad), Offset(size.width - pad - arm, size.height - pad), stroke)
+                    drawLine(bracketColor, Offset(size.width - pad, size.height - pad), Offset(size.width - pad, size.height - pad - arm), stroke)
+                }
+
+                // Floating large bespoke icon
+                val floatDp = floatPhase * 5.5f
+                Image(
+                    painter = rememberItemIconPainter(item.id, item.type),
+                    contentDescription = item.name,
+                    modifier = Modifier
+                        .size(116.dp)
+                        .graphicsLayer {
+                            translationY = floatDp.dp.toPx()
+                            val s = entryScale.value * (1f + floatPhase * 0.014f)
+                            scaleX = s
+                            scaleY = s
+                        }
+                )
+
+                // Single-pass holographic scanline sweep on open / tap
+                val sweep = scanSweep.value
+                if (sweep in 0.001f..0.999f) {
+                    Canvas(modifier = Modifier.fillMaxSize()) {
+                        val y = size.height * sweep
+                        val trailHeight = 28.dp.toPx()
+                        drawRect(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(Color.Transparent, stageTint.copy(alpha = 0.22f)),
+                                startY = (y - trailHeight).coerceAtLeast(0f),
+                                endY = y
+                            ),
+                            topLeft = Offset(0f, (y - trailHeight).coerceAtLeast(0f)),
+                            size = Size(size.width, trailHeight.coerceAtMost(y))
+                        )
+                        drawLine(
+                            color = stageTint.copy(alpha = 0.85f),
+                            start = Offset(0f, y),
+                            end = Offset(size.width, y),
+                            strokeWidth = 1.6.dp.toPx()
+                        )
                     }
                 }
-                if (onUse != null || item.combatOnly) Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    val canUseNow = onUse != null && !item.combatOnly
-                    Button(
-                        onClick = { onUse?.invoke() },
-                        enabled = canUseNow,
-                        modifier = Modifier.fillMaxWidth().heightIn(min = if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp),
-                        shape = RoundedCornerShape(10.dp),
-                        border = BorderStroke(
-                            1.5.dp,
-                            if (canUseNow) FieldMenuDesign.gold else FieldMenuDesign.subtleBorder
-                        ),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = FieldMenuDesign.primaryActionFill,
-                            contentColor = FieldMenuDesign.text,
-                            disabledContainerColor = Color.White.copy(alpha = 0.09f),
-                            disabledContentColor = Color.White.copy(alpha = 0.38f)
-                        )
+
+                // Top-right quantity badge inside the bay
+                if (item.quantity > 0) {
+                    Surface(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(14.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        color = FieldMenuDesign.panel.copy(alpha = 0.9f),
+                        border = BorderStroke(1.dp, stageTint.copy(alpha = 0.5f))
                     ) {
                         Text(
-                            text = if (item.combatOnly) "Combat only" else "Use Item",
-                            fontWeight = FontWeight.Bold
+                            text = "×${item.quantity}",
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                            color = stageTint,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
                         )
                     }
                 }
             }
+
+            // Title & category pill
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(
+                    text = item.name,
+                    style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                    color = Color.White,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Surface(
+                    shape = RoundedCornerShape(6.dp),
+                    color = stageTint.copy(alpha = 0.14f),
+                    border = BorderStroke(1.dp, stageTint.copy(alpha = 0.45f))
+                ) {
+                    Text(
+                        text = categoryLabel,
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 0.7.sp
+                        ),
+                        color = stageTint,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                    )
+                }
+            }
+
+            Text(
+                text = item.description?.takeIf { it.isNotBlank() } ?: "No field description is available for this item.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.White.copy(alpha = 0.84f)
+            )
+
+            item.equipment?.let { gear ->
+                val gearRows = buildList {
+                    gear.damageMin?.let { add("Damage" to "$it–${gear.damageMax ?: it}") }
+                    gear.defense?.let { add("Defense" to "+$it") }
+                    gear.hpBonus?.let { add("HP Bonus" to "+$it") }
+                    gear.attackElement?.let { add("Element" to it.readableInventoryLabel()) }
+                    gear.accuracy?.let { add("Accuracy" to "${if (it > 0) "+" else ""}${it.roundToInt()}") }
+                    gear.critRate?.let {
+                        val pct = if (kotlin.math.abs(it) <= 1.0) (it * 100).roundToInt() else it.roundToInt()
+                        add("Crit Rate" to "+$pct%")
+                    }
+                    gear.statMods?.forEach { (stat, value) ->
+                        add(com.example.starborn.feature.exploration.ui.components.equipmentLabel(stat) to "${if (value > 0) "+" else ""}$value")
+                    }
+                }
+                if (gearRows.isNotEmpty()) {
+                    HorizontalDivider(color = borderColor.copy(alpha = 0.24f))
+                    Text(
+                        text = "SPECIFICATIONS",
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, letterSpacing = 0.8.sp),
+                        color = stageTint
+                    )
+                    gearRows.forEach { (label, value) ->
+                        PreviewDetailRow(label, value, stageTint)
+                    }
+                }
+            }
+
+            item.effect?.let { effect ->
+                HorizontalDivider(color = borderColor.copy(alpha = 0.24f))
+                Text(
+                    text = "EFFECTS",
+                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, letterSpacing = 0.8.sp),
+                    color = stageTint
+                )
+                previewEffectRows(effect).forEach { (label, value) ->
+                    PreviewDetailRow(label, value, stageTint)
+                }
+            }
+
+            if (onUse != null || item.combatOnly) Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                val canUseNow = onUse != null && !item.combatOnly
+                Button(
+                    onClick = { onUse?.invoke() },
+                    enabled = canUseNow,
+                    modifier = Modifier.fillMaxWidth().heightIn(min = if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    border = BorderStroke(
+                        1.5.dp,
+                        if (canUseNow) FieldMenuDesign.gold else FieldMenuDesign.subtleBorder
+                    ),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = FieldMenuDesign.primaryActionFill,
+                        contentColor = FieldMenuDesign.text,
+                        disabledContainerColor = Color.White.copy(alpha = 0.09f),
+                        disabledContentColor = Color.White.copy(alpha = 0.38f)
+                    )
+                ) {
+                    Text(
+                        text = if (item.combatOnly) "Combat only" else "Use Item",
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
         }
+    }
 }
 
 @Composable

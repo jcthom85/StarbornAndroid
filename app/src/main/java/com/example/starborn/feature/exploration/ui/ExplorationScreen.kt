@@ -3050,13 +3050,18 @@ internal fun MenuOverlay(
             if (settings.modernFieldMenu) {
                 androidx.compose.runtime.CompositionLocalProvider(LocalModernFieldMenu provides true,
                     LocalFieldMenuHighContrast provides settings.highContrastMode,
-                    LocalFieldMenuLargeTargets provides settings.largeTouchTargets) {
+                    LocalFieldMenuLargeTargets provides settings.largeTouchTargets,
+                    com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuReducedMotion provides (settings.disableFlashes || settings.disableScreenshake)) {
                     ModernFieldMenu(
                         tab = selectedTab,
                         detailTitle = detailKind?.let { menuDetailTitle(it, selectedTab) },
                         party = partyStatus,
                         selectedMemberId = activePartyId,
-                        credits = if (detailKind == MenuDetailKind.SKILL_TREE) "${skillTreeOverlay?.availableAp ?: 0} AP available" else creditsLabel,
+                        credits = when {
+                            detailKind == MenuDetailKind.SKILL_TREE -> "${skillTreeOverlay?.availableAp ?: 0} AP"
+                            selectedTab == MenuTab.INVENTORY && detailKind == null -> creditsLabel
+                            else -> null
+                        },
                         scroll = sheetScroll,
                         tinkerTutorial = isTinkeringTutorialActive,
                         gearTutorial = isGearTutorialActive,
@@ -3772,7 +3777,12 @@ private fun MenuTabContentArea(
             MenuTab.STATS -> if (modern) {
                 val member = partyStatus.members.firstOrNull { it.id == selectedMemberId }
                     ?: partyStatus.members.firstOrNull()
-                ModernPartyPage(member, onShowDetails, onShowSkillTree) {
+                ModernPartyPage(
+                    member = member,
+                    onDetails = onShowDetails,
+                    onSkills = onShowSkillTree,
+                    showEquipmentHint = isGearTutorialActive && member?.id == "nova"
+                ) {
                     InventoryEquipmentPreview(
                         inventoryItems = inventoryItems,
                         equippedItems = equippedItems,
@@ -4680,7 +4690,7 @@ internal fun InteractiveMapPanel(
             .map { it.roomId }.toSet()
     }
     val threatIds = remember(cells) {
-        cells.filter { it.hasEnemies && !it.isDark && !it.isPreview }.map { it.roomId }.toSet()
+        cells.filter { (it.hasEnemies || it.hasNearbyPatrol) && !it.isDark && !it.isPreview }.map { it.roomId }.toSet()
     }
     val exitIds = remember(cells) {
         cells.filter { com.example.starborn.ui.map.mapRoomHasExit(it) }.map { it.roomId }.toSet()
@@ -4722,10 +4732,10 @@ internal fun InteractiveMapPanel(
                 color = FieldMenuDesign.textMuted
             )
         } else {
-            // POI Filter strip
+            // POI Filter strip (proportional weights so Services/Threats/Exits never crowd on narrow phones)
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 MapPoiFilter.entries.forEach { filter ->
                     val isSelected = activeFilter == filter
@@ -4740,9 +4750,10 @@ internal fun InteractiveMapPanel(
                         MapPoiFilter.EXITS -> MapPalette.gateway
                         else -> FieldMenuDesign.gold
                     }
+                    val pillWeight = if (filter == MapPoiFilter.ALL) 0.68f else 1.11f
                     Surface(
                         modifier = Modifier
-                            .weight(1f)
+                            .weight(pillWeight)
                             .clip(RoundedCornerShape(10.dp))
                             .clickable { activeFilter = filter },
                         shape = RoundedCornerShape(10.dp),
@@ -4758,9 +4769,9 @@ internal fun InteractiveMapPanel(
                             horizontalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = if (count != null && count > 0) "${filter.label} ($count)" else filter.label,
+                                text = filter.label,
                                 style = MaterialTheme.typography.labelSmall.copy(
-                                    fontSize = 11.sp,
+                                    fontSize = 10.5.sp,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                                 ),
                                 color = if (isSelected) Color.White else FieldMenuDesign.textMuted,
@@ -4768,6 +4779,19 @@ internal fun InteractiveMapPanel(
                                 softWrap = false,
                                 overflow = TextOverflow.Ellipsis
                             )
+                            if (count != null && count > 0) {
+                                Spacer(Modifier.width(3.dp))
+                                Text(
+                                    text = "$count",
+                                    style = MaterialTheme.typography.labelSmall.copy(
+                                        fontSize = 9.5.sp,
+                                        fontWeight = FontWeight.Black
+                                    ),
+                                    color = if (isSelected) accent else accent.copy(alpha = 0.78f),
+                                    maxLines = 1,
+                                    softWrap = false
+                                )
+                            }
                         }
                     }
                 }
@@ -4828,27 +4852,6 @@ internal fun InteractiveMapPanel(
                                 text = "N",
                                 style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp, fontWeight = FontWeight.Black),
                                 color = MapPalette.gateway
-                            )
-                        }
-                    }
-
-                    // Bottom-left selected room callout pill
-                    selected?.let { room ->
-                        Surface(
-                            modifier = Modifier
-                                .align(Alignment.BottomStart)
-                                .padding(start = 10.dp, bottom = 10.dp, end = 164.dp),
-                            shape = RoundedCornerShape(10.dp),
-                            color = Color(0xFF061018).copy(alpha = 0.88f),
-                            border = BorderStroke(1.dp, MapPalette.room(room).copy(alpha = 0.50f))
-                        ) {
-                            Text(
-                                text = room.title,
-                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                color = Color.White,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
                             )
                         }
                     }

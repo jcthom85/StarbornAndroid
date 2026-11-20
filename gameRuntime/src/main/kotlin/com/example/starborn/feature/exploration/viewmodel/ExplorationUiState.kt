@@ -338,7 +338,9 @@ data class MinimapCellUi(
     val title: String = roomId,
     val hubExit: MapHubExitUi? = null,
     // Relative target positions for paths continuing outside the minimap's dot viewport.
-    val continuationOffsets: Map<String, Pair<Int, Int>> = emptyMap()
+    val continuationOffsets: Map<String, Pair<Int, Int>> = emptyMap(),
+    val hasNearbyPatrol: Boolean = false,
+    val isPatrolRoute: Boolean = false
 )
 
 data class MapHubExitUi(val destinationTitle: String, val blocked: Boolean = false)
@@ -452,7 +454,8 @@ data class PartyMemberStatusUi(
     val hpLabel: String?,
     val hpProgress: Float? = null,
     val portraitPath: String?,
-    val unlockedSkills: List<String>
+    val unlockedSkills: List<String>,
+    val availableAp: Int = 0
 )
 
 data class PartyMemberDetailsUi(

@@ -41,6 +41,14 @@ class EnemyMovementManager(
                 states[definition.id]?.let { !it.defeated && it.roomId == roomId } == true
         }
 
+    fun isRoomOnActivePatrolRoute(roomId: String, session: GameSessionState): Boolean =
+        definitionsById.values.any { definition ->
+            definition.behavior.equals("patrol", ignoreCase = true) &&
+                isActive(definition, session) &&
+                states[definition.id]?.defeated != true &&
+                roomId in definition.route
+        }
+
     fun party(partyId: String): EnemyMovementParty? = definitionsById[partyId]
 
     fun stateSnapshot(): Map<String, EnemyPartyRuntimeState> = states

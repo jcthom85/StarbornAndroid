@@ -116,7 +116,7 @@
   {
     "id": "cyber_visor",
     "name": "ICE Breaker Cyber Visor",
-    "description": "A neon targeting visor awarded for mastering Spire Infiltrator. Enhances vulnerability detection (+3 Focus, +4% Accuracy).",
+    "description": "A neon targeting visor awarded for mastering Spire Infiltrator. Its optical overlay locks onto structural weak points in low light.",
     "type": "accessory",
     "value": 1200,
     "rarity": "epic",
@@ -150,7 +150,7 @@
   {
     "id": "foundry_crucible_lining",
     "name": "Crucible Heat Shield",
-    "description": "A ceramic shield shaped in a Foundry crucible. Equip it as an accessory for +3 Vitality and +2 Strength.",
+    "description": "A ceramic heat-shield shaped in a Foundry crucible, tempered to shrug off slag bursts and heavy kinetic impacts.",
     "type": "accessory",
     "value": 850,
     "rarity": "rare",
@@ -165,7 +165,7 @@
   {
     "id": "thermal_solder_gun",
     "name": "Master Smelter Solder Gun",
-    "description": "An industrial precision tool awarded for mastering Slag Catcher. Grants +5 Strength and +3 Focus.",
+    "description": "An industrial precision solder gun awarded for mastering Slag Catcher. Rewired as a compact thermal booster for field combat.",
     "type": "accessory",
     "value": 1400,
     "rarity": "epic",
@@ -199,7 +199,7 @@
   {
     "id": "plasma_lens_mod",
     "name": "Zenith Plasma Lens",
-    "description": "A precision focus crystal awarded from Orbital Defense (+4 Accuracy, +3 Attack Power).",
+    "description": "A precision-cut focus crystal awarded from Orbital Defense. Tightens energy dispersion into a razor-sharp beam.",
     "type": "accessory",
     "value": 1000,
     "rarity": "rare",
@@ -214,7 +214,7 @@
   {
     "id": "orbital_deflector_matrix",
     "name": "Orbital Deflector Matrix",
-    "description": "An advanced shielding matrix earned by mastering Orbital Defense 2000 (+4 Focus, +3 Vitality).",
+    "description": "An advanced shielding matrix earned by mastering Orbital Defense 2000. Projects a micro-deflector lattice around the wearer.",
     "type": "accessory",
     "value": 1600,
     "rarity": "epic",
@@ -248,7 +248,7 @@
   {
     "id": "harmonic_resonator_tome",
     "name": "Harmonic Resonator Codex",
-    "description": "An ancient resonance codex awarded from Harmonic Pulse (+4 Focus, +3 Intelligence).",
+    "description": "An ancient resonance codex awarded from Harmonic Pulse, inscribed with harmonic intervals that steady the mind under pressure.",
     "type": "accessory",
     "value": 1250,
     "rarity": "rare",
@@ -263,7 +263,7 @@
   {
     "id": "source_cadence_crown",
     "name": "Crown of the Primordial Cadence",
-    "description": "A radiant diadem awarded for mastering Harmonic Pulse. Its six tones resonate in unison. Grants +12 Focus.",
+    "description": "A radiant diadem awarded for mastering Harmonic Pulse. Its six tones resonate in quiet, unbroken unison.",
     "type": "accessory",
     "value": 2500,
     "rarity": "legendary",
@@ -633,7 +633,7 @@
   {
     "id": "zeke_surge_harness",
     "name": "Surge Harness",
-    "description": "Flexible armor for Zeke. Grants +4 Defense, +4 Speed and +6 Evasion. The Brawler Rig trades speed and evasion for stronger strikes.",
+    "description": "Flexible, low-profile kinetic armor built for Zeke to stay nimble and slip past incoming blows.",
     "aliases": [
       "surge harness"
     ],
@@ -653,7 +653,7 @@
   {
     "id": "zeke_brawler_rig",
     "name": "Brawler Rig",
-    "description": "Weighted armor for Zeke. Grants +6 Defense, +6 Strength and +4 percentage points of weapon crit chance. The Surge Harness is faster and easier to dodge in.",
+    "description": "Weighted shock-frame armor engineered for Zeke, trading agility for crushing momentum behind every strike.",
     "aliases": [
       "brawler rig"
     ],
@@ -713,7 +713,7 @@
   {
     "id": "orion_driftweave_cloak",
     "name": "Driftweave Cloak",
-    "description": "Light armor for Orion. It grants +3 Defense, +4 Speed and +6 Evasion. His Channeler Mantle gives him more Focus and Accuracy.",
+    "description": "Featherlight driftweave armor cut for Orion, built to keep him quick on his feet and hard to pin down.",
     "aliases": [
       "driftweave cloak"
     ],
@@ -1066,7 +1066,7 @@
   {
     "id": "starbar_crunch",
     "name": "Starbar Crunch",
-    "description": "Compressed carbs and caffeine. Tastes like chalk and panic. Equip it in a party member’s Snack slot for +6 Speed. In combat, use Snack to boost evasion for two turns. The action recharges after use.",
+    "description": "Compressed carbs and caffeine. Tastes like chalk and panic, and kicks your reflexes into overdrive when eaten in combat.",
     "type": "snack",
     "value": 120,
     "buy_price": 240,
@@ -1113,7 +1113,7 @@
   {
     "id": "comet_gummies",
     "name": "Comet Gummies",
-    "description": "Neon-bright chews. They taste like battery acid and make the world slow down. Use the ability before basic weapon attacks; it spends your action to boost weapon accuracy and crit chance.",
+    "description": "Neon-bright chews that taste like battery acid and make the whole world slow to a crawl. Best saved right before lining up a heavy shot.",
     "type": "snack",
     "value": 180,
     "buy_price": 320,
@@ -1188,7 +1188,7 @@
   {
     "id": "ion_poppers",
     "name": "Ion Poppers",
-    "description": "Carbonated stimulant spheres sealed in a field ration pouch. Equip them in a party member’s Snack slot for +2 Luck. In combat, use Snack to boost accuracy for two turns. The action recharges after use.",
+    "description": "Carbonated stimulant spheres sealed in a field ration pouch. The fizzy jolt clears tunnel vision in the middle of a firefight.",
     "type": "snack",
     "value": 190,
     "buy_price": 360,
@@ -1212,7 +1212,7 @@
   {
     "id": "sunder_seeds",
     "name": "Sunder Seeds",
-    "description": "Bitter pits shaken loose from the Source's memory of a meal. Equip them in a Snack slot for +1 Vitality. Use Snack in combat for +6 Defense for two turns. The action recharges after use.",
+    "description": "Bitter pits shaken loose from the Source's memory of a meal. Hard to swallow, yet they leave the skin braced like tempered iron.",
     "type": "snack",
     "value": 210,
     "buy_price": 400,
@@ -1661,7 +1661,7 @@
   {
     "id": "mod_corrosive_rounds",
     "name": "Corrosive Rounds",
-    "description": "An illegal munitions mod scavenged from an enforcer's sidearm. Micro-injectors coat plasma slugs in acid. Hits have a 25% chance to inflict Corrosion: 8 acid damage per turn for 3 turns.",
+    "description": "An illegal munitions mod scavenged from an enforcer's sidearm. Micro-injectors coat plasma slugs in reactive acid that eats through armor over time.",
     "type": "mod",
     "value": 250,
     "buy_price": 500,
@@ -2506,7 +2506,7 @@
   {
     "id": "stability_gyro_mod",
     "name": "Stability Gyro Mod",
-    "description": "A gyroscopic stabilizer for an unlocked mod slot. Grants +4 Defense and +2 Speed.",
+    "description": "A compact gyroscopic stabilizer machined to fit an unlocked mod slot, smoothing recoil and footwork alike.",
     "type": "mod",
     "value": 200,
     "buy_price": 400,
@@ -2624,7 +2624,7 @@
   {
     "id": "relic_mod_biolum_focus",
     "name": "Bioluminescent Focus",
-    "description": "An Architect prism weapon mod. Adds Electric to basic attacks when the weapon and any earlier mod supply no element. Has a 25% chance to inflict Shock on hit when this mod supplies the weapon’s status effect.",
+    "description": "An Architect prism weapon mod pulsing with bioluminescent charge. Channels raw electric arcs through unaligned weapons.",
     "type": "mod",
     "value": 450,
     "buy_price": 900,
@@ -2913,7 +2913,7 @@
   {
     "id": "source_resin",
     "name": "Source Resin",
-    "description": "Hardened residue from Source activity. Equip it as a mod for +4 Focus and +4 Vitality, or use it as a Tinkering ingredient.",
+    "description": "Hardened residue crystallized from Source activity. Can be slotted directly as a field mod or refined at a Tinkering workbench.",
     "type": "mod",
     "value": 300,
     "buy_price": 600,
@@ -2930,7 +2930,7 @@
   {
     "id": "rapid_capacitor",
     "name": "Rapid Capacitor",
-    "description": "An overclocked capacitor assembled from a Dominion transmitter core. Equip it for +5 Speed and +3 Agility, or use it to build a Resonance Capacitor Mod.",
+    "description": "An overclocked capacitor salvaged from a Dominion transmitter core. Usable right away as a mod, or as the heart of a Resonance Capacitor.",
     "type": "mod",
     "value": 300,
     "buy_price": 600,
@@ -2998,7 +2998,7 @@
   {
     "id": "neon_band",
     "name": "Neon Band",
-    "description": "A woven band that glows under neon. Grants +2 Focus and 5 percentage points of critical hit chance.",
+    "description": "A woven band stitched with neon filament that hums faintly whenever you line up a clean shot.",
     "type": "accessory",
     "value": 250,
     "buy_price": 500,
@@ -3050,7 +3050,7 @@
   {
     "id": "phase_rounds",
     "name": "Phase Rounds",
-    "description": "An experimental targeting accessory recovered from executive security. Equip it for +2 Agility and +2 Focus.",
+    "description": "An experimental targeting clip recovered from executive security, phase-tuned for rapid target acquisition.",
     "type": "accessory",
     "value": 700,
     "buy_price": 650,
@@ -3067,7 +3067,7 @@
   {
     "id": "heat_liner",
     "name": "Heat Liner",
-    "description": "Insulated Foundry armor. Grants +6 Defense, +20 max HP, and +2 Vitality.",
+    "description": "Heavy insulated Foundry armor lined with heat-baffling plates to endure furnace floors and sustained fire.",
     "type": "armor",
     "value": 600,
     "buy_price": 650,
@@ -3093,7 +3093,7 @@
   {
     "id": "explosive_tip",
     "name": "Explosive Tip",
-    "description": "An accessory built around impact-charge hardware. Grants +2 Strength and +1 Luck.",
+    "description": "A compact impact-charge kit that packs an extra concussive punch into close-quarters blows.",
     "type": "accessory",
     "value": 850,
     "buy_price": 1700,
@@ -3152,7 +3152,7 @@
   {
     "id": "thermal_clip",
     "name": "Thermal Clip",
-    "description": "A heat-stabilized ammunition accessory. Grants +2 Strength and +1 Focus.",
+    "description": "A heat-stabilized clip machined to keep shots running hot and true under sustained fire.",
     "type": "accessory",
     "value": 900,
     "buy_price": 700,
@@ -3185,7 +3185,7 @@
   {
     "id": "mag_boots",
     "name": "Mag-Boots",
-    "description": "Heavy boots with magnetic soles. Equip them as an accessory for +2 Defense and +2 Vitality.",
+    "description": "Heavy boots fitted with magnetic soles that anchor your stance against shockwaves and slick grating.",
     "type": "accessory",
     "value": 850,
     "buy_price": 1700,
@@ -3219,7 +3219,7 @@
   {
     "id": "void_clip",
     "name": "Void Clip",
-    "description": "A phase-calibrated ammunition accessory. Grants +2 Strength and +2 Focus.",
+    "description": "A phase-calibrated clip tuned to slip past light shielding without losing stopping power.",
     "type": "accessory",
     "value": 1200,
     "buy_price": 2400,
@@ -3244,7 +3244,7 @@
   {
     "id": "starborn_mod",
     "name": "Starborn",
-    "description": "An accessory forged from the Astra's future hull. Grants +5 Strength, +5 Focus, +3 Luck, and +15 percentage points of critical chance.",
+    "description": "A luminous relay forged from a sliver of the Astra's future hull. Its resonant alloy sharpens every instinct in battle.",
     "type": "accessory",
     "value": 5000,
     "buy_price": 10000,
@@ -3857,7 +3857,7 @@
   {
     "id": "cyano_coolant_injector",
     "name": "Cyano-Coolant Injector",
-    "description": "A weapon mod recovered from Sorrell’s comms core. Adds Freeze to basic attacks when the weapon and any earlier mod supply no element. Has a 20% chance to inflict Freeze on hit when this mod supplies the weapon’s status effect. Grants +4 Focus and +3 Accuracy.",
+    "description": "A cryo-coolant injector recovered from Sorrell’s comms core. Supercools unaligned weapon discharges to flash-chill targets on impact.",
     "type": "mod",
     "value": 350,
     "rarity": "rare",
@@ -3875,7 +3875,7 @@
   {
     "id": "crucible_forge_plate",
     "name": "Crucible Forge-Plate",
-    "description": "Master-forged gladiator armor beaten under slag hammers (+10 Defense, +45 HP, +4 Vitality, +2 Strength).",
+    "description": "Master-forged gladiator plating beaten under Foundry slag hammers—scarred, heavy, and nearly impervious to direct blows.",
     "type": "armor",
     "value": 1500,
     "buy_price": 3000,

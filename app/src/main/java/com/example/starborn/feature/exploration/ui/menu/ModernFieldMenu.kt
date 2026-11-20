@@ -43,22 +43,13 @@ internal fun MenuTab.fieldTitle(): String = when (this) {
     else -> label()
 }
 
-private fun MenuTab.headerSubtitle(): String = when (this) {
-    MenuTab.STATS -> "CREW · LOADOUT · PROGRESSION"
-    MenuTab.INVENTORY -> "SUPPLIES · GEAR · KEY ITEMS"
-    MenuTab.FIELD_KIT -> "WORKBENCH · SCHEMATICS · SALVAGE"
-    MenuTab.JOURNAL -> "ACTIVE & COMPLETED LOGS"
-    MenuTab.MAP -> "SECTOR TELEMETRY & NAVIGATION"
-    MenuTab.SETTINGS -> "SYSTEM · SAVE DATA · COMFORT"
-}
-
 @Composable
 internal fun ModernFieldMenu(
     tab: MenuTab,
     detailTitle: String?,
     party: PartyStatusUi,
     selectedMemberId: String?,
-    credits: String,
+    credits: String?,
     scroll: ScrollState,
     tinkerTutorial: Boolean,
     gearTutorial: Boolean,
@@ -123,17 +114,19 @@ internal fun ModernFieldMenu(
                 val compact = maxWidth < 310.dp || LocalDensity.current.fontScale > 1.25f
                 val heading: @Composable () -> Unit = {
                     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                        Text(
-                            text = if (detailTitle != null) "FIELD MENU · ${tab.fieldTitle().uppercase()}" else tab.headerSubtitle(),
-                            color = FieldMenuDesign.cyan.copy(alpha = 0.85f),
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 0.8.sp
-                            ),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
+                        if (detailTitle != null) {
+                            Text(
+                                text = tab.fieldTitle().uppercase(),
+                                color = FieldMenuDesign.cyan.copy(alpha = 0.85f),
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    letterSpacing = 1.sp
+                                ),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -149,18 +142,20 @@ internal fun ModernFieldMenu(
                                 maxLines = if (compact) 2 else 1,
                                 overflow = TextOverflow.Ellipsis
                             )
-                            Surface(
-                                shape = RoundedCornerShape(8.dp),
-                                color = FieldMenuDesign.gold.copy(alpha = 0.14f),
-                                border = BorderStroke(1.dp, FieldMenuDesign.gold.copy(alpha = 0.55f))
-                            ) {
-                                Text(
-                                    text = credits,
-                                    color = FieldMenuDesign.gold,
-                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
-                                    maxLines = 1
-                                )
+                            credits?.takeIf { it.isNotBlank() }?.let { badgeText ->
+                                Surface(
+                                    shape = RoundedCornerShape(8.dp),
+                                    color = FieldMenuDesign.gold.copy(alpha = 0.14f),
+                                    border = BorderStroke(1.dp, FieldMenuDesign.gold.copy(alpha = 0.55f))
+                                ) {
+                                    Text(
+                                        text = badgeText,
+                                        color = FieldMenuDesign.gold,
+                                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+                                        maxLines = 1
+                                    )
+                                }
                             }
                         }
                     }
@@ -276,6 +271,7 @@ internal fun ModernFieldMenu(
                         )
                         Column(Modifier.widthIn(min = 60.dp, max = 104.dp)) {
                             Row(
+                                modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(4.dp)
                             ) {
@@ -285,7 +281,7 @@ internal fun ModernFieldMenu(
                                     style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
-                                    modifier = Modifier.weight(1f, fill = false)
+                                    modifier = Modifier.weight(1f)
                                 )
                                 Text(
                                     text = "L${member.level}",
@@ -477,12 +473,14 @@ internal fun ModernPartyPage(
     onSkills: (String) -> Unit,
     availableAp: Int = 0,
     activeMealSummary: String? = null,
+    showEquipmentHint: Boolean = false,
     equipment: @Composable () -> Unit
 ) {
     if (member == null) {
         Text("No party members yet.", color = FieldMenuDesign.textMuted)
         return
     }
+    val effectiveAp = if (availableAp > 0) availableAp else member.availableAp
     val largeTargets = LocalFieldMenuLargeTargets.current
     val largeFont = LocalDensity.current.fontScale >= 1.3f
 
@@ -514,13 +512,17 @@ internal fun ModernPartyPage(
                 MemberPortrait(member, Modifier.size(72.dp), selected = true)
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                     Row(
+                        modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
                             text = member.name,
                             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                            color = FieldMenuDesign.text
+                            color = FieldMenuDesign.text,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f).padding(end = 8.dp)
                         )
                         Surface(
                             shape = RoundedCornerShape(6.dp),
@@ -531,7 +533,8 @@ internal fun ModernPartyPage(
                                 text = "Level ${member.level}",
                                 color = FieldMenuDesign.gold,
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp)
+                                modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp),
+                                maxLines = 1
                             )
                         }
                     }
@@ -592,15 +595,15 @@ internal fun ModernPartyPage(
         }
     }
 
-    // 2. Dual Tactical Cards: Abilities (Skills) & Attributes
-    val cardHeight = if (largeTargets) 68.dp else 60.dp
+    // 2. Dual Tactical Cards: Abilities & Attributes (lean — no filler subtitles)
+    val cardHeight = if (largeTargets) 62.dp else 54.dp
     val abilitiesCard: @Composable (Modifier) -> Unit = { mod ->
         Surface(
             onClick = { onSkills(member.id) },
             modifier = mod.heightIn(min = cardHeight),
             shape = RoundedCornerShape(12.dp),
             color = FieldMenuDesign.primaryActionFill,
-            border = BorderStroke(1.5.dp, if (availableAp > 0) FieldMenuDesign.gold else FieldMenuDesign.cyan.copy(alpha = 0.65f))
+            border = BorderStroke(1.5.dp, if (effectiveAp > 0) FieldMenuDesign.gold else FieldMenuDesign.cyan.copy(alpha = 0.65f))
         ) {
             Row(
                 modifier = Modifier
@@ -609,29 +612,39 @@ internal fun ModernPartyPage(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        Text(
-                            text = "Abilities",
-                            color = FieldMenuDesign.text,
-                            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
-                        )
-                        Text(
-                            text = "Skills",
-                            color = FieldMenuDesign.cyan,
-                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold)
-                        )
-                    }
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.AutoAwesome,
+                        contentDescription = null,
+                        tint = if (effectiveAp > 0) FieldMenuDesign.gold else FieldMenuDesign.cyan,
+                        modifier = Modifier.size(18.dp)
+                    )
                     Text(
-                        text = if (availableAp > 0) "$availableAp AP ready to spend" else "Skill trees & combat techniques",
-                        color = if (availableAp > 0) FieldMenuDesign.gold else FieldMenuDesign.textMuted,
-                        style = MaterialTheme.typography.labelSmall,
+                        text = "Abilities",
+                        color = FieldMenuDesign.text,
+                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
+                    if (effectiveAp > 0) {
+                        Surface(
+                            shape = RoundedCornerShape(6.dp),
+                            color = FieldMenuDesign.gold.copy(alpha = 0.18f),
+                            border = BorderStroke(1.dp, FieldMenuDesign.gold.copy(alpha = 0.7f))
+                        ) {
+                            Text(
+                                text = "$effectiveAp AP",
+                                color = FieldMenuDesign.gold,
+                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold),
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                maxLines = 1
+                            )
+                        }
+                    }
                 }
                 Text("›", color = FieldMenuDesign.gold, fontSize = 20.sp, fontWeight = FontWeight.Bold)
             }
@@ -653,16 +666,21 @@ internal fun ModernPartyPage(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Tune,
+                        contentDescription = null,
+                        tint = FieldMenuDesign.cyan,
+                        modifier = Modifier.size(18.dp)
+                    )
                     Text(
                         text = "Attributes",
                         color = FieldMenuDesign.text,
-                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
-                    )
-                    Text(
-                        text = "Base stats & combat readout",
-                        color = FieldMenuDesign.textMuted,
-                        style = MaterialTheme.typography.labelSmall,
+                        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -684,7 +702,7 @@ internal fun ModernPartyPage(
         }
     }
 
-    // 3. Equipment & Mods Section
+    // 3. Equipment Section
     Row(
         modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -695,11 +713,13 @@ internal fun ModernPartyPage(
             color = FieldMenuDesign.text,
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
         )
-        Text(
-            text = "Tap slot to swap or mod",
-            color = FieldMenuDesign.textMuted,
-            style = MaterialTheme.typography.labelSmall
-        )
+        if (showEquipmentHint) {
+            Text(
+                text = "Tap slot to swap or mod",
+                color = FieldMenuDesign.cyan,
+                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold)
+            )
+        }
     }
     equipment()
 }

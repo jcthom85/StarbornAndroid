@@ -127,8 +127,22 @@ internal fun EquipmentComparison(candidate: Equipment?, current: Equipment?, cur
 
 internal fun equipmentNumber(value: Double): String = String.format(Locale.ROOT, "%.2f", value).trimEnd('0').trimEnd('.')
 internal fun equipmentPercent(value: Double): String = "${equipmentNumber(if (kotlin.math.abs(value) <= 1.0) value * 100 else value)}%"
-internal fun equipmentLabel(raw: String): String = raw.split('_', ' ').filter { it.isNotBlank() }
-    .joinToString(" ") { it.replaceFirstChar { c -> c.uppercaseChar() } }
+internal fun equipmentLabel(raw: String): String = when (raw.trim().lowercase(Locale.ROOT)) {
+    "atk" -> "Attack"
+    "str" -> "Strength"
+    "vit" -> "Vitality"
+    "spd" -> "Speed"
+    "agi" -> "Agility"
+    "foc" -> "Focus"
+    "int" -> "Intelligence"
+    "lck" -> "Luck"
+    "def" -> "Defense"
+    "eva" -> "Evasion"
+    "acc" -> "Accuracy"
+    "crit_rate", "crit" -> "Crit Rate"
+    else -> raw.split('_', ' ').filter { it.isNotBlank() }
+        .joinToString(" ") { it.replaceFirstChar { c -> c.uppercaseChar() } }
+}
 internal fun equipmentAttackStyle(raw: String): String = when (raw.lowercase(Locale.ROOT)) {
     "single" -> "Single target"
     "all" -> "All enemies"

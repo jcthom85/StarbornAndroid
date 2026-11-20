@@ -8,6 +8,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 val LocalModernFieldMenu = staticCompositionLocalOf { false }
 val LocalFieldMenuHighContrast = staticCompositionLocalOf { false }
 val LocalFieldMenuLargeTargets = staticCompositionLocalOf { false }
+val LocalFieldMenuReducedMotion = staticCompositionLocalOf { false }
 
 /** Stable visual language for the out-of-world field menu. */
 object FieldMenuDesign {

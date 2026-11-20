@@ -71,7 +71,8 @@ internal fun buildPartyStatusUi(
             hpLabel = hpLabel,
             hpProgress = hpProgress,
             portraitPath = character.miniIconPath,
-            unlockedSkills = unlockedSkills
+            unlockedSkills = unlockedSkills,
+            availableAp = sessionState.playerAp
         )
     }
     return PartyStatusUi(members = members)

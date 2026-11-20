@@ -27,9 +27,13 @@ import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.starborn.feature.exploration.viewmodel.*
@@ -44,6 +48,7 @@ object MapPalette {
     val gateway = Color(0xFF00E5FF)
     val blocked = Color(0xFFC5B3DE)
     val threat = Color(0xFFFF746D)
+    val patrol = Color(0xFFFFB454)
     val background = Color(0xFF061018)
     fun room(cell: MinimapCellUi) = when {
         cell.isCurrent -> current
@@ -72,7 +77,9 @@ fun mapServiceIcon(service: MinimapService) = when (service) {
 fun mapRoomDescription(cell: MinimapCellUi): String = buildList {
     add(cell.title)
     add(when { cell.isCurrent -> "You are here"; cell.isPreview -> "Unexplored"; cell.visited -> "Visited"; else -> "Discovered" })
+    if (cell.hasNearbyPatrol) add("Motion detected (patrol nearby)")
     if (cell.hasEnemies) add("Enemies present")
+    if (cell.isPatrolRoute && !cell.hasNearbyPatrol) add("Patrol route")
     if (cell.blockedDirections.isNotEmpty()) add("Blocked paths: ${cell.blockedDirections.joinToString()}")
     addAll(cell.services.filterNot { it == MinimapService.EXIT }.map(::mapServiceLabel))
     cell.hubExit?.let { add("Exit to ${it.destinationTitle}${if (it.blocked) " (blocked)" else ""}") }
@@ -97,6 +104,7 @@ fun MapLegend(modifier: Modifier = Modifier) {
             MapLegendSwatch("Unexplored", MapPalette.discovered)
             MapLegendSwatch("Exit room", MapPalette.gateway, shape = "diamond")
             MapLegendSwatch("Enemies", MapPalette.threat, shape = "dot")
+            MapLegendSwatch("Motion contact", MapPalette.patrol, shape = "motion")
             MapLegendSwatch("Blocked route", MapPalette.blocked, shape = "lock")
             MapLegendSwatch("Dark room", MapPalette.discovered, shape = "dark")
         }
@@ -158,6 +166,10 @@ private fun MapLegendSwatch(label: String, color: Color, shape: String = "tile")
                         }, color, style = Stroke(1.6.dp.toPx()))
                     }
                     "dot" -> drawCircle(color, r * 0.65f, c)
+                    "motion" -> {
+                        drawCircle(color.copy(alpha = 0.35f), r * 1.15f, c, style = Stroke(1.3.dp.toPx()))
+                        drawCircle(color, r * 0.55f, c)
+                    }
                     "lock" -> drawMapLock(c)
                     "dark" -> {
                         drawRoundRect(color.copy(alpha = 0.55f), c - Offset(r, r), Size(r * 2, r * 2), CornerRadius(3.dp.toPx()))
@@ -210,6 +222,39 @@ fun MapRoomDetails(
             )
             Spacer(Modifier.width(8.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+                if (cell.hasNearbyPatrol) {
+                    Surface(
+                        shape = RoundedCornerShape(999.dp),
+                        color = MapPalette.patrol.copy(alpha = 0.18f),
+                        border = BorderStroke(1.dp, MapPalette.patrol.copy(alpha = 0.7f))
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Box(Modifier.size(6.dp).clip(CircleShape).background(MapPalette.patrol))
+                            Text(
+                                "MOTION",
+                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold),
+                                color = MapPalette.patrol
+                            )
+                        }
+                    }
+                } else if (cell.isPatrolRoute) {
+                    Surface(
+                        shape = RoundedCornerShape(999.dp),
+                        color = MapPalette.patrol.copy(alpha = 0.10f),
+                        border = BorderStroke(1.dp, MapPalette.patrol.copy(alpha = 0.38f))
+                    ) {
+                        Text(
+                            "PATROL ROUTE",
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold),
+                            color = MapPalette.patrol.copy(alpha = 0.88f),
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                        )
+                    }
+                }
                 if (cell.hasEnemies) {
                     Surface(
                         shape = RoundedCornerShape(999.dp),
@@ -418,9 +463,16 @@ fun DrawScope.drawMapRoom(
             drawCircle(MapPalette.current.copy(alpha = 0.22f), radius * 1.65f, center)
             drawCircle(MapPalette.current.copy(alpha = 0.45f), radius * 1.25f, center, style = Stroke(1.2.dp.toPx()))
         }
+        // Solid opaque dark backing so route corridors never bleed through room interiors
+        drawRoundRect(
+            color = Color(0xFF0A1926),
+            topLeft = topLeft,
+            size = rectSize,
+            cornerRadius = corner
+        )
         drawRoundRect(
             color = if (cell.isCurrent) MapPalette.current.copy(alpha = dimAlpha)
-            else baseColor.copy(alpha = (if (cell.visited) 0.28f else 0.16f) * dimAlpha),
+            else baseColor.copy(alpha = (if (cell.visited) 0.30f else 0.16f) * dimAlpha),
             topLeft = topLeft,
             size = rectSize,
             cornerRadius = corner
@@ -430,7 +482,7 @@ fun DrawScope.drawMapRoom(
             topLeft = topLeft,
             size = rectSize,
             cornerRadius = corner,
-            style = Stroke(if (cell.isCurrent || selected) 2.dp.toPx() else 1.4.dp.toPx())
+            style = Stroke(if (cell.isCurrent || selected) 2.dp.toPx() else 1.5.dp.toPx())
         )
     } else {
         drawCircle(baseColor, radius, center)
@@ -444,12 +496,26 @@ fun DrawScope.drawMapRoom(
 }
 
 fun DrawScope.drawMapThreat(cell: MinimapCellUi, center: Offset, radius: Float, dimmed: Boolean = false) {
-    if (!cell.hasEnemies || cell.isDark || cell.isPreview) return
-    val p = center + Offset(radius * .85f, -radius * .85f)
-    val dot = (radius * .42f).coerceAtMost(3.5.dp.toPx())
+    if (cell.isDark || cell.isPreview) return
     val alpha = if (dimmed) 0.25f else 1f
-    drawCircle(MapPalette.background, dot * 1.55f, p)
-    drawCircle(MapPalette.threat.copy(alpha = alpha), dot, p)
+    if (cell.hasEnemies) {
+        val p = center + Offset(radius * .85f, -radius * .85f)
+        val dot = (radius * .42f).coerceAtMost(3.5.dp.toPx())
+        drawCircle(MapPalette.background, dot * 1.55f, p)
+        drawCircle(MapPalette.threat.copy(alpha = alpha), dot, p)
+    }
+    if (cell.hasNearbyPatrol) {
+        // Short-range motion tracker contact: place top-left if static enemies occupy top-right
+        val p = if (cell.hasEnemies) {
+            center + Offset(-radius * .85f, -radius * .85f)
+        } else {
+            center + Offset(radius * .85f, -radius * .85f)
+        }
+        val dot = (radius * .38f).coerceAtMost(3.2.dp.toPx())
+        drawCircle(MapPalette.background, dot * 1.95f, p)
+        drawCircle(MapPalette.patrol.copy(alpha = 0.38f * alpha), dot * 1.85f, p, style = Stroke(1.3.dp.toPx()))
+        drawCircle(MapPalette.patrol.copy(alpha = alpha), dot, p)
+    }
 }
 
 /** Service details belong to the full map; keep all services instead of silently choosing one. */
@@ -631,7 +697,61 @@ fun AreaMapCanvas(
                 drawNodeExitMarker(p, exit, radius, step * .48f)
             }
         }
-        if (!minimap) drawFullMapNodeExits(visible, ::point, step*.36f, textMeasurer)
+        if (!minimap) {
+            drawFullMapNodeExits(visible, ::point, step * .36f, textMeasurer)
+            // Draw crisp non-overlapping room name tags: always for selected room, and for visited rooms when zoomed in
+            val labelCells = buildList {
+                visible.firstOrNull { it.roomId == selectedId }?.let { add(it) }
+                if (scale >= 1.35f) {
+                    visible.filter { (it.visited || it.isCurrent) && !it.isDark && it.roomId != selectedId }
+                        .forEach { add(it) }
+                }
+            }
+            if (labelCells.isNotEmpty()) {
+                val occupiedLabels = mutableListOf<Rect>()
+                val hPad = 5.dp.toPx()
+                val vPad = 2.5.dp.toPx()
+                val edgePad = 6.dp.toPx()
+                labelCells.forEach { cell ->
+                    val isSel = cell.roomId == selectedId
+                    val p = point(cell)
+                    val radius = step * (if (cell.isCurrent) .28f else if (mapRoomHasExit(cell)) .24f else .21f)
+                    val measured = textMeasurer.measure(
+                        AnnotatedString(cell.title),
+                        style = TextStyle(
+                            color = if (isSel) Color.White else Color.White.copy(alpha = 0.86f),
+                            fontSize = if (isSel) 9.5.sp else 8.5.sp,
+                            fontWeight = if (isSel) FontWeight.Bold else FontWeight.Medium
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        constraints = Constraints(maxWidth = 112.dp.roundToPx())
+                    )
+                    val boxW = measured.size.width + hPad * 2f
+                    val boxH = measured.size.height + vPad * 2f
+                    val left = (p.x - boxW / 2f).coerceIn(edgePad, (size.width - boxW - edgePad).coerceAtLeast(edgePad))
+                    val top = (p.y - radius - boxH - 6.dp.toPx()).coerceIn(edgePad, (size.height - boxH - edgePad).coerceAtLeast(edgePad))
+                    val rect = Rect(Offset(left, top), Size(boxW, boxH))
+                    if (isSel || occupiedLabels.none { it.overlaps(rect.inflate(2.dp.toPx())) }) {
+                        occupiedLabels.add(rect)
+                        drawRoundRect(
+                            color = Color(0xFF061018).copy(alpha = if (isSel) 0.94f else 0.84f),
+                            topLeft = rect.topLeft,
+                            size = rect.size,
+                            cornerRadius = CornerRadius(5.dp.toPx())
+                        )
+                        drawRoundRect(
+                            color = (if (isSel) MapPalette.room(cell) else MapPalette.visited).copy(alpha = if (isSel) 0.72f else 0.35f),
+                            topLeft = rect.topLeft,
+                            size = rect.size,
+                            cornerRadius = CornerRadius(5.dp.toPx()),
+                            style = Stroke(1.dp.toPx())
+                        )
+                        drawText(measured, topLeft = rect.topLeft + Offset(hPad, vPad))
+                    }
+                }
+            }
+        }
     }
 }
 
