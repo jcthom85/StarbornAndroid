@@ -704,6 +704,7 @@
       {
         "type": "narration",
         "text": "Nova clamps the Flux Liner's ground strip to the floor bus. Cold loop: 68%. She opens the governor bypass. Jed keeps one hand beside the cut-off.",
+        "music_cue": "music_cinematic_cutter_surge",
         "image": "images/rooms/world_1/workshop_floor_v3.webp",
         "camera_start_scale": 1.0,
         "camera_end_scale": 1.05,
@@ -747,7 +748,6 @@
         "speaker": "Nova",
         "emote": "worried",
         "text": "I have. Jed... it's still answering.",
-        "music_cue": "music_nova_theme",
         "caption_style": "dialogue",
         "image": "images/cinematics/w1_cutter_surge_steady_v1.webp",
         "camera_start_scale": 1.0,
@@ -763,7 +763,8 @@
         "camera_start_scale": 1.05,
         "camera_end_scale": 1.11,
         "transition": "cut",
-        "duration_seconds": 6.5
+        "duration_seconds": 6.5,
+        "fade_out_seconds": 0.9
       }
     ]
   },

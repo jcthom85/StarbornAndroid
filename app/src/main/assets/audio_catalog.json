@@ -114,6 +114,20 @@
       ]
     },
     {
+      "id": "music_cinematic_cutter_surge",
+      "type": "music",
+      "loop": false,
+      "fade_in_ms": 150,
+      "fade_out_ms": 800,
+      "gain": 0.90,
+      "tags": [
+        "world_1",
+        "cinematic",
+        "tense",
+        "mystery"
+      ]
+    },
+    {
       "id": "music_w1_combat",
       "type": "music",
       "loop": true,

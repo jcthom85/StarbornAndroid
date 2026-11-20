@@ -8291,28 +8291,9 @@ private fun IllustratedCinematicOverlay(
         }
     }
     val isIntroPrologue = state.sceneId == "intro_prologue"
-    val cinematicTapInteraction = remember(stepKey) { MutableInteractionSource() }
-    val cinematicInteractionModifier = if (isIntroPrologue || state.step.captionStyle == CinematicCaptionStyle.DIALOGUE) {
-        Modifier
-    } else {
-        Modifier
-            .maestroTag("cinematic-advance")
-            .semantics {
-                contentDescription = buildString {
-                    state.step.speaker?.takeIf { it.isNotBlank() }?.let { append("$it. ") }
-                    append(state.step.text)
-                }
-                onClick(label = "Advance cinematic") {
-                    advanceOrReveal()
-                    true
-                }
-            }
-            .clickable(
-                interactionSource = cinematicTapInteraction,
-                indication = null,
-                onClick = advanceOrReveal
-            )
-    }
+    // Illustrated cinematics play on their authored step durations so timed scores and SFX
+    // stay locked to the visuals; players can always use HOLD TO SKIP.
+    val cinematicInteractionModifier = Modifier
 
     Box(
         modifier = modifier
@@ -8554,7 +8535,6 @@ private fun IllustratedCinematicCaption(
 ) {
     if (state.step.captionStyle == CinematicCaptionStyle.DIALOGUE) {
         val speaker = state.step.speaker.orEmpty()
-        val isIntro = state.sceneId == "intro_prologue"
         DialogueOverlay(
             dialogue = DialogueUi(
                 line = DialogueLine(
@@ -8568,10 +8548,10 @@ private fun IllustratedCinematicCaption(
                 voiceCue = null
             ),
             choices = emptyList(),
-            onAdvance = if (isIntro) ({}) else onAdvance,
-            onChoice = { onAdvance() },
+            onAdvance = {},
+            onChoice = {},
             onPlayVoice = {},
-            canDismissByTap = !isIntro,
+            canDismissByTap = false,
             onPlayMurmur = { cue, pitch ->
                 audioCuePlayer?.execute(
                     listOf(AudioCommand.Play(AudioCueType.VOICE, cue, loop = false, fadeMs = 0L, gain = 0.50f, pitch = pitch))
@@ -8591,7 +8571,7 @@ private fun IllustratedCinematicCaption(
             revealAllRequest = revealAllRequest,
             onRevealFinished = onRevealFinished,
             isLastStep = state.stepIndex + 1 >= state.stepCount,
-            showTapToContinue = state.sceneId != "intro_prologue",
+            showTapToContinue = false,
             modifier = modifier
         )
         return
