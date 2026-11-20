@@ -59,7 +59,7 @@ import com.example.starborn.feature.crafting.TinkeringTutorialStep
 import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuLargeTargets
 import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuHighContrast
 import com.example.starborn.feature.exploration.ui.MenuSectionCard
-import com.example.starborn.feature.exploration.ui.components.previewItemIconRes
+import com.example.starborn.feature.exploration.ui.components.rememberItemIconPainter
 import kotlinx.coroutines.flow.collect
 
 enum class TinkerTabMode { WORKBENCH, SCHEMATICS, SCRAP }
@@ -854,7 +854,7 @@ private fun BenchSocket(
                         horizontalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
                         Image(
-                            painter = painterResource(previewItemIconRes(itemId)),
+                            painter = rememberItemIconPainter(itemId, fallbackType = itemId ?: "component"),
                             contentDescription = itemName,
                             modifier = Modifier.size(20.dp)
                         )
@@ -962,7 +962,7 @@ private fun InventoryMaterialChip(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Image(
-                    painter = painterResource(previewItemIconRes(item.id)),
+                    painter = rememberItemIconPainter(item.id, fallbackType = item.id),
                     contentDescription = item.name,
                     modifier = Modifier.size(24.dp)
                 )
@@ -1326,7 +1326,7 @@ private fun ScrapListPanel(
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Image(
-                                    painter = painterResource(previewItemIconRes(item.id)),
+                                    painter = rememberItemIconPainter(item.id, fallbackType = item.id),
                                     contentDescription = item.name,
                                     modifier = Modifier.size(22.dp)
                                 )

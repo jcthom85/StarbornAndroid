@@ -34,7 +34,7 @@ import com.example.starborn.domain.crafting.MealRules
 import com.example.starborn.domain.inventory.InventoryService
 import com.example.starborn.domain.inventory.ItemUseController
 import com.example.starborn.domain.model.CookingRecipe
-import com.example.starborn.feature.exploration.ui.components.previewItemIconRes
+import com.example.starborn.feature.exploration.ui.components.rememberItemIconPainter
 import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 import kotlinx.coroutines.launch
 
@@ -571,7 +571,7 @@ fun CookingScreen(
                                 horizontalArrangement = Arrangement.spacedBy(10.dp)
                             ) {
                                 Image(
-                                    painter = painterResource(previewItemIconRes(recipe.result)),
+                                    painter = rememberItemIconPainter(recipe.result, fallbackType = "food"),
                                     contentDescription = null,
                                     modifier = Modifier.size(38.dp)
                                 )

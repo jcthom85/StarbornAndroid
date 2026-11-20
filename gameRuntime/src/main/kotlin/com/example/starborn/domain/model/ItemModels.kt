@@ -2,6 +2,7 @@ package com.example.starborn.domain.model
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.util.Locale
 
 @JsonClass(generateAdapter = true)
 data class Item(
@@ -16,13 +17,23 @@ data class Item(
     val buyPrice: Int? = null,
     val rarity: String? = null,
     val description: String? = null,
+    val icon: String? = null,
     val equipment: Equipment? = null,
     val effect: ItemEffect? = null,
     val unsellable: Boolean = false,
     // Optional base used before the shop's markdown; purchase pricing is unchanged.
     @Json(name = "resale_value")
     val resaleValue: Int? = null
-)
+) {
+    fun resolvedIconAssetPath(): String? =
+        icon?.trim()?.takeIf { it.isNotEmpty() } ?: itemIconAssetPath(id)
+}
+
+fun itemIconAssetPath(itemId: String?): String? =
+    itemId?.trim()
+        ?.lowercase(Locale.ROOT)
+        ?.takeIf { it.isNotEmpty() }
+        ?.let { "images/items/$it.webp" }
 
 @JsonClass(generateAdapter = true)
 data class Equipment(

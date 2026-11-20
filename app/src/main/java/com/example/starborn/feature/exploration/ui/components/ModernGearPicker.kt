@@ -64,7 +64,7 @@ internal fun ModernGearPicker(
                             Column(Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(12.dp),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                                    Image(painterResource(previewItemIconRes(option.type)), null, modifier = Modifier.size(32.dp))
+                                    Image(rememberItemIconPainter(option.id, option.type), null, modifier = Modifier.size(32.dp))
                                     Text(option.name, color = FieldMenuDesign.text, style = MaterialTheme.typography.titleSmall)
                                 }
                                 if (option.id.equals(equippedId, true)) Text("Equipped", color = FieldMenuDesign.gold,

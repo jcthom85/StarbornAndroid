@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.starborn.feature.crafting.*
 import com.example.starborn.feature.crafting.ui.ModComparisonPanel
-import com.example.starborn.feature.exploration.ui.components.previewItemIconRes
+import com.example.starborn.feature.exploration.ui.components.rememberItemIconPainter
 import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuHighContrast
 import com.example.starborn.feature.exploration.ui.menu.LocalFieldMenuLargeTargets
@@ -148,7 +148,7 @@ internal fun ModernTinkerWorkbench(
                                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
                                     Image(
-                                        painterResource(previewItemIconRes(item.id)),
+                                        rememberItemIconPainter(item.id, fallbackType = item.id),
                                         contentDescription = null,
                                         modifier = Modifier.size(28.dp)
                                     )
@@ -522,7 +522,7 @@ private fun ModernTinkerSocket(
         ) {
             if (filled && !itemId.isNullOrBlank()) {
                 Image(
-                    painter = painterResource(previewItemIconRes(itemId)),
+                    painter = rememberItemIconPainter(itemId, fallbackType = itemId),
                     contentDescription = null,
                     modifier = Modifier.size(26.dp)
                 )
@@ -870,7 +870,7 @@ internal fun ModernTinkerScrap(items: List<TinkeringItemChoice>, onScrap: (Strin
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Image(
-                            painter = painterResource(previewItemIconRes(item.id)),
+                            painter = rememberItemIconPainter(item.id, fallbackType = item.id),
                             contentDescription = null,
                             modifier = Modifier.size(32.dp)
                         )

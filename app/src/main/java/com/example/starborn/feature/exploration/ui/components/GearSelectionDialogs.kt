@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -26,10 +27,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.starborn.domain.model.itemIconAssetPath
 import com.example.starborn.feature.exploration.ui.menu.LocalModernFieldMenu
 import com.example.starborn.feature.exploration.ui.menu.FieldMenuDesign
 import com.example.starborn.R
 import com.example.starborn.feature.exploration.viewmodel.InventoryPreviewItemUi
+import com.example.starborn.ui.background.rememberAssetPainter
 import java.util.Locale
 
 @Composable
@@ -159,7 +162,7 @@ fun GearSelectionDialog(
                             val normalizedId = option.id.lowercase(Locale.getDefault())
                             val isEquipped = normalizedId == equippedNormalized
                             val shape = RoundedCornerShape(12.dp)
-                            val iconRes = remember(option.id + option.type) { previewItemIconRes(option.type) }
+                            val iconPainter = rememberItemIconPainter(option.id, option.type)
                             Surface(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -180,7 +183,7 @@ fun GearSelectionDialog(
                                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                                 ) {
                                     Image(
-                                        painter = painterResource(iconRes),
+                                        painter = iconPainter,
                                         contentDescription = null,
                                         modifier = Modifier.size(36.dp)
                                     )
@@ -326,6 +329,25 @@ private fun computeStatDiffs(
         if (diff != 0) diffs += StatDiffUi(key.uppercase(Locale.getDefault()), diff)
     }
     return diffs
+}
+
+@Composable
+fun rememberItemIconPainter(
+    itemId: String?,
+    fallbackType: String? = null,
+    @DrawableRes fallbackRes: Int? = null,
+    explicitIconPath: String? = null
+): Painter {
+    val assetPath = remember(itemId, explicitIconPath) {
+        explicitIconPath?.trim()?.takeIf { it.isNotEmpty() } ?: itemIconAssetPath(itemId)
+    }
+    val resolvedFallback = remember(itemId, fallbackType, fallbackRes) {
+        fallbackRes ?: previewItemIconRes(fallbackType ?: itemId)
+    }
+    return rememberAssetPainter(
+        imagePath = assetPath,
+        fallback = painterResource(resolvedFallback)
+    )
 }
 
 @DrawableRes

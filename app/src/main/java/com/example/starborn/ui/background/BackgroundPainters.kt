@@ -42,6 +42,7 @@ private object AssetImageCache {
 
     // accessOrder = true makes iteration order least-recently-used first.
     private val entries = object : LinkedHashMap<String, ImageBitmap>(16, 0.75f, true) {}
+    private val missingPaths = java.util.concurrent.ConcurrentHashMap.newKeySet<String>()
 
     private fun sizeOf(bitmap: ImageBitmap): Long =
         bitmap.width.toLong() * bitmap.height.toLong() * 4L
@@ -49,8 +50,15 @@ private object AssetImageCache {
     @Synchronized
     operator fun get(path: String): ImageBitmap? = entries[path]
 
+    fun isMissing(path: String): Boolean = missingPaths.contains(path)
+
+    fun markMissing(path: String) {
+        missingPaths.add(path)
+    }
+
     @Synchronized
     fun put(path: String, bitmap: ImageBitmap) {
+        missingPaths.remove(path)
         val size = sizeOf(bitmap)
         // A single image larger than the whole budget is served but never retained.
         if (size > budgetBytes) return
@@ -154,13 +162,18 @@ private fun loadAssetImage(
     imagePath: String
 ): ImageBitmap? {
     AssetImageCache[imagePath]?.let { return it }
-    return runCatching {
+    if (AssetImageCache.isMissing(imagePath)) return null
+    val decoded = runCatching {
         context.assets.open(imagePath).use { stream ->
             BitmapFactory.decodeStream(stream)?.asImageBitmap()
         }
-    }.getOrNull()?.also { bitmap ->
-        AssetImageCache.put(imagePath, bitmap)
+    }.getOrNull()
+    if (decoded != null) {
+        AssetImageCache.put(imagePath, decoded)
+    } else {
+        AssetImageCache.markMissing(imagePath)
     }
+    return decoded
 }
 
 /** Warm only adjacent room art; cancellation stops work when the player moves again. */

@@ -326,6 +326,7 @@ import kotlin.math.min
 import com.example.starborn.feature.exploration.ui.components.SkillTreeOverlay
 import com.example.starborn.feature.exploration.ui.components.GearSelectionDialog
 import com.example.starborn.feature.exploration.ui.components.previewItemIconRes
+import com.example.starborn.feature.exploration.ui.components.rememberItemIconPainter
 import com.example.starborn.feature.exploration.ui.components.PartyMemberDetailsDialog
 import com.example.starborn.feature.exploration.ui.components.EventAnnouncementOverlay
 import com.example.starborn.feature.exploration.ui.components.TogglePromptDialog
@@ -7243,7 +7244,7 @@ fun ItemGrantedBanner(
         ?: "Item"
     val itemLabel = if (prompt.quantity > 1) "${prompt.itemName} ×${prompt.quantity}" else prompt.itemName
     val hasSequence = prompt.sequenceTotal > 1 && !prompt.sequenceId.isNullOrBlank()
-    val iconRes = remember(prompt.itemId, prompt.category) { previewItemIconRes(prompt.category) }
+    val iconPainter = rememberItemIconPainter(prompt.itemId, fallbackType = prompt.category)
 
     Surface(
         onClick = onDismiss,
@@ -7312,7 +7313,7 @@ fun ItemGrantedBanner(
                         Icon(Icons.Default.VideogameAsset, null, Modifier.padding(10.dp), tint = accentColor)
                     } else {
                     Image(
-                        painter = painterResource(iconRes),
+                        painter = iconPainter,
                         contentDescription = null,
                         modifier = Modifier.padding(10.dp),
                         contentScale = ContentScale.Fit

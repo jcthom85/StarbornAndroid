@@ -16,7 +16,17 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.DrawScope
 
 private val imageCache = java.util.concurrent.ConcurrentHashMap<String, ImageBitmap>()
+private val missingAssetPaths = java.util.concurrent.ConcurrentHashMap.newKeySet<String>()
 private val imageDecodeMutex = kotlinx.coroutines.sync.Mutex()
+
+internal fun hasDesktopAsset(path: String?, assetProvider: AssetProvider): Boolean {
+    val key = path?.trim()?.takeIf { it.isNotEmpty() } ?: return false
+    if (imageCache.containsKey(key)) return true
+    if (missingAssetPaths.contains(key)) return false
+    val exists = runCatching { assetProvider.open(key)?.use { true } ?: false }.getOrDefault(false)
+    if (!exists) missingAssetPaths.add(key)
+    return exists
+}
 
 internal class DesktopBitmapPainter(val bitmap: ImageBitmap) : Painter() {
     private val delegate = BitmapPainter(bitmap)

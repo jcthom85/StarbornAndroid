@@ -52,7 +52,10 @@ internal fun DesktopItemGrantedBanner(
         ?: "Item"
     val itemLabel = if (prompt.quantity > 1) "${prompt.itemName} ×${prompt.quantity}" else prompt.itemName
     val hasSequence = prompt.sequenceTotal > 1 && !prompt.sequenceId.isNullOrBlank()
-    val iconRes = remember(prompt.itemId, prompt.category) { acquiredItemIconPath(prompt.category) }
+    val iconRes = remember(prompt.itemId, prompt.category, services.assetProvider) {
+        val bespoke = com.example.starborn.domain.model.itemIconAssetPath(prompt.itemId)
+        if (hasDesktopAsset(bespoke, services.assetProvider)) bespoke!! else acquiredItemIconPath(prompt.category)
+    }
 
     Surface(
         onClick = onDismiss,

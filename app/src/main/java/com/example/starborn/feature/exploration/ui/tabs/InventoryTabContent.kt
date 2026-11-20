@@ -53,6 +53,7 @@ import com.example.starborn.feature.exploration.ui.components.ModernGearPicker
 import com.example.starborn.feature.exploration.ui.components.EquipmentComparison
 import com.example.starborn.feature.exploration.ui.components.GearSelectionDialog
 import com.example.starborn.feature.exploration.ui.components.previewItemIconRes
+import com.example.starborn.feature.exploration.ui.components.rememberItemIconPainter
 import com.example.starborn.feature.exploration.viewmodel.InventoryPreviewItemUi
 import com.example.starborn.feature.exploration.viewmodel.PartyMemberStatusUi
 import com.example.starborn.ui.background.rememberAssetPainter
@@ -392,7 +393,7 @@ private fun InventoryItemsPreview(
             val modernMenuRow = LocalModernFieldMenu.current
             val isUsable = onItemClick != null && item.effect != null && !item.combatOnly
             val shape = RoundedCornerShape(18.dp)
-            val iconRes = remember(item.id + item.type) { previewItemIconRes(item.type) }
+            val iconPainter = rememberItemIconPainter(item.id, item.type)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -412,7 +413,7 @@ private fun InventoryItemsPreview(
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     Image(
-                        painter = painterResource(iconRes),
+                        painter = iconPainter,
                         contentDescription = null,
                         modifier = Modifier
                             .size(28.dp)
@@ -535,7 +536,7 @@ fun InventoryItemDetailsContent(
                     verticalAlignment = Alignment.Top
                 ) {
                     Image(
-                        painter = painterResource(previewItemIconRes(item.type)),
+                        painter = rememberItemIconPainter(item.id, item.type),
                         contentDescription = null,
                         modifier = Modifier.size(52.dp)
                     )
@@ -901,6 +902,7 @@ internal fun InventoryEquipmentPreview(
                                     isTutorialTarget = isGearTutorialActive && normalizedMemberId == "nova" &&
                                         normalized == (if (equippedWeapons["nova"].isNullOrBlank()) "weapon" else "armor"),
                                     slot = normalized,
+                                    equippedItemId = equippedId.takeIf { it.isNotBlank() },
                                     equippedName = equippedName,
                                     modsLocked = modSlots.isNotEmpty() && equippedId.isBlank(),
                                     modNames = modNames,
@@ -1046,6 +1048,7 @@ internal fun InventoryEquipmentPreview(
 private fun GearSlotTile(
     isTutorialTarget: Boolean = false,
     slot: String,
+    equippedItemId: String? = null,
     equippedName: String,
     modsLocked: Boolean,
     modNames: Map<String, String>,
@@ -1082,7 +1085,7 @@ private fun GearSlotTile(
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Image(
-                    painter = painterResource(iconRes),
+                    painter = rememberItemIconPainter(equippedItemId, fallbackType = slot, fallbackRes = iconRes),
                     contentDescription = null,
                     modifier = Modifier.size(28.dp)
                 )
@@ -1621,7 +1624,7 @@ private fun WeaponFeatureCard(
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(iconRes),
+                    painter = rememberItemIconPainter(weapon.id, weapon.type, fallbackRes = iconRes, explicitIconPath = weapon.icon),
                     contentDescription = null,
                     modifier = Modifier.size(40.dp)
                 )
@@ -1718,7 +1721,7 @@ private fun ArmorFeatureCard(
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(iconRes),
+                    painter = rememberItemIconPainter(armor.id, armor.type, fallbackRes = iconRes, explicitIconPath = armor.icon),
                     contentDescription = null,
                     modifier = Modifier.size(40.dp)
                 )

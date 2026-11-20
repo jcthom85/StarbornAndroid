@@ -42,8 +42,11 @@ internal fun DesktopMenuItemArt(services: DesktopAppServices, item: Item?, modif
         type in setOf("material", "component", "mod") -> "material"
         else -> "generic"
     }
+    val fallbackPath = "drawable-nodpi/item_icon_$icon.webp"
+    val itemPath = item?.resolvedIconAssetPath()
+    val resolvedPath = if (hasDesktopAsset(itemPath, services.assetProvider)) itemPath else fallbackPath
     Box(modifier.background(Brush.radialGradient(listOf(FieldMenuDesign.cyan.copy(alpha = .12f), Color.Transparent)), RoundedCornerShape(12.dp)), contentAlignment = Alignment.Center) {
-        Image(rememberDesktopAssetPainter("drawable-nodpi/item_icon_$icon.webp", services.assetProvider), null,
+        Image(rememberDesktopAssetPainter(resolvedPath, services.assetProvider), null,
             Modifier.fillMaxSize().padding(5.dp), contentScale = ContentScale.Fit)
     }
 }
