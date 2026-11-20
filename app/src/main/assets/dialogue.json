@@ -238,8 +238,7 @@
     "speaker": "Jed",
     "text": "You look like you slept inside the ventilation shaft. Sit. I've saved you the chair that doesn't bite.",
     "condition": "quest_active:w1_mq01,milestone_not_set:ms_w1_mq01_jed_talked",
-    "next": "jed_w1_mq01_intro_2",
-    "music": "music_jed_theme"
+    "next": "jed_w1_mq01_intro_2"
   },
   {
     "id": "jed_w1_mq01_intro_2",
@@ -471,8 +470,7 @@
     "emote": "surprised",
     "text": "Name, ID, clearance... Nova? You're early. Usually I get three complaints before someone I like.",
     "condition": "quest_active:w1_mq02,milestone:ms_w1_mq02_hank_denied,milestone_not_set:ms_w1_mq02_zeke_override,room:checkpoint_booth",
-    "next": "zeke_w1_mq02_override_2",
-    "music": "music_zeke_theme"
+    "next": "zeke_w1_mq02_override_2"
   },
   {
     "id": "zeke_w1_mq02_override_2",
@@ -1343,8 +1341,7 @@
     "speaker": "Thorne",
     "condition": "quest_completed:w3_mq14,quest_active:w3_mq15",
     "text": "You’ve taken the Lens. I’ve opened an audit and given Vale recovery access. Administrator, contain the crew. I want the Lens back intact.",
-    "next": "vale_w3_mq15_override",
-    "music": "music_thorne_theme"
+    "next": "vale_w3_mq15_override"
   },
   {
     "id": "thorne_w3_mq14_trap_vale",
@@ -1674,15 +1671,13 @@
     "id": "thorne_w5_mq23_core",
     "speaker": "Thorne",
     "condition": "quest_active:w5_mq23,quest_task_not_done:w5_mq23:navigate_maze",
-    "text": "The coolant pulse still tells you which branch is live. Follow it through Alpha, Beta, and Gamma. Vale changed the locks while I was inside.",
-    "music": "music_thorne_theme"
+    "text": "The coolant pulse still tells you which branch is live. Follow it through Alpha, Beta, and Gamma. Vale changed the locks while I was inside."
   },
   {
     "id": "thorne_w5_post_mq23_idle",
     "speaker": "Thorne",
     "condition": "quest_completed:w5_mq22,milestone_not_set:ms_w5_soloist_witnessed",
-    "text": "The coolant branches lead straight to the Anchor Chamber. Get the Anchor out before Vale finishes routing the Ring through the Throne Room.",
-    "music": "music_thorne_theme"
+    "text": "The coolant branches lead straight to the Anchor Chamber. Get the Anchor out before Vale finishes routing the Ring through the Throne Room."
   },
   {
     "id": "elara_w5_mq24_reunion",
@@ -1696,15 +1691,13 @@
     "id": "elara_w5_take_anchor_prompt",
     "speaker": "Elara",
     "condition": "quest_active:w5_mq24,quest_task_done:w5_mq24:find_elara,quest_task_not_done:w5_mq24:take_anchor",
-    "text": "The cradle lock is open. Lift the Anchor out before the Hunter-Killer reaches the tank.",
-    "music": "music_elaras_song"
+    "text": "The cradle lock is open. Lift the Anchor out before the Hunter-Killer reaches the tank."
   },
   {
     "id": "elara_w5_post_mq24_idle",
     "speaker": "Elara",
     "condition": "quest_completed:w5_mq24,milestone_not_set:ms_w5_mq25_complete",
-    "text": "Follow the cable east to the Throne Room. I can hold the door open from inside the tank.",
-    "music": "music_elaras_song"
+    "text": "Follow the cable east to the Throne Room. I can hold the door open from inside the tank."
   },
   {
     "id": "vale_w5_mq25_soloist",

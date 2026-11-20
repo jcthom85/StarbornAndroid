@@ -406,7 +406,6 @@
       {
         "type": "narration",
         "text": "The damaged cradle closes its circuit through cutter, suit, and operator. The grip turns hot. Nova tries to pull away; her fingers won't open.",
-        "audio_cue": "stinger_motif_source",
         "image": "images/cinematics/w1_relic_sync_lock_v1.webp",
         "camera_start_scale": 1.05,
         "camera_end_scale": 1.11,
@@ -931,8 +930,7 @@
         "transition": "cut",
         "image": "images/cinematics/w6_ending_circuit_v1.webp",
         "camera_start_scale": 1.09,
-        "camera_end_scale": 1.11,
-        "audio_cue": "stinger_motif_nova"
+        "camera_end_scale": 1.11
       },
       {
         "type": "dialogue",
@@ -1052,8 +1050,7 @@
         "type": "narration",
         "text": "A hand reaches back through the corridor. Gh0st catches it. “I’ve got you, Elara.”",
         "duration_seconds": 5.8,
-        "image": "images/cinematics/w6_ending_crossing_v1.webp",
-        "audio_cue": "stinger_motif_elara"
+        "image": "images/cinematics/w6_ending_crossing_v1.webp"
       },
       {
         "type": "narration",
@@ -1275,7 +1272,8 @@
         "text": "Power’s steady. She’s holding.",
         "duration_seconds": 3.5,
         "caption_style": "dialogue",
-        "image": "images/rooms/astra/bridge.webp"
+        "image": "images/rooms/astra/bridge.webp",
+        "music_cue": "music_zeke_theme"
       },
       {
         "type": "dialogue",
@@ -1323,6 +1321,7 @@
         "text": "",
         "duration_seconds": 2.7,
         "audio_cue": "sfx_crash_impact",
+        "music_cue": "silence",
         "transition": "cut",
         "caption_style": "none"
       },
@@ -1382,7 +1381,8 @@
         "text": "The rooftop guns fall quiet.",
         "duration_seconds": 3,
         "image": "images/rooms/world_3/spire_landing_pad_roof.webp",
-        "audio_cue": "sfx_w2_astra_launch"
+        "audio_cue": "sfx_w2_astra_launch",
+        "music_cue": "music_zeke_theme"
       },
       {
         "type": "dialogue",
@@ -1575,6 +1575,7 @@
         "duration_seconds": 3.7,
         "caption_style": "dialogue",
         "image": "images/cinematics/w5_stasis_elara_v2.webp",
+        "music_cue": "silence",
         "transition": "cut"
       },
       {
@@ -1636,12 +1637,13 @@
         "image": "images/cinematics/w5_tear_hands_v2.webp",
         "camera_start_scale": 1.04,
         "camera_end_scale": 1.12,
+        "music_cue": "silence",
         "transition": "fade"
       },
       {
         "type": "narration",
         "text": "Nova wakes beside the fire and reaches into empty air.",
-        "duration_seconds": 4.2,
+        "duration_seconds": 5.8,
         "image": "images/rooms/world_6/source_campfire.webp",
         "transition": "fade",
         "audio_cue": "stinger_motif_source"
@@ -1717,8 +1719,7 @@
         "text": "Stay together. Check your gear before we go again.",
         "duration_seconds": 4,
         "caption_style": "dialogue",
-        "image": "images/rooms/world_6/source_center.webp",
-        "music_cue": "music_nova_theme"
+        "image": "images/rooms/world_6/source_center.webp"
       }
     ],
     "presentation": "illustrated",
@@ -1779,7 +1780,6 @@
         "type": "dialogue",
         "speaker": "Nova",
         "text": "It holds.",
-        "audio_cue": "stinger_motif_jed",
         "caption_style": "dialogue",
         "image": "images/cinematics/w6_jed_echo_holds_v1.webp",
         "camera_start_scale": 1.06,
