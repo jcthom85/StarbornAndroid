@@ -4457,7 +4457,14 @@ class ExplorationController(
                 isAggressive = party.aggression.equals("aggressive", ignoreCase = true)
             )
         }
-        _uiState.update { it.copy(visualEnemyParties = staticVisuals + movingVisuals) }
+        val displayRoom = room?.let { roomWithMovement(it) }
+        _uiState.update {
+            it.copy(
+                visualEnemyParties = staticVisuals + movingVisuals,
+                enemyIcons = buildEnemyIconMap(displayRoom),
+                enemyTiers = buildEnemyTierMap(displayRoom)
+            )
+        }
         refreshMovementPresence()
     }
 
@@ -4588,7 +4595,7 @@ class ExplorationController(
                 currentRoom = displayRoom,
                 enemies = roomEnemyParties(displayRoom).flatten(),
                 enemyTiers = buildEnemyTierMap(displayRoom),
-                enemyIcons = buildEnemyIconMap(displayRoom),
+                enemyIcons = buildEnemyIconMap(displayRoom, finalVisuals.map { it.enemies }),
                 blockedDirections = computeBlockedDirections(displayRoom),
                 directionIndicators = buildDirectionIndicators(displayRoom, current.nearbyThreatDirection),
                 visualEnemyParties = finalVisuals
@@ -4808,9 +4815,12 @@ class ExplorationController(
             .associateWith { enemyId -> enemyTierById[enemyId] ?: "common" }
     }
 
-    private fun buildEnemyIconMap(room: Room?): Map<String, EnemyIconUi> {
+    private fun buildEnemyIconMap(
+        room: Room?,
+        extraParties: List<List<String>> = emptyList()
+    ): Map<String, EnemyIconUi> {
         if (room == null) return emptyMap()
-        val parties = roomEnemyParties(room)
+        val parties = roomEnemyParties(room) + extraParties
         if (parties.isEmpty()) return emptyMap()
         val result = mutableMapOf<String, EnemyIconUi>()
         parties.forEach { party ->
@@ -4862,7 +4872,17 @@ class ExplorationController(
                     return@forEach
                 }
             }
-            result[leaderId] = EnemyIconUi(spritePath = leaderSprite, displayName = leaderEnemy?.takeIf { it.id == "acoustic_bulwark" }?.name)
+            partyIds.forEach { memberId ->
+                if (memberId !in result) {
+                    val memberEnemy = enemyById[memberId]?.forEncounterRoom(room.id)
+                    val memberSprite = memberEnemy?.let { enemySpritePath(it) }
+                        ?: "images/enemies/${memberId}_combat.png"
+                    result[memberId] = EnemyIconUi(
+                        spritePath = memberSprite,
+                        displayName = memberEnemy?.takeIf { it.id == "acoustic_bulwark" }?.name
+                    )
+                }
+            }
         }
         return result
     }

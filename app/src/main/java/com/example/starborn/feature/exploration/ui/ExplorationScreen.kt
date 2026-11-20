@@ -6467,7 +6467,7 @@ private fun EnemyPartyLeaderIcon(
     iconSize: Dp = 80.dp
 ) {
     val iconPath = icon?.spritePath ?: remember(enemyId) { "images/enemies/${enemyId}_combat.png" }
-    val painter = rememberAssetPainter(iconPath, painterResource(R.drawable.inventory_icon), async = transitionActive)
+    val painter = rememberAssetPainter(iconPath, ColorPainter(Color.Transparent), async = transitionActive)
     val tierAccent = enemyTierAccent(tier, accentColor)
     val tierBadge = when (tier) {
         EnemyPresentationTier.BOSS -> "☠"
@@ -6708,7 +6708,7 @@ private fun CompositeEnemyIcon(
             val offsetX = baseSize * (part.offsetX + groupOffsetX - centerX)
             val offsetY = baseSize * (part.offsetY + groupOffsetY - centerY)
             Image(
-                painter = rememberAssetPainter(part.spritePath, painterResource(R.drawable.inventory_icon), async = true),
+                painter = rememberAssetPainter(part.spritePath, ColorPainter(Color.Transparent), async = true),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
