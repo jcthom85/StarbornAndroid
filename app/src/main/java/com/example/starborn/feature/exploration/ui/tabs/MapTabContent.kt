@@ -20,6 +20,7 @@ import com.example.starborn.feature.exploration.viewmodel.MinimapUiState
 
 @Composable
 fun MapTabContent(
+    objective: String?,
     minimap: MinimapUiState?,
     fullMap: FullMapUiState?,
     isCurrentRoomDark: Boolean,
@@ -33,6 +34,14 @@ fun MapTabContent(
         accentColor = accentColor,
         borderColor = borderColor
     ) {
+        fullMap?.cells?.firstOrNull { it.isCurrent }?.let { room ->
+            Text("You are here · ${room.title}",
+                style = MaterialTheme.typography.titleSmall, color = accentColor)
+        }
+        objective?.takeIf { it.isNotBlank() }?.let {
+            Text("Next · $it", style = MaterialTheme.typography.bodyMedium,
+                color = if (LocalModernFieldMenu.current) FieldMenuDesign.text else Color.White)
+        }
         val fullMapAvailable = fullMap?.cells?.isNotEmpty() == true
         if (fullMapAvailable) {
             InteractiveMapPanel(

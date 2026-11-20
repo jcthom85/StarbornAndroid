@@ -4950,6 +4950,7 @@ class ExplorationController(
         if (itemId.isNullOrBlank()) {
             sessionStore.setEquippedItem(normalizedSlot, null, characterId)
             playUiCue("equip_item")
+            postStatus("${normalizedSlot.replaceFirstChar { it.uppercase() }} unequipped.")
             telemetry.record("reward_equipped", mapOf("slot_id" to normalizedSlot, "item_id" to null, "character_id" to characterId))
             return
         }
@@ -4972,6 +4973,7 @@ class ExplorationController(
         }
         sessionStore.setEquippedItem(normalizedSlot, entry.item.id, characterId)
         playUiCue("equip_item")
+        postStatus("Equipped ${entry.item.name}.")
         telemetry.record("reward_equipped", mapOf("slot_id" to normalizedSlot, "item_id" to entry.item.id, "character_id" to characterId))
     }
 
@@ -5011,6 +5013,7 @@ class ExplorationController(
         if (weaponId.isNullOrBlank()) {
             sessionStore.setEquippedWeapon(normalizedCharacter, null)
             playUiCue("equip_item")
+            postStatus("Weapon unequipped.")
             telemetry.record("reward_equipped", mapOf("slot_id" to "weapon", "item_id" to null, "character_id" to normalizedCharacter))
             return
         }
@@ -5026,6 +5029,7 @@ class ExplorationController(
             return
         }
         playUiCue("equip_item")
+        postStatus("Equipped ${item.name}.")
         if (normalizedCharacter == "nova") completeOpeningEquipmentTutorial()
         telemetry.record("reward_equipped", mapOf("slot_id" to "weapon", "item_id" to resolvedWeaponId, "character_id" to normalizedCharacter))
     }
@@ -5036,6 +5040,7 @@ class ExplorationController(
         if (armorId.isNullOrBlank()) {
             sessionStore.setEquippedArmor(normalizedCharacter, null)
             playUiCue("equip_item")
+            postStatus("Armor unequipped.")
             telemetry.record("reward_equipped", mapOf("slot_id" to "armor", "item_id" to null, "character_id" to normalizedCharacter))
             return
         }
@@ -5051,6 +5056,7 @@ class ExplorationController(
             return
         }
         playUiCue("equip_item")
+        postStatus("Equipped ${item.name}.")
         if (normalizedCharacter == "nova") completeOpeningEquipmentTutorial()
         telemetry.record("reward_equipped", mapOf("slot_id" to "armor", "item_id" to resolvedArmorId, "character_id" to normalizedCharacter))
     }
@@ -7087,6 +7093,9 @@ private fun buildQuestSummariesFromSession(
             stageTitle = stage?.title,
             stageDescription = stage?.description?.takeIf { it.isNotBlank() },
             objectives = stage?.tasks.orEmpty().map { it.text },
+            currentObjective = stage?.tasks?.firstOrNull {
+                !completed && !it.optional && !it.done && it.id !in session.questTasksCompleted[questId].orEmpty()
+            }?.text,
             completed = completed,
             stageIndex = stageIndex,
             totalStages = quest.stages.size

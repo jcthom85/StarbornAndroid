@@ -269,7 +269,7 @@
   {
     "id": "jed_w1_mq01_intro_6",
     "speaker": "Jed",
-    "text": "Mind the scrap loader in the yard. Its sensor's gone bad. It won't recognize you, and I haven't taught it manners.",
+    "text": "Mind the scrap loader in the yard. Its sensor's gone bad. Give it room to turn.",
     "trigger": "set_quest_task_done:w1_mq01:find_jed,set_quest_task_done:w1_mq01:talk_to_jed,player_action:w1_mq01_receive_starter_kit,set_quest_task_done:w1_mq01:equip_starter_gear,set_milestone:ms_w1_mq01_jed_talked"
   },
   {
@@ -468,7 +468,7 @@
     "id": "zeke_w1_mq02_override_1",
     "speaker": "Zeke",
     "emote": "surprised",
-    "text": "Name, ID, clearance... Nova? You're early. Usually I get three complaints before someone I like.",
+    "text": "Name, ID, clearance... Nova? You're early. Did Hank send you over, or did you just miss the queue?",
     "condition": "quest_active:w1_mq02,milestone:ms_w1_mq02_hank_denied,milestone_not_set:ms_w1_mq02_zeke_override,room:checkpoint_booth",
     "next": "zeke_w1_mq02_override_2"
   },
@@ -505,7 +505,7 @@
     "id": "zeke_w1_mq02_override_6",
     "speaker": "Zeke",
     "emote": "sad",
-    "text": "Everything they can reclaim. It's a disposal order. I process these files. I thought... I never saw the person on the other side of one.",
+    "text": "Everything they can reclaim. It's a disposal order. Usually all I see is the badge number.",
     "next": "zeke_w1_mq02_override_choice"
   },
   {
@@ -734,7 +734,7 @@
   {
     "id": "bogs_w1_mq03_intro_3",
     "speaker": "Foreman Boggs",
-    "text": "Sector 4’s relays are failing. Director Thorne’s office froze pay until the junction runs. You’re the cutter I have.",
+    "text": "Sector 4’s relays are failing. Thorne’s office froze the whole shift’s pay. Get that junction running so I can release it.",
     "next": "bogs_w1_mq03_intro_4"
   },
   {
@@ -817,7 +817,7 @@
     "id": "zeke_w1_mq05_defeat_warden_2",
     "speaker": "Nova",
     "emote": "worried",
-    "text": "Open the hatch. Jed gave me the Chime. I'm getting it out of here.",
+    "text": "Here. I’ve got the hatch. Where do you need the Chime?",
     "next": "zeke_w1_mq05_defeat_warden_3"
   },
   {
@@ -1353,7 +1353,7 @@
     "id": "vale_w3_mq15_override",
     "speaker": "Vale",
     "condition": "quest_active:w3_mq15,quest_task_not_done:w3_mq15:defeat_administrator",
-    "text": "Recovery access accepted. Seal the roof. Authorize lethal force. You leased Harmony like a product, Director; I’ve heard what the Lens carries when every voice has its own way out, and I’m closing those exits.",
+    "text": "Recovery access accepted. Seal the roof. Authorize lethal force. Route every voice on the Lens through my channel. Leave it that way when the vault reopens.",
     "next": "thorne_w3_mq14_trap_vale",
     "music": "music_vale_theme"
   },

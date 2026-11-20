@@ -22,8 +22,11 @@ class CinematicMusicIntegrityTest {
 
         val catalogText = File("src/main/assets/audio_catalog.json").readText()
 
+        // Playback treats these as commands to stop the score, even in otherwise scored scenes.
+        val stopCommands = setOf("none", "stop", "silence")
         val scenesWithMusic = scenes.mapNotNull { scene ->
             val musicCues = scene.steps.orEmpty().filterNotNull().mapNotNull { it.musicCue }
+                .filterNot { it.lowercase() in stopCommands }
             if (musicCues.isNotEmpty()) scene.id to musicCues else null
         }.toMap()
 
@@ -41,7 +44,6 @@ class CinematicMusicIntegrityTest {
             assertTrue("Expected scene $sceneId to have music cues", scenesWithMusic.containsKey(sceneId))
         }
 
-        // Every music cue in cinematics must exist in audio_catalog.json
         scenesWithMusic.values.flatten().distinct().forEach { cueId ->
             assertTrue("Music cue '$cueId' not found in audio_catalog.json", catalogText.contains("\"id\": \"$cueId\""))
         }

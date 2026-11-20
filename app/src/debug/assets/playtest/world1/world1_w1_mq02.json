@@ -6,7 +6,7 @@
   "playerLevel": 1,
   "playerXp": 85,
   "playerAp": 2,
-  "playerCredits": 0,
+  "playerCredits": 80,
   "partyMemberXp": {
     "nova": 85
   },
@@ -32,10 +32,14 @@
     "ms_w1_mq01_jed_talked",
     "ms_w1_mq01_loader_inspected",
     "ms_w1_mq01_loader_cleared",
+    "ms_w1_mq01_workshop_briefed",
+    "tut_tinker_open_menu_shown",
     "ms_w1_mq01_cryo_repaired",
+    "ms_w1_mq01_test_briefed",
     "ms_w1_mq01_cutter_surge",
     "ms_w1_mq01_complete",
-    "ms_w1_mq02_clearance_ordered"
+    "ms_w1_mq02_clearance_ordered",
+    "ms_w1_mq02_jed_advised"
   ],
   "milestoneHistory": [
     "ms_w1_mq01_fault_visible",
@@ -45,10 +49,14 @@
     "ms_w1_mq01_jed_talked",
     "ms_w1_mq01_loader_inspected",
     "ms_w1_mq01_loader_cleared",
+    "ms_w1_mq01_workshop_briefed",
+    "tut_tinker_open_menu_shown",
     "ms_w1_mq01_cryo_repaired",
+    "ms_w1_mq01_test_briefed",
     "ms_w1_mq01_cutter_surge",
     "ms_w1_mq01_complete",
-    "ms_w1_mq02_clearance_ordered"
+    "ms_w1_mq02_clearance_ordered",
+    "ms_w1_mq02_jed_advised"
   ],
   "learnedSchematics": [
     "repair_cryo_inductor"
@@ -59,15 +67,9 @@
     "nova_cryo_vent"
   ],
   "unlockedWeapons": [
-    "zeke_shock_fists",
-    "orion_prism_focus",
-    "gh0st_whisperblade",
     "mining_pistol"
   ],
   "unlockedArmors": [
-    "zeke_surge_harness",
-    "orion_channeler_mantle",
-    "gh0st_phaseweave_jacket",
     "nova_flux_liner"
   ],
   "unlockedAreas": [],
@@ -88,15 +90,9 @@
   },
   "equippedItems": {},
   "equippedWeapons": {
-    "zeke": "zeke_shock_fists",
-    "orion": "orion_prism_focus",
-    "gh0st": "gh0st_whisperblade",
     "nova": "mining_pistol"
   },
   "equippedArmors": {
-    "zeke": "zeke_surge_harness",
-    "orion": "orion_channeler_mantle",
-    "gh0st": "gh0st_phaseweave_jacket",
     "nova": "nova_flux_liner"
   },
   "tutorialSeen": [
@@ -104,7 +100,8 @@
     "swipe_move",
     "opening_gear_offer",
     "gear_equip_basics",
-    "scene_market_locator"
+    "scene_market_locator",
+    "tut_nova_first_ap_v1"
   ],
   "tutorialCompleted": [
     "swipe_move",
@@ -243,6 +240,14 @@
       "moveRemainingMs": 15000,
       "retreatGraceRemainingMs": 0,
       "defeated": false
+    },
+    "spire_rooftop_assassin": {
+      "roomId": "spire_landing_pad_scale_03",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 22000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
     }
   },
   "revealedNodes": [
@@ -269,8 +274,11 @@
   "mealChefId": "nova",
   "fishingCleanCatchProgress": 0,
   "progressionPrototypeVersion": 1,
+  "physicalGearInventory": true,
   "purchasedSkillNodes": {},
   "progressionAwardClaims": [
     "w1_mq01"
-  ]
+  ],
+  "heardRestBanter": [],
+  "lastRestBanterId": ""
 }

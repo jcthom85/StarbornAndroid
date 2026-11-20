@@ -111,6 +111,8 @@ class World3PublicInteractionTest {
         compose.waitUntil(10000) { !s.exploration.uiState.value.isLoading }
         dismissNarration(s)
         act(s, "w3_mq15_launch_astra")
+        compose.waitUntil(5000) { s.exploration.uiState.value.cinematic?.sceneId == "scene_w3_foundry_flight" }
+        compose.runOnIdle { s.exploration.skipCinematic() }
         compose.waitUntil(5000) { s.exploration.uiState.value.currentRoom?.id == "foundry_slag_landing" }
         assertEquals(ScriptedTravelStyle.LAUNCH, s.exploration.uiState.value.roomTransition?.scriptedStyle)
         assertTrue("w3_mq15" in s.sessionStore.state.value.completedQuests)

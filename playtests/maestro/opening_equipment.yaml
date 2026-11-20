@@ -12,7 +12,7 @@ appId: ${APP_ID}
 - tapOn: "Weapon"
 - assertVisible: "Equipped: Empty"
 - tapOn: "Mining Pistol"
-- tapOn: "Equip selected item"
+- tapOn: "Equip Mining Pistol"
 - assertVisible: "Mining Pistol"
 - scrollUntilVisible:
     element: "Armor"
@@ -20,6 +20,6 @@ appId: ${APP_ID}
 - tapOn: "Armor"
 - assertVisible: "Equipped: Empty"
 - tapOn: "Flux Liner"
-- tapOn: "Equip selected item"
+- tapOn: "Equip Flux Liner"
 - assertVisible: "Flux Liner"
 - takeScreenshot: opening-equipment-complete

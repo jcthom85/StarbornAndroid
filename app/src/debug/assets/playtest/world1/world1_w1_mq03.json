@@ -3,18 +3,18 @@
   "hubId": "hub_1_homestead",
   "roomId": "checkpoint_booth",
   "playerId": "nova",
-  "playerLevel": 2,
-  "playerXp": 330,
+  "playerLevel": 3,
+  "playerXp": 420,
   "playerAp": 2,
-  "playerCredits": 0,
+  "playerCredits": 224,
   "partyMemberXp": {
-    "nova": 330
+    "nova": 420
   },
   "partyMemberLevels": {
-    "nova": 2
+    "nova": 3
   },
   "partyMemberHp": {
-    "nova": 120
+    "nova": 90
   },
   "trackedQuestId": "w1_mq03",
   "activeQuests": [
@@ -35,12 +35,15 @@
     "ms_w1_mq01_jed_talked",
     "ms_w1_mq01_loader_inspected",
     "ms_w1_mq01_loader_cleared",
+    "ms_w1_mq01_workshop_briefed",
+    "tut_tinker_open_menu_shown",
     "ms_w1_mq01_cryo_repaired",
+    "ms_w1_mq01_test_briefed",
     "ms_w1_mq01_cutter_surge",
     "ms_w1_mq01_complete",
     "ms_w1_mq02_clearance_ordered",
-    "ms_w1_sq01_started",
     "ms_w1_mq02_jed_advised",
+    "ms_w1_sq01_started",
     "ms_w1_sq01_cache_opened",
     "ms_w1_sq01_complete",
     "ms_w1_sq02_started",
@@ -51,18 +54,18 @@
     "ms_w1_mq02_complete"
   ],
   "milestoneHistory": [
-    "ms_w1_mq01_bunk_light_on",
-    "ms_w1_mq01_safety_fault_inspected",
-    "ms_w1_manual_starter_equipment",
     "ms_w1_mq01_jed_talked",
     "ms_w1_mq01_loader_inspected",
     "ms_w1_mq01_loader_cleared",
+    "ms_w1_mq01_workshop_briefed",
+    "tut_tinker_open_menu_shown",
     "ms_w1_mq01_cryo_repaired",
+    "ms_w1_mq01_test_briefed",
     "ms_w1_mq01_cutter_surge",
     "ms_w1_mq01_complete",
     "ms_w1_mq02_clearance_ordered",
-    "ms_w1_sq01_started",
     "ms_w1_mq02_jed_advised",
+    "ms_w1_sq01_started",
     "ms_w1_sq01_cache_opened",
     "ms_w1_sq01_complete",
     "ms_w1_sq02_started",
@@ -81,15 +84,9 @@
     "nova_cryo_vent"
   ],
   "unlockedWeapons": [
-    "zeke_shock_fists",
-    "orion_prism_focus",
-    "gh0st_whisperblade",
     "mining_pistol"
   ],
   "unlockedArmors": [
-    "zeke_surge_harness",
-    "orion_channeler_mantle",
-    "gh0st_phaseweave_jacket",
     "nova_flux_liner"
   ],
   "unlockedAreas": [],
@@ -104,7 +101,7 @@
     "mining_pistol": 1,
     "nova_flux_liner": 1,
     "scrap_metal": 2,
-    "ration_pack": 5,
+    "ration_pack": 7,
     "functional_cryo_inductor": 1,
     "medkit_i": 3,
     "pulse_grenade": 3,
@@ -113,15 +110,9 @@
   },
   "equippedItems": {},
   "equippedWeapons": {
-    "zeke": "zeke_shock_fists",
-    "orion": "orion_prism_focus",
-    "gh0st": "gh0st_whisperblade",
     "nova": "mining_pistol"
   },
   "equippedArmors": {
-    "zeke": "zeke_surge_harness",
-    "orion": "orion_channeler_mantle",
-    "gh0st": "gh0st_phaseweave_jacket",
     "nova": "nova_flux_liner"
   },
   "tutorialSeen": [
@@ -130,8 +121,8 @@
     "opening_gear_offer",
     "gear_equip_basics",
     "scene_market_locator",
-    "menu_save",
     "tut_nova_first_ap_v1",
+    "menu_save",
     "mod_slots_basics"
   ],
   "tutorialCompleted": [
@@ -292,6 +283,7 @@
     "medbay_vents": {
       "visited": true,
       "discovered": true,
+      "encounter_cleared:siren_skimmer|siren_skimmer": true,
       "vent_inspected": true,
       "airflow_rerouted": true,
       "toxic_blockage_cleared": true
@@ -358,6 +350,14 @@
       "moveRemainingMs": 15000,
       "retreatGraceRemainingMs": 0,
       "defeated": false
+    },
+    "spire_rooftop_assassin": {
+      "roomId": "spire_landing_pad_scale_03",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 22000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
     }
   },
   "revealedNodes": [
@@ -391,8 +391,11 @@
   "mealChefId": "nova",
   "fishingCleanCatchProgress": 0,
   "progressionPrototypeVersion": 1,
+  "physicalGearInventory": true,
   "purchasedSkillNodes": {},
   "progressionAwardClaims": [
     "w1_mq01"
-  ]
+  ],
+  "heardRestBanter": [],
+  "lastRestBanterId": ""
 }

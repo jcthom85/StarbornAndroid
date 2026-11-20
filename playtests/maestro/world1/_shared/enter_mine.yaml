@@ -1,14 +1,8 @@
 appId: ${APP_ID}
 ---
-# Scroll the nested room prose so the final path link is inside its clipped viewport.
-- swipe:
-    start: 50%, 42%
-    end: 50%, 24%
-    duration: 700
-- runFlow:
-    file: action.yaml
-    env:
-      ACTION: Plan mine descent
+# The authorized elevator now uses its north exit to reveal the Deep Mine node.
+- tapOn:
+    id: travel-north
 - extendedWaitUntil:
     visible: Enter Deep Mine
     timeout: 20000

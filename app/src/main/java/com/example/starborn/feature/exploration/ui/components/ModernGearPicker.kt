@@ -1,7 +1,6 @@
 package com.example.starborn.feature.exploration.ui.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -49,7 +48,7 @@ internal fun ModernGearPicker(
                     }
                     TextButton(onClick = onDismiss) { Text("Close") }
                 }
-                Text("Select an item to inspect it, then equip below.", color = FieldMenuDesign.textMuted,
+                Text(if (selected != null && !isEquipped) "Proposed: ${selected.name}" else "Select an item to compare.", color = FieldMenuDesign.textMuted,
                     style = MaterialTheme.typography.bodySmall)
                 LazyColumn(Modifier.weight(1f).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     if (options.isEmpty()) item {
@@ -134,7 +133,15 @@ internal fun ModernGearPicker(
                         disabledContentColor = FieldMenuDesign.textMuted
                     )
                 ) {
-                    Text(if (isEquipped) "Already equipped" else "Equip selected item")
+                    if (selected != null && !isEquipped) {
+                        Image(rememberItemIconPainter(selected.id, selected.type), null, Modifier.size(26.dp))
+                        Spacer(Modifier.width(8.dp))
+                    }
+                    Text(when {
+                        isEquipped -> "Already equipped"
+                        selected != null -> "Equip ${selected.name}"
+                        else -> "Choose an item"
+                    })
                 }
             }
         }

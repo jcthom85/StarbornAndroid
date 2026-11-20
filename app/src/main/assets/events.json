@@ -30,10 +30,6 @@
         "type": "give_item",
         "item_id": "composite_plate",
         "quantity": 4
-      },
-      {
-        "type": "show_message",
-        "message": "An abandoned hull-repair case contains four intact laminate panels. Recovered Composite Plate x4: enough for the Orbital Defense cabinet repair and an Orbital Deflector Mod. Keep these rare components for crafting."
       }
     ]
   },
@@ -5162,7 +5158,7 @@
       },
       {
         "type": "show_message",
-        "message": "Gh0st strips the plaza kiosk for extraction codes, staff routes, and archived case numbers. One file has Elara stamped in a deleted transfer chain, and his voice goes flat enough to hurt."
+        "message": "Gh0st copies the staff routes. His finger stops on a deleted transfer. “Elara. That’s my sister.” He copies the case number too."
       }
     ]
   },

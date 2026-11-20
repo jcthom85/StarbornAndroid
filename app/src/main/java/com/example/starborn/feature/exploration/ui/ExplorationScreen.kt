@@ -1157,10 +1157,22 @@ fun ExplorationScreen(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
+                val currentCell = uiState.minimap?.cells?.firstOrNull { it.isCurrent }
+                val sectorLabel = remember(uiState.currentHub?.title, uiState.currentWorld?.title) {
+                    uiState.currentHub?.title?.takeIf { it.isNotBlank() }
+                        ?: uiState.currentWorld?.title?.takeIf { it.isNotBlank() }
+                        ?: "SECTOR"
+                }
                 RoomHeaderPanel(
+                    roomId = uiState.currentRoom?.id.orEmpty(),
+                    worldId = uiState.currentWorld?.id.orEmpty(),
+                    sectorLabel = sectorLabel,
+                    isGateway = currentCell?.hubExit != null || currentCell?.nodeExits?.isNotEmpty() == true,
+                    hasHostiles = uiState.enemies.isNotEmpty() && !isRoomDark,
                     roomTitle = uiState.currentRoom?.title ?: "",
                     isDark = isRoomDark,
                     obscureTitle = isRoomDark && uiState.currentRoom?.revealTitleWhenDark != true,
+                    reduceMotion = uiState.settings.disableFlashes || uiState.settings.disableScreenshake,
                     titleColor = titleColor,
                     warmTitleColor = warmTitleColor,
                     minimap = uiState.minimap,
@@ -2091,11 +2103,52 @@ fun ExplorationScreen(
 }
 }
 
+private data class WorldHeaderPalette(
+    val titleTint: Color,
+    val accentTint: Color
+)
+
+private fun worldHeaderPalette(worldId: String, fallbackWarm: Color, fallbackAccent: Color): WorldHeaderPalette {
+    val id = worldId.lowercase(Locale.ROOT)
+    return when {
+        id.contains("world_2") || id.contains("sector9") -> WorldHeaderPalette(
+            titleTint = Color(0xFFE7F5C8),
+            accentTint = Color(0xFF4BE3C8)
+        )
+        id.contains("world_3") || id.contains("spire") -> WorldHeaderPalette(
+            titleTint = Color(0xFFF3E8FF),
+            accentTint = Color(0xFF56E1FF)
+        )
+        id.contains("world_4") || id.contains("foundry") -> WorldHeaderPalette(
+            titleTint = Color(0xFFFFD599),
+            accentTint = Color(0xFFFF7A3D)
+        )
+        id.contains("world_5") || id.contains("orbital") -> WorldHeaderPalette(
+            titleTint = Color(0xFFEAF4FF),
+            accentTint = Color(0xFF7BC8FF)
+        )
+        id.contains("world_6") || id.contains("source") -> WorldHeaderPalette(
+            titleTint = Color(0xFFFFE7A3),
+            accentTint = Color(0xFFB58BFF)
+        )
+        else -> WorldHeaderPalette(
+            titleTint = fallbackWarm,
+            accentTint = fallbackAccent
+        )
+    }
+}
+
 @Composable
 private fun RoomHeaderPanel(
+    roomId: String,
+    worldId: String,
+    sectorLabel: String,
+    isGateway: Boolean,
+    hasHostiles: Boolean,
     roomTitle: String,
     isDark: Boolean,
     obscureTitle: Boolean,
+    reduceMotion: Boolean,
     titleColor: Color,
     warmTitleColor: Color,
     minimap: MinimapUiState?,
@@ -2103,77 +2156,216 @@ private fun RoomHeaderPanel(
     onTitleClick: () -> Unit,
     onMapClick: () -> Unit
 ) {
-    val shape = RoundedCornerShape(10.dp)
-    val panelColor = Color(0xFF061018).copy(alpha = if (isDark) 0.68f else 0.54f)
-    val borderColor = if (isDark) {
-        Color.White.copy(alpha = 0.22f)
-    } else {
-        titleColor.copy(alpha = 0.36f)
+    val palette = remember(worldId, warmTitleColor, titleColor) {
+        worldHeaderPalette(worldId, warmTitleColor, titleColor)
     }
+    val arrivalProgress = remember(roomId) { CoreAnimatable(if (reduceMotion) 1f else 0f) }
+    LaunchedEffect(roomId, reduceMotion) {
+        if (reduceMotion) {
+            arrivalProgress.snapTo(1f)
+        } else {
+            arrivalProgress.snapTo(0f)
+            arrivalProgress.animateTo(1f, animationSpec = tween(durationMillis = 340, easing = FastOutSlowInEasing))
+        }
+    }
+    val hostilePulseTransition = rememberInfiniteTransition(label = "roomHeaderHostilePulse")
+    val hostilePulse by hostilePulseTransition.animateFloat(
+        initialValue = 0.55f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 900, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "hostilePulseAlpha"
+    )
+
+    val shape = RoundedCornerShape(12.dp)
+    val panelColor = Color(0xFF061018).copy(alpha = if (isDark) 0.72f else 0.58f)
+    val borderColor = if (isDark) {
+        Color.White.copy(alpha = 0.20f)
+    } else if (hasHostiles) {
+        Color(0xFFFF746D).copy(alpha = 0.45f)
+    } else {
+        palette.accentTint.copy(alpha = 0.36f)
+    }
+    val rulePrimary = if (isDark) Color.White.copy(alpha = 0.45f) else palette.titleTint
+    val ruleSecondary = if (isDark) Color.White.copy(alpha = 0.16f) else palette.accentTint
+
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = shape,
         color = panelColor,
         border = BorderStroke(1.dp, borderColor)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    Brush.horizontalGradient(
-                        colors = listOf(
-                            warmTitleColor.copy(alpha = if (isDark) 0.05f else 0.08f),
-                            titleColor.copy(alpha = if (isDark) 0.03f else 0.05f),
-                            Color.Transparent
-                        )
-                    )
-                )
-                .padding(start = 14.dp, top = 10.dp, end = 10.dp, bottom = 10.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
+        Box(modifier = Modifier.fillMaxWidth()) {
+            // Subtle world-tinted atmospheric gradient wash + corner tactical bracket ticks
+            Canvas(modifier = Modifier.matchParentSize()) {
+                val tick = 9.dp.toPx()
+                val inset = 4.dp.toPx()
+                val stroke = 1.4.dp.toPx()
+                val bracketColor = (if (isDark) Color.White.copy(alpha = 0.25f) else palette.accentTint.copy(alpha = 0.55f))
+                // Top-left bracket
+                drawLine(bracketColor, Offset(inset, inset), Offset(inset + tick, inset), stroke, StrokeCap.Round)
+                drawLine(bracketColor, Offset(inset, inset), Offset(inset, inset + tick), stroke, StrokeCap.Round)
+                // Bottom-left bracket
+                drawLine(bracketColor, Offset(inset, size.height - inset), Offset(inset + tick, size.height - inset), stroke, StrokeCap.Round)
+                drawLine(bracketColor, Offset(inset, size.height - inset), Offset(inset, size.height - inset - tick), stroke, StrokeCap.Round)
+            }
+            Row(
                 modifier = Modifier
-                    .weight(1f)
-                    .clickable { onTitleClick() },
-                verticalArrangement = Arrangement.spacedBy(7.dp)
-            ) {
-                Text(
-                    text = if (obscureTitle) "???" else roomTitle,
-                    style = MaterialTheme.typography.headlineSmall.copy(
-                        fontSize = 26.sp,
-                        lineHeight = 30.sp,
-                        shadow = Shadow(
-                            color = Color.Black.copy(alpha = 0.62f),
-                            offset = Offset(0f, 1.25f),
-                            blurRadius = 1.5f
-                        )
-                    ),
-                    color = if (isDark) Color.White.copy(alpha = 0.92f) else warmTitleColor,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(2.dp)
-                        .background(
-                            Brush.horizontalGradient(
-                                colors = listOf(
-                                    warmTitleColor.copy(alpha = if (isDark) 0.38f else 0.76f),
-                                    titleColor.copy(alpha = if (isDark) 0.18f else 0.34f),
-                                    Color.Transparent
-                                )
+                    .fillMaxWidth()
+                    .background(
+                        Brush.horizontalGradient(
+                            colors = listOf(
+                                palette.titleTint.copy(alpha = if (isDark) 0.04f else 0.09f),
+                                palette.accentTint.copy(alpha = if (isDark) 0.02f else 0.05f),
+                                Color.Transparent
                             )
                         )
+                    )
+                    .padding(start = 15.dp, top = 10.dp, end = 10.dp, bottom = 10.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { onTitleClick() },
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+                    // Diegetic sector eyebrow + subtle status pip (rewarding gateways/threats without shrinking title)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(5.dp)
+                                .graphicsLayer { rotationZ = 45f }
+                                .background(
+                                    if (isDark) Color.White.copy(alpha = 0.45f) else palette.accentTint
+                                )
+                        )
+                        Text(
+                            text = sectorLabel.uppercase(Locale.ROOT),
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                fontSize = 9.5.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                letterSpacing = 1.6.sp
+                            ),
+                            color = (if (isDark) Color.White.copy(alpha = 0.52f) else palette.accentTint.copy(alpha = 0.85f)),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f, fill = false)
+                        )
+                        when {
+                            hasHostiles -> {
+                                Surface(
+                                    shape = RoundedCornerShape(999.dp),
+                                    color = Color(0xFFFF746D).copy(alpha = 0.16f),
+                                    border = BorderStroke(1.dp, Color(0xFFFF746D).copy(alpha = 0.55f * (if (reduceMotion) 1f else hostilePulse)))
+                                ) {
+                                    Text(
+                                        text = "HOSTILE",
+                                        style = MaterialTheme.typography.labelSmall.copy(
+                                            fontSize = 8.5.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            letterSpacing = 0.9.sp
+                                        ),
+                                        color = Color(0xFFFF8E88),
+                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 1.5.dp)
+                                    )
+                                }
+                            }
+                            isDark -> {
+                                Surface(
+                                    shape = RoundedCornerShape(999.dp),
+                                    color = Color.White.copy(alpha = 0.08f),
+                                    border = BorderStroke(1.dp, Color.White.copy(alpha = 0.24f))
+                                ) {
+                                    Text(
+                                        text = "UNLIT",
+                                        style = MaterialTheme.typography.labelSmall.copy(
+                                            fontSize = 8.5.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            letterSpacing = 0.9.sp
+                                        ),
+                                        color = Color.White.copy(alpha = 0.68f),
+                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 1.5.dp)
+                                    )
+                                }
+                            }
+                            isGateway -> {
+                                Surface(
+                                    shape = RoundedCornerShape(999.dp),
+                                    color = palette.accentTint.copy(alpha = 0.14f),
+                                    border = BorderStroke(1.dp, palette.accentTint.copy(alpha = 0.48f))
+                                ) {
+                                    Text(
+                                        text = "EXIT",
+                                        style = MaterialTheme.typography.labelSmall.copy(
+                                            fontSize = 8.5.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            letterSpacing = 0.9.sp
+                                        ),
+                                        color = palette.accentTint,
+                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 1.5.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    // Full-presence atmospheric room title on EVERY room with smooth sweep-in
+                    val p = arrivalProgress.value
+                    Text(
+                        text = if (obscureTitle) "???" else roomTitle,
+                        style = MaterialTheme.typography.headlineSmall.copy(
+                            fontSize = 24.sp,
+                            lineHeight = 28.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            shadow = Shadow(
+                                color = Color.Black.copy(alpha = 0.72f),
+                                offset = Offset(0f, 1.5f),
+                                blurRadius = 2.5f
+                            )
+                        ),
+                        color = if (isDark) Color.White.copy(alpha = 0.92f) else palette.titleTint,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.graphicsLayer {
+                            alpha = 0.45f + 0.55f * p
+                            translationX = (1f - p) * (-14f)
+                        }
+                    )
+
+                    // Sweeping world-tinted signature hairline rule
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(2.dp)
+                            .graphicsLayer {
+                                scaleX = p.coerceAtLeast(0.01f)
+                                transformOrigin = androidx.compose.ui.graphics.TransformOrigin(0f, 0.5f)
+                            }
+                            .background(
+                                Brush.horizontalGradient(
+                                    colors = listOf(
+                                        rulePrimary.copy(alpha = if (isDark) 0.42f else 0.85f),
+                                        ruleSecondary.copy(alpha = if (isDark) 0.18f else 0.42f),
+                                        Color.Transparent
+                                    )
+                                )
+                            )
+                    )
+                }
+                MinimapWidget(
+                    minimap = minimap,
+                    onLegend = onMapClick,
+                    obscured = isDark,
+                    modifier = Modifier.requiredSize(minimapSize)
                 )
             }
-            MinimapWidget(
-                minimap = minimap,
-                onLegend = onMapClick,
-                obscured = isDark,
-                modifier = Modifier.requiredSize(minimapSize)
-            )
         }
     }
 }
@@ -3568,6 +3760,7 @@ private fun MenuTabContentArea(
                 onQuestSelected = onShowQuestDetails
             )
             MenuTab.MAP -> MapTabContent(
+                objective = (trackedQuest ?: activeQuests.firstOrNull())?.let { it.currentObjective ?: it.stageDescription },
                 minimap = minimap,
                 fullMap = fullMap,
                 isCurrentRoomDark = isCurrentRoomDark,
