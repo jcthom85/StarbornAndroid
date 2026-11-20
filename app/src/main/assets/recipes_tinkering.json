@@ -272,7 +272,7 @@
     },
     "result": "insulated_lining",
     "description": "Stitch insulated wiring through weave into a defensive suit mod.",
-    "success_message": "You stitch an Insulated Lining that hums with safety.",
+    "success_message": "You stitch a reinforced Insulated Lining rated for heavy discharge.",
     "salvage": {
       "ballistic_weave": 1
     },
@@ -450,7 +450,7 @@
     },
     "result": "resonance_capacitor_mod",
     "description": "Stabilize an overclocked capacitor with Source Resin and nano-filament.",
-    "success_message": "You build a Resonance Capacitor Mod that charges in silence.",
+    "success_message": "You assemble a Resonance Capacitor Mod with shielded terminals.",
     "salvage": {
       "nano_filament": 1
     },
@@ -496,7 +496,7 @@
     },
     "result": "harmonic_carbon_rod",
     "description": "Stabilize carbon thread with Source Resin and nano-filament so the rod can ride standing waves.",
-    "success_message": "You build a Harmonic Carbon Rod that flexes in time with the air.",
+    "success_message": "You build a Harmonic Carbon Rod braced for heavy glow-water currents.",
     "salvage": {
       "carbon_rod": 1
     },

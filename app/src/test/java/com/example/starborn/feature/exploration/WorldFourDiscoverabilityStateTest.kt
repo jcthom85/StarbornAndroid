@@ -51,7 +51,7 @@ class WorldFourDiscoverabilityStateTest {
             "foundry_obsidian_overlook" to listOf("foundry basin", "shield window telemetry"),
             "foundry_forge_control_alcove" to listOf("hazard cycle map", "overclock profile"),
             "foundry_forge_scale_01" to listOf("bellows valve"),
-            "foundry_power_core_scale_04" to listOf("blue pipes", "coolant choir"),
+            "foundry_power_core_scale_04" to listOf("blue pipes", "coolant manifold"),
             "foundry_reject_bay" to listOf("rejected droid"))
         val events = reader.readList<GameEvent>("events.json")
         reader.readList<Room>("rooms.json").filter { it.id in labels }.forEach { room ->

@@ -32,7 +32,7 @@ class CampaignCatalogIntegrityTest {
             "sector9_beach_pillar" to "resonant pillar",
             "sector9_beach_dunes" to "wind-sculpted ridges",
             "sector9_stream_wetlands" to "spore warning",
-            "sector9_stream_wetlands" to "wind-sung reeds",
+            "sector9_stream_wetlands" to "hollow reeds",
             "sector9_stream_flats" to "half-sunken causeway",
             "sector9_stream_cave_entrance" to "cave glyphs",
             "sector9_stream_cave_entrance" to "waterfall curtain",

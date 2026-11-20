@@ -229,8 +229,8 @@
   },
   {
     "id": "prismatic_tuning_fork",
-    "name": "Prismatic Tuning Fork",
-    "description": "A primordial resonant tuning fork recovered from the Source echo workbench. It hums with the foundational frequencies of the galaxy.",
+    "name": "Prismatic Phase Core",
+    "description": "A primordial crystalline phase core recovered from Jed’s Echo Bench in the Source. It pulses with raw astral light.",
     "type": "quest",
     "value": 0,
     "rarity": "legendary",
@@ -1987,7 +1987,7 @@
   {
     "id": "resonance_carp",
     "name": "Resonance Carp",
-    "description": "A broad glow-water carp that hums when handled.",
+    "description": "A broad glow-water carp whose swim bladder vibrates faintly when handled.",
     "type": "ingredient",
     "value": 28,
     "resale_value": 28,
@@ -2017,7 +2017,7 @@
   {
     "id": "frequency_tetra",
     "name": "Frequency Tetra",
-    "description": "A tiny false-tide fish that vibrates between notes when held.",
+    "description": "A darting false-tide fish with electric-blue scales that tingle against the palm.",
     "type": "ingredient",
     "value": 110,
     "resale_value": 110,
@@ -2147,7 +2147,7 @@
   {
     "id": "resonance_carp_stew",
     "name": "Resonance Carp Stew",
-    "description": "A deep, humming stew that settles the pulse. Restores 120 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion's perk. In combat: focus +6 for 2 turns to one ally.",
+    "description": "A rich, warming stew that settles the pulse. Restores 120 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion’s perk. In battle, uses that ally’s turn.",
     "type": "consumable",
     "value": 120,
     "buy_price": 240,
@@ -2207,7 +2207,7 @@
   {
     "id": "frequency_tetra_consomme",
     "name": "Frequency Tetra Consomme",
-    "description": "A precise, high-note broth that steadies the whole body. Restores 140 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion's perk. In combat: evasion +8 for 2 turns to one ally.",
+    "description": "A clear, peppery broth that sharpens focus and steadies the hands. Restores 140 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion’s perk. In battle, uses that ally’s turn.",
     "type": "consumable",
     "value": 190,
     "buy_price": 380,

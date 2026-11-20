@@ -59,7 +59,7 @@
     "title": "Calibrate Bioluminescent Prism",
     "prompt": "Aim the beam into the receiver, tighten its fringe, then balance the glow. A steady green receiver means the lattice is ready.",
     "success_event": "w2_relic_biolum_solved",
-    "success_message": "The crystal lattice illuminates with resonant green light, revealing an ancient focus component.",
+    "success_message": "The crystal lattice locks into a clean green beam, revealing an ancient focus component.",
     "failure_hint": "Center the beam, tighten the fringe, and keep the receiver green rather than dim or overloaded.",
     "audio_cue": "sfx_chime_splice",
     "sliders": [
@@ -85,7 +85,7 @@
       },
       {
         "id": "freq",
-        "label": "Crystal Frequency",
+        "label": "Focus Dispersion",
         "min": 20,
         "max": 150,
         "initial": 40,
@@ -99,9 +99,9 @@
   {
     "id": "w3_chrono_flux_tune",
     "title": "Synchronize Chrono Coils",
-    "prompt": "Steady the coil before it drops the signal. Damping cuts the jitter, pitch brings the carrier into range, and dilation lines up the return pulse.",
+    "prompt": "Steady the coil before it drops the signal. Damping cuts the jitter, drift brings the carrier into range, and dilation lines up the return pulse.",
     "success_event": "w3_relic_chrono_solved",
-    "success_message": "The tachyon loop locks into crystalline harmony, expelling an overclocked core.",
+    "success_message": "The tachyon loop locks into phase, expelling an overclocked core.",
     "failure_hint": "The coil dropped the signal. Use the readouts to bring each control into range.",
     "audio_cue": "sfx_chime_splice",
     "sliders": [
@@ -117,7 +117,7 @@
       },
       {
         "id": "pitch",
-        "label": "Tachyon Pitch",
+        "label": "Carrier Drift",
         "min": 50,
         "max": 200,
         "initial": 140,
@@ -127,7 +127,7 @@
       },
       {
         "id": "dilation",
-        "label": "Harmonic Dilation",
+        "label": "Phase Dilation",
         "min": 0,
         "max": 360,
         "initial": 90,

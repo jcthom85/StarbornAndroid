@@ -858,7 +858,7 @@
       {
         "id": "repair_astra",
         "title": "Rebuild the Circuit",
-        "description": "Resolve the gate chord, gather pod parts, and bring the Astra back online.",
+        "description": "Stabilize the Source Gate feeds, gather pod parts, and bring the Astra back online.",
         "tasks": [
           {
             "id": "bypass_source_gate",
@@ -1028,15 +1028,15 @@
   {
     "id": "w2_sq04",
     "title": "Ancient Echoes",
-    "summary": "Retrieve three wing crystals and use their harmonics to align the stasis chamber murals.",
-    "description": "Calibrate the light-murals to hear their full song.",
+    "summary": "Retrieve three wing crystals to realign the Sanctuary light-murals.",
+    "description": "Recover the three missing wing crystals and restore the Sanctuary light-murals.",
     "flavor": "Three missing crystals leave three dead bands in the mural array.",
     "giver": "Orion",
     "hub_id": "hub_4_facility",
     "stages": [
       {
         "id": "gather_resonance",
-        "title": "Scattered Chorus",
+        "title": "Scattered Crystals",
         "description": "Recover resonance crystals from the Sanctuary wings.",
         "tasks": [
           {
@@ -1055,12 +1055,12 @@
       },
       {
         "id": "calibrate_murals",
-        "title": "Chorus Tuning",
-        "description": "Seat the crystals and restore the stasis mural chord.",
+        "title": "Mural Alignment",
+        "description": "Seat the wing crystals and restore the Sanctuary light-murals.",
         "tasks": [
           {
             "id": "mural_tuning",
-            "text": "Seat the crystal voices and restore the mural chord."
+            "text": "Seat the three wing crystals at the Hall of Echoes and restore the mural circuit."
           }
         ]
       }

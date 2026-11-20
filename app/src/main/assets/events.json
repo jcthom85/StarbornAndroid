@@ -4226,7 +4226,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "A massive barrier of energy blocks the way. Orion hears four systems feeding the same wrong chord: a shaking horn, a burning receiver cup, root pressure with no relief, and breakers still giving the lock too much power."
+        "message": "A massive barrier of energy blocks the way. Orion traces four overloaded feeds driving the lock: a shaking emitter horn, a burning receiver cup, unvented root pressure, and breakers still feeding the lock too much power."
       }
     ]
   },
@@ -12390,7 +12390,7 @@
       },
       {
         "type": "show_message",
-        "message": "The west resonance crystal settles into a low supporting voice. The mural will need the answering east voice and the bright north voice before it can sing safely."
+        "message": "The west resonance crystal locks into the foundation band. The mural array still needs the east and north wing crystals before its projection can hold."
       }
     ]
   },
@@ -12423,7 +12423,7 @@
       },
       {
         "type": "show_message",
-        "message": "The east resonance crystal answers the west voice with a cleaner harmonic. The mural sockets brighten without flattening into one note."
+        "message": "The east resonance crystal locks into the paired band beside the west crystal. The mural sockets brighten without collapsing into a single beam."
       }
     ]
   },
@@ -12456,7 +12456,7 @@
       },
       {
         "type": "show_message",
-        "message": "The north resonance crystal adds a high stabilizing voice. Three tones now hold apart like Ice in dark water."
+        "message": "The north resonance crystal locks into the upper stabilizer socket. All three mural bands now hold separate and clear."
       }
     ]
   },
@@ -12763,7 +12763,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "The reliquary pedestal is keyed to the facility chorus. It will not release anything until the mural chord is stable."
+        "message": "The reliquary pedestal is keyed to the Sanctuary mural array. It will not release anything until all three wing crystals are seated."
       }
     ]
   },
@@ -13036,7 +13036,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "The acoustic lock howls in three clashing bands. Orion can hear the resolving chord better than the console can display it."
+        "message": "The acoustic lock shudders across three overloaded feeds. Stabilize the horn, receiver cup, root pressure, and breakers before asking Orion to release it."
       }
     ]
   },
@@ -15410,7 +15410,7 @@
   },
   {
     "id": "warp_source_orion_nightmare_node_scale_03_to_entry",
-    "description": "Return to source_orion_nightmare via harmonic wave.",
+    "description": "Return to source_orion_nightmare via tidal wave.",
     "trigger": {
       "type": "player_action",
       "action": "warp_source_orion_nightmare_node_scale_03_to_entry"
@@ -15430,7 +15430,7 @@
   },
   {
     "id": "warp_source_echo_mines_node_scale_final_to_entry",
-    "description": "Return to source_echo_mines via echo.",
+    "description": "Return to source_echo_mines via return rift.",
     "trigger": {
       "type": "player_action",
       "action": "warp_source_echo_mines_node_scale_final_to_entry"
@@ -15510,7 +15510,7 @@
   },
   {
     "id": "warp_source_center_node_scale_final_to_entry",
-    "description": "Return to source_center via echo.",
+    "description": "Return to source_center via return rift.",
     "trigger": {
       "type": "player_action",
       "action": "warp_source_center_node_scale_final_to_entry"
@@ -16751,7 +16751,7 @@
       },
       {
         "type": "show_message",
-        "message": "The horn steadies, the receiver cup grounds, the pressure roots bleed safely, and the breakers starve the last howl from the lock. Orion gives the system one clean resolving tone, and the barrier dissolves into blue mist."
+        "message": "The horn steadies, the receiver cup grounds, the pressure roots bleed safely, and the breakers cut the final overload. Orion releases the lock, and the barrier dissolves into blue mist."
       },
       {
         "type": "set_milestone",

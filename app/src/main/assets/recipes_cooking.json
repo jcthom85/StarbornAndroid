@@ -42,7 +42,7 @@
       "herb": 1
     },
     "result": "resonance_carp_stew",
-    "description": "Simmer resonance carp with meat and herbs until the hum settles into something restorative.",
+    "description": "Simmer resonance carp with meat and herbs into a rich, restorative stew.",
     "success_message": "You cook a warm pot of Resonance Carp Stew."
   },
   {
@@ -78,7 +78,7 @@
     },
     "result": "frequency_tetra_consomme",
     "description": "Clarify false-tide fish and herbs into a precise broth that rings at the edge of hearing.",
-    "success_message": "You finish a Frequency Tetra Consomme that hums in the cup."
+    "success_message": "You finish a steaming cup of Frequency Tetra Consomme."
   },
   {
     "id": "provision_field_ration_press",

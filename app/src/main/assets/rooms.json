@@ -5535,7 +5535,7 @@
     "env": "neon",
     "title": "Prism Gallery",
     "background_image": "images/rooms/world_3/spire_prism_gallery.webp",
-    "description": "Prism shutters divide the containment circuit into red feed, blue return and gold authorization. The braided chord is a control loom: its three handles can release the Lens if pressure and audit continuity are preserved.",
+    "description": "Prism shutters divide the containment circuit into red feed, blue return, and gold authorization. The control loom sits at the center: its three handles can release the Lens if pressure and audit continuity are preserved.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -5550,13 +5550,13 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The Prism Gallery fractures lockdown lights into alarm chords. The resolved containment route is still warm. Prism shutters frame the braided chord in the glass; scan alarm chords to follow a narrow timing path through the noise toward the roof.",
+        "description": "The Prism Gallery fractures lockdown beams across the glass. The resolved containment route is still warm. Prism shutters frame the control loom; scan alarm grid to follow a narrow timing path through the sweeps toward the roof.",
         "requires_milestones": [
           "ms_w3_mq14_complete"
         ]
       },
       {
-        "description": "The prism shutters hold the containment field safely open. The braided chord’s control loom rests in its bypass position, with pressure relieved and the audit held locally.",
+        "description": "The prism shutters hold the containment field safely open. The control loom rests in its bypass position, with pressure relieved and the audit held locally.",
         "requires_milestones": [
           "ms_w3_prism_solved"
         ]
@@ -5571,7 +5571,7 @@
         "inspect_after_completion": true
       },
       {
-        "name": "braided chord",
+        "name": "control loom",
         "type": "generic",
         "action_event": "w3_mq14_route_prisms",
         "requires_milestones": [
@@ -5579,13 +5579,13 @@
           "ms_w3_prism_shutters_read",
           "ms_w3_command_tethers_traced"
         ],
-        "condition_unmet_message": "The braided chord will not resolve until the containment field, prism shutters, and command tether-lines agree."
+        "condition_unmet_message": "The control loom will not release until the containment field, prism shutters, and command tether-lines agree."
       },
       {
-        "name": "scan alarm chords",
+        "name": "scan alarm grid",
         "type": "generic",
         "action_event": "w3_scan_prism_alarm_chords",
-        "condition_unmet_message": "The alarm chords are visible only after the Lens teaches Nova how to look between colors."
+        "condition_unmet_message": "The alarm grid pattern is visible only after the Lens teaches Nova how to look between refraction bands."
       }
     ]
   },
@@ -10031,7 +10031,7 @@
         "discovery_cabinet_id": "harmonic_pulse",
         "discovered_message": "You have recovered the unique component and learned the Harmonic Pulse repair schematic. Repair the cabinet through Menu → Tinker to make it playable from Astra Recreation.",
         "hide_when_milestone": "ms_arcade_cabinet_06_repaired",
-        "condition_unmet_message": "An ancient crystalline arcade console stands in the harmonic resonance field. A prismatic tuning fork hums within its core housing."
+        "condition_unmet_message": "An ancient crystalline arcade console stands beside the bench. A prismatic phase core hums within its housing."
       }
     ]
   },
@@ -11353,9 +11353,9 @@
     "id": "sector9_stream_wetlands",
     "env": "swamp",
     "weather": "fog",
-    "title": "Resonant Sedge",
+    "title": "Hollow Sedge",
     "background_image": "images/rooms/world_2/stream_wetlands.webp",
-    "description": "Dense sedge grasses with hollow, fluted stalks rise from the swamp. A handwritten spore warning sign leans in the muck as wind-sung reeds whistle in harmonic chords near a submerged emergency locker.",
+    "description": "Dense sedge grasses with hollow, fluted stalks rise from the swamp. A handwritten spore warning sign leans in the muck as hollow reeds whistle in the breeze near a submerged emergency locker.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -11376,9 +11376,9 @@
         "condition_unmet_message": "Amber sacs inflate along the path. Aethel markers identify the cloud as neurotoxic and harmful to Erosion control."
       },
       {
-        "name": "wind-sung reeds",
+        "name": "hollow reeds",
         "type": "generic",
-        "condition_unmet_message": "Hollow reed stalks whistle with harmonic frequencies as the coastal breeze passes through them."
+        "condition_unmet_message": "Hollow reed stalks whistle softly as the coastal breeze passes through them."
       },
       {
         "name": "submerged emergency locker",
@@ -11476,7 +11476,7 @@
         "activity_title": "Shelter Behind the Falls",
         "type": "rest_stop",
         "rest_event": "w2_camp_stream_falls",
-        "message": "The steady water-chord quiets the mental strain, letting your squad rest and recharge."
+        "message": "The steady rush of falling water quiets the mental strain, letting your squad rest and recharge."
       },
       {
         "name": "provisions counter",
@@ -12137,7 +12137,7 @@
       {
         "name": "low-frequency hum",
         "type": "generic",
-        "condition_unmet_message": "Their leaves vibrate like harp strings when touched, ringing out a quiet chord."
+        "condition_unmet_message": "Their crystalline leaves vibrate when brushed, shedding glowing spores into the air."
       },
       {
         "name": "crystalline ferns",
@@ -13243,13 +13243,13 @@
     "env": "swamp",
     "title": "Left Tuner Column",
     "background_image": "images/rooms/world_2/temple_left_wing.webp",
-    "description": "The left resonator battery column holds the western resonance crystal in a copper-wired pillar that vibrates in low harmony.",
+    "description": "The left resonator battery column holds the western resonance crystal inside a copper-wired stone pillar.",
     "description_variants": [
       {
         "requires_milestones": [
           "ms_w2_crystal_west_seated"
         ],
-        "description": "The left resonator battery column hums in steady low harmony around the aligned western resonance crystal."
+        "description": "The left resonator battery column glows steadily around the aligned western resonance crystal."
       }
     ],
     "npcs": [],
@@ -13269,8 +13269,8 @@
         "type": "generic",
         "action_event": "w2_sq04_crystal_west",
         "requires_milestone_not_set": "ms_w2_crystal_west_seated",
-        "condition_unmet_message": "A violet harmonic crystal rests in the west alcove.",
-        "unavailable_message": "A violet harmonic crystal rests in the west alcove. Speak with Orion about the stasis murals before tuning it."
+        "condition_unmet_message": "A violet crystal rests in the west alcove.",
+        "unavailable_message": "A violet crystal rests in the west alcove. Speak with Orion about the stasis murals before aligning it."
       }
     ]
   },
@@ -13279,13 +13279,13 @@
     "env": "swamp",
     "title": "Right Tuner Column",
     "background_image": "images/rooms/world_2/temple_right_wing.webp",
-    "description": "The right frequency dampener column holds the eastern resonance crystal, filtering local seismic noise into an answering harmonic.",
+    "description": "The right dampener column holds the eastern resonance crystal inside a stone pillar braced against local tremors.",
     "description_variants": [
       {
         "requires_milestones": [
           "ms_w2_crystal_east_seated"
         ],
-        "description": "The right frequency dampener column hums with a focused answering harmonic around the seated eastern resonance crystal."
+        "description": "The right dampener column locks cleanly around the seated eastern resonance crystal, its tremor gauges steady."
       }
     ],
     "npcs": [],
@@ -13305,8 +13305,8 @@
         "type": "generic",
         "action_event": "w2_sq04_crystal_east",
         "requires_milestone_not_set": "ms_w2_crystal_east_seated",
-        "condition_unmet_message": "A cyan harmonic crystal hums in the east alcove.",
-        "unavailable_message": "A cyan harmonic crystal hums in the east alcove. Speak with Orion about the stasis murals before tuning it."
+        "condition_unmet_message": "A cyan crystal rests in the east alcove.",
+        "unavailable_message": "A cyan crystal rests in the east alcove. Speak with Orion about the stasis murals before aligning it."
       }
     ]
   },
@@ -13722,7 +13722,7 @@
           "ms_w2_crystal_north_seated"
         ],
         "requires_milestone_not_set": "ms_w2_sq04_complete",
-        "condition_unmet_message": "The central relief hums out of tune. It needs the west, east, and north crystal voices seated before the mural chord can hold."
+        "condition_unmet_message": "The central relief is dark and misaligned. It needs the west, east, and north wing crystals seated before the mural projection can hold."
       }
     ],
     "description_variants": [
@@ -13730,7 +13730,7 @@
         "requires_milestones": [
           "ms_w2_murals_inspected"
         ],
-        "description": "A soaring gallery lined with vibrating acoustic pillars. The deciphered cymatic murals glow with stable turquoise light above the central relief."
+        "description": "A soaring gallery lined with carved stone pillars. The deciphered light murals glow with stable turquoise light above the central relief."
       }
     ]
   },
@@ -13782,13 +13782,13 @@
     "weather": "resonance",
     "title": "Acoustics Lab",
     "background_image": "images/rooms/world_2/hall_acoustics_lab.webp",
-    "description": "A laboratory bay containing Dominion logging sensors focused on cymatic pool fluctuations. The northern resonance crystal hums inside a sealed acoustic rack. An ancient iris sentry tracks a spore bulb rooted beneath its housing; each moves to a different rhythm.",
+    "description": "A laboratory bay containing Dominion logging sensors aimed at the water pools. The northern resonance crystal sits inside a sealed test rack. An ancient iris sentry tracks a spore bulb rooted beneath its housing; each moves to a different rhythm.",
     "description_variants": [
       {
         "requires_milestones": [
           "ms_w2_crystal_north_seated"
         ],
-        "description": "A laboratory bay containing Dominion logging sensors. The northern resonance crystal hums in harmonic alignment within the open acoustic rack."
+        "description": "A laboratory bay containing Dominion logging sensors. The northern resonance crystal glows inside the opened test rack."
       }
     ],
     "npcs": [],
@@ -13811,8 +13811,8 @@
         "type": "generic",
         "action_event": "w2_sq04_crystal_north",
         "requires_milestone_not_set": "ms_w2_crystal_north_seated",
-        "condition_unmet_message": "A gold harmonic crystal vibrates inside the acoustic rack.",
-        "unavailable_message": "A gold harmonic crystal vibrates inside the acoustic rack. Speak with Orion about the stasis murals before tuning it."
+        "condition_unmet_message": "A gold crystal rests inside the test rack.",
+        "unavailable_message": "A gold crystal rests inside the test rack. Speak with Orion about the stasis murals before aligning it."
       }
     ],
     "enemy_parties": [
@@ -13952,7 +13952,7 @@
     "weather": "resonance",
     "title": "Tuning Matrix",
     "background_image": "images/rooms/world_2/archive_tuning_bay.webp",
-    "description": "Four resonator columns stand around a low stone socket bed. Three empty seats wait for crystal voices from the west, east, and north wings before the mural chord can settle.",
+    "description": "Four resonator columns stand around a low stone socket bed. Three empty cradles wait for the crystals from the west, east, and north wings before the mural circuit can close.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -13976,7 +13976,7 @@
           "ms_w2_crystal_north_seated"
         ],
         "requires_milestone_not_set": "ms_w2_sq04_complete",
-        "condition_unmet_message": "The columns answer with three missing tones. Seat the west, east, and north crystal voices before asking them to carry the mural chord."
+        "condition_unmet_message": "Three sockets remain open. Align the west, east, and north wing crystals before closing the mural circuit."
       }
     ],
     "description_variants": [
@@ -13984,7 +13984,7 @@
         "requires_milestones": [
           "ms_w2_sq04_complete"
         ],
-        "description": "Four resonator columns hum in a stable three-part chord around the central acoustic pedestal."
+        "description": "Four resonator columns glow in steady alignment around the central stone pedestal."
       },
       {
         "requires_milestones": [
@@ -13995,7 +13995,7 @@
         "forbidden_milestones": [
           "ms_w2_sq04_complete"
         ],
-        "description": "The tuning matrix room holds three seated crystal voices. The resonator columns no longer sound like separate machines; they are waiting for one careful touch to carry the mural chord."
+        "description": "The tuning matrix room holds all three wing crystals. The resonator columns are aligned and waiting for one final touch to lock the mural circuit."
       }
     ]
   },
@@ -14173,7 +14173,7 @@
     "env": "swamp",
     "title": "Ring Array",
     "background_image": "images/rooms/world_2/stasis_ring_array.webp",
-    "description": "The ring console controls three concentric stasis rings. The alignment indicators hum with discordant tones, waiting for the mural pattern, pod pressure, overview sockets, and coolant flow to agree.",
+    "description": "The ring console controls three concentric stasis rings. Warning indicators flicker across the panel, waiting for the mural pattern, pod pressure, overview roles, and coolant flow to agree.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14198,7 +14198,7 @@
           "ms_w2_stasis_overview_read",
           "ms_w2_coolant_stabilized"
         ],
-        "condition_unmet_message": "The rings refuse to move until all four alignment frequencies are in phase.",
+        "condition_unmet_message": "The rings refuse to move until all four stasis checks are aligned.",
         "requires_milestone_not_set": "ms_w2_stasis_awake"
       }
     ],
@@ -14210,7 +14210,7 @@
         "forbidden_milestones": [
           "ms_w2_mq03_complete"
         ],
-        "description": "The aligned rings carry pressure safely around the memory shell. The pod occupant is awake. Return west to Stasis Chamber to talk to him and open the separate Bridge cradle."
+        "description": "The aligned rings carry pressure safely around the memory shell beside the quiet ring console. The pod occupant is awake. Return west to Stasis Chamber to talk to him and open the separate Bridge cradle."
       },
       {
         "requires_milestones": [
@@ -14222,13 +14222,13 @@
         "forbidden_milestones": [
           "ms_w2_mq03_complete"
         ],
-        "description": "The three concentric stasis rings hum in a stable pattern now. The ring console is no longer guessing at a code; it is waiting for Nova to let the room breathe in sequence."
+        "description": "The three concentric stasis rings turn in a stable pattern now. The ring console is ready for Nova to release the stasis sequence."
       },
       {
         "requires_milestones": [
           "ms_w2_mq03_complete"
         ],
-        "description": "A concentric ring array vibrating with harmonic frequencies. The alignment rings spin in perfect synchronization."
+        "description": "A concentric ring array turning in clean synchronization beside the ring console."
       }
     ]
   },
@@ -14303,7 +14303,7 @@
         "requires_milestones": [
           "ms_w2_stasis_overview_read"
         ],
-        "description": "The viewing balcony's stasis mural overview remains projected over the deck: memory, pressure, and return, each ring with a role instead of a random pitch."
+        "description": "The viewing balcony’s stasis mural overview remains projected over the deck: memory, pressure, and return, each ring assigned a distinct physical role."
       }
     ]
   },
@@ -14602,7 +14602,7 @@
     "weather": "resonance",
     "title": "Source Gate",
     "background_image": "images/rooms/world_2/source_gate.webp",
-    "description": "A giant barrier of humming energy blocks access to the hangar. The acoustic lock vibrates with three discordant, howling bands fed by a horn, a cup, pressure roots, and overloaded breakers.",
+    "description": "A giant barrier of unstable energy blocks access to the hangar. The acoustic lock shudders under four overloaded feeds: a loose copper horn, an ungrounded receiver cup, backed-up root pressure, and live auxiliary breakers.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14679,7 +14679,7 @@
         "forbidden_milestones": [
           "ms_w2_mq05_complete"
         ],
-        "description": "The Source Gate still blocks the hangar, but the acoustic lock's three howling bands have fallen into a tense, readable chord. The horn, cup, roots, and breakers are finally ready for Orion's resolving tone."
+        "description": "The Source Gate still blocks the hangar, but the four feeds have stabilized. With the horn braced, the cup grounded, root pressure bled, and the breakers isolated, the acoustic lock is ready for Orion to release."
       }
     ]
   },
@@ -14694,9 +14694,9 @@
     ],
     "env": "swamp",
     "weather": "resonance",
-    "title": "Harmonic Horn",
+    "title": "Left Emitter Horn",
     "background_image": "images/rooms/world_2/gate_emitter_left.webp",
-    "description": "The left emitter tower focuses the lock frequency. The copper horn vibrates violently, and an emitter memory glows inside its service frame.",
+    "description": "The left emitter tower focuses the barrier field. The heavy copper horn vibrates violently against loose stays, and an emitter memory glows inside its service frame.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -14722,7 +14722,7 @@
         "requires_milestones": [
           "ms_w2_source_horn_stabilized"
         ],
-        "description": "The left emitter tower has stopped shaking against its copper stays. Tuned and stable, the harmonic horn now breathes in a low, steady band."
+        "description": "The left emitter tower has stopped shaking against its copper stays. Braced and stable, the emitter horn holds a steady low output."
       }
     ]
   },
@@ -16384,7 +16384,7 @@
     "env": "neon",
     "title": "Catalog Atrium",
     "background_image": "images/rooms/world_3/spire_archive_scale_01.webp",
-    "description": "The catalog atrium sings file numbers in a soft index choir. Each note points to a life Dominion turned into property, and the index choir never wonders who is listening. An index terminal flashes amber in the dark. The vault is north; the maintenance wing continues south to Prism Service Bay.",
+    "description": "The catalog atrium cycles through file numbers across a tall index array. Each entry points to a life Dominion turned into property. An index terminal flashes amber in the dark. The vault is north; the maintenance wing continues south to Prism Service Bay.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -16404,9 +16404,9 @@
         "condition_unmet_message": "The atrium is beautiful in a way that should be illegal."
       },
       {
-        "name": "index choir",
+        "name": "index array",
         "type": "generic",
-        "condition_unmet_message": "The choir treats people like folders because that is what it was built to do."
+        "condition_unmet_message": "The index array treats people like folders because that is what it was built to do."
       },
       {
         "name": "index terminal",
@@ -18440,9 +18440,9 @@
     "id": "foundry_power_core_scale_04",
     "env": "foundry",
     "weather": "sparks",
-    "title": "Coolant Choir",
+    "title": "Coolant Manifold",
     "background_image": "images/rooms/world_4/foundry_power_core_scale_04.webp",
-    "description": "Blue pipes carry coolant under core pressure, knocking against their clamps in a coolant choir. Flow drops sharply at a damaged valve. A pressure relief lever is clamped in the open position.",
+    "description": "Blue pipes carry coolant under core pressure, knocking against their clamps along the coolant manifold. Flow drops sharply at a damaged valve. A pressure relief lever is clamped in the open position.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -18457,14 +18457,14 @@
     "state": {},
     "actions": [
       {
-        "name": "coolant choir",
+        "name": "coolant manifold",
         "type": "generic",
         "condition_unmet_message": "The pipes are the only reason the room has not become a crater."
       },
       {
         "name": "blue pipes",
         "type": "generic",
-        "condition_unmet_message": "The chord falls flat near a damaged valve."
+        "condition_unmet_message": "Pressure drops sharply near a damaged valve."
       },
       {
         "name": "pressure relief lever",
@@ -19929,7 +19929,7 @@
     "weather": "resonance",
     "title": "Cable Narthex",
     "background_image": "images/rooms/world_5/deep_anchor_chamber_scale_01.webp",
-    "description": "A cable narthex braids power lines into a pulse rosary leading toward Elara's tank. The pulse rosary counts her heartbeats as throughput, while a maintenance hymn loops softly enough to make captivity sound like care.",
+    "description": "A cable narthex braids power lines into a pulse rosary leading toward Elara’s tank. The pulse rosary counts her heartbeats as throughput, while a low compliance drone loops softly enough to make captivity feel routine.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -19949,9 +19949,9 @@
         "condition_unmet_message": "Each bead of light is a processed heartbeat, logged and routed into the Ring's Harmony stack."
       },
       {
-        "name": "maintenance hymn",
+        "name": "compliance drone",
         "type": "generic",
-        "condition_unmet_message": "The hymn is not music. It is a compliance tone tuned to keep operators calm around a living prisoner."
+        "condition_unmet_message": "A steady low-frequency audio loop engineered to keep operators calm around a living prisoner."
       }
     ]
   },
@@ -19966,9 +19966,9 @@
     ],
     "env": "void",
     "weather": "resonance",
-    "title": "Chorus Tank",
+    "title": "Isolation Tank",
     "background_image": "images/rooms/world_5/deep_anchor_chamber_scale_02.webp",
-    "description": "A chorus tank echoes with synthetic voices trying to smooth Elara into infrastructure. Breath meters rise beside the glass whenever the system calls her an asset instead of a person.",
+    "description": "An isolation tank masks Elara’s neural telemetry behind synthetic traffic, trying to smooth her into infrastructure. Breath meters rise beside the glass whenever the system logs her as an asset instead of a person.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -19983,9 +19983,9 @@
     "state": {},
     "actions": [
       {
-        "name": "chorus tank",
+        "name": "isolation tank",
         "type": "generic",
-        "condition_unmet_message": "The tank isolates Elara's clean signal and buries it beneath a thousand approved voices."
+        "condition_unmet_message": "The tank isolates Elara’s clean signal and buries it beneath synthetic relay traffic."
       },
       {
         "name": "breath meters",
@@ -20220,7 +20220,7 @@
     "weather": "resonance",
     "title": "Manual Release Plinth",
     "background_image": "images/rooms/world_5/deep_anchor_chamber_scale_08.webp",
-    "description": "A manual release plinth hides under ceremonial glass near the last tank cable. The manual key is labeled EMERGENCY, because even monsters leave themselves a maintenance route. A harmonic resonance anchor safe hums in tune with the containment field. An optional return anchor cable leads directly back to the entrance. The room corridors also remain open for walking back.",
+    "description": "A manual release plinth hides under ceremonial glass near the last tank cable. The manual key is labeled EMERGENCY, because even monsters leave themselves a maintenance route. A sealed resonance anchor safe sits wired into the containment frame. An optional return anchor cable leads directly back to the entrance. The room corridors also remain open for walking back.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -20642,9 +20642,9 @@
     ],
     "env": "void",
     "weather": "resonance",
-    "title": "Choir Gap",
+    "title": "Signal Breach",
     "background_image": "images/rooms/world_5/deep_tear_scale_02.webp",
-    "description": "A choir gap opens where music moves without air. A soundless note presses against Nova's teeth, not silent but too full of signal to become sound.",
+    "description": "A signal breach opens where the hull pulls apart into vacuum. A heavy pressure wave presses against Nova’s teeth, too dense with raw current to become sound.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -20661,14 +20661,14 @@
     "state": {},
     "actions": [
       {
-        "name": "choir gap",
+        "name": "signal breach",
         "type": "generic",
-        "condition_unmet_message": "The gap is where the Source starts leaking through as pressure, memory, and song."
+        "condition_unmet_message": "The breach is where the Source starts leaking through as pressure and raw memory."
       },
       {
-        "name": "soundless note",
+        "name": "pressure wave",
         "type": "generic",
-        "condition_unmet_message": "The note tastes like metal and grief."
+        "condition_unmet_message": "The air tastes like copper and ozone."
       }
     ],
     "enemy_parties": [
@@ -20916,7 +20916,7 @@
     "weather": "resonance",
     "title": "Three Dark Paths",
     "background_image": "images/rooms/world_6/source_campfire_node_scale_02.webp",
-    "description": "Three dark paths pull away from the song-fire, each tuned to a different kind of fear. The fear tones are ugly, personal, and too specific for Vale to call noise.",
+    "description": "Three dark paths pull away from the song-fire, each shaped by one crew member’s personal fears—ugly, specific, and too real for Vale to dismiss as noise.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -20936,7 +20936,7 @@
         "condition_unmet_message": "One path smells like office dust, one like gun oil, and one like black salt."
       },
       {
-        "name": "fear tones",
+        "name": "personal fears",
         "type": "generic",
         "condition_unmet_message": "They hurt because they belong to someone real."
       }
@@ -21382,7 +21382,7 @@
     "weather": "starfall",
     "title": "Chorus Door",
     "background_image": "images/rooms/world_6/source_orion_nightmare_node_scale_03.webp",
-    "description": "A Chorus door hums with wet harmonics from below the shore. The wet harmonics carry names Orion thought the universe had erased. A luminous tide glass shell hums with melodies from home. A one-way harmonic wave leads directly back to the entrance.",
+    "description": "A Chorus door stands half-submerged where a deep tidal current rises from below the shore, carrying names Orion thought the universe had erased. A luminous tide glass shell rests on the threshold. A one-way tidal wave leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -21401,9 +21401,9 @@
         "condition_unmet_message": "The door opens to an answer, not an escape."
       },
       {
-        "name": "wet harmonics",
+        "name": "tidal current",
         "type": "generic",
-        "condition_unmet_message": "The harmonics prove the dead are carried, not flattened into silence."
+        "condition_unmet_message": "The current proves the dead are carried, not flattened into silence."
       },
       {
         "name": "tide glass shell",
@@ -21418,7 +21418,7 @@
         "discovery_message": "You part the shell and gather the fragments held inside its translucent folds."
       },
       {
-        "name": "harmonic wave",
+        "name": "tidal wave",
         "type": "generic",
         "action_event": "warp_source_orion_nightmare_node_scale_03_to_entry"
       }
@@ -21720,9 +21720,9 @@
     ],
     "env": "source",
     "weather": "resonance",
-    "title": "Astra Engine Note",
+    "title": "Astra Engine Thrust",
     "background_image": "images/rooms/world_6/source_memory_bridge_node_scale_04.webp",
-    "description": "The Astra engine note becomes a narrow gold rail across the static. It wobbles when Nova tries to lead alone and settles when the others answer.",
+    "description": "The Astra’s familiar engine pulse forms a narrow gold rail across the static. It wobbles when Nova tries to cross alone and steadies when the crew steps onto it together.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -21737,7 +21737,7 @@
     "state": {},
     "actions": [
       {
-        "name": "engine note",
+        "name": "engine pulse",
         "type": "generic",
         "condition_unmet_message": "The ship sounds damaged, loyal, and alive."
       },
@@ -21873,7 +21873,7 @@
     "weather": "resonance",
     "title": "Ring Silence Step",
     "background_image": "images/rooms/world_6/source_memory_stair_node_scale_04.webp",
-    "description": "A Ring silence step absorbs sound until Elara's clean note cuts through it. The clean note proves silence was never peace, only a cage with better acoustics.",
+    "description": "A Ring silence step absorbs every footstep until Elara’s signal cuts cleanly through the damping field, proving the Ring’s quiet was only a better-insulated cage.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -21893,7 +21893,7 @@
         "condition_unmet_message": "For one breath, the whole stair feels like the Orbital Ring."
       },
       {
-        "name": "clean note",
+        "name": "Elara’s signal",
         "type": "generic",
         "condition_unmet_message": "Elara is not a symbol here. She is a person still pushing back."
       }
@@ -21958,9 +21958,9 @@
     ],
     "env": "source",
     "weather": "resonance",
-    "title": "Choir Fracture",
+    "title": "Fractured Unison",
     "background_image": "images/rooms/world_6/source_spire_thought_node_scale_02.webp",
-    "description": "A choir fracture splits Vale's single note into separate voices arguing, grieving, and laughing out of tune. The out-of-tune laughter damages the Silence more than any weapon.",
+    "description": "A fractured unison splits Vale’s monument into separate people arguing, grieving, and breaking into unruly laughter that cracks the white geometry.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -21975,12 +21975,12 @@
     "state": {},
     "actions": [
       {
-        "name": "choir fracture",
+        "name": "fractured unison",
         "type": "generic",
         "condition_unmet_message": "Harmony survives disagreement. Vale's Soloist does not."
       },
       {
-        "name": "out-of-tune laughter",
+        "name": "unruly laughter",
         "type": "generic",
         "condition_unmet_message": "It sounds like people, which is exactly the problem for him."
       }
@@ -22125,8 +22125,8 @@
         "id": "inspect_chorus_resonance_tuning",
         "name": "ocean resonance",
         "type": "inspect",
-        "description": "Attune to the gentle harmonics of the white shore.",
-        "inspect_message": "The tide rolls in without water, carrying thousands of whispers from six worlds. They are no longer screaming in unison; each voice sings its own independent song, blending into an unyielding chord of shared survival."
+        "description": "Listen to the currents along the white shore.",
+        "inspect_message": "The tide rolls in without water, carrying thousands of distinct memories from six worlds—no longer flattened into unison, each person holding their own ground."
       }
     ]
   },
@@ -22726,9 +22726,9 @@
   {
     "id": "foundry_conditioning_scale_final",
     "env": "foundry",
-    "title": "Foundry Defect Choir",
+    "title": "Foundry Defect Rack",
     "background_image": "images/rooms/world_4/foundry_conditioning_scale_final.webp",
-    "description": "A defect choir of rejected units clicks behind glass, half-awake and waiting for a command that may never come. The defect choir and glass seam deepen the question of what the Foundry throws away. A hardened stress-test locker survived the pressure cycles. An optional return valve leads directly back to the entrance. You can also walk back through the room corridors.",
+    "description": "A defect rack of rejected units clicks behind a cracked glass seam, half-awake and waiting for a command that may never come. A hardened stress-test locker survived the pressure cycles. An optional return valve leads directly back to the entrance. You can also walk back through the room corridors.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -22745,7 +22745,7 @@
     "state": {},
     "actions": [
       {
-        "name": "defect choir",
+        "name": "defect rack",
         "type": "generic",
         "condition_unmet_message": "The rejected units click in uneven rhythm, each delay sounding almost like resistance."
       },
@@ -23319,7 +23319,7 @@
     "weather": "resonance",
     "title": "Source Memory Shore",
     "background_image": "images/rooms/world_6/source_campfire_node_scale_final.webp",
-    "description": "A memory shore curves around the Campfire, where tide marks from six worlds meet in blue ash. The tide marks and blue ash make the finale feel like the whole journey gathered in one place. A warm hearth memory chest glows softly in the blue ash. A one-way trail leads directly back to the entrance.",
+    "description": "A memory shore curves around the Campfire, where tide marks from six worlds meet in drifts of blue ash. A warm hearth memory chest glows softly beside the waterline. A one-way trail leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -23368,7 +23368,7 @@
     "weather": "dust",
     "title": "Source First Fear",
     "background_image": "images/rooms/world_6/source_echo_mines_node_scale_final.webp",
-    "description": "A first fear corridor repeats Nova's earliest exit routes, but every door now opens from the inside. The first fear and inside latch show that the beginning no longer owns her. An unburned first shift locker holds tools Nova thought were lost forever. A one-way echo leads directly back to the entrance.",
+    "description": "A first fear corridor repeats Nova’s earliest exit routes from the Pit, but every door now has an inside latch waiting for her hand. An unburned first shift locker holds tools Nova thought were lost forever. A one-way return rift leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -23404,7 +23404,7 @@
         "discovery_message": "You pull open the familiar locker and gather the things that have held their shape inside."
       },
       {
-        "name": "echo",
+        "name": "return rift",
         "type": "generic",
         "action_event": "warp_source_echo_mines_node_scale_final_to_entry"
       }
@@ -23424,7 +23424,7 @@
     "weather": "resonance",
     "title": "Source Crew Span",
     "background_image": "images/rooms/world_6/source_memory_bridge_node_scale_final.webp",
-    "description": "A crew span brightens only where more than one shadow crosses it. The crew span and shared shadow make the bridge's rule impossible to miss. A radiant covenant beacon marks where the crew chose each other. A one-way light beam leads directly back to the entrance.",
+    "description": "A crew span arches across the void, brightening only where more than one figure casts a shared shadow across its glass. A radiant covenant beacon marks where the crew chose each other. A one-way light beam leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -23480,7 +23480,7 @@
     "weather": "resonance",
     "title": "Source Scar Step",
     "background_image": "images/rooms/world_6/source_memory_stair_node_scale_final.webp",
-    "description": "A scar step holds dents from every world, refusing Vale's offer to polish them away. The scar step and unpolished edge turn damage into proof of life. A scarred survivor reliquary holds fragments of every battle survived. A one-way slide leads directly back to the entrance.",
+    "description": "A scar step holds dents from every world, its unpolished edge refusing Vale’s offer to smooth the damage away. A scarred survivor reliquary holds fragments of every battle survived. A one-way slide leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -23535,9 +23535,9 @@
     ],
     "env": "source",
     "weather": "resonance",
-    "title": "Source Voice Orbit",
+    "title": "Center Orbit",
     "background_image": "images/rooms/world_6/source_center_node_scale_final.webp",
-    "description": "A voice orbit circles the Center with separate tones that harmonize without merging. The voice orbit and separate tones state the game's final answer in room form. A glowing chorus harmony seed spins in equilibrium. A one-way echo leads directly back to the entrance.",
+    "description": "A voice orbit circles the Center with separate tones that hold together without merging into a single command. At its hub, a glowing chorus harmony seed spins in quiet equilibrium. A one-way return rift leads directly back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -23573,7 +23573,7 @@
         "discovery_message": "You hold the seed as its outer layers part, leaving tangible fragments in your palms."
       },
       {
-        "name": "echo",
+        "name": "return rift",
         "type": "generic",
         "action_event": "warp_source_center_node_scale_final_to_entry"
       }
@@ -23585,7 +23585,7 @@
     "env": "source",
     "title": "Source Morning Street",
     "background_image": "images/rooms/world_6/source_new_world_node_scale_final.webp",
-    "description": "A morning street outside the diner carries repair crews, bad jokes, and weather nobody scheduled. A terminal offers to call Astra shuttle. The repair crews and real weather make the ending feel lived in instead of merely won. A morning provision basket sits packed for the journey ahead. The southern street returns past Open Window toward the diner. An ether well ripples beside the street.",
+    "description": "A morning street outside the diner carries repair crews, bad jokes, and real weather nobody scheduled. A terminal offers to call Astra shuttle. A morning provision basket sits packed for the journey ahead. The southern street returns past Open Window toward the diner. An ether well ripples beside the street.",
     "npcs": [],
     "items": [],
     "enemies": [],
