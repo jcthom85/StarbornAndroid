@@ -18,6 +18,9 @@ import com.example.starborn.feature.exploration.presentation.*
 import com.example.starborn.feature.enemy.EnemyPresentationTier
 import com.example.starborn.feature.enemy.enemyPresentationTier
 import com.example.starborn.feature.enemy.explorationEnemySpriteScale
+import com.example.starborn.domain.movement.EnemyAggressionState
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.ui.graphics.lerp as lerpColor
 
 import androidx.annotation.DrawableRes
 import androidx.activity.compose.BackHandler
@@ -405,9 +408,21 @@ fun ExplorationScreen(
         listOf(null, "dust", "rain", "storm", "snow", "cave_drip", "starfall", "steam", "fog", "gas", "resonance", "sparks")
     }
     var approachingCombat by remember { mutableStateOf(false) }
+    var approachingAmbush by remember { mutableStateOf(false) }
     val hostileApproachScale by animateFloatAsState(
-        targetValue = if (approachingCombat && !uiState.settings.disableScreenshake) 1.05f else 1f,
-        animationSpec = tween(300), label = "hostileApproach")
+        targetValue = when {
+            !approachingCombat || uiState.settings.disableScreenshake -> 1f
+            approachingAmbush -> 1.24f
+            else -> 1.06f
+        },
+        animationSpec = tween(if (approachingAmbush) 280 else 300, easing = FastOutSlowInEasing),
+        label = "hostileApproach"
+    )
+    val ambushFlashAlpha by animateFloatAsState(
+        targetValue = if (approachingCombat && approachingAmbush) 0.42f else 0f,
+        animationSpec = tween(220, easing = FastOutSlowInEasing),
+        label = "ambushFlash"
+    )
     val gateReveal = com.example.starborn.ui.exploration.rememberTempleGateReveal(
         uiState.currentRoom?.id, uiState.roomState["temple_open"] == true, uiState.settings.disableScreenshake)
     val gateRevealActive = gateReveal.active
@@ -480,13 +495,15 @@ fun ExplorationScreen(
         viewModel.events.collect { event ->
             when (event) {
                 is ExplorationEvent.EnterCombat -> {
-                    if (eventWorldId == "world_2") {
+                    if (event.isAmbush || eventWorldId == "world_2") {
+                        approachingAmbush = event.isAmbush
                         approachingCombat = true
                         viewModel.setExplorationInteractionBlocked(true)
-                        delay(350L)
+                        delay(if (event.isAmbush) 380L else 350L)
                     }
                     onEnemySelected(event.enemyIds)
                     approachingCombat = false
+                    approachingAmbush = false
                 }
                 is ExplorationEvent.PlayCinematic -> Unit
                 is ExplorationEvent.ShowMessage -> Unit
@@ -1212,13 +1229,20 @@ fun ExplorationScreen(
                     visualParties = uiState.visualEnemyParties,
                     enemyTiers = uiState.enemyTiers,
                     enemyIcons = uiState.enemyIcons,
+                    enemyAggression = if (!patrolInteractionBlocked) uiState.enemyAggression else null,
                     accentColor = actionAccentColor,
                     isDark = isRoomDark,
                     roomId = uiState.currentRoom?.id,
                     onPartyClick = { enemyId -> if (!approachingCombat) viewModel.engageEnemy(enemyId) },
                     modifier = Modifier
                         .zIndex(1f)
-                        .graphicsLayer { scaleX = hostileApproachScale; scaleY = hostileApproachScale }
+                        .graphicsLayer {
+                            scaleX = hostileApproachScale
+                            scaleY = hostileApproachScale
+                            if (approachingCombat && approachingAmbush && !uiState.settings.disableScreenshake) {
+                                translationY = 18f * density
+                            }
+                        }
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth()
                         .heightIn(min = 250.dp, max = 410.dp)
@@ -1226,18 +1250,42 @@ fun ExplorationScreen(
                 )
             }
 
+            if (ambushFlashAlpha > 0.01f) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .zIndex(3f)
+                        .background(
+                            Brush.radialGradient(
+                                colors = listOf(
+                                    Color.Transparent,
+                                    Color(0xFFDC2626).copy(alpha = ambushFlashAlpha)
+                                )
+                            )
+                        )
+                )
+            }
 
             if (!patrolInteractionBlocked) {
                 val aggression = uiState.enemyAggression
                 if (aggression != null) {
                     com.example.starborn.ui.exploration.PatrolWarning(
-                        aggression, Modifier.align(Alignment.Center).padding(horizontal = 16.dp)
+                        aggression,
+                        Modifier
+                            .zIndex(4f)
+                            .align(Alignment.TopCenter)
+                            .padding(top = 84.dp, start = 16.dp, end = 16.dp)
                     )
                 } else {
                     uiState.enemyMovementNotice?.let { notice ->
                         Surface(
-                            Modifier.align(Alignment.Center).padding(horizontal = 16.dp),
-                            shape = RoundedCornerShape(8.dp), color = Color(0xDB101A23)
+                            Modifier
+                                .zIndex(4f)
+                                .align(Alignment.TopCenter)
+                                .padding(top = 84.dp, start = 16.dp, end = 16.dp),
+                            shape = RoundedCornerShape(10.dp),
+                            color = Color(0xE2101A23),
+                            border = BorderStroke(1.dp, Color(0x66FFD8B0))
                         ) {
                             Text(notice, Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
                                 color = Color(0xFFFFD8B0), style = MaterialTheme.typography.labelMedium)
@@ -1248,13 +1296,27 @@ fun ExplorationScreen(
 
             if (approachingCombat) {
                 Surface(
-                    modifier = Modifier.align(Alignment.Center).padding(24.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    color = Color(0xFF24191D),
-                    border = BorderStroke(1.dp, Color(0xFFE5A36B))
+                    modifier = Modifier
+                        .zIndex(5f)
+                        .align(Alignment.TopCenter)
+                        .padding(top = 92.dp, start = 24.dp, end = 24.dp),
+                    shape = RoundedCornerShape(14.dp),
+                    color = if (approachingAmbush) Color(0xF2330D12) else Color(0xEE24191D),
+                    border = BorderStroke(
+                        width = if (approachingAmbush) 1.5.dp else 1.dp,
+                        color = if (approachingAmbush) Color(0xFFEF4444) else Color(0xFFE5A36B)
+                    ),
+                    shadowElevation = 8.dp
                 ) {
-                    Text("Hostiles closing in", modifier = Modifier.padding(20.dp),
-                        color = Color(0xFFFFD8B0), style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        text = if (approachingAmbush) "⚠ AMBUSH!" else "Hostiles closing in",
+                        modifier = Modifier.padding(horizontal = 22.dp, vertical = 12.dp),
+                        color = if (approachingAmbush) Color(0xFFFFE4E6) else Color(0xFFFFD8B0),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.ExtraBold,
+                            letterSpacing = if (approachingAmbush) 1.2.sp else 0.3.sp
+                        )
+                    )
                 }
             }
 
@@ -6006,6 +6068,7 @@ private fun EnemyPartyStrip(
     visualParties: List<VisualEnemyParty>,
     enemyTiers: Map<String, String>,
     enemyIcons: Map<String, EnemyIconUi>,
+    enemyAggression: EnemyAggressionState?,
     accentColor: Color,
     isDark: Boolean,
     roomId: String?,
@@ -6073,9 +6136,10 @@ private fun EnemyPartyStrip(
             }
         }
 
+        val singlePartyCentered = orderedParties.size == 1
         val placements = orderedParties.mapNotNull { party ->
             slotAssignments[party.id]?.let { slotIndex ->
-                val slot = if (party == soloBossParty) EnemyPartySlot(0.5f, row = 0)
+                val slot = if (party == soloBossParty || singlePartyCentered) EnemyPartySlot(0.5f, row = 0)
                     else ENEMY_PARTY_SLOTS[slotIndex]
                 Triple(party, slot, slotIndex)
             }
@@ -6119,6 +6183,9 @@ private fun EnemyPartyStrip(
                 } else {
                     (ENEMY_PARTY_SLOTS.size - slotIndex + 10).toFloat()
                 }
+                val partyAggression = enemyAggression?.takeIf { agg ->
+                    party.id == "moving_${agg.partyId}" || party.id == agg.partyId
+                }
                 EnemyPartyCluster(
                     party = if (party == soloBossParty) party.copy(enemies = party.enemies.sortedByDescending {
                         enemyPresentationTier(enemyTiers[it]) == EnemyPresentationTier.BOSS
@@ -6126,6 +6193,7 @@ private fun EnemyPartyStrip(
                     centerBoss = party == soloBossParty,
                     enemyTiers = enemyTiers,
                     enemyIcons = enemyIcons,
+                    partyAggression = partyAggression,
                     accentColor = accentColor,
                     isDark = isDark,
                     memberSize = memberSize,
@@ -6169,6 +6237,7 @@ private fun EnemyPresenceStage(
     visualParties: List<VisualEnemyParty>,
     enemyTiers: Map<String, String>,
     enemyIcons: Map<String, EnemyIconUi>,
+    enemyAggression: EnemyAggressionState?,
     accentColor: Color,
     isDark: Boolean,
     roomId: String?,
@@ -6189,6 +6258,7 @@ private fun EnemyPresenceStage(
                 visualParties = visualParties,
                 enemyTiers = enemyTiers,
                 enemyIcons = enemyIcons,
+                enemyAggression = enemyAggression,
                 accentColor = accentColor,
                 isDark = isDark,
                 roomId = roomId,
@@ -6206,6 +6276,7 @@ private fun EnemyPartyCluster(
     centerBoss: Boolean = false,
     enemyTiers: Map<String, String>,
     enemyIcons: Map<String, EnemyIconUi>,
+    partyAggression: EnemyAggressionState? = null,
     accentColor: Color,
     isDark: Boolean,
     memberSize: Dp,
@@ -6219,6 +6290,15 @@ private fun EnemyPartyCluster(
     val density = LocalDensity.current
     val verticalWiggle = transitionDirection == "north" || transitionDirection == "south"
     val transitionActive = party.enteringFrom != null || party.leavingTo != null
+    val rawUrgency = partyAggression?.let { agg ->
+        val total = agg.totalMs.coerceAtLeast(1L).toFloat()
+        (1f - agg.remainingMs.toFloat() / total).coerceIn(0f, 1f)
+    } ?: 0f
+    val aggressionUrgency by animateFloatAsState(
+        targetValue = rawUrgency,
+        animationSpec = tween(durationMillis = 250, easing = LinearEasing),
+        label = "partyAggroUrgency-${party.id}"
+    )
     val motionCycle = if (transitionActive) {
         0f
     } else {
@@ -6227,7 +6307,10 @@ private fun EnemyPartyCluster(
             initialValue = 0f,
             targetValue = 1f,
             animationSpec = infiniteRepeatable(
-                animation = tween(durationMillis = 6_400, easing = LinearEasing),
+                animation = tween(
+                    durationMillis = if (partyAggression != null) 2_600 else 6_400,
+                    easing = LinearEasing
+                ),
                 repeatMode = RepeatMode.Restart
             ),
             label = "hostilesMotionCycle-${party.id}"
@@ -6293,25 +6376,40 @@ private fun EnemyPartyCluster(
         }
     }
 
+    val aggroSwell = 1f + aggressionUrgency * 0.09f
     Box(
         modifier = modifier
             .graphicsLayer {
                 translationX = animX.value * density.density
                 translationY = animY.value * density.density
+                scaleX = aggroSwell
+                scaleY = aggroSwell
                 alpha = animAlpha.value
             },
         contentAlignment = Alignment.BottomCenter
     ) {
+        val memberCount = party.enemies.size
+        val spreadFactor = (1f - overlapFraction).coerceIn(0.42f, 0.72f)
         party.enemies.forEachIndexed { index, enemyId ->
             val step = (index + 1) / 2
             val isLeft = index % 2 == 1
             val offsetX = when {
-                index == 0 -> 0.dp
+                centerBoss && index == 0 -> 0.dp
                 centerBoss -> memberSize * (if (isLeft) 0.38f else -0.38f) * step
-                else -> (if (isLeft) -24.dp else 24.dp) * step
+                memberCount == 2 -> memberSize * (if (index == 0) -0.22f else 0.26f)
+                index == 0 -> 0.dp
+                else -> memberSize * (if (isLeft) -0.36f else 0.36f) * (spreadFactor / 0.64f) * step
             }
-            val offsetY = if (centerBoss || index == 0) 0.dp else -16.dp * step
-            val scale = if (centerBoss || index == 0) 1f else (1f - 0.08f * step).coerceAtLeast(0.8f)
+            val offsetY = when {
+                centerBoss || index == 0 -> 0.dp
+                memberCount == 2 -> (-12).dp
+                else -> (-14).dp * step
+            }
+            val scale = when {
+                centerBoss || index == 0 -> 1f
+                memberCount == 2 -> 0.87f
+                else -> (1f - 0.12f * step).coerceAtLeast(0.76f)
+            }
 
             EnemyPartyStandee(
                 enemyId = enemyId,
@@ -6324,7 +6422,9 @@ private fun EnemyPartyCluster(
                 icon = enemyIcons[enemyId],
                 size = if (centerBoss && index > 0) memberSize * 0.52f else memberSize,
                 showFightBadge = (index == 0),
+                squadSize = memberCount,
                 isAggressive = party.isAggressive,
+                aggressionUrgency = if (index == 0) aggressionUrgency else 0f,
                 modifier = Modifier
                     .zIndex(if (centerBoss) index.toFloat() else (party.enemies.size - index).toFloat())
                     .offset(x = offsetX, y = offsetY)
@@ -6350,18 +6450,29 @@ private fun EnemyPartyStandee(
     icon: EnemyIconUi?,
     size: Dp,
     showFightBadge: Boolean = true,
+    squadSize: Int = 1,
     isAggressive: Boolean = false,
+    aggressionUrgency: Float = 0f,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     val interactionSource = remember(instanceKey) { MutableInteractionSource() }
-    val aggressivePulse = if (isAggressive && !transitionActive) {
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val pressScale by animateFloatAsState(
+        targetValue = if (isPressed) 0.94f else 1f,
+        animationSpec = tween(durationMillis = 90, easing = FastOutSlowInEasing),
+        label = "standeePress-$instanceKey"
+    )
+    val aggressivePulse = if ((isAggressive || aggressionUrgency > 0f) && !transitionActive) {
         val pulseTransition = rememberInfiniteTransition(label = "aggroPulse-$instanceKey")
         val pulse by pulseTransition.animateFloat(
-            initialValue = 0.5f,
+            initialValue = 0.50f,
             targetValue = 1f,
             animationSpec = infiniteRepeatable(
-                animation = tween(durationMillis = 800, easing = FastOutSlowInEasing),
+                animation = tween(
+                    durationMillis = if (aggressionUrgency > 0.6f) 340 else 760,
+                    easing = FastOutSlowInEasing
+                ),
                 repeatMode = RepeatMode.Reverse
             ),
             label = "aggroPulseAlpha-$instanceKey"
@@ -6371,12 +6482,32 @@ private fun EnemyPartyStandee(
         1f
     }
 
+    val displayName = icon?.displayName?.takeIf { it.isNotBlank() } ?: enemyDisplayLabel(enemyId)
+    val tierAccent = enemyTierAccent(tier, accentColor)
+    val borderColor = when {
+        aggressionUrgency > 0f -> lerpColor(Color(0xFFF59E0B), Color(0xFFEF4444), aggressionUrgency).copy(alpha = aggressivePulse)
+        isAggressive -> Color(0xFFFF6B6B).copy(alpha = aggressivePulse)
+        tier == EnemyPresentationTier.BOSS -> Color(0xFFFFD54F).copy(alpha = 0.92f)
+        tier == EnemyPresentationTier.ELITE -> Color(0xFFFFB74D).copy(alpha = 0.88f)
+        else -> Color(0xFFEF4444).copy(alpha = 0.72f)
+    }
+    val pillBg = when {
+        aggressionUrgency > 0f -> Color(0xEC2E0F14)
+        isAggressive -> Color(0xE8281115)
+        tier == EnemyPresentationTier.BOSS -> Color(0xEC1B1508)
+        else -> Color(0xE011161F)
+    }
+
     Box(
         modifier = modifier
             .width(size)
             .height(size + 28.dp)
+            .graphicsLayer {
+                scaleX = pressScale
+                scaleY = pressScale
+            }
             .maestroTag("engage-$enemyId")
-            .semantics { contentDescription = "Engage ${icon?.displayName ?: enemyDisplayLabel(enemyId)}" }
+            .semantics { contentDescription = "Engage $displayName" }
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
@@ -6389,65 +6520,76 @@ private fun EnemyPartyStandee(
             instanceKey = instanceKey,
             tier = tier,
             motionCycle = motionCycle,
-            accentColor = if (isAggressive) Color(0xFFFF3B30) else accentColor,
+            accentColor = if (isAggressive || aggressionUrgency > 0f) Color(0xFFFF3B30) else accentColor,
             isDark = isDark,
             transitionActive = transitionActive,
             icon = icon,
-            iconSize = size
+            iconSize = size,
+            aggressionUrgency = aggressionUrgency,
+            aggressionPulse = aggressivePulse
         )
         if (!transitionActive && showFightBadge) {
-            if (isAggressive) {
-                Surface(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .offset(y = 2.dp),
-                    shape = RoundedCornerShape(6.dp),
-                    color = Color(0xFFB91C1C).copy(alpha = 0.95f),
-                    border = BorderStroke(1.dp, Color(0xFFFFA39E).copy(alpha = aggressivePulse))
+            Surface(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .offset(y = 2.dp),
+                shape = RoundedCornerShape(999.dp),
+                color = pillBg,
+                border = BorderStroke(if (isAggressive || tier != EnemyPresentationTier.STANDARD) 1.2.dp else 1.dp, borderColor),
+                shadowElevation = 4.dp
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(3.dp)
-                    ) {
-                        Text(
+                    when {
+                        isAggressive || aggressionUrgency > 0f -> Text(
                             text = "⚠",
                             style = MaterialTheme.typography.labelSmall.copy(
-                                fontSize = 8.sp,
+                                fontSize = 9.sp,
                                 fontWeight = FontWeight.Black
                             ),
-                            color = Color(0xFFFFD591)
+                            color = if (aggressionUrgency > 0.5f) Color(0xFFFF6B6B) else Color(0xFFFFD591)
                         )
-                        Text(
-                            text = "HOSTILE",
+                        tier == EnemyPresentationTier.BOSS -> Text(
+                            text = "☠",
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Black
+                            ),
+                            color = tierAccent
+                        )
+                        tier == EnemyPresentationTier.ELITE -> Text(
+                            text = "★",
                             style = MaterialTheme.typography.labelSmall.copy(
                                 fontSize = 9.sp,
-                                fontWeight = FontWeight.Black,
-                                letterSpacing = 0.6.sp
+                                fontWeight = FontWeight.Black
                             ),
-                            color = Color.White
+                            color = tierAccent
                         )
                     }
-                }
-            } else {
-                Surface(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .offset(y = 2.dp),
-                    shape = RoundedCornerShape(6.dp),
-                    color = Color(0xFF7F1D1D).copy(alpha = 0.90f),
-                    border = BorderStroke(1.dp, Color(0xFFEF4444).copy(alpha = 0.85f))
-                ) {
                     Text(
-                        text = "HOSTILE",
+                        text = displayName,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.labelSmall.copy(
-                            fontSize = 9.sp,
+                            fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
-                            letterSpacing = 0.5.sp
+                            letterSpacing = 0.2.sp
                         ),
-                        color = Color.White,
-                        modifier = Modifier.padding(horizontal = 5.dp, vertical = 1.dp)
+                        color = Color(0xFFFDF8F4)
                     )
+                    if (squadSize > 1) {
+                        Text(
+                            text = "+${squadSize - 1}",
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                fontSize = 9.sp,
+                                fontWeight = FontWeight.ExtraBold
+                            ),
+                            color = Color(0xFFFFC1A6)
+                        )
+                    }
                 }
             }
         }
@@ -6464,38 +6606,26 @@ private fun EnemyPartyLeaderIcon(
     isDark: Boolean,
     transitionActive: Boolean,
     icon: EnemyIconUi?,
-    iconSize: Dp = 80.dp
+    iconSize: Dp = 80.dp,
+    aggressionUrgency: Float = 0f,
+    aggressionPulse: Float = 1f
 ) {
     val iconPath = icon?.spritePath ?: remember(enemyId) { "images/enemies/${enemyId}_combat.png" }
     val painter = rememberAssetPainter(iconPath, ColorPainter(Color.Transparent), async = transitionActive)
-    val tierAccent = enemyTierAccent(tier, accentColor)
-    val tierBadge = when (tier) {
-        EnemyPresentationTier.BOSS -> "☠"
-        EnemyPresentationTier.ELITE -> "★"
-        EnemyPresentationTier.STANDARD -> null
-    }
-    val tierLabel = when (tier) {
-        EnemyPresentationTier.BOSS -> "☠"
-        EnemyPresentationTier.ELITE -> "★"
-        EnemyPresentationTier.STANDARD -> null
-    }
     val density = LocalDensity.current
     val phaseOffset = remember(instanceKey) {
         (abs(instanceKey.lowercase(Locale.getDefault()).hashCode()) % 1000) / 1000f
     }
     val t = (motionCycle + phaseOffset) % 1f
     val wave = if (transitionActive) 0f else kotlin.math.sin(t * Math.PI * 2.0).toFloat()
-    val glow = (0.5f + 0.5f * wave).coerceIn(0f, 1f)
-    val bobAmplitude = if (isDark) 1.2.dp else 2.0.dp
+    val bobAmplitude = when {
+        aggressionUrgency > 0f -> 2.8.dp
+        isDark -> 1.2.dp
+        else -> 2.0.dp
+    }
     val bobPx = with(density) { bobAmplitude.toPx() } * wave
     val scale = 1f + (if (isDark) 0.012f else 0.02f) * wave
     val spriteScale = explorationEnemySpriteScale(tier)
-    val shape = RoundedCornerShape(topStart = 20.dp, topEnd = 12.dp, bottomEnd = 20.dp, bottomStart = 12.dp)
-    val background = remember {
-        Brush.radialGradient(
-            colors = listOf(Color.Transparent, Color.Transparent)
-        )
-    }
     Box(
         modifier = Modifier.size(iconSize),
         contentAlignment = Alignment.Center
@@ -6503,6 +6633,10 @@ private fun EnemyPartyLeaderIcon(
         if (!transitionActive) {
             EnemyPresenceShadow(
                 isDark = isDark,
+                threatRingColor = if (aggressionUrgency > 0f) {
+                    lerpColor(Color(0xFFF59E0B), Color(0xFFEF4444), aggressionUrgency)
+                        .copy(alpha = (0.35f + 0.55f * aggressionUrgency) * aggressionPulse)
+                } else null,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .offset(y = EnemyPresenceShadowDrop)
@@ -6518,15 +6652,6 @@ private fun EnemyPartyLeaderIcon(
                     translationY = bobPx
                     scaleX = scale * spriteScale
                     scaleY = scale * spriteScale
-                }
-                .let { base ->
-                    if (transitionActive || tier == EnemyPresentationTier.BOSS) {
-                        base
-                    } else {
-                        base
-                            .clip(shape)
-                            .background(background)
-                    }
                 },
             contentAlignment = Alignment.Center
         ) {
@@ -6547,19 +6672,8 @@ private fun EnemyPartyLeaderIcon(
                     contentScale = ContentScale.Fit
                 )
             }
-        if (tier != EnemyPresentationTier.STANDARD && !transitionActive) {
-            EnemyTierBadge(
-                tier = tier,
-                accentColor = tierAccent,
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(4.dp)
-                    .size(if (tier == EnemyPresentationTier.BOSS) 30.dp else 24.dp)
-            )
         }
     }
-}
-
 }
 
 @Composable
@@ -6634,6 +6748,7 @@ private fun EnemyTierBadge(
 @Composable
 private fun EnemyPresenceShadow(
     isDark: Boolean,
+    threatRingColor: Color? = null,
     modifier: Modifier = Modifier
 ) {
     Canvas(modifier = modifier) {
@@ -6647,6 +6762,14 @@ private fun EnemyPresenceShadow(
             topLeft = Offset.Zero,
             size = size
         )
+        if (threatRingColor != null) {
+            drawOval(
+                color = threatRingColor,
+                topLeft = Offset(size.width * 0.03f, size.height * 0.06f),
+                size = Size(size.width * 0.94f, size.height * 0.88f),
+                style = Stroke(width = size.height * 0.14f)
+            )
+        }
     }
 }
 

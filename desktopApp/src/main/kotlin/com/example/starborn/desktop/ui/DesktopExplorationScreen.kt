@@ -329,7 +329,10 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
             )
         }
         ui.enemyAggression?.takeUnless { blocked }?.let { aggression ->
-            com.example.starborn.ui.exploration.PatrolWarning(aggression, Modifier.align(Alignment.Center))
+            com.example.starborn.ui.exploration.PatrolWarning(
+                aggression,
+                Modifier.align(Alignment.TopCenter).padding(top = 72.dp, start = 16.dp, end = 16.dp)
+            )
         }
         if (gateReveal.active) {
             com.example.starborn.ui.exploration.TempleGateReveal(gateReveal.progress, settings.disableFlashes,

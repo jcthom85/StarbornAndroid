@@ -4618,7 +4618,7 @@ class ExplorationController(
         val room = _uiState.value.currentRoom ?: return
         if (manager.partiesInRoom(room.id, sessionStore.state.value).none { it.id == partyId }) return
         preparePendingEncounter(room, party.enemies, party.id)
-        emitEvent(ExplorationEvent.EnterCombat(party.enemies))
+        emitEvent(ExplorationEvent.EnterCombat(party.enemies, isAmbush = true))
     }
 
     fun engageEnemy(enemyId: String) {
@@ -4830,7 +4830,7 @@ class ExplorationController(
             val leaderEnemy = enemyById[leaderId]?.forEncounterRoom(room.id)
             if (partyIds.size == 1 && leaderEnemy?.authored?.linkedActions?.isNotEmpty() == true &&
                 !leaderEnemy.portrait.isNullOrBlank()) {
-                result[leaderId] = EnemyIconUi(spritePath = leaderEnemy.portrait)
+                result[leaderId] = EnemyIconUi(spritePath = leaderEnemy.portrait, displayName = leaderEnemy.name)
                 return@forEach
             }
             val leaderSprite = leaderEnemy?.let { enemySpritePath(it) }
@@ -4863,6 +4863,7 @@ class ExplorationController(
                 if (parts.size == partyEnemies.size && parts.isNotEmpty()) {
                     result[leaderId] = EnemyIconUi(
                         spritePath = leaderSprite,
+                        displayName = groupSource?.name ?: leaderEnemy?.name,
                         composite = EnemyCompositeIconUi(
                             groupOffsetX = groupOffsetX,
                             groupOffsetY = groupOffsetY,
@@ -4879,7 +4880,7 @@ class ExplorationController(
                         ?: "images/enemies/${memberId}_combat.png"
                     result[memberId] = EnemyIconUi(
                         spritePath = memberSprite,
-                        displayName = memberEnemy?.takeIf { it.id == "acoustic_bulwark" }?.name
+                        displayName = memberEnemy?.name
                     )
                 }
             }
@@ -7122,7 +7123,7 @@ private fun QuestLogEntry.toUiEntry(questRepository: QuestRepository): QuestLogE
 private fun TutorialEntry.toUiPrompt(): TutorialPrompt = TutorialPrompt(this)
 
 sealed interface ExplorationEvent {
-    data class EnterCombat(val enemyIds: List<String>) : ExplorationEvent
+    data class EnterCombat(val enemyIds: List<String>, val isAmbush: Boolean = false) : ExplorationEvent
     data class PlayCinematic(val sceneId: String) : ExplorationEvent
     data class ShowMessage(val message: String) : ExplorationEvent
     data class ShowToast(val id: String, val message: String) : ExplorationEvent
