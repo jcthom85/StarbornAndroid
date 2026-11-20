@@ -35,6 +35,35 @@ fun itemIconAssetPath(itemId: String?): String? =
         ?.takeIf { it.isNotEmpty() }
         ?.let { "images/items/$it.webp" }
 
+enum class SupplyCategory(val label: String) {
+    FOOD("Food"),
+    FIELD("Field"),
+    CRAFT("Craft")
+}
+
+private val FOOD_CONSUMABLE_IDS = setOf(
+    "tideglass_delight", "black_coffee", "ellies_signature_sampler", "latte",
+    "ration_pack", "spicy_ramen", "celestial_fillet", "chronos_stew",
+    "ration_soup", "glowfish_broth", "resonance_carp_stew", "chime_minnow_broth",
+    "stellarium_eel_skewer", "frequency_tetra_consomme", "foundry_smoked_brisket",
+    "orbital_glimmer_tonic", "source_astral_feast", "gagas_skillet_biscuits"
+)
+
+fun classifySupplyCategory(itemId: String, itemType: String): SupplyCategory {
+    val type = itemType.trim().lowercase(Locale.ROOT)
+    val id = itemId.trim().lowercase(Locale.ROOT)
+    return when {
+        type == "snack" || id in FOOD_CONSUMABLE_IDS ||
+            (type == "consumable" && (id.contains("stew") || id.contains("broth") || id.contains("ramen") ||
+                id.contains("delight") || id.contains("brisket") || id.contains("feast") ||
+                id.contains("fillet") || id.contains("tonic") || id.contains("consomme") ||
+                id.contains("skewer") || id.contains("soup") || id.contains("biscuit") ||
+                id.contains("coffee") || id.contains("latte") || id.contains("ration"))) -> SupplyCategory.FOOD
+        type == "consumable" || type == "medicine" -> SupplyCategory.FIELD
+        else -> SupplyCategory.CRAFT
+    }
+}
+
 @JsonClass(generateAdapter = true)
 data class Equipment(
     val slot: String,

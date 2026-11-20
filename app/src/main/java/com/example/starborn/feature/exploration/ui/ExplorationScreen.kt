@@ -101,10 +101,15 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.filled.VideogameAsset
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.MyLocation
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.ZoomOutMap
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.EmojiEvents
@@ -4455,44 +4460,348 @@ fun ThemedMenuButton(
     }
 }
 
+private enum class MapPoiFilter(val label: String) {
+    ALL("All"),
+    SERVICES("Services"),
+    THREATS("Threats"),
+    EXITS("Exits")
+}
+
 @Composable
-internal fun InteractiveMapPanel(fullMap: FullMapUiState?) {
+internal fun InteractiveMapPanel(
+    fullMap: FullMapUiState?,
+    onOpenMapLegend: (() -> Unit)? = null
+) {
     val cells = fullMap?.cells.orEmpty()
     val mapMaxStepPx = with(LocalDensity.current) { 58.dp.toPx() }
     var selectedId by remember { mutableStateOf<String?>(null) }
+    var activeFilter by remember { mutableStateOf(MapPoiFilter.ALL) }
     var viewportScale by remember { mutableFloatStateOf(1f) }
     var viewportOffset by remember { mutableStateOf(Offset.Zero) }
     var viewportSize by remember { mutableStateOf(IntSize.Zero) }
     val selected = cells.firstOrNull { it.roomId == selectedId } ?: cells.firstOrNull { it.isCurrent }
-    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        if (cells.isEmpty()) Text("Survey more rooms to reveal the map.") else {
-            AreaMapCanvas(cells,
-                modifier = Modifier.fillMaxWidth().height(320.dp).clip(RoundedCornerShape(12.dp))
-                    .onSizeChanged { viewportSize = it }
-                    .pointerInput(cells) { detectTransformGestures { _, pan, zoom, _ ->
-                        viewportScale = (viewportScale * zoom).coerceIn(.5f, 4f)
-                        val next = viewportOffset + pan
-                        viewportOffset = Offset(next.x.coerceIn(-viewportSize.width * viewportScale / 2, viewportSize.width * viewportScale / 2),
-                            next.y.coerceIn(-viewportSize.height * viewportScale / 2, viewportSize.height * viewportScale / 2))
-                    } },
-                scale = viewportScale, offset = viewportOffset, selectedId = selected?.roomId,
-                onSelect = { selectedId = it.roomId })
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                TextButton(onClick = { viewportScale = 1f; viewportOffset = Offset.Zero }, modifier = Modifier.heightIn(min = 48.dp)) { Text("Fit map") }
-                TextButton(onClick = {
-                    selectedId = cells.firstOrNull { it.isCurrent }?.roomId
-                    viewportScale = 1f
-                    val minX = cells.minOf { it.gridX }; val maxX = cells.maxOf { it.gridX }
-                    val minY = cells.minOf { it.gridY }; val maxY = cells.maxOf { it.gridY }
-                    val step = minOf(viewportSize.width.toFloat()/(maxX-minX+3), viewportSize.height.toFloat()/(maxY-minY+3), mapMaxStepPx)
-                    cells.firstOrNull { it.isCurrent }?.let { current ->
-                        viewportOffset = Offset(((minX+maxX)/2f-current.gridX)*step, (current.gridY-(minY+maxY)/2f)*step)
+
+    val visitedCount = remember(cells) { cells.count { it.visited || it.isCurrent } }
+    val serviceIds = remember(cells) {
+        cells.filter { !it.isDark && !it.isPreview && it.services.any { s -> s != MinimapService.EXIT } }
+            .map { it.roomId }.toSet()
+    }
+    val threatIds = remember(cells) {
+        cells.filter { it.hasEnemies && !it.isDark && !it.isPreview }.map { it.roomId }.toSet()
+    }
+    val exitIds = remember(cells) {
+        cells.filter { com.example.starborn.ui.map.mapRoomHasExit(it) }.map { it.roomId }.toSet()
+    }
+    val highlightedIds: Set<String>? = when (activeFilter) {
+        MapPoiFilter.ALL -> null
+        MapPoiFilter.SERVICES -> serviceIds
+        MapPoiFilter.THREATS -> threatIds
+        MapPoiFilter.EXITS -> exitIds
+    }
+
+    fun clampOffset(raw: Offset, scale: Float): Offset {
+        val maxX = viewportSize.width * scale / 2f
+        val maxY = viewportSize.height * scale / 2f
+        return Offset(raw.x.coerceIn(-maxX, maxX), raw.y.coerceIn(-maxY, maxY))
+    }
+
+    fun centerOnRoom(room: MinimapCellUi?) {
+        val target = room ?: return
+        if (viewportSize.width <= 0 || viewportSize.height <= 0 || cells.isEmpty()) return
+        val minX = cells.minOf { it.gridX }; val maxX = cells.maxOf { it.gridX }
+        val minY = cells.minOf { it.gridY }; val maxY = cells.maxOf { it.gridY }
+        val step = minOf(
+            viewportSize.width.toFloat() / (maxX - minX + 3),
+            viewportSize.height.toFloat() / (maxY - minY + 3),
+            mapMaxStepPx
+        ) * viewportScale
+        viewportOffset = clampOffset(
+            Offset(((minX + maxX) / 2f - target.gridX) * step, (target.gridY - (minY + maxY) / 2f) * step),
+            viewportScale
+        )
+    }
+
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        if (cells.isEmpty()) {
+            Text(
+                "Survey more rooms to reveal the map.",
+                style = MaterialTheme.typography.bodySmall,
+                color = FieldMenuDesign.textMuted
+            )
+        } else {
+            // POI Filter strip
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                MapPoiFilter.entries.forEach { filter ->
+                    val isSelected = activeFilter == filter
+                    val count = when (filter) {
+                        MapPoiFilter.ALL -> null
+                        MapPoiFilter.SERVICES -> serviceIds.size
+                        MapPoiFilter.THREATS -> threatIds.size
+                        MapPoiFilter.EXITS -> exitIds.size
                     }
-                }, modifier = Modifier.heightIn(min = 48.dp)) { Text("You are here") }
+                    val accent = when (filter) {
+                        MapPoiFilter.THREATS -> MapPalette.threat
+                        MapPoiFilter.EXITS -> MapPalette.gateway
+                        else -> FieldMenuDesign.gold
+                    }
+                    Surface(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(10.dp))
+                            .clickable { activeFilter = filter },
+                        shape = RoundedCornerShape(10.dp),
+                        color = if (isSelected) accent.copy(alpha = 0.18f) else FieldMenuDesign.panel,
+                        border = BorderStroke(
+                            1.dp,
+                            if (isSelected) accent.copy(alpha = 0.72f) else FieldMenuDesign.subtleBorder
+                        )
+                    ) {
+                        Row(
+                            modifier = Modifier.heightIn(min = 36.dp).padding(horizontal = 4.dp, vertical = 6.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = if (count != null && count > 0) "${filter.label} ($count)" else filter.label,
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    fontSize = 11.sp,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                                ),
+                                color = if (isSelected) Color.White else FieldMenuDesign.textMuted,
+                                maxLines = 1,
+                                softWrap = false,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+                }
             }
-            selected?.let { MapRoomDetails(it, Modifier.fillMaxWidth().background(MapPalette.background, RoundedCornerShape(12.dp)).padding(14.dp), cells = cells) }
-            Text("Tap a room for details. Pinch to zoom; drag to pan.", style = MaterialTheme.typography.bodySmall, color = MapPalette.preview)
+
+            // Framed tactical blueprint map viewport with floating glass HUD controls
+            Surface(
+                modifier = Modifier.fillMaxWidth().height(330.dp),
+                shape = RoundedCornerShape(16.dp),
+                color = MapPalette.background,
+                border = BorderStroke(1.dp, MapPalette.gateway.copy(alpha = 0.30f)),
+                shadowElevation = 6.dp
+            ) {
+                Box(Modifier.fillMaxSize()) {
+                    AreaMapCanvas(
+                        cells = cells,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .onSizeChanged { viewportSize = it }
+                            .pointerInput(cells) {
+                                detectTransformGestures { _, pan, zoom, _ ->
+                                    val nextScale = (viewportScale * zoom).coerceIn(0.6f, 3.5f)
+                                    viewportScale = nextScale
+                                    viewportOffset = clampOffset(viewportOffset + pan, nextScale)
+                                }
+                            },
+                        scale = viewportScale,
+                        offset = viewportOffset,
+                        selectedId = selected?.roomId,
+                        onSelect = { selectedId = it.roomId },
+                        highlightedRoomIds = highlightedIds
+                    )
+
+                    // Top-left survey badge
+                    Surface(
+                        modifier = Modifier.align(Alignment.TopStart).padding(10.dp),
+                        shape = RoundedCornerShape(999.dp),
+                        color = Color(0xFF061018).copy(alpha = 0.86f),
+                        border = BorderStroke(1.dp, MapPalette.visited.copy(alpha = 0.35f))
+                    ) {
+                        Text(
+                            text = "$visitedCount / ${cells.size} rooms",
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.SemiBold),
+                            color = Color.White.copy(alpha = 0.85f),
+                            modifier = Modifier.padding(horizontal = 9.dp, vertical = 4.dp)
+                        )
+                    }
+
+                    // Top-right compact compass badge
+                    Surface(
+                        modifier = Modifier.align(Alignment.TopEnd).padding(10.dp),
+                        shape = CircleShape,
+                        color = Color(0xFF061018).copy(alpha = 0.86f),
+                        border = BorderStroke(1.dp, MapPalette.gateway.copy(alpha = 0.40f))
+                    ) {
+                        Box(Modifier.size(30.dp), contentAlignment = Alignment.Center) {
+                            Text(
+                                text = "N",
+                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp, fontWeight = FontWeight.Black),
+                                color = MapPalette.gateway
+                            )
+                        }
+                    }
+
+                    // Bottom-left selected room callout pill
+                    selected?.let { room ->
+                        Surface(
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .padding(start = 10.dp, bottom = 10.dp, end = 164.dp),
+                            shape = RoundedCornerShape(10.dp),
+                            color = Color(0xFF061018).copy(alpha = 0.88f),
+                            border = BorderStroke(1.dp, MapPalette.room(room).copy(alpha = 0.50f))
+                        ) {
+                            Text(
+                                text = room.title,
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                color = Color.White,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                            )
+                        }
+                    }
+
+                    // Bottom-right floating glass control cluster (-, +, Fit, Center on Me)
+                    Row(
+                        modifier = Modifier.align(Alignment.BottomEnd).padding(10.dp),
+                        horizontalArrangement = Arrangement.spacedBy(5.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        MapViewportActionButton(
+                            icon = Icons.Default.Remove,
+                            contentDescription = "Zoom out"
+                        ) {
+                            val next = (viewportScale / 1.3f).coerceIn(0.6f, 3.5f)
+                            viewportScale = next
+                            viewportOffset = clampOffset(viewportOffset, next)
+                        }
+                        MapViewportActionButton(
+                            icon = Icons.Default.Add,
+                            contentDescription = "Zoom in"
+                        ) {
+                            val next = (viewportScale * 1.3f).coerceIn(0.6f, 3.5f)
+                            viewportScale = next
+                            viewportOffset = clampOffset(viewportOffset, next)
+                        }
+                        MapViewportActionButton(
+                            icon = Icons.Default.ZoomOutMap,
+                            contentDescription = "Fit map"
+                        ) {
+                            viewportScale = 1f
+                            viewportOffset = Offset.Zero
+                        }
+                        MapViewportActionButton(
+                            icon = Icons.Default.MyLocation,
+                            contentDescription = "Center on current room",
+                            tint = MapPalette.current
+                        ) {
+                            val current = cells.firstOrNull { it.isCurrent }
+                            selectedId = current?.roomId
+                            viewportScale = 1.25f
+                            centerOnRoom(current)
+                        }
+                    }
+                }
+            }
+
+            // Upgraded Room Inspector Card (with tappable adjacent room chips!)
+            selected?.let { room ->
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(14.dp),
+                    color = FieldMenuDesign.panel,
+                    border = BorderStroke(1.dp, FieldMenuDesign.subtleBorder)
+                ) {
+                    MapRoomDetails(
+                        cell = room,
+                        modifier = Modifier.fillMaxWidth().padding(14.dp),
+                        cells = cells,
+                        onSelectRoom = { targetId ->
+                            selectedId = targetId
+                            centerOnRoom(cells.firstOrNull { it.roomId == targetId })
+                        }
+                    )
+                }
+            }
+
+            // Compact inline visual key strip + optional Legend button
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(
+                    modifier = Modifier.weight(1f),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    InlineMapKeyDot(MapPalette.current, "You")
+                    InlineMapKeyDot(MapPalette.gateway, "Exit")
+                    InlineMapKeyDot(MapPalette.threat, "Hostiles")
+                    InlineMapKeyDot(MapPalette.blocked, "Locked")
+                }
+                if (onOpenMapLegend != null) {
+                    Surface(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(999.dp))
+                            .clickable { onOpenMapLegend() },
+                        shape = RoundedCornerShape(999.dp),
+                        color = FieldMenuDesign.panel,
+                        border = BorderStroke(1.dp, FieldMenuDesign.subtleBorder)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Icon(Icons.Default.Info, null, Modifier.size(13.dp), tint = MapPalette.gateway)
+                            Text(
+                                "Legend",
+                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp, fontWeight = FontWeight.SemiBold),
+                                color = Color.White.copy(alpha = 0.88f)
+                            )
+                        }
+                    }
+                }
+            }
         }
+    }
+}
+
+@Composable
+private fun MapViewportActionButton(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    contentDescription: String,
+    tint: Color = Color.White.copy(alpha = 0.9f),
+    onClick: () -> Unit
+) {
+    Surface(
+        modifier = Modifier
+            .size(34.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(10.dp),
+        color = Color(0xFF061018).copy(alpha = 0.88f),
+        border = BorderStroke(1.dp, tint.copy(alpha = 0.35f))
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Icon(icon, contentDescription = contentDescription, tint = tint, modifier = Modifier.size(17.dp))
+        }
+    }
+}
+
+@Composable
+private fun InlineMapKeyDot(color: Color, label: String) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Box(Modifier.size(7.dp).clip(CircleShape).background(color))
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+            color = FieldMenuDesign.textMuted,
+            maxLines = 1
+        )
     }
 }
 

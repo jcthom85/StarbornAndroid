@@ -35,7 +35,13 @@ fun MapTabContent(
     ) {
         val fullMapAvailable = fullMap?.cells?.isNotEmpty() == true
         if (fullMapAvailable) {
-            InteractiveMapPanel(fullMap = fullMap)
+            InteractiveMapPanel(
+                fullMap = fullMap,
+                onOpenMapLegend = {
+                    onMenuAction()
+                    onOpenMapLegend()
+                }
+            )
         } else {
             Text(
                 text = "Survey more rooms in this area to reveal the map.",
@@ -58,15 +64,15 @@ fun MapTabContent(
                     )
                 }
             }
+            ThemedMenuButton(
+                label = "Map Legend",
+                accentColor = accentColor,
+                modifier = Modifier.fillMaxWidth().heightIn(min = if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp),
+                onClick = {
+                    onMenuAction()
+                    onOpenMapLegend()
+                }
+            )
         }
-        ThemedMenuButton(
-            label = "Map Legend",
-            accentColor = accentColor,
-            modifier = Modifier.fillMaxWidth().heightIn(min = if (LocalFieldMenuLargeTargets.current) 56.dp else 48.dp),
-            onClick = {
-                onMenuAction()
-                onOpenMapLegend()
-            }
-        )
     }
 }

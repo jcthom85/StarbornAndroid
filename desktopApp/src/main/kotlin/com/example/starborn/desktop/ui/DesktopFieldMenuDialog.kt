@@ -385,14 +385,27 @@ private fun DesktopInventoryTabContent(
             }
             InventoryCategory.SUPPLIES -> {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf("All", "Consumables", "Components").forEach { filter ->
+                    listOf("All", "Food", "Field", "Craft").forEach { filter ->
                         FilterChip(supplyFilter == filter, onClick = { supplyFilter = filter }, label = { Text(filter) })
                     }
                 }
                 val supplies = visibleEntries
-                    .filterNot { allItems[it.key]?.type == "key" || allItems[it.key]?.categoryOverride == "key" }
-                    .filterNot { allItems[it.key]?.equipment != null }
-                    .filter { supplyFilter == "All" || if (supplyFilter == "Consumables") allItems[it.key]?.type == "consumable" else allItems[it.key]?.type == "component" }
+                    .filterNot {
+                        val t = allItems[it.key]?.type?.lowercase()
+                        t in setOf("key", "key_item", "quest") || allItems[it.key]?.categoryOverride == "key"
+                    }
+                    .filterNot {
+                        val item = allItems[it.key]
+                        item?.equipment != null || item?.type?.lowercase() in setOf("weapon", "armor", "gear", "mod", "accessory")
+                    }
+                    .filter {
+                        if (supplyFilter == "All") true
+                        else {
+                            val item = allItems[it.key]
+                            val bucket = item?.let { i -> com.example.starborn.domain.model.classifySupplyCategory(i.id, i.type) }
+                            bucket?.label == supplyFilter
+                        }
+                    }
                     .toList()
                 DesktopInventorySplitLayout(
                     services = services,

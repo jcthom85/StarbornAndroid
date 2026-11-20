@@ -66,9 +66,9 @@ private enum class InventoryCarouselPage { SUPPLIES, GEAR, KEY_ITEMS }
 
 private enum class SuppliesFilter(val label: String) {
     ALL("All"),
-    INGREDIENTS("Food & Fish"),
-    COMPONENTS("Crafting Mats"),
-    CONSUMABLES("Consumables")
+    FOOD("Food"),
+    FIELD("Field"),
+    CRAFT("Craft")
 }
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -108,9 +108,18 @@ fun InventoryTabContent(
     val supplies = remember(rawSupplies, suppliesFilter) {
         when (suppliesFilter) {
             SuppliesFilter.ALL -> rawSupplies
-            SuppliesFilter.INGREDIENTS -> rawSupplies.filter { it.isIngredientOrFish() }
-            SuppliesFilter.COMPONENTS -> rawSupplies.filter { it.isCraftingComponent() }
-            SuppliesFilter.CONSUMABLES -> rawSupplies.filter { it.isCombatRationOrSnack() }
+            SuppliesFilter.FOOD -> rawSupplies.filter {
+                com.example.starborn.domain.model.classifySupplyCategory(it.id, it.type) ==
+                    com.example.starborn.domain.model.SupplyCategory.FOOD
+            }
+            SuppliesFilter.FIELD -> rawSupplies.filter {
+                com.example.starborn.domain.model.classifySupplyCategory(it.id, it.type) ==
+                    com.example.starborn.domain.model.SupplyCategory.FIELD
+            }
+            SuppliesFilter.CRAFT -> rawSupplies.filter {
+                com.example.starborn.domain.model.classifySupplyCategory(it.id, it.type) ==
+                    com.example.starborn.domain.model.SupplyCategory.CRAFT
+            }
         }
     }
     val keyItems = remember(inventoryItems) { inventoryItems.filter { it.isKeyItem() } }
@@ -164,15 +173,9 @@ fun InventoryTabContent(
                             val tint = if (selected) FieldMenuDesign.gold else FieldMenuDesign.textMuted
                             val icon = when (filter) {
                                 SuppliesFilter.ALL -> Icons.Default.Backpack
-                                SuppliesFilter.INGREDIENTS -> Icons.Default.Restaurant
-                                SuppliesFilter.COMPONENTS -> Icons.Default.Settings
-                                SuppliesFilter.CONSUMABLES -> Icons.Default.Science
-                            }
-                            val label = when (filter) {
-                                SuppliesFilter.ALL -> "All"
-                                SuppliesFilter.INGREDIENTS -> "Food"
-                                SuppliesFilter.COMPONENTS -> "Materials"
-                                SuppliesFilter.CONSUMABLES -> "Consumables"
+                                SuppliesFilter.FOOD -> Icons.Default.Restaurant
+                                SuppliesFilter.FIELD -> Icons.Default.Science
+                                SuppliesFilter.CRAFT -> Icons.Default.Settings
                             }
                             Surface(
                                 modifier = Modifier
@@ -190,22 +193,23 @@ fun InventoryTabContent(
                                     if (selected) FieldMenuDesign.gold.copy(alpha = 0.7f) else FieldMenuDesign.subtleBorder
                                 )
                             ) {
-                                Row(
+                                Column(
                                     modifier = Modifier
-                                        .heightIn(min = 44.dp)
-                                        .padding(horizontal = 6.dp, vertical = 8.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.Center
+                                        .heightIn(min = 50.dp)
+                                        .padding(horizontal = 4.dp, vertical = 6.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
                                 ) {
                                     Icon(icon, contentDescription = null, tint = tint, modifier = Modifier.size(16.dp))
-                                    Spacer(Modifier.width(4.dp))
+                                    Spacer(Modifier.height(3.dp))
                                     Text(
-                                        text = label,
+                                        text = filter.label,
                                         color = if (selected) FieldMenuDesign.text else tint,
                                         style = MaterialTheme.typography.labelSmall.copy(
                                             fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium
                                         ),
                                         maxLines = 1,
+                                        softWrap = false,
                                         overflow = TextOverflow.Ellipsis
                                     )
                                 }
