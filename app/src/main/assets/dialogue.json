@@ -471,7 +471,8 @@
     "emote": "surprised",
     "text": "Name, ID, clearance... Nova? You're early. Usually I get three complaints before someone I like.",
     "condition": "quest_active:w1_mq02,milestone:ms_w1_mq02_hank_denied,milestone_not_set:ms_w1_mq02_zeke_override,room:checkpoint_booth",
-    "next": "zeke_w1_mq02_override_2"
+    "next": "zeke_w1_mq02_override_2",
+    "music": "music_zeke_theme"
   },
   {
     "id": "zeke_w1_mq02_override_2",
@@ -493,7 +494,7 @@
     "emote": "scared",
     "text": "Mandatory retirement. Asset liability exceeds projected value. Disposition: recycle. Nova, don't put your badge back in the reader.",
     "next": "zeke_w1_mq02_override_5",
-    "music": "music_zeke_theme"
+    "music": "music_w1_deep_mine"
   },
   {
     "id": "zeke_w1_mq02_override_5",

@@ -1352,9 +1352,10 @@
       {
         "type": "narration",
         "text": "The shutters meet. Jed’s end of the radio goes quiet.",
-        "duration_seconds": 3.2,
+        "duration_seconds": 3.4,
         "image": "images/rooms/world_1/launch_lift.webp",
         "audio_cue": "sfx_door_airlock_close",
+        "music_cue": "silence",
         "transition": "cut"
       },
       {
@@ -1362,7 +1363,7 @@
         "speaker": "Zeke",
         "portrait": "images/characters/emotes/zeke_idle.png",
         "text": "Nova. I’m still here. Follow my light.",
-        "duration_seconds": 3.8,
+        "duration_seconds": 6.8,
         "image": "images/rooms/world_1/launch_lift.webp",
         "caption_style": "dialogue",
         "audio_cue": "stinger_motif_jed"

@@ -2780,12 +2780,6 @@
     ],
     "actions": [
       {
-        "type": "audio_layer",
-        "layer": "stinger",
-        "cue_id": "sfx_chime_splice",
-        "fade_ms": 0
-      },
-      {
         "type": "set_quest_task_done",
         "quest_id": "w1_mq04",
         "task_id": "receive_chime"

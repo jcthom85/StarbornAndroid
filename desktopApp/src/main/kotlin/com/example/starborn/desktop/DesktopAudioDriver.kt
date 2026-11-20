@@ -122,7 +122,10 @@ class DesktopAudioDriver(
             pendingMusicCue = null
         }
         val playing = active.remove(key) ?: return
-        if (command.type == AudioCueType.MUSIC) musicPositions[key.second] = playing.clip.microsecondPosition
+        if (command.type == AudioCueType.MUSIC) {
+            musicPositions[key.second] = playing.clip.microsecondPosition
+            refreshAmbientCoexistenceGains()
+        }
         if (command.fadeMs > 0) {
             fadingOutClips.add(playing.clip)
             fade(command.type, playing, 0f, command.fadeMs) {
@@ -151,6 +154,7 @@ class DesktopAudioDriver(
                 }
             }
             musicPositions.clear()
+            refreshAmbientCoexistenceGains()
         }
     }
 
@@ -351,6 +355,7 @@ class DesktopAudioDriver(
                             if (command.fadeMs > 0) {
                                 fade(AudioCueType.MUSIC, playing, 1f, command.fadeMs)
                             }
+                            refreshAmbientCoexistenceGains()
                         }
                     } catch (_: java.util.concurrent.RejectedExecutionException) {
                         try { readyClip.close() } catch (_: Exception) {}
@@ -503,12 +508,21 @@ class DesktopAudioDriver(
         }
     }
 
+    private fun refreshAmbientCoexistenceGains() {
+        active.forEach { (key, playing) ->
+            if (key.first == AudioCueType.AMBIENT) {
+                applyGain(AudioCueType.AMBIENT, playing)
+            }
+        }
+    }
+
     private fun applyGain(type: AudioCueType, playing: Playing) {
         val clip = playing.clip
         if (!clip.isOpen || !clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) return
         val control = clip.getControl(FloatControl.Type.MASTER_GAIN) as FloatControl
         val master = if (isMuted) 0f else masterGain
-        val volume = (master * (userGains[type] ?: 1f) * (layerGains[type] ?: 1f) * playing.cueGain * playing.envelope).coerceIn(0f, 1f)
+        val coexistenceTrim = if (type == AudioCueType.AMBIENT && active.keys.any { it.first == AudioCueType.MUSIC }) 0.50f else 1f
+        val volume = (master * (userGains[type] ?: 1f) * (layerGains[type] ?: 1f) * playing.cueGain * playing.envelope * coexistenceTrim).coerceIn(0f, 1f)
         control.value = if (volume <= .0001f) control.minimum else (20 * log10(volume)).coerceIn(control.minimum, control.maximum)
     }
 

@@ -32,6 +32,8 @@ private const val MISSING_SOUND_ID = -1
 private const val MICRO_FADE_MS = 20L
 private const val SHORT_STOP_FADE_MS = 16L
 private const val MAX_TRACKED_STREAMS_PER_CUE = 4
+private const val AMBIENT_UNDER_MUSIC_SCALE = 0.50f
+private const val AMBIENT_COEXISTENCE_FADE_MS = 450L
 
 private data class PendingShortCue(
     val type: AudioCueType,
@@ -247,6 +249,19 @@ class AudioCuePlayer(
     private fun effectiveMusicVolume(gain: Float): Float =
         (gain * userMusicGain * focusDuckMultiplier).coerceIn(0f, 1f)
 
+    private fun effectiveAmbientVolume(gain: Float): Float {
+        val coexistenceTrim = if (currentMusicCue != null) AMBIENT_UNDER_MUSIC_SCALE else 1f
+        return effectiveMusicVolume(gain * coexistenceTrim)
+    }
+
+    private fun syncAmbientCoexistenceVolume(fadeMs: Long = AMBIENT_COEXISTENCE_FADE_MS) {
+        ambientPlayers.forEach { (cueId, player) ->
+            val base = ambientBaseGains[cueId] ?: 1f
+            val targetVol = effectiveAmbientVolume(base * ambientGain)
+            scheduleAmbientCueGain(cueId, player, targetVol, fadeMs, equalPowerIn = false)
+        }
+    }
+
     private fun applyStreamingVolumes() {
         musicPlayer.volume = effectiveMusicVolume(musicGain)
         if (stingerAnimator == null) {
@@ -255,7 +270,7 @@ class AudioCuePlayer(
         ambientPlayers.forEach { (cueId, player) ->
             if (!ambientAnimators.containsKey(cueId)) {
                 val base = ambientBaseGains[cueId] ?: ambientGain
-                player.volume = effectiveMusicVolume(base * ambientGain)
+                player.volume = effectiveAmbientVolume(base * ambientGain)
             }
         }
     }
@@ -525,7 +540,11 @@ class AudioCuePlayer(
                 musicPlayer.volume = 0f
                 musicPlayer.stop()
             }
+            val musicWasInactive = previousCue == null
             currentMusicCue = cueId
+            if (musicWasInactive) {
+                syncAmbientCoexistenceVolume()
+            }
         } else {
             player.volume = 0f
             player.stop()
@@ -656,9 +675,13 @@ class AudioCuePlayer(
         standbyMusicPlayer.volume = 0f
         standbyMusicPlayer.stop()
         standbyMusicPlayer.clearMediaItems()
+        val hadMusic = currentMusicCue != null
         currentMusicCue = null
         musicTrackPositions.clear()
         resumeMusicAfterBackground = false
+        if (hadMusic) {
+            syncAmbientCoexistenceVolume(0L)
+        }
     }
 
     private fun playAmbientStreaming(cueId: String, command: AudioCommand.Play) {
@@ -672,7 +695,7 @@ class AudioCuePlayer(
         player.repeatMode = if (command.loop) Player.REPEAT_MODE_ONE else Player.REPEAT_MODE_OFF
         val baseGain = command.gain.coerceIn(0f, 1f)
         ambientBaseGains[cueId] = baseGain
-        val targetVol = effectiveMusicVolume(baseGain * ambientGain)
+        val targetVol = effectiveAmbientVolume(baseGain * ambientGain)
         val fadeInMs = if (command.fadeMs > 0L) command.fadeMs else MICRO_FADE_MS
         player.volume = 0f
         player.prepare()
@@ -694,10 +717,14 @@ class AudioCuePlayer(
                 musicPlayer.volume = 0f
                 musicPlayer.stop()
             }
+            val hadMusic = currentMusicCue != null
             currentMusicCue = null
             currentMusicLoopStartMs = null
             currentMusicInLoopBodyOnly = false
             musicGain = 0f
+            if (hadMusic) {
+                syncAmbientCoexistenceVolume()
+            }
             return
         }
         val effectiveFadeMs = if (fadeMs > 0L) fadeMs else if (player.volume > 0.001f) MICRO_FADE_MS else 0L
@@ -875,7 +902,7 @@ class AudioCuePlayer(
                 ambientPlayers.forEach { (cueId, player) ->
                     if (!ambientAnimators.containsKey(cueId)) {
                         val base = ambientBaseGains[cueId] ?: 1f
-                        player.volume = effectiveMusicVolume(base * clamped)
+                        player.volume = effectiveAmbientVolume(base * clamped)
                     }
                 }
             }

@@ -1803,6 +1803,9 @@ class CombatController(
         val previousSize = previous.log.size
         if (updated.log.size <= previousSize) return
         val newEntries = updated.log.drop(previousSize)
+        val skippedActors = newEntries.filterIsInstance<CombatLogEntry.TurnSkipped>()
+            .map { it.actorId }
+            .toSet()
         var currentAction: CombatAction? = null
         newEntries.forEach { entry ->
             when (entry) {
@@ -1813,15 +1816,16 @@ class CombatController(
                     if (shouldPauseForAttackAnimation(entry.action)) {
                         pauseForAttackAnimation()
                     }
+                    if (entry.actorId !in skippedActors) {
+                        playCombatActionSound(entry.action)
+                    }
                     setCombatBanner(entry, updated, previous = previous)
                 }
                 is CombatLogEntry.Damage -> {
-                    val skillUse = currentAction as? CombatAction.SkillUse
-                    val skillId = skillUse?.skillId?.lowercase(Locale.getDefault())
-                    if (skillId != null && skillId.contains("drone")) {
-                        playBattleCue("enemy_attack_drone")
-                    } else {
-                        playCharacterAttackSound(entry.sourceId, skillId)
+                    val isStatusTick = entry.sourceId.startsWith(STATUS_SOURCE_PREFIX)
+                    val isReactiveHit = !isStatusTick && entry.sourceId != currentAction?.actorId
+                    if (isReactiveHit) {
+                        playCharacterAttackSound(entry.sourceId, null)
                     }
                     val effectDelayMs = actionEffectDelayMs(currentAction)
                     if (entry.amount == 0 && entry.element == "miss") {
@@ -1906,7 +1910,9 @@ class CombatController(
                         CombatOutcome.Retreat -> CombatFxEvent.CombatOutcomeFx.OutcomeType.RETREAT
                     }
                     when (outcomeType) {
-                        CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY -> playVictoryMusic()
+                        // Victory stinger is triggered by the UI right when the "Spoils Recovered"
+                        // dialog appears (after hit/knockout animations settle), not on the killing blow.
+                        CombatFxEvent.CombatOutcomeFx.OutcomeType.VICTORY -> Unit
                         CombatFxEvent.CombatOutcomeFx.OutcomeType.DEFEAT -> playBattleCue("defeat")
                         CombatFxEvent.CombatOutcomeFx.OutcomeType.RETREAT -> playBattleCue("retreat")
                     }
@@ -3828,10 +3834,7 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
 
     private fun playBattleCue(key: String) {
         val commands = audioRouter.commandsForBattle(key)
-        val shouldVaryPitch = key.startsWith("wpn_") ||
-            key.startsWith("enemy_attack_") ||
-            key == "shield_block" ||
-            key == "shield_break"
+        val shouldVaryPitch = com.example.starborn.domain.combat.CombatAbilityAudioResolver.shouldVaryPitch(key)
         if (!shouldVaryPitch) {
             emitAudio(commands)
             return
@@ -3929,84 +3932,60 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
         emitAudio(commands)
     }
 
-    private fun playCharacterAttackSound(sourceId: String, skillId: String? = null) {
-        val base = sourceId.substringBefore('#')
-        val segment = base.substringAfterLast(':').substringAfterLast('/')
-        val normalized = segment.lowercase(Locale.getDefault()).removePrefix("player_")
-        val cue = when {
-            normalized.startsWith("nova") -> when {
-                skillId == null -> "wpn_nova_laser"
-                skillId in setOf("nova_hydraulic_kick", "slide_kick", "nova_cheap_shot") -> "wpn_zeke_body_impact"
-                skillId in setOf(
-                    "nova_arc_tether",
-                    "nova_cryo_vent",
-                    "nova_plasma_burst",
-                    "nova_rend_round",
-                    "nova_blast_wave",
-                    "nova_pulse_grenade",
-                    "scrap_shot",
-                    "nova_smoke_bomb"
-                ) || skillId.startsWith("source_art_") -> "wpn_nova_resonance_shot"
-                else -> "wpn_nova_laser"
+    private fun playCombatActionSound(action: CombatAction) {
+        val cue = when (action) {
+            is CombatAction.BasicAttack -> {
+                val base = action.actorId.substringBefore('#')
+                val enemy = enemyDefinitions[action.actorId] ?: enemyDefinitions[base]
+                com.example.starborn.domain.combat.CombatAbilityAudioResolver.resolveBasicAttackCue(
+                    sourceId = action.actorId,
+                    enemy = enemy
+                )
             }
-            normalized.startsWith("zeke") -> when {
-                skillId != null && skillId in setOf(
-                    "zeke_shatter_blow",
-                    "zeke_quake_slam",
-                    "zeke_overload_fists",
-                    "zeke_synergy_pitch"
-                ) -> "wpn_zeke_body_impact"
-                else -> "wpn_zeke_punch"
+            is CombatAction.SkillUse -> {
+                val base = action.actorId.substringBefore('#')
+                val enemy = enemyDefinitions[action.actorId] ?: enemyDefinitions[base]
+                val skill = skillById[action.skillId]
+                com.example.starborn.domain.combat.CombatAbilityAudioResolver.resolveSkillCue(
+                    sourceId = action.actorId,
+                    skillId = action.skillId,
+                    skill = skill,
+                    enemy = enemy
+                )
             }
-            normalized.startsWith("orion") -> when {
-                skillId != null && skillId in setOf(
-                    "orion_prism_lance",
-                    "orion_disruption_pulse",
-                    "orion_stasis_field",
-                    "orion_stasis_stitch",
-                    "orion_sunbeam"
-                ) -> "wpn_orion_bowl_resonance"
-                else -> "wpn_orion_resonance"
+            is CombatAction.ItemUse -> {
+                val effect = itemCatalog.findItem(action.itemId)?.effect
+                com.example.starborn.domain.combat.CombatAbilityAudioResolver.resolveItemCue(
+                    itemId = action.itemId,
+                    effect = effect
+                )
             }
-            normalized.startsWith("gh0st") || normalized.startsWith("ghost") -> when {
-                skillId != null && skillId in setOf(
-                    "gh0st_venom_edge",
-                    "gh0st_shadow_flurry",
-                    "gh0st_phase_counter",
-                    "gh0st_intercept",
-                    "gh0st_system_crash"
-                ) -> "wpn_gh0st_wire_slash"
-                else -> "wpn_gh0st_slash"
+            is CombatAction.SnackUse -> {
+                val effect = itemCatalog.findItem(action.snackItemId)?.effect
+                com.example.starborn.domain.combat.CombatAbilityAudioResolver.resolveItemCue(
+                    itemId = action.snackItemId,
+                    effect = effect
+                )
             }
-            normalized.startsWith("ollie") -> "wpn_zeke_body_impact"
-            else -> resolveEnemyAttackCue(sourceId, base, normalized)
+            is CombatAction.Defend -> com.example.starborn.domain.combat.CombatAbilityAudioResolver.resolveDefendCue()
+            is CombatAction.Flee -> null
         }
         if (cue != null) {
             playBattleCue(cue)
         }
     }
 
-    private fun resolveEnemyAttackCue(sourceId: String, base: String, normalized: String): String? {
+    private fun playCharacterAttackSound(sourceId: String, skillId: String? = null) {
+        val base = sourceId.substringBefore('#')
         val enemy = enemyDefinitions[sourceId] ?: enemyDefinitions[base]
-        val tags = enemy?.tags.orEmpty().map { it.lowercase(Locale.getDefault()) }
-        val element = enemy?.element?.lowercase(Locale.getDefault())
-
-        return when {
-            "massive" in tags || "industrial" in tags || normalized.contains("loader") -> "enemy_attack_slam"
-            "robotic" in tags || "machine" in tags || "mech" in tags -> {
-                if ("flying" in tags || "drone" in tags) "enemy_attack_drone" else "robot_stomp"
-            }
-            "crawler" in tags || "beast" in tags || normalized.contains("hound") || normalized.contains("borer") -> {
-                if (normalized.contains("borer") || normalized.contains("crawler")) "enemy_attack_bite" else "enemy_attack_slash"
-            }
-            "flora" in tags || normalized.contains("spitter") || normalized.contains("vine") -> "enemy_attack_spore"
-            element == "acid" -> "enemy_attack_acid"
-            element == "fire" || element == "burn" || "foundry" in tags -> "enemy_attack_flame"
-            "source" in tags || "shadow" in tags || "nightmare" in tags || "digital" in tags -> "enemy_attack_void"
-            "human" in tags || "dominion" in tags -> "enemy_attack_gunshot"
-            "biological" in tags -> "enemy_screech"
-            else -> "enemy_attack_slash"
-        }
+        val skill = skillId?.let { skillById[it] }
+        val cue = com.example.starborn.domain.combat.CombatAbilityAudioResolver.resolveSkillCue(
+            sourceId = sourceId,
+            skillId = skillId,
+            skill = skill,
+            enemy = enemy
+        )
+        playBattleCue(cue)
     }
 
 

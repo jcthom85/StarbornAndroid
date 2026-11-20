@@ -2242,9 +2242,18 @@ class ExplorationController(
             ?.takeIf { it.isNotBlank() }
             ?: return
         cinematicMusicActive = true
-        emitAudioCommands(
-            audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = cue)
-        )
+        if (cue.equals("none", ignoreCase = true) ||
+            cue.equals("stop", ignoreCase = true) ||
+            cue.equals("silence", ignoreCase = true)
+        ) {
+            emitAudioCommands(
+                audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, stop = true, fadeMs = 450L)
+            )
+        } else {
+            emitAudioCommands(
+                audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = cue)
+            )
+        }
     }
 
     init {
@@ -3108,7 +3117,13 @@ class ExplorationController(
             promptManager.setToastsSuspended(false)
             lastDialogueVoiceCue = null
             if (dialogueMusicActive && !dialogueMusicPersistent) {
-                playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
+                if (cinematicCoordinator.state.value != null || _uiState.value.cinematic != null) {
+                    // Hand off restoration to cinematic completion so closing dialogue
+                    // doesn't slam room music back on top of an incoming cinematic.
+                    cinematicMusicActive = true
+                } else {
+                    playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
+                }
             }
             dialogueMusicActive = false
             if (!npcName.isNullOrBlank()) {
@@ -3155,7 +3170,13 @@ class ExplorationController(
             promptManager.setToastsSuspended(false)
             lastDialogueVoiceCue = null
             if (dialogueMusicActive && !dialogueMusicPersistent) {
-                playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
+                if (cinematicCoordinator.state.value != null || _uiState.value.cinematic != null) {
+                    // Hand off restoration to cinematic completion so closing dialogue
+                    // doesn't slam room music back on top of an incoming cinematic.
+                    cinematicMusicActive = true
+                } else {
+                    playRoomAudio(sessionStore.state.value.hubId, _uiState.value.currentRoom?.id)
+                }
             }
             dialogueMusicActive = false
             if (!npcName.isNullOrBlank()) {

@@ -20,6 +20,7 @@
   "node_music": {
     "deep_mine": "music_w1_deep_mine",
     "echo_chamber": "music_w1_deep_mine",
+    "launch_bay": "music_w1_launch_escape",
     "workshop": "music_w1_jed_workshop",
     "tideglass_beach": "music_w2_tideglass_beach",
     "stasis_chamber": "music_w2_stasis_sanctuary",
@@ -366,6 +367,19 @@
     "enemy_attack_slam": "sfx_combat_enemy_heavy_slam",
     "enemy_attack_gunshot": "sfx_combat_enemy_gunshot",
     "enemy_attack_void": "sfx_combat_enemy_void_blast",
-    "enemy_attack_flame": "sfx_combat_enemy_flamethrower"
+    "enemy_attack_flame": "sfx_combat_enemy_flamethrower",
+    "skill_shock_arc": "sfx_skill_shock_arc",
+    "skill_cryo_freeze": "sfx_skill_cryo_freeze",
+    "skill_plasma_blast": "sfx_skill_plasma_blast",
+    "skill_shockwave_slam": "sfx_skill_shockwave_slam",
+    "skill_precision_shot": "sfx_skill_precision_shot",
+    "skill_acid_burn": "sfx_skill_acid_burn",
+    "skill_source_harmonic": "sfx_skill_source_harmonic",
+    "skill_heal": "sfx_skill_heal",
+    "skill_shield_up": "sfx_skill_shield_up",
+    "skill_smoke_cloak": "sfx_skill_smoke_cloak",
+    "skill_power_up": "sfx_skill_power_up",
+    "skill_target_scan": "sfx_skill_target_scan",
+    "skill_psionic_silence": "sfx_skill_psionic_silence"
   }
 }

@@ -38,8 +38,9 @@
       "tags": [
         "character",
         "zeke",
-        "blues",
-        "rhodes"
+        "warm",
+        "acoustic",
+        "reflective"
       ]
     },
     {
@@ -96,6 +97,21 @@
         "explore",
         "blues",
         "industrial"
+      ]
+    },
+    {
+      "id": "music_w1_launch_escape",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 1000,
+      "fade_out_ms": 1000,
+      "gain": 0.85,
+      "tags": [
+        "world_1",
+        "launch",
+        "escape",
+        "tense",
+        "somber"
       ]
     },
     {
@@ -326,7 +342,7 @@
       "loop": true,
       "fade_in_ms": 800,
       "fade_out_ms": 800,
-      "gain": 0.8,
+      "gain": 0.56,
       "tags": [
         "outdoor",
         "forest"
@@ -338,7 +354,7 @@
       "loop": true,
       "fade_in_ms": 850,
       "fade_out_ms": 850,
-      "gain": 0.82,
+      "gain": 0.5,
       "tags": [
         "cave",
         "moist"
@@ -350,7 +366,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.72,
+      "gain": 0.52,
       "tags": [
         "world_1",
         "homestead",
@@ -364,7 +380,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.78,
+      "gain": 0.46,
       "tags": [
         "world_1",
         "logistics",
@@ -392,7 +408,7 @@
       "loop": true,
       "fade_in_ms": 700,
       "fade_out_ms": 900,
-      "gain": 0.8,
+      "gain": 0.42,
       "tags": [
         "world_1",
         "launch",
@@ -406,7 +422,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.78,
+      "gain": 0.44,
       "tags": [
         "world_1",
         "dust",
@@ -433,7 +449,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.76,
+      "gain": 0.5,
       "tags": [
         "world_2",
         "sector9",
@@ -448,7 +464,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.76,
+      "gain": 0.48,
       "tags": [
         "world_2",
         "sector9",
@@ -463,7 +479,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.76,
+      "gain": 0.48,
       "tags": [
         "world_2",
         "sector9",
@@ -478,7 +494,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.76,
+      "gain": 0.54,
       "tags": [
         "world_2",
         "sector9",
@@ -493,7 +509,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.76,
+      "gain": 0.45,
       "tags": [
         "world_2",
         "sector9",
@@ -523,7 +539,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.76,
+      "gain": 0.5,
       "tags": [
         "world_2",
         "sector9",
@@ -538,7 +554,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.76,
+      "gain": 0.48,
       "tags": [
         "world_2",
         "astra",
@@ -552,7 +568,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.85,
+      "gain": 0.5,
       "tags": [
         "world_3",
         "spire",
@@ -566,7 +582,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.76,
+      "gain": 0.46,
       "tags": [
         "world_3",
         "spire",
@@ -581,7 +597,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.76,
+      "gain": 0.44,
       "tags": [
         "world_3",
         "spire",
@@ -596,7 +612,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.7,
+      "gain": 0.5,
       "tags": [
         "world_3",
         "spire",
@@ -611,7 +627,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.76,
+      "gain": 0.46,
       "tags": [
         "world_3",
         "spire",
@@ -626,7 +642,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.76,
+      "gain": 0.44,
       "tags": [
         "world_3",
         "spire",
@@ -641,7 +657,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.76,
+      "gain": 0.46,
       "tags": [
         "world_3",
         "spire",
@@ -656,7 +672,7 @@
       "loop": true,
       "fade_in_ms": 900,
       "fade_out_ms": 900,
-      "gain": 0.76,
+      "gain": 0.44,
       "tags": [
         "world_3",
         "spire",
@@ -2015,10 +2031,10 @@
       "id": "wpn_nova_resonance_shot",
       "category": "battle",
       "priority": 3,
-      "gain": 0.82,
+      "gain": 0.9,
       "fade_in_ms": 0,
       "fade_out_ms": 110,
-      "duration_ms": 880
+      "duration_ms": 760
     },
     {
       "id": "wpn_zeke_body_impact",
@@ -2627,6 +2643,123 @@
       "fade_in_ms": 30,
       "fade_out_ms": 600,
       "duration_ms": 6160
+    },
+    {
+      "id": "sfx_skill_shock_arc",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.94,
+      "fade_in_ms": 0,
+      "fade_out_ms": 140,
+      "duration_ms": 890
+    },
+    {
+      "id": "sfx_skill_cryo_freeze",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.92,
+      "fade_in_ms": 0,
+      "fade_out_ms": 160,
+      "duration_ms": 970
+    },
+    {
+      "id": "sfx_skill_plasma_blast",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.96,
+      "fade_in_ms": 0,
+      "fade_out_ms": 180,
+      "duration_ms": 1040
+    },
+    {
+      "id": "sfx_skill_shockwave_slam",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.95,
+      "fade_in_ms": 0,
+      "fade_out_ms": 180,
+      "duration_ms": 1040
+    },
+    {
+      "id": "sfx_skill_precision_shot",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.92,
+      "fade_in_ms": 0,
+      "fade_out_ms": 120,
+      "duration_ms": 760
+    },
+    {
+      "id": "sfx_skill_acid_burn",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.92,
+      "fade_in_ms": 0,
+      "fade_out_ms": 150,
+      "duration_ms": 910
+    },
+    {
+      "id": "sfx_skill_source_harmonic",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 200,
+      "duration_ms": 1120
+    },
+    {
+      "id": "sfx_skill_heal",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 180,
+      "duration_ms": 970
+    },
+    {
+      "id": "sfx_skill_shield_up",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.9,
+      "fade_in_ms": 0,
+      "fade_out_ms": 150,
+      "duration_ms": 890
+    },
+    {
+      "id": "sfx_skill_smoke_cloak",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.92,
+      "fade_in_ms": 0,
+      "fade_out_ms": 150,
+      "duration_ms": 890
+    },
+    {
+      "id": "sfx_skill_power_up",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.88,
+      "fade_in_ms": 0,
+      "fade_out_ms": 160,
+      "duration_ms": 910
+    },
+    {
+      "id": "sfx_skill_target_scan",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.88,
+      "fade_in_ms": 0,
+      "fade_out_ms": 120,
+      "duration_ms": 760
+    },
+    {
+      "id": "sfx_skill_psionic_silence",
+      "category": "battle",
+      "priority": 5,
+      "gain": 0.94,
+      "fade_in_ms": 0,
+      "fade_out_ms": 180,
+      "duration_ms": 1040
     }
   ]
 }

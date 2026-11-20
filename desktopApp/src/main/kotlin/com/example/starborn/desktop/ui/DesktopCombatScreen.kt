@@ -274,8 +274,9 @@ private fun DesktopCombatContent(
     LaunchedEffect(runtime, battle.outcome) {
         val outcome = battle.outcome as? CombatOutcome.Victory ?: return@LaunchedEffect
         val summaries = runtime.consumeLevelUpSummaries()
-        // Let the victory pose and music land before presenting rewards.
+        // Let the victory pose settle before presenting rewards and victory stinger.
         delay(2000)
+        runtime.playVictoryMusic()
         victoryPayload = com.example.starborn.navigation.CombatResultPayload(
             outcome = com.example.starborn.navigation.CombatResultPayload.Outcome.VICTORY,
             enemyIds = runtime.encounterEnemyIds, roomId = runtime.encounterRoomId,
