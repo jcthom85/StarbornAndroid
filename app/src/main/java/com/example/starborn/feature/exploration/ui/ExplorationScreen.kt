@@ -2306,24 +2306,6 @@ private fun RoomHeaderPanel(
                                     )
                                 }
                             }
-                            isDark -> {
-                                Surface(
-                                    shape = RoundedCornerShape(999.dp),
-                                    color = Color.White.copy(alpha = 0.08f),
-                                    border = BorderStroke(1.dp, Color.White.copy(alpha = 0.24f))
-                                ) {
-                                    Text(
-                                        text = "UNLIT",
-                                        style = MaterialTheme.typography.labelSmall.copy(
-                                            fontSize = 8.5.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            letterSpacing = 0.9.sp
-                                        ),
-                                        color = Color.White.copy(alpha = 0.68f),
-                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 1.5.dp)
-                                    )
-                                }
-                            }
                             isGateway -> {
                                 Surface(
                                     shape = RoundedCornerShape(999.dp),
