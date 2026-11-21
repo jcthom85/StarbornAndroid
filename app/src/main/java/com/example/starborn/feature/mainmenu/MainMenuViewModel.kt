@@ -374,6 +374,7 @@ class MainMenuViewModel(
                 "scene_launch_crash"
             ),
             "World 2 — The Wilds" to listOf(
+                "scene_w2_orion_awakening",
                 "scene_anchor_drill",
                 "scene_w2_astra_departure"
             ),
@@ -437,7 +438,7 @@ class MainMenuViewModel(
                 val normalized = speaker.trim().lowercase(Locale.US)
                 val cleanEmote = emote?.trim()?.lowercase(Locale.US)?.takeIf { it.isNotBlank() }
                 if (cleanEmote != null) {
-                    "images/characters/${normalized}_${cleanEmote}.png"
+                    "images/characters/emotes/${normalized}_${cleanEmote}.png"
                 } else {
                     null
                 }

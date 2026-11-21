@@ -8304,7 +8304,8 @@ fun CinematicOverlay(
                 cue == "sfx_pod_launch" ||
                 cue == "sfx_combat_shield_deflect" ||
                 cue == "sfx_crash_impact" ||
-                cue == "sfx_w2_astra_launch"
+                cue == "sfx_w2_astra_launch" ||
+                cue == "sfx_w2_stasis_release"
             audioCuePlayer?.execute(
                 listOf(
                     AudioCommand.Play(
@@ -8604,7 +8605,8 @@ internal fun IllustratedCinematicOverlay(
                 cue == "sfx_pod_launch" ||
                 cue == "sfx_combat_shield_deflect" ||
                 cue == "sfx_crash_impact" ||
-                cue == "sfx_w2_astra_launch"
+                cue == "sfx_w2_astra_launch" ||
+                cue == "sfx_w2_stasis_release"
             audioCuePlayer?.execute(
                 listOf(
                     AudioCommand.Play(
@@ -8738,6 +8740,7 @@ internal fun IllustratedCinematicOverlay(
         when (state.step.audioCue) {
             "sfx_combat_plasma_arc" -> Color(0xFF80F8FF)
             "wpn_orion_bowl_resonance" -> Color(0xFFB3F7FF)
+            "sfx_w2_stasis_release" -> Color(0xFFC8F4FF)
             "sfx_combat_shield_deflect" -> Color(0xFFFFE0E0)
             else -> Color.White
         }
@@ -8870,6 +8873,23 @@ internal fun IllustratedCinematicOverlay(
                     impactShakeX.animateTo(rumbleAmp * 0.45f * decay * sign, animationSpec = tween(durationMillis = 85, easing = LinearEasing))
                     impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 85, easing = LinearEasing))
                 }
+            }
+        } else if (cue == "sfx_w2_stasis_release") {
+            // Pneumatic frost-seal release hiss + soft settling tremor
+            val sealAmp = with(density) { 4.5.dp.toPx() }
+            launch {
+                impactShakeY.snapTo(sealAmp)
+                impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 280, easing = FastOutSlowInEasing))
+                for (cycle in 5 downTo 1) {
+                    val decay = cycle / 5f
+                    val sign = if (cycle % 2 == 0) 1f else -1f
+                    impactShakeX.animateTo(sealAmp * 0.35f * decay * sign, animationSpec = tween(durationMillis = 60, easing = LinearEasing))
+                    impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 60, easing = LinearEasing))
+                }
+            }
+            launch {
+                impactFlash.snapTo(0.4f)
+                impactFlash.animateTo(0f, animationSpec = tween(durationMillis = 360, easing = LinearEasing))
             }
         } else if (cue == "sfx_door_airlock_close") {
             // Heavy blast-shutter slam + brief metallic latch rattle
@@ -9335,6 +9355,37 @@ internal fun IllustratedCinematicOverlay(
                             ),
                             center = Offset(540f, 460f),
                             radius = 900f
+                        )
+                    )
+            )
+        }
+
+        // Atmospheric Layer 9: Orion stasis unseal cryo-resonance glow
+        val isStasisUnseal = state.step.imagePath?.contains("w2_orion_stasis_unseal") == true
+        if (isStasisUnseal) {
+            val stasisTransition = rememberInfiniteTransition(label = "stasis_unseal_glow")
+            val stasisAlpha by stasisTransition.animateFloat(
+                initialValue = 0.08f,
+                targetValue = 0.22f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 1600, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "stasis_alpha"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = stasisAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFFB3F7FF).copy(alpha = 0.50f),
+                                Color(0xFFFFD54F).copy(alpha = 0.20f),
+                                Color.Transparent
+                            ),
+                            center = Offset(540f, 760f),
+                            radius = 920f
                         )
                     )
             )

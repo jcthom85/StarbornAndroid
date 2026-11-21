@@ -16668,12 +16668,6 @@
     ],
     "actions": [
       {
-        "type": "audio_layer",
-        "layer": "stinger",
-        "cue_id": "sfx_w2_stasis_release",
-        "fade_ms": 0
-      },
-      {
         "type": "set_quest_task_done",
         "quest_id": "w2_mq03",
         "task_id": "align_stasis_rings"
@@ -16683,8 +16677,12 @@
         "milestone": "ms_w2_stasis_awake"
       },
       {
+        "type": "play_cinematic",
+        "scene_id": "scene_w2_orion_awakening"
+      },
+      {
         "type": "show_message",
-        "message": "The pressure ring opens its outer bypass. Memory stays on its own band; return waits for the coolant to settle. The stranger opens his eyes. Return to the Stasis Chamber and talk to him."
+        "message": "The stasis shell stands open in the Stasis Chamber. Return there to speak with Orion."
       }
     ]
   },

@@ -684,7 +684,7 @@
       },
       {
         "type": "narration",
-        "text": "The Chime clears the shaft. Something in the dark answers its signal.",
+        "text": "A chord answers through the dark. The receiver needles rise together.",
         "image": "images/cinematics/intro_chorus_answer_v1.webp",
         "camera_start_scale": 1.0,
         "camera_end_scale": 1.08,
@@ -1363,6 +1363,67 @@
         "duration_seconds": 3.8,
         "transition": "cut",
         "fade_out_seconds": 1.2
+      }
+    ],
+    "skippable": true,
+    "backdrop": "black",
+    "presentation": "illustrated"
+  },
+  {
+    "id": "scene_w2_orion_awakening",
+    "title": "Twenty Years",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The outer bypass opens. The alignment rings lock into a single, steady pulse—and twenty years of frost cracks loose from the glass.",
+        "duration_seconds": 4.6,
+        "image": "images/cinematics/w2_orion_stasis_unseal_v1.png",
+        "audio_cue": "sfx_w2_stasis_release",
+        "music_cue": "music_orion_theme",
+        "transition": "fade",
+        "camera_start_scale": 1.02,
+        "camera_end_scale": 1.1,
+        "camera_start_y": 12.0,
+        "camera_end_y": -4.0
+      },
+      {
+        "type": "narration",
+        "text": "Coolant mist spills down the stone steps. Inside the shell, Orion's eyes open to a world that never stopped turning.",
+        "duration_seconds": 4.4,
+        "image": "images/cinematics/w2_orion_stasis_unseal_v1.png",
+        "audio_cue": "wpn_orion_bowl_resonance",
+        "transition": "cut",
+        "camera_start_scale": 1.1,
+        "camera_end_scale": 1.18,
+        "camera_start_y": -4.0,
+        "camera_end_y": -18.0
+      },
+      {
+        "type": "narration",
+        "text": "He steps out into the mist, gaze drawn upward to the root-tangled vault. Below the stairs, Nova and Zeke stand still—two halves of a twenty-year signal finally in the same room.",
+        "duration_seconds": 5.2,
+        "image": "images/cinematics/w2_orion_awakening_catch_v1.png",
+        "transition": "fade",
+        "camera_start_scale": 1.14,
+        "camera_end_scale": 1.04,
+        "camera_start_y": -14.0,
+        "camera_end_y": 4.0
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Orion",
+        "emote": "sad",
+        "portrait": "images/characters/emotes/orion_sad.png",
+        "text": "The air smells like rain and cedar. How long did the pod keep me under?",
+        "duration_seconds": 5.2,
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w2_orion_awakening_catch_v1.png",
+        "transition": "cut",
+        "camera_start_scale": 1.04,
+        "camera_end_scale": 1.08,
+        "camera_start_y": 4.0,
+        "camera_end_y": -6.0,
+        "fade_out_seconds": 1.4
       }
     ],
     "skippable": true,
