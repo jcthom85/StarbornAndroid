@@ -4280,7 +4280,7 @@ class ExplorationController(
         }
         if (_uiState.value.settings.modernFieldMenu) {
             tutorialManager.showOnce(key = BAG_TUTORIAL_ID, context = "Items",
-                message = "Open Items to browse Supplies and Key Items. Tap an info icon to inspect an item. Equipment is in Party: choose a character, then tap an equipment slot.",
+                message = "Browse Supplies and Key Items in Items. Tap an info icon to inspect an item, or use consumables between fights.",
                 onDismiss = {
                     tutorialManager.markCompleted(BAG_TUTORIAL_ID)
                     maybeShowGearTutorial()

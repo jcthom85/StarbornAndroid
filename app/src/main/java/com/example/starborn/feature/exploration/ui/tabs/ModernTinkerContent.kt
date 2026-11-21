@@ -234,7 +234,7 @@ internal fun ModernTinkerWorkbench(
                         )
                     }
                     Text(
-                        com.example.starborn.feature.crafting.tinkeringTutorialInstruction(step),
+                        com.example.starborn.feature.crafting.tinkeringTutorialInstruction(step, "Repair"),
                         style = MaterialTheme.typography.bodySmall,
                         color = FieldMenuDesign.text
                     )

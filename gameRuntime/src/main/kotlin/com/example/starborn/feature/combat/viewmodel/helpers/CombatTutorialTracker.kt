@@ -57,10 +57,12 @@ class CombatTutorialTracker(
             session.tutorialCompleted.none { it.equals(COMBAT_LOADER_TUTORIAL_ID, ignoreCase = true) }
         if (isLoaderEligible) return true
 
-        val isBulwarkEligible = (currentRoomId.equals(COMBAT_TUTORIAL_ROOM_ID, ignoreCase = true) || currentRoomId.equals("admin_security", ignoreCase = true)) &&
+        val isBulwarkInAdmin = currentRoomId.equals("admin_security", ignoreCase = true)
+        val isBulwarkInDockQuest = currentRoomId.equals(COMBAT_TUTORIAL_ROOM_ID, ignoreCase = true) &&
+            (session.questStageById[COMBAT_TUTORIAL_QUEST_ID] == COMBAT_TUTORIAL_QUEST_STAGE || session.activeQuests.contains(COMBAT_TUTORIAL_QUEST_ID))
+        val isBulwarkEligible = (isBulwarkInAdmin || isBulwarkInDockQuest) &&
             encounterEnemyIdList.size == 1 &&
             encounterEnemyIdList.first().equals(COMBAT_TUTORIAL_ENEMY_ID, ignoreCase = true) &&
-            (session.questStageById[COMBAT_TUTORIAL_QUEST_ID] == COMBAT_TUTORIAL_QUEST_STAGE || session.activeQuests.contains(COMBAT_TUTORIAL_QUEST_ID)) &&
             session.tutorialCompleted.none { it.equals(COMBAT_BASICS_TUTORIAL_ID, ignoreCase = true) }
         return isBulwarkEligible
     }

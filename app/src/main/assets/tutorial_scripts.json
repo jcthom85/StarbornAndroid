@@ -23,48 +23,11 @@
     ]
   },
   {
-    "id": "hotspot_actions",
-    "steps": [
-      {
-        "message": "Highlighted room details are interactive. Tap one to inspect it or use its available action.",
-        "context": "Exploration"
-      }
-    ]
-  },
-  {
-    "id": "scene_tinkering_tutorial",
-    "steps": [
-      {
-        "message": "Open Tinker and choose the Workbench. Tap the Broken Cryo-Inductor in the tray to place it in the Base socket.",
-        "context": "Tinker"
-      },
-      {
-        "message": "Tap Scrap Metal in the tray to add the replacement part, then press Synthesize when the repair is ready.",
-        "context": "Tinker",
-        "delay_ms": 2500
-      }
-    ]
-  },
-  {
     "id": "scene_market_locator",
     "steps": [
       {
-        "message": "Head out of the Pit toward Jed's Workshop. Tap highlighted exits or swipe toward open connections to keep moving.",
+        "message": "Open the menu to check your Map for routes toward Jed's Workshop, or open Journal anytime to track active quests and objectives.",
         "context": "Navigation"
-      }
-    ]
-  },
-  {
-    "id": "scene_market_journal",
-    "steps": [
-      {
-        "message": "Open your journal from the menu to track active errands and choose which quest to follow.",
-        "context": "Market Plaza"
-      },
-      {
-        "message": "Use the journal tabs to review active quests, completed quests, and recent updates.",
-        "context": "Market Plaza",
-        "delay_ms": 2000
       }
     ]
   },
@@ -81,7 +44,7 @@
     "id": "menu_save",
     "steps": [
       {
-        "message": "Open the menu to save your progress. Tap the Save icon in the top-right corner for a quick checkpoint, or open Settings > Save Game to choose a manual save slot.",
+        "message": "Open the menu to save your progress. Tap the Save icon in the top-right corner for a quick checkpoint, or open Settings > Save Slot to choose a manual save slot.",
         "context": "Save"
       }
     ]
@@ -163,22 +126,8 @@
     "id": "mod_slots_basics",
     "steps": [
       {
-        "message": "Weapon Mod slots are now unlocked in Party. Combine Scrap Metal, Ballistic Weave, Focusing Lenses, or Batteries on the Tinker Workbench to craft mods and Pulse Grenades.",
+        "message": "Weapon Mod slots are open in Party. Equip mods on Nova's weapon, or craft new mods and Pulse Grenades on the Tinker Workbench.",
         "context": "Tinker"
-      }
-    ]
-  },
-  {
-    "id": "combat_basics_opener",
-    "steps": [
-      {
-        "message": "When your turn bar fills, choose an action. Basic attacks build Momentum to Overcharge abilities with increased power, cooldown refunds, and elemental infusion.",
-        "context": "Combat"
-      },
-      {
-        "message": "Enemies with cracked relays or exposed circuits are weak to Shock. Exploit weaknesses to crack Stability and stun them!",
-        "context": "Combat",
-        "delay_ms": 2500
       }
     ]
   },
@@ -187,7 +136,8 @@
     "steps": [
       {
         "title": "Momentum & Burst",
-        "message": "Landing basic attacks builds up to 3 Momentum. Spending Momentum on a Skill boosts power (1.25x / 1.5x / 1.8x), refunds 1 turn of cooldown at 2 stacks, and guarantees a Critical Hit at 3 stacks."
+        "context": "Combat",
+        "message": "Basic attacks build up to 3 Momentum. Spending Momentum on an Ability boosts power (1.25x / 1.5x / 1.8x), refunds 1 turn of cooldown at 2 stacks, and guarantees a Critical Hit at 3 stacks."
       }
     ]
   },
@@ -206,6 +156,16 @@
       {
         "title": "Equipped Snacks",
         "message": "Snacks are permanent gear equipped in each crew member's Snack slot. They grant passive stats and a reusable combat boost on a 5-turn cooldown—they are never consumed."
+      }
+    ]
+  },
+  {
+    "id": "dark_rooms_basics",
+    "steps": [
+      {
+        "title": "Dark Rooms",
+        "context": "Deep Mine",
+        "message": "Dark rooms hide exits and room details. Look for wall breakers or light switches to restore power and reveal the way forward."
       }
     ]
   }

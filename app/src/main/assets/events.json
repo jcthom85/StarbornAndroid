@@ -1230,6 +1230,58 @@
     ]
   },
   {
+    "id": "w1_mq02_momentum_tiers_tutorial",
+    "description": "Introduces 2-stack cooldown refund and 3-stack guaranteed crit Momentum tiers before the Server Room encounters.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "server_airlock"
+    },
+    "conditions": [
+      {
+        "type": "quest_completed",
+        "quest_id": "w1_mq01"
+      },
+      {
+        "type": "tutorial_not_completed",
+        "tutorial_id": "combat_momentum"
+      }
+    ],
+    "actions": [
+      {
+        "type": "system_tutorial",
+        "scene_id": "combat_momentum",
+        "context": "Combat"
+      }
+    ],
+    "repeatable": false
+  },
+  {
+    "id": "w1_mq03_dark_rooms_tutorial",
+    "description": "Explains dark-room exploration and light/breaker switches when Nova enters the Deep Mine.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "mine_landing"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w1_mq03"
+      },
+      {
+        "type": "tutorial_not_completed",
+        "tutorial_id": "dark_rooms_basics"
+      }
+    ],
+    "actions": [
+      {
+        "type": "system_tutorial",
+        "scene_id": "dark_rooms_basics",
+        "context": "Deep Mine"
+      }
+    ],
+    "repeatable": false
+  },
+  {
     "id": "w1_mq02_reach_booth",
     "description": "Marks the booth objective once Nova reaches Zeke's window.",
     "trigger": {
