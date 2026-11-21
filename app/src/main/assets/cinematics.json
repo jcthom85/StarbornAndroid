@@ -2036,38 +2036,60 @@
       {
         "type": "narration",
         "text": "The Anchor comes free. The Hunter-Killer lunges past the tank.",
-        "duration_seconds": 4.5,
+        "duration_seconds": 4.4,
         "image": "images/rooms/world_5/deep_anchor_chamber.webp",
-        "audio_cue": "sfx_distant_gate_rumble"
+        "audio_cue": "sfx_distant_gate_rumble",
+        "transition": "fade",
+        "camera_start_scale": 1.02,
+        "camera_end_scale": 1.12,
+        "camera_start_y": 10.0,
+        "camera_end_y": -8.0
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
+        "emote": "scared",
         "portrait": "images/characters/emotes/nova_scared.png",
         "text": "Gh0st, down!",
-        "duration_seconds": 2.8,
+        "duration_seconds": 2.6,
         "caption_style": "dialogue",
-        "image": "images/rooms/world_5/deep_anchor_chamber.webp"
+        "image": "images/rooms/world_5/deep_anchor_chamber.webp",
+        "transition": "cut",
+        "camera_start_scale": 1.12,
+        "camera_end_scale": 1.18,
+        "camera_start_y": -8.0,
+        "camera_end_y": -14.0
       },
       {
         "type": "narration",
         "text": "",
-        "duration_seconds": 2.4,
+        "duration_seconds": 3.0,
         "caption_style": "none",
-        "image": "images/cinematics/w5_stasis_lunge_v1.webp",
+        "image": "images/cinematics/w5_stasis_lunge_v2.png",
         "transition": "cut",
-        "audio_cue": "sfx_intro_stasis_lock"
+        "audio_cue": "sfx_intro_stasis_lock",
+        "camera_start_scale": 1.1,
+        "camera_end_scale": 1.02,
+        "camera_start_y": -8.0,
+        "camera_end_y": 4.0
       },
       {
         "type": "dialogue",
         "speaker": "Gh0st",
-        "portrait": "images/characters/emotes/gh0st_idle.png",
+        "emote": "worried",
+        "portrait": "images/characters/emotes/gh0st_worried.png",
         "text": "I’m still here. Can I get you out?",
-        "duration_seconds": 3.7,
+        "duration_seconds": 4.0,
         "caption_style": "dialogue",
         "image": "images/cinematics/w5_stasis_elara_v2.webp",
         "music_cue": "silence",
-        "transition": "cut"
+        "transition": "fade",
+        "camera_start_scale": 1.02,
+        "camera_end_scale": 1.08,
+        "camera_start_x": -6.0,
+        "camera_end_x": 6.0,
+        "camera_start_y": 6.0,
+        "camera_end_y": -2.0
       },
       {
         "type": "dialogue",
@@ -2077,7 +2099,79 @@
         "duration_seconds": 7.5,
         "caption_style": "dialogue",
         "image": "images/cinematics/w5_stasis_elara_v2.webp",
-        "audio_cue": "stinger_motif_elara"
+        "audio_cue": "stinger_motif_elara",
+        "transition": "cut",
+        "camera_start_scale": 1.08,
+        "camera_end_scale": 1.14,
+        "camera_start_x": 6.0,
+        "camera_end_x": 12.0,
+        "camera_start_y": -2.0,
+        "camera_end_y": -6.0,
+        "fade_out_seconds": 1.4
+      }
+    ],
+    "presentation": "illustrated",
+    "backdrop": "black",
+    "skippable": true
+  },
+  {
+    "id": "scene_w5_soloist_breach",
+    "title": "The Soloist",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The Ring’s lights die in long white strips. Every stolen current in the station coils into Vale’s raised hand.",
+        "duration_seconds": 4.8,
+        "image": "images/cinematics/w5_vale_soloist_tear_v1.png",
+        "audio_cue": "stinger_motif_vale",
+        "music_cue": "music_vale_theme",
+        "transition": "fade",
+        "camera_start_scale": 1.02,
+        "camera_end_scale": 1.1,
+        "camera_start_y": 14.0,
+        "camera_end_y": -4.0
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Vale",
+        "portrait": "images/npcs/vale_portrait_v2.webp",
+        "text": "A choir still leaves room for someone to cry out. One voice. A solo.",
+        "duration_seconds": 5.2,
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w5_vale_soloist_tear_v1.png",
+        "transition": "cut",
+        "camera_start_scale": 1.1,
+        "camera_end_scale": 1.18,
+        "camera_start_y": -4.0,
+        "camera_end_y": -14.0
+      },
+      {
+        "type": "narration",
+        "text": "The panoramic glass shatters into zero gravity. Behind Vale, space itself splits open into a blinding blue-gold Tear.",
+        "duration_seconds": 4.8,
+        "image": "images/cinematics/w5_vale_soloist_tear_v1.png",
+        "audio_cue": "sfx_combat_enemy_void_blast",
+        "transition": "cut",
+        "camera_start_scale": 1.18,
+        "camera_end_scale": 1.06,
+        "camera_start_y": -14.0,
+        "camera_end_y": 4.0
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Nova",
+        "emote": "confident",
+        "portrait": "images/characters/emotes/nova_confident.png",
+        "text": "That cable runs straight back to Elara. Gh0st—with me!",
+        "duration_seconds": 4.6,
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w5_vale_soloist_tear_v1.png",
+        "transition": "cut",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.02,
+        "camera_start_y": 4.0,
+        "camera_end_y": 10.0,
+        "fade_out_seconds": 1.4
       }
     ],
     "presentation": "illustrated",
@@ -2091,53 +2185,75 @@
       {
         "type": "narration",
         "text": "Through the fracture, Elara grips the last cable. It peels away from the deck.",
-        "duration_seconds": 4,
-        "image": "images/rooms/world_5/deep_tear.webp"
+        "duration_seconds": 4.2,
+        "image": "images/rooms/world_5/deep_tear.webp",
+        "transition": "fade",
+        "camera_start_scale": 1.02,
+        "camera_end_scale": 1.1,
+        "camera_start_y": 12.0,
+        "camera_end_y": -6.0
       },
       {
         "type": "dialogue",
         "speaker": "Gh0st",
+        "emote": "scared",
         "portrait": "images/characters/emotes/gh0st_scared.png",
         "text": "Elara! Take my hand!",
-        "duration_seconds": 3,
+        "duration_seconds": 3.0,
         "caption_style": "dialogue",
-        "image": "images/rooms/world_5/deep_tear.webp"
+        "image": "images/rooms/world_5/deep_tear.webp",
+        "transition": "cut",
+        "camera_start_scale": 1.1,
+        "camera_end_scale": 1.18,
+        "camera_start_y": -6.0,
+        "camera_end_y": -16.0
       },
       {
         "type": "narration",
         "text": "",
-        "duration_seconds": 2.6,
+        "duration_seconds": 2.8,
         "caption_style": "none",
         "image": "images/cinematics/w5_tear_hands_v2.webp",
         "transition": "cut",
-        "audio_cue": "sfx_combat_enemy_void_blast"
+        "audio_cue": "sfx_combat_enemy_void_blast",
+        "camera_start_scale": 1.12,
+        "camera_end_scale": 1.04
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
-        "portrait": "images/characters/emotes/nova_idle.png",
+        "emote": "confident",
+        "portrait": "images/characters/emotes/nova_confident.png",
         "text": "We’re going after her. Take my arm.",
         "duration_seconds": 4.2,
         "caption_style": "dialogue",
-        "image": "images/cinematics/w5_tear_hands_v2.webp"
+        "image": "images/cinematics/w5_tear_hands_v2.webp",
+        "transition": "cut",
+        "camera_start_scale": 1.04,
+        "camera_end_scale": 1.08
       },
       {
         "type": "narration",
         "text": "For a second, four hands hold. Then the grip breaks.",
-        "duration_seconds": 3.2,
+        "duration_seconds": 3.6,
         "image": "images/cinematics/w5_tear_hands_v2.webp",
-        "camera_start_scale": 1.04,
-        "camera_end_scale": 1.12,
+        "camera_start_scale": 1.08,
+        "camera_end_scale": 1.18,
         "music_cue": "silence",
         "transition": "fade"
       },
       {
         "type": "narration",
-        "text": "Nova wakes beside the fire and reaches into empty air.",
-        "duration_seconds": 5.8,
-        "image": "images/rooms/world_6/source_campfire.webp",
+        "text": "Nova wakes beside the blue fire—alone—and reaches into empty air.",
+        "duration_seconds": 6.0,
+        "image": "images/cinematics/w5_tear_nova_wakes_v1.png",
         "transition": "fade",
-        "audio_cue": "stinger_motif_source"
+        "audio_cue": "stinger_motif_source",
+        "camera_start_scale": 1.12,
+        "camera_end_scale": 1.02,
+        "camera_start_y": -10.0,
+        "camera_end_y": 6.0,
+        "fade_out_seconds": 1.5
       }
     ],
     "presentation": "illustrated",

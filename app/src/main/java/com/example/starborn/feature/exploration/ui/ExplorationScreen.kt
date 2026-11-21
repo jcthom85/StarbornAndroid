@@ -8307,7 +8307,9 @@ fun CinematicOverlay(
                 cue == "sfx_w2_astra_launch" ||
                 cue == "sfx_w2_stasis_release" ||
                 cue == "sfx_security_lockdown" ||
-                cue == "sfx_w3_shield_anchor"
+                cue == "sfx_w3_shield_anchor" ||
+                cue == "sfx_intro_stasis_lock" ||
+                cue == "sfx_combat_enemy_void_blast"
             audioCuePlayer?.execute(
                 listOf(
                     AudioCommand.Play(
@@ -8610,7 +8612,9 @@ internal fun IllustratedCinematicOverlay(
                 cue == "sfx_w2_astra_launch" ||
                 cue == "sfx_w2_stasis_release" ||
                 cue == "sfx_security_lockdown" ||
-                cue == "sfx_w3_shield_anchor"
+                cue == "sfx_w3_shield_anchor" ||
+                cue == "sfx_intro_stasis_lock" ||
+                cue == "sfx_combat_enemy_void_blast"
             audioCuePlayer?.execute(
                 listOf(
                     AudioCommand.Play(
@@ -8747,6 +8751,8 @@ internal fun IllustratedCinematicOverlay(
             "sfx_w2_stasis_release" -> Color(0xFFC8F4FF)
             "sfx_security_lockdown" -> Color(0xFFFF1744)
             "sfx_w3_shield_anchor" -> Color(0xFFFFE57F)
+            "sfx_intro_stasis_lock" -> Color(0xFFB3F7FF)
+            "sfx_combat_enemy_void_blast" -> Color(0xFFD1A6FF)
             "sfx_combat_shield_deflect" -> Color(0xFFFFE0E0)
             else -> Color.White
         }
@@ -8934,6 +8940,39 @@ internal fun IllustratedCinematicOverlay(
             }
             launch {
                 impactFlash.snapTo(0.42f)
+                impactFlash.animateTo(0f, animationSpec = tween(durationMillis = 380, easing = LinearEasing))
+            }
+        } else if (cue == "sfx_intro_stasis_lock") {
+            // Sudden crisp Stasis time-lock snap + icy-cyan flash
+            val snapAmp = with(density) { 5.dp.toPx() }
+            launch {
+                impactShakeX.snapTo(snapAmp)
+                impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 140, easing = FastOutSlowInEasing))
+            }
+            launch {
+                impactFlash.snapTo(0.55f)
+                impactFlash.animateTo(0f, animationSpec = tween(durationMillis = 420, easing = LinearEasing))
+            }
+        } else if (cue == "sfx_combat_enemy_void_blast") {
+            // Dimensional Tear rupture jolt + violet flash
+            val riftAmp = with(density) { 13.dp.toPx() }
+            val shudderAmp = with(density) { 4.dp.toPx() }
+            launch {
+                impactShakeX.snapTo(riftAmp)
+                impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 220, easing = FastOutSlowInEasing))
+                for (cycle in 6 downTo 1) {
+                    val decay = cycle / 6f
+                    val sign = if (cycle % 2 == 0) 1f else -1f
+                    impactShakeX.animateTo(shudderAmp * decay * sign, animationSpec = tween(durationMillis = 52, easing = LinearEasing))
+                    impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 52, easing = LinearEasing))
+                }
+            }
+            launch {
+                impactShakeY.snapTo(-riftAmp * 0.5f)
+                impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 220, easing = FastOutSlowInEasing))
+            }
+            launch {
+                impactFlash.snapTo(0.52f)
                 impactFlash.animateTo(0f, animationSpec = tween(durationMillis = 380, easing = LinearEasing))
             }
         } else if (cue == "sfx_door_airlock_close") {
@@ -9609,6 +9648,67 @@ internal fun IllustratedCinematicOverlay(
                             ),
                             center = Offset(560f, 640f),
                             radius = 920f
+                        )
+                    )
+            )
+        }
+
+        // Atmospheric Layer 12: World 5 Stasis lock shimmer & Soloist/Tear rift luminescence
+        val isStasisLunge = state.step.imagePath?.contains("w5_stasis_lunge") == true
+        if (isStasisLunge) {
+            val stasisLockTransition = rememberInfiniteTransition(label = "w5_stasis_lock_glow")
+            val stasisLockAlpha by stasisLockTransition.animateFloat(
+                initialValue = 0.08f,
+                targetValue = 0.24f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 1200, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "stasis_lock_alpha"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = stasisLockAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFF80F8FF).copy(alpha = 0.56f),
+                                Color(0xFF2979FF).copy(alpha = 0.22f),
+                                Color.Transparent
+                            ),
+                            center = Offset(540f, 680f),
+                            radius = 920f
+                        )
+                    )
+            )
+        }
+        val isSoloistTear = state.step.imagePath?.contains("w5_vale_soloist_tear") == true ||
+            state.step.imagePath?.contains("w5_tear_hands") == true
+        if (isSoloistTear) {
+            val tearTransition = rememberInfiniteTransition(label = "w5_tear_rift_glow")
+            val tearAlpha by tearTransition.animateFloat(
+                initialValue = 0.08f,
+                targetValue = 0.24f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 1100, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "tear_alpha"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = tearAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFFB388FF).copy(alpha = 0.54f),
+                                Color(0xFF40E8FF).copy(alpha = 0.28f),
+                                Color.Transparent
+                            ),
+                            center = Offset(540f, 640f),
+                            radius = 960f
                         )
                     )
             )

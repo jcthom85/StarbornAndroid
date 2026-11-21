@@ -389,6 +389,7 @@ class MainMenuViewModel(
             ),
             "World 5 — The Orbital Ring" to listOf(
                 "scene_w5_anchor_stasis",
+                "scene_w5_soloist_breach",
                 "scene_w5_cross_the_tear"
             ),
             "World 6 — The Source" to listOf(

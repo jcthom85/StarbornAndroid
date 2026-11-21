@@ -1714,7 +1714,8 @@
     "speaker": "Gh0st",
     "condition": "quest_active:w5_mq21,quest_task_done:w5_mq21:force_dock,quest_task_not_done:w5_mq21:hack_airlock",
     "text": "Vale kept Thorne’s cipher. I know where she used to put the override. Give me ten seconds.",
-    "trigger": "player_action:w5_mq21_hack_airlock"
+    "trigger": "player_action:w5_mq21_hack_airlock",
+    "emote": "cool"
   },
   {
     "id": "maintenance_bot_w5_sq22_intro",
@@ -1787,74 +1788,86 @@
     "id": "zeke_w5_post_docking_idle",
     "speaker": "Zeke",
     "text": "That carpet’s trying to float away. Test the next plate before you put your weight on it.",
-    "condition": "milestone:ms_w5_mq21_complete,milestone_not_set:ms_w5_mq22_complete"
+    "condition": "milestone:ms_w5_mq21_complete,milestone_not_set:ms_w5_mq22_complete",
+    "emote": "worried"
   },
   {
     "id": "zeke_w5_post_zerog_idle",
     "speaker": "Zeke",
     "text": "Her panel kept taking the code and sending it straight back. She must’ve tried it a hundred times.",
-    "condition": "milestone:ms_w5_mq22_complete,milestone_not_set:ms_w5_mq23_complete"
+    "condition": "milestone:ms_w5_mq22_complete,milestone_not_set:ms_w5_mq23_complete",
+    "emote": "sad"
   },
   {
     "id": "zeke_w5_post_firewall_idle",
     "speaker": "Zeke",
     "text": "That coolant gauge has dropped all the way to zero. Keep moving before someone brings the firewall back up.",
-    "condition": "milestone:ms_w5_mq23_complete,milestone_not_set:ms_w5_mq24_complete"
+    "condition": "milestone:ms_w5_mq23_complete,milestone_not_set:ms_w5_mq24_complete",
+    "emote": "worried"
   },
   {
     "id": "zeke_w5_post_anchor_idle",
     "speaker": "Zeke",
     "text": "They put Elara on the same diagram as the coolant pumps. No name. Just a port number. I keep looking at it.",
-    "condition": "milestone:ms_w5_mq24_complete,milestone_not_set:ms_w5_mq25_complete"
+    "condition": "milestone:ms_w5_mq24_complete,milestone_not_set:ms_w5_mq25_complete",
+    "emote": "angry"
   },
   {
     "id": "orion_w5_post_docking_idle",
     "speaker": "Orion",
     "text": "At the dock the floor dropped away for a moment. Keep one hand near the rail. It might happen again.",
     "condition": "milestone:ms_w5_mq21_complete,milestone_not_set:ms_w5_mq22_complete",
-    "next": "nova_w5_offer_a_hand"
+    "next": "nova_w5_offer_a_hand",
+    "emote": "worried"
   },
   {
     "id": "orion_w5_post_zerog_idle",
     "speaker": "Orion",
     "text": "There were names on Thorne’s list. I wonder whether Vale ever read them aloud.",
-    "condition": "milestone:ms_w5_mq22_complete,milestone_not_set:ms_w5_mq23_complete"
+    "condition": "milestone:ms_w5_mq22_complete,milestone_not_set:ms_w5_mq23_complete",
+    "emote": "sad"
   },
   {
     "id": "orion_w5_post_firewall_idle",
     "speaker": "Orion",
     "text": "I thought the pulse was coming from the server. It’s still there with the core down. Elara’s ahead.",
-    "condition": "milestone:ms_w5_mq23_complete,milestone_not_set:ms_w5_mq24_complete"
+    "condition": "milestone:ms_w5_mq23_complete,milestone_not_set:ms_w5_mq24_complete",
+    "emote": "confident"
   },
   {
     "id": "orion_w5_post_anchor_idle",
     "speaker": "Orion",
     "text": "I could still hear Elara when we took the Anchor. Let’s get back to her as soon as we can.",
-    "condition": "milestone:ms_w5_mq24_complete,milestone_not_set:ms_w5_mq25_complete"
+    "condition": "milestone:ms_w5_mq24_complete,milestone_not_set:ms_w5_mq25_complete",
+    "emote": "worried"
   },
   {
     "id": "ghost_w5_post_docking_idle",
     "speaker": "Gh0st",
     "text": "Recognized Thorne's security handshake at the dock. Same protocols she used when she tagged me Unit 734.",
-    "condition": "milestone:ms_w5_mq21_complete,milestone_not_set:ms_w5_mq22_complete"
+    "condition": "milestone:ms_w5_mq21_complete,milestone_not_set:ms_w5_mq22_complete",
+    "emote": "angry"
   },
   {
     "id": "ghost_w5_post_zerog_idle",
     "speaker": "Gh0st",
     "text": "I used to rehearse what I’d say if I got Thorne alone. Then I saw the lock on her door. All I wanted was the list of names.",
-    "condition": "milestone:ms_w5_mq22_complete,milestone_not_set:ms_w5_mq23_complete"
+    "condition": "milestone:ms_w5_mq22_complete,milestone_not_set:ms_w5_mq23_complete",
+    "emote": "sad"
   },
   {
     "id": "ghost_w5_post_firewall_idle",
     "speaker": "Gh0st",
     "text": "That’s Elara’s cipher. Three quick pings, then a gap. She’s still working the lock from her side.",
-    "condition": "milestone:ms_w5_mq23_complete,milestone_not_set:ms_w5_mq24_complete"
+    "condition": "milestone:ms_w5_mq23_complete,milestone_not_set:ms_w5_mq24_complete",
+    "emote": "confident"
   },
   {
     "id": "ghost_w5_post_anchor_idle",
     "speaker": "Gh0st",
     "text": "The glass was cold against my hands. She’s still in there, holding the door for us. We need to reach the other end of that cable.",
-    "condition": "milestone:ms_w5_mq24_complete,milestone_not_set:ms_w5_mq25_complete"
+    "condition": "milestone:ms_w5_mq24_complete,milestone_not_set:ms_w5_mq25_complete",
+    "emote": "sad"
   },
   {
     "id": "zeke_w6_nightmare_release",
@@ -4551,7 +4564,8 @@
     "speaker": "Gh0st",
     "text": "Who’s still in those seats? Open the list before you ask us for anything.",
     "scripted_only": true,
-    "next": "thorne_w5_mq22_intro_beat_2"
+    "next": "thorne_w5_mq22_intro_beat_2",
+    "emote": "angry"
   },
   {
     "id": "thorne_w5_mq22_intro_beat_2",
@@ -4586,7 +4600,8 @@
     "speaker": "Nova",
     "text": "Gh0st, get to the field. I’ll hold him.",
     "scripted_only": true,
-    "next": "vale_w5_mq25_soloist_beat_5"
+    "next": "vale_w5_mq25_soloist_beat_5",
+    "emote": "angry"
   },
   {
     "id": "vale_w5_mq25_soloist_beat_5",
@@ -4600,7 +4615,8 @@
     "speaker": "Gh0st",
     "text": "Thorne? [He waits for an answer. The note holds.]",
     "scripted_only": true,
-    "next": "vale_w5_mq25_soloist_beat_7"
+    "next": "vale_w5_mq25_soloist_beat_7",
+    "emote": "scared"
   },
   {
     "id": "vale_w5_mq25_soloist_beat_7",
@@ -4614,14 +4630,16 @@
     "speaker": "Nova",
     "text": "[The glass opens onto a blue fracture. The Compliance Avatar steps between the crew and the breach.] That cable runs back to Elara. Gh0st, with me.",
     "scripted_only": true,
-    "trigger": "player_action:w5_mq25_soloist"
+    "trigger": "player_action:w5_mq25_soloist",
+    "emote": "confident"
   },
   {
     "id": "gh0st_w5_answer_elara",
     "speaker": "Gh0st",
     "text": "I thought I’d lost you. Tell me where to put my hands.",
     "next": "elara_w5_release_cradle",
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "worried"
   },
   {
     "id": "elara_w5_release_cradle",
@@ -4722,7 +4740,8 @@
     "speaker": "Gh0st",
     "text": "Do you want the light left on?",
     "scripted_only": true,
-    "next": "elara_w5_lamp_answer"
+    "next": "elara_w5_lamp_answer",
+    "emote": "sad"
   },
   {
     "id": "elara_w5_lamp_answer",
@@ -4737,7 +4756,8 @@
     "text": "We’re getting them out. We’re not restoring your access.",
     "scripted_only": true,
     "next": "thorne_w5_route_terms",
-    "music": "music_nova_theme"
+    "music": "music_nova_theme",
+    "emote": "angry"
   },
   {
     "id": "thorne_w5_route_terms",
@@ -4802,19 +4822,22 @@
     "speaker": "Nova",
     "text": "You can take my hand.",
     "scripted_only": true,
-    "next": "orion_w5_choose_his_pace"
+    "next": "orion_w5_choose_his_pace",
+    "emote": "worried"
   },
   {
     "id": "orion_w5_choose_his_pace",
     "speaker": "Orion",
     "text": "I’d rather go slowly. Stay beside me?",
     "scripted_only": true,
-    "next": "nova_w5_match_his_pace"
+    "next": "nova_w5_match_his_pace",
+    "emote": "sad"
   },
   {
     "id": "nova_w5_match_his_pace",
     "speaker": "Nova",
     "text": "[Nova shortens her stride.] I can do slowly.",
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "happy"
   }
 ]

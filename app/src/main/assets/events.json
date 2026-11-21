@@ -9090,6 +9090,10 @@
         "type": "advance_quest_stage",
         "quest_id": "w5_mq25",
         "to_stage_id": "critical_escape"
+      },
+      {
+        "type": "play_cinematic",
+        "scene_id": "scene_w5_soloist_breach"
       }
     ]
   },

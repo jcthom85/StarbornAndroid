@@ -8267,9 +8267,7 @@
     "description": "Polished mirror panels line a humid maintenance walk behind the Solarium. Each panel reflects a different angle of the same fake sun. The false sun path converges on a solar reflector hub.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "prism_surveyor"
-    ],
+    "enemies": [],
     "connections": {
       "north": "orbital_solarium"
     },
@@ -8901,10 +8899,7 @@
     "description": "Firewall node beta loops through recursion windows. Each window shows a slightly different version of the same locked door.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "void_turret",
-      "null_g_drone"
-    ],
+    "enemies": [],
     "connections": {
       "west": "deep_firewall_alpha",
       "east": "deep_firewall_gamma"

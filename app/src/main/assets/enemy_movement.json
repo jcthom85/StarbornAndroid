@@ -166,6 +166,50 @@
         "foundry_engine_service_ring"
       ],
       "protected_rooms": []
+    },
+    {
+      "id": "w5_security_precinct_sweep",
+      "rooms": [
+        "orbital_security_hub_scale_02",
+        "orbital_security_hub_scale_03"
+      ],
+      "protected_rooms": [
+        "orbital_security_hub",
+        "orbital_security_hub_scale_01",
+        "orbital_security_hub_scale_04"
+      ]
+    },
+    {
+      "id": "w5_solarium_drone_sweep",
+      "rooms": [
+        "orbital_solarium_scale_02",
+        "orbital_solarium_scale_03"
+      ],
+      "protected_rooms": [
+        "orbital_solarium",
+        "orbital_solarium_scale_01",
+        "orbital_solarium_scale_04"
+      ]
+    },
+    {
+      "id": "w5_throne_lockdown_sweep",
+      "rooms": [
+        "deep_throne_room_scale_02",
+        "deep_throne_room_scale_03"
+      ],
+      "protected_rooms": [
+        "deep_throne_room",
+        "deep_throne_room_scale_01",
+        "deep_throne_room_scale_04"
+      ]
+    },
+    {
+      "id": "w5_guard_posts",
+      "rooms": [
+        "orbital_mirror_walk",
+        "deep_firewall_beta"
+      ],
+      "protected_rooms": []
     }
   ],
   "parties": [
@@ -686,6 +730,115 @@
         "enter_room": "A Dominion flame trooper blocks the engine service ring and sparks his torch.",
         "leave_room": "The flame trooper returns to guard the core catwalk.",
         "adjacent": "An arc-torch flares along the engine service ring ahead."
+      }
+    },
+    {
+      "id": "w5_security_precinct_patrol",
+      "zone_id": "w5_security_precinct_sweep",
+      "enemies": [
+        "compliance_officer",
+        "null_g_drone"
+      ],
+      "start_room": "orbital_security_hub_scale_03",
+      "route": [
+        "orbital_security_hub_scale_02",
+        "orbital_security_hub_scale_03"
+      ],
+      "behavior": "patrol",
+      "aggression": "aggressive",
+      "move_interval_seconds": 15,
+      "engage_delay_seconds": 5,
+      "signals": {
+        "enter_room": "A Compliance sweep rounds the marble corner with stun batons raised.",
+        "leave_room": "The Compliance detail moves farther down the precinct hall.",
+        "adjacent": "Synchronized bootsteps echo across polished orbital stone nearby."
+      }
+    },
+    {
+      "id": "w5_solarium_drone_patrol",
+      "zone_id": "w5_solarium_drone_sweep",
+      "enemies": [
+        "null_g_drone",
+        "prism_surveyor"
+      ],
+      "start_room": "orbital_solarium_scale_03",
+      "route": [
+        "orbital_solarium_scale_02",
+        "orbital_solarium_scale_03"
+      ],
+      "behavior": "patrol",
+      "aggression": "aggressive",
+      "move_interval_seconds": 14,
+      "engage_delay_seconds": 5,
+      "signals": {
+        "enter_room": "A pair of Solarium drones sweeps through the false sunlight, optics snapping red.",
+        "leave_room": "The drones drift deeper into the orbital garden terraces.",
+        "adjacent": "Low grav-thrusters hum among the glass planters nearby."
+      }
+    },
+    {
+      "id": "w5_throne_lockdown_patrol",
+      "zone_id": "w5_throne_lockdown_sweep",
+      "enemies": [
+        "elite_guard"
+      ],
+      "start_room": "deep_throne_room_scale_03",
+      "route": [
+        "deep_throne_room_scale_02",
+        "deep_throne_room_scale_03"
+      ],
+      "behavior": "patrol",
+      "aggression": "aggressive",
+      "move_interval_seconds": 14,
+      "engage_delay_seconds": 5,
+      "requires_milestone": "ms_w5_mq24_complete",
+      "signals": {
+        "enter_room": "One of Vale's Elite Guard intercepts the crew in the darkened command corridor.",
+        "leave_room": "The Elite Guard continues sweeping the approaches to the Throne Room.",
+        "adjacent": "Armored strides ring out along the obsidian deck nearby."
+      }
+    },
+    {
+      "id": "w5_mirror_walk_surveyor",
+      "zone_id": "w5_guard_posts",
+      "enemies": [
+        "prism_surveyor"
+      ],
+      "start_room": "orbital_mirror_walk",
+      "route": [
+        "orbital_mirror_walk"
+      ],
+      "behavior": "stationary",
+      "aggression": "aggressive",
+      "move_interval_seconds": 30,
+      "engage_delay_seconds": 5,
+      "replaces_static_encounter": true,
+      "signals": {
+        "enter_room": "A prism surveyor focuses its mirrors directly onto the crew.",
+        "leave_room": "The surveyor tilts back toward the Solarium skylight.",
+        "adjacent": "Refracted laser chimes shimmer down the mirror walk ahead."
+      }
+    },
+    {
+      "id": "w5_firewall_beta_sentries",
+      "zone_id": "w5_guard_posts",
+      "enemies": [
+        "void_turret",
+        "null_g_drone"
+      ],
+      "start_room": "deep_firewall_beta",
+      "route": [
+        "deep_firewall_beta"
+      ],
+      "behavior": "stationary",
+      "aggression": "aggressive",
+      "move_interval_seconds": 30,
+      "engage_delay_seconds": 5,
+      "replaces_static_encounter": true,
+      "signals": {
+        "enter_room": "Firewall Beta defenses spin online, locking onto the crew's intrusion signal.",
+        "leave_room": "The firewall turrets return to cold standby.",
+        "adjacent": "Hard-light relays buzz sharply inside Firewall Beta ahead."
       }
     }
   ]
