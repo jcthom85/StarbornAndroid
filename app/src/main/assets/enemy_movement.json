@@ -121,6 +121,51 @@
         "spire_landing_pad_scale_01"
       ],
       "protected_rooms": []
+    },
+    {
+      "id": "w4_waste_intake_sweep",
+      "rooms": [
+        "foundry_waste_intake_scale_01",
+        "foundry_waste_intake_scale_02"
+      ],
+      "protected_rooms": [
+        "foundry_waste_intake",
+        "foundry_waste_intake_scale_03"
+      ]
+    },
+    {
+      "id": "w4_conditioning_prowl",
+      "rooms": [
+        "foundry_conditioning_scale_03",
+        "foundry_conditioning_scale_04"
+      ],
+      "protected_rooms": [
+        "foundry_conditioning_chamber",
+        "foundry_conditioning_scale_01",
+        "foundry_conditioning_scale_02",
+        "foundry_conditioning_scale_final"
+      ]
+    },
+    {
+      "id": "w4_titan_dock_sweep",
+      "rooms": [
+        "foundry_titan_dock_scale_03",
+        "foundry_titan_dock_scale_04"
+      ],
+      "protected_rooms": [
+        "foundry_titan_dock",
+        "foundry_titan_dock_scale_01",
+        "foundry_titan_dock_scale_02",
+        "foundry_titan_dock_scale_final"
+      ]
+    },
+    {
+      "id": "w4_guard_posts",
+      "rooms": [
+        "foundry_reject_bay",
+        "foundry_engine_service_ring"
+      ],
+      "protected_rooms": []
     }
   ],
   "parties": [
@@ -534,6 +579,113 @@
         "enter_room": "Rooftop patrol drones snap onto the crew across the fuel bridge.",
         "leave_room": "The drones return to their holding pattern over the fuel lines.",
         "adjacent": "Turbine whine cuts through the rooftop rain ahead."
+      }
+    },
+    {
+      "id": "w4_waste_intake_patrol",
+      "zone_id": "w4_waste_intake_sweep",
+      "enemies": [
+        "slag_golem"
+      ],
+      "start_room": "foundry_waste_intake_scale_02",
+      "route": [
+        "foundry_waste_intake_scale_01",
+        "foundry_waste_intake_scale_02"
+      ],
+      "behavior": "patrol",
+      "aggression": "aggressive",
+      "move_interval_seconds": 15,
+      "engage_delay_seconds": 5,
+      "signals": {
+        "enter_room": "A molten slag golem lumbers out of the intake trough toward the crew.",
+        "leave_room": "The slag golem grinds deeper down the waste chute.",
+        "adjacent": "Heavy crusted footsteps hiss along the intake grates nearby."
+      }
+    },
+    {
+      "id": "w4_conditioning_phantom_patrol",
+      "zone_id": "w4_conditioning_prowl",
+      "enemies": [
+        "phantom_prototype"
+      ],
+      "start_room": "foundry_conditioning_scale_04",
+      "route": [
+        "foundry_conditioning_scale_03",
+        "foundry_conditioning_scale_04"
+      ],
+      "behavior": "patrol",
+      "aggression": "aggressive",
+      "move_interval_seconds": 14,
+      "engage_delay_seconds": 5,
+      "signals": {
+        "enter_room": "A Phantom prototype drops from the conditioning gantry, optic locked onto Gh0st.",
+        "leave_room": "The prototype vanishes down the darkened conditioning lane.",
+        "adjacent": "Quiet, familiar footsteps echo down the adjacent conditioning bay."
+      }
+    },
+    {
+      "id": "w4_titan_dock_meltdown_patrol",
+      "zone_id": "w4_titan_dock_sweep",
+      "enemies": [
+        "flame_trooper",
+        "welder_bot"
+      ],
+      "start_room": "foundry_titan_dock_scale_04",
+      "route": [
+        "foundry_titan_dock_scale_03",
+        "foundry_titan_dock_scale_04"
+      ],
+      "behavior": "patrol",
+      "aggression": "aggressive",
+      "move_interval_seconds": 14,
+      "engage_delay_seconds": 5,
+      "requires_milestone": "ms_w4_mq19_complete",
+      "signals": {
+        "enter_room": "A Dominion flame squad sweeps the Titan gantry, igniters roaring.",
+        "leave_room": "The flame squad advances farther along the upper gantry.",
+        "adjacent": "Pressurized fuel jets hiss across the adjacent gantry."
+      }
+    },
+    {
+      "id": "w4_reject_bay_phantom",
+      "zone_id": "w4_guard_posts",
+      "enemies": [
+        "phantom_prototype"
+      ],
+      "start_room": "foundry_reject_bay",
+      "route": [
+        "foundry_reject_bay"
+      ],
+      "behavior": "stationary",
+      "aggression": "aggressive",
+      "move_interval_seconds": 30,
+      "engage_delay_seconds": 5,
+      "replaces_static_encounter": true,
+      "signals": {
+        "enter_room": "A half-finished Phantom prototype snaps upright in the reject rack and lunges.",
+        "leave_room": "The prototype settles motionless back into the reject bay.",
+        "adjacent": "Hydraulic clamps click erratically in the reject bay ahead."
+      }
+    },
+    {
+      "id": "w4_engine_ring_trooper",
+      "zone_id": "w4_guard_posts",
+      "enemies": [
+        "flame_trooper"
+      ],
+      "start_room": "foundry_engine_service_ring",
+      "route": [
+        "foundry_engine_service_ring"
+      ],
+      "behavior": "stationary",
+      "aggression": "aggressive",
+      "move_interval_seconds": 30,
+      "engage_delay_seconds": 5,
+      "replaces_static_encounter": true,
+      "signals": {
+        "enter_room": "A Dominion flame trooper blocks the engine service ring and sparks his torch.",
+        "leave_room": "The flame trooper returns to guard the core catwalk.",
+        "adjacent": "An arc-torch flares along the engine service ring ahead."
       }
     }
   ]

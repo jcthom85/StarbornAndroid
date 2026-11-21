@@ -1506,40 +1506,46 @@
     "speaker": "Gh0st",
     "condition": "quest_active:w4_mq16,quest_task_not_done:w4_mq16:land_shelf",
     "text": "I know where the vents are. I crawled through them when I was small.",
-    "trigger": "player_action:w4_mq16_land_shelf"
+    "trigger": "player_action:w4_mq16_land_shelf",
+    "emote": "sad"
   },
   {
     "id": "zeke_w4_vents_intro",
     "speaker": "Zeke",
     "condition": "quest_active:w4_mq16,quest_task_done:w4_mq16:cross_slag_river,quest_task_not_done:w4_mq16:hack_cooling_vents",
     "text": "These vents are running hot enough to cook a tank. Give me thirty seconds and a reason to hate this place more.",
-    "trigger": "player_action:w4_mq16_hack_cooling_vents"
+    "trigger": "player_action:w4_mq16_hack_cooling_vents",
+    "emote": "angry"
   },
   {
     "id": "gh0st_w4_phantom_intro",
     "speaker": "Gh0st",
     "condition": "quest_active:w4_mq17,quest_task_not_done:w4_mq17:access_phantom_terminal",
     "text": "Project Phantom. That name is on the inside of my skull.",
-    "next": "nova_w4_phantom_prompt"
+    "next": "nova_w4_phantom_prompt",
+    "emote": "sad"
   },
   {
     "id": "nova_w4_phantom_prompt",
     "speaker": "Nova",
     "text": "We can read it together.",
-    "next": "gh0st_w4_phantom_boundary"
+    "next": "gh0st_w4_phantom_boundary",
+    "emote": "worried"
   },
   {
     "id": "gh0st_w4_springs_intro",
     "speaker": "Gh0st",
     "condition": "quest_active:w4_mq17,quest_task_done:w4_mq17:access_phantom_terminal,quest_task_not_done:w4_mq17:regroup_springs",
     "text": "My Source Lock caught on your Fork scar. It interrupted the trigger. I waited for the next order. There wasn’t one.",
-    "next": "nova_w4_springs_handwriting"
+    "next": "nova_w4_springs_handwriting",
+    "emote": "sad"
   },
   {
     "id": "gh0st_w4_springs_key",
     "speaker": "Gh0st",
     "text": "Take this. If I lock up, it buys me time. Wait for me to tell you when I’m ready.",
-    "trigger": "player_action:w4_mq17_regroup_springs"
+    "trigger": "player_action:w4_mq17_regroup_springs",
+    "emote": "cool"
   },
   {
     "id": "vale_w4_compliance_bulletin",
@@ -1553,35 +1559,40 @@
     "speaker": "Gh0st",
     "condition": "quest_active:w4_mq18,quest_task_not_done:w4_mq18:navigate_conveyors",
     "text": "These belts carried bodies before they carried machines. Watch the timing.",
-    "trigger": "player_action:w4_mq18_navigate_conveyors"
+    "trigger": "player_action:w4_mq18_navigate_conveyors",
+    "emote": "angry"
   },
   {
     "id": "gh0st_w4_mq18_prototypes",
     "speaker": "Gh0st",
     "condition": "quest_active:w4_mq18,quest_task_done:w4_mq18:navigate_conveyors,quest_task_not_done:w4_mq18:defeat_prototypes",
     "text": "They made more of me. Faster. Emptier. Put them down before the line teaches them pain.",
-    "trigger": "player_action:w4_mq18_defeat_prototypes"
+    "trigger": "player_action:w4_mq18_defeat_prototypes",
+    "emote": "angry"
   },
   {
     "id": "orion_w4_mq19_puzzle_intro",
     "speaker": "Orion",
     "condition": "quest_active:w4_mq19,quest_task_done:w4_mq19:reach_core_chamber,quest_task_not_done:w4_mq19:solve_conveyor_puzzle",
     "text": "Belts cycle, crushers cycle, then a three-second stop. Find the timing relay.",
-    "trigger": "player_action:w4_mq19_open_anvil_cradle"
+    "trigger": "player_action:w4_mq19_open_anvil_cradle",
+    "emote": "cool"
   },
   {
     "id": "nova_w4_mq19_anvil_intro",
     "speaker": "Nova",
     "scripted_only": true,
     "text": "My scar's burning. Stand back. I think I can hold it.",
-    "next": "gh0st_w4_mq19_catch_nova"
+    "next": "gh0st_w4_mq19_catch_nova",
+    "emote": "confident"
   },
   {
     "id": "gh0st_w4_mq19_catch_nova",
     "speaker": "Gh0st",
     "scripted_only": true,
     "text": "[A lattice of light snaps into shape above the Anvil, then buckles. Nova slips toward the slag. Gh0st catches her arm.] Let it fall. I've got you.",
-    "trigger": "player_action:w4_mq19_take_anvil"
+    "trigger": "player_action:w4_mq19_take_anvil",
+    "emote": "scared"
   },
   {
     "id": "rylos_w4_before_anvil",
@@ -1594,7 +1605,8 @@
     "id": "gh0st_w4_return_for_anvil",
     "speaker": "Gh0st",
     "scripted_only": true,
-    "text": "The relic is still in the Forge. We need to take it before we make our move here."
+    "text": "The relic is still in the Forge. We need to take it before we make our move here.",
+    "emote": "cool"
   },
   {
     "id": "rylos_w4_mq20_intro",
@@ -1644,50 +1656,58 @@
     "id": "orion_w4_post_airlock_idle",
     "speaker": "Orion",
     "text": "That pressure wave’s coming through the rail. Take your hand off it a moment. Can you still feel it?",
-    "condition": "milestone:ms_w4_mq16_complete,milestone_not_set:ms_w4_mq17_complete"
+    "condition": "milestone:ms_w4_mq16_complete,milestone_not_set:ms_w4_mq17_complete",
+    "emote": "worried"
   },
   {
     "id": "orion_w4_post_phantom_idle",
     "speaker": "Orion",
     "text": "Gh0st went quiet when the terminal read out his number. Give him a minute before we ask what he remembers.",
-    "condition": "milestone:ms_w4_mq17_complete,milestone_not_set:ms_w4_mq18_complete"
+    "condition": "milestone:ms_w4_mq17_complete,milestone_not_set:ms_w4_mq18_complete",
+    "emote": "sad"
   },
   {
     "id": "orion_w4_post_assembly_idle",
     "speaker": "Orion",
     "text": "The floor’s stopped vibrating. The Anvil’s still beating through the Forge wall. I can follow that.",
-    "condition": "milestone:ms_w4_mq18_complete,milestone_not_set:ms_w4_mq19_complete"
+    "condition": "milestone:ms_w4_mq18_complete,milestone_not_set:ms_w4_mq19_complete",
+    "emote": "confident"
   },
   {
     "id": "orion_w4_post_anvil_idle",
     "speaker": "Orion",
     "text": "The shape held for a breath. We can work on the next breath when we’re clear of the dock.",
-    "condition": "milestone:ms_w4_mq19_complete,milestone_not_set:ms_w4_mq20_complete"
+    "condition": "milestone:ms_w4_mq19_complete,milestone_not_set:ms_w4_mq20_complete",
+    "emote": "cool"
   },
   {
     "id": "ghost_w4_post_airlock_idle",
     "speaker": "Gh0st",
     "text": "The airlock pressure cycled. I remember these maintenance pipes. Every vent leads to an intake or an incinerator.",
-    "condition": "milestone:ms_w4_mq16_complete,milestone_not_set:ms_w4_mq17_complete"
+    "condition": "milestone:ms_w4_mq16_complete,milestone_not_set:ms_w4_mq17_complete",
+    "emote": "sad"
   },
   {
     "id": "ghost_w4_post_phantom_idle",
     "speaker": "Gh0st",
     "text": "I kept that page. I want to show Elara her correction is still there.",
-    "condition": "milestone:ms_w4_mq17_complete,milestone_not_set:ms_w4_mq18_complete"
+    "condition": "milestone:ms_w4_mq17_complete,milestone_not_set:ms_w4_mq18_complete",
+    "emote": "sad"
   },
   {
     "id": "ghost_w4_post_assembly_idle",
     "speaker": "Gh0st",
     "text": "I counted the empty tanks twice. I needed to see the line stop.",
     "condition": "milestone:ms_w4_mq18_complete,milestone_not_set:ms_w4_mq19_complete",
-    "next": "nova_w4_offer_a_minute"
+    "next": "nova_w4_offer_a_minute",
+    "emote": "cool"
   },
   {
     "id": "ghost_w4_post_anvil_idle",
     "speaker": "Gh0st",
     "text": "Rylos brought the Titan Walker to the dock. He wants to execute us where he built me. Let him try.",
-    "condition": "milestone:ms_w4_mq19_complete,milestone_not_set:ms_w4_mq20_complete"
+    "condition": "milestone:ms_w4_mq19_complete,milestone_not_set:ms_w4_mq20_complete",
+    "emote": "angry"
   },
   {
     "id": "gh0st_w5_mq21_airlock",
@@ -4523,7 +4543,8 @@
     "id": "vale_w4_mq20_coup_beat_3",
     "speaker": "Gh0st",
     "text": "The Ring used to announce whose orders I was following. Listen. It’s stopped saying her name.",
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "worried"
   },
   {
     "id": "thorne_w5_mq22_intro_beat_1",
@@ -4653,42 +4674,48 @@
     "speaker": "Gh0st",
     "text": "Let me read it first.",
     "scripted_only": true,
-    "next": "nova_w4_phantom_wait"
+    "next": "nova_w4_phantom_wait",
+    "emote": "cool"
   },
   {
     "id": "nova_w4_phantom_wait",
     "speaker": "Nova",
     "text": "[Nova takes her hand off the terminal.] I’ll be here.",
     "scripted_only": true,
-    "trigger": "player_action:w4_mq17_access_phantom_terminal"
+    "trigger": "player_action:w4_mq17_access_phantom_terminal",
+    "emote": "sad"
   },
   {
     "id": "nova_w4_springs_handwriting",
     "speaker": "Nova",
     "text": "You kept the page with the handwriting.",
     "scripted_only": true,
-    "next": "gh0st_w4_springs_elara"
+    "next": "gh0st_w4_springs_elara",
+    "emote": "worried"
   },
   {
     "id": "gh0st_w4_springs_elara",
     "speaker": "Gh0st",
     "text": "Elara’s. She used to ask whether I wanted the light left on. Then she’d wait.",
     "scripted_only": true,
-    "next": "nova_w4_springs_answer"
+    "next": "nova_w4_springs_answer",
+    "emote": "sad"
   },
   {
     "id": "nova_w4_springs_answer",
     "speaker": "Nova",
     "text": "What did you tell her?",
     "scripted_only": true,
-    "next": "gh0st_w4_springs_light"
+    "next": "gh0st_w4_springs_light",
+    "emote": "worried"
   },
   {
     "id": "gh0st_w4_springs_light",
     "speaker": "Gh0st",
     "text": "Nothing, at first. She came back the next night and asked again.",
     "scripted_only": true,
-    "next": "gh0st_w4_springs_key"
+    "next": "gh0st_w4_springs_key",
+    "emote": "sad"
   },
   {
     "id": "gh0st_w5_elara_lamp",
@@ -4760,13 +4787,15 @@
     "speaker": "Nova",
     "text": "Do you want another minute?",
     "scripted_only": true,
-    "next": "gh0st_w4_walk_to_the_door"
+    "next": "gh0st_w4_walk_to_the_door",
+    "emote": "worried"
   },
   {
     "id": "gh0st_w4_walk_to_the_door",
     "speaker": "Gh0st",
     "text": "No. Walk with me to the door.",
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "confident"
   },
   {
     "id": "nova_w5_offer_a_hand",

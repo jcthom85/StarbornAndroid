@@ -8306,7 +8306,8 @@ fun CinematicOverlay(
                 cue == "sfx_crash_impact" ||
                 cue == "sfx_w2_astra_launch" ||
                 cue == "sfx_w2_stasis_release" ||
-                cue == "sfx_security_lockdown"
+                cue == "sfx_security_lockdown" ||
+                cue == "sfx_w3_shield_anchor"
             audioCuePlayer?.execute(
                 listOf(
                     AudioCommand.Play(
@@ -8608,7 +8609,8 @@ internal fun IllustratedCinematicOverlay(
                 cue == "sfx_crash_impact" ||
                 cue == "sfx_w2_astra_launch" ||
                 cue == "sfx_w2_stasis_release" ||
-                cue == "sfx_security_lockdown"
+                cue == "sfx_security_lockdown" ||
+                cue == "sfx_w3_shield_anchor"
             audioCuePlayer?.execute(
                 listOf(
                     AudioCommand.Play(
@@ -8744,6 +8746,7 @@ internal fun IllustratedCinematicOverlay(
             "wpn_orion_bowl_resonance" -> Color(0xFFB3F7FF)
             "sfx_w2_stasis_release" -> Color(0xFFC8F4FF)
             "sfx_security_lockdown" -> Color(0xFFFF1744)
+            "sfx_w3_shield_anchor" -> Color(0xFFFFE57F)
             "sfx_combat_shield_deflect" -> Color(0xFFFFE0E0)
             else -> Color.White
         }
@@ -8915,6 +8918,23 @@ internal fun IllustratedCinematicOverlay(
             launch {
                 impactFlash.snapTo(0.45f)
                 impactFlash.animateTo(0f, animationSpec = tween(durationMillis = 340, easing = LinearEasing))
+            }
+        } else if (cue == "sfx_w3_shield_anchor") {
+            // Resonant Forge Anvil chime impact + golden Construct flash
+            val anvilAmp = with(density) { 6.dp.toPx() }
+            launch {
+                impactShakeY.snapTo(anvilAmp)
+                impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 240, easing = FastOutSlowInEasing))
+                for (cycle in 4 downTo 1) {
+                    val decay = cycle / 4f
+                    val sign = if (cycle % 2 == 0) 1f else -1f
+                    impactShakeX.animateTo(anvilAmp * 0.35f * decay * sign, animationSpec = tween(durationMillis = 55, easing = LinearEasing))
+                    impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 55, easing = LinearEasing))
+                }
+            }
+            launch {
+                impactFlash.snapTo(0.42f)
+                impactFlash.animateTo(0f, animationSpec = tween(durationMillis = 380, easing = LinearEasing))
             }
         } else if (cue == "sfx_door_airlock_close") {
             // Heavy blast-shutter slam + brief metallic latch rattle
@@ -9500,6 +9520,95 @@ internal fun IllustratedCinematicOverlay(
                             ),
                             center = Offset(540f, 1280f),
                             radius = 1040f
+                        )
+                    )
+            )
+        }
+
+        // Atmospheric Layer 11: Foundry Anvil Construct, Rylos Titan Dock embers & Outer Shield breach
+        val isAnvilConstruct = state.step.imagePath?.contains("w4_anvil_construct") == true
+        if (isAnvilConstruct) {
+            val anvilTransition = rememberInfiniteTransition(label = "anvil_construct_glow")
+            val anvilAlpha by anvilTransition.animateFloat(
+                initialValue = 0.08f,
+                targetValue = 0.24f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 1350, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "anvil_alpha"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = anvilAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFFFFD740).copy(alpha = 0.56f),
+                                Color(0xFF40E8FF).copy(alpha = 0.26f),
+                                Color.Transparent
+                            ),
+                            center = Offset(520f, 1020f),
+                            radius = 900f
+                        )
+                    )
+            )
+        }
+        val isRylosSpared = state.step.imagePath?.contains("w4_rylos_spared") == true
+        if (isRylosSpared) {
+            val dockTransition = rememberInfiniteTransition(label = "rylos_dock_embers")
+            val dockAlpha by dockTransition.animateFloat(
+                initialValue = 0.06f,
+                targetValue = 0.18f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 1900, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "dock_alpha"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = dockAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFFFF6D00).copy(alpha = 0.45f),
+                                Color(0xFF40E8FF).copy(alpha = 0.16f),
+                                Color.Transparent
+                            ),
+                            center = Offset(480f, 1180f),
+                            radius = 960f
+                        )
+                    )
+            )
+        }
+        val isOuterShieldBreach = state.step.imagePath?.contains("w4_outer_shield_breach") == true
+        if (isOuterShieldBreach) {
+            val breachTransition = rememberInfiniteTransition(label = "outer_shield_breach_glow")
+            val breachAlpha by breachTransition.animateFloat(
+                initialValue = 0.08f,
+                targetValue = 0.26f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 680, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "breach_alpha"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = breachAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFF80F8FF).copy(alpha = 0.56f),
+                                Color(0xFFFFD54F).copy(alpha = 0.28f),
+                                Color.Transparent
+                            ),
+                            center = Offset(560f, 640f),
+                            radius = 920f
                         )
                     )
             )

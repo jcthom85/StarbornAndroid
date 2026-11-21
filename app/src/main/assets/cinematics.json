@@ -1759,30 +1759,127 @@
     "skippable": true
   },
   {
+    "id": "scene_w4_anvil_forged",
+    "title": "The First Shape",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The Anvil answers Nova's scar with furnace heat. Raw Source bends into a lattice of gold and cyan light above the forge.",
+        "duration_seconds": 4.6,
+        "image": "images/cinematics/w4_anvil_construct_v1.png",
+        "audio_cue": "sfx_w3_shield_anchor",
+        "music_cue": "music_nova_theme",
+        "transition": "fade",
+        "camera_start_scale": 1.02,
+        "camera_end_scale": 1.1,
+        "camera_start_y": 12.0,
+        "camera_end_y": -4.0
+      },
+      {
+        "type": "narration",
+        "text": "For one blinding breath, the shape holds—then fractures into drifting sparks across the slag as Gh0st steadies her arm.",
+        "duration_seconds": 4.6,
+        "image": "images/cinematics/w4_anvil_construct_v1.png",
+        "audio_cue": "sfx_combat_plasma_arc",
+        "transition": "cut",
+        "camera_start_scale": 1.1,
+        "camera_end_scale": 1.18,
+        "camera_start_y": -4.0,
+        "camera_end_y": -14.0
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Orion",
+        "emote": "confident",
+        "portrait": "images/characters/emotes/orion_confident.png",
+        "text": "You bent it. One breath is all a bridge needs to begin.",
+        "duration_seconds": 4.4,
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w4_anvil_construct_v1.png",
+        "transition": "cut",
+        "camera_start_scale": 1.14,
+        "camera_end_scale": 1.06,
+        "camera_start_x": 0.0,
+        "camera_end_x": -10.0,
+        "camera_start_y": -10.0,
+        "camera_end_y": 2.0
+      },
+      {
+        "type": "narration",
+        "text": "Beyond the Forge walls, heavy hydraulics answer—Rylos is bringing the Titan Walker onto the dock.",
+        "duration_seconds": 4.8,
+        "image": "images/cinematics/w4_anvil_construct_v1.png",
+        "audio_cue": "sfx_distant_gate_rumble",
+        "transition": "cut",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.02,
+        "camera_start_y": 2.0,
+        "camera_end_y": 10.0,
+        "fade_out_seconds": 1.4
+      }
+    ],
+    "presentation": "illustrated",
+    "backdrop": "black",
+    "skippable": true
+  },
+  {
     "id": "scene_w4_rylos_spared",
     "title": "At Titan Dock",
     "steps": [
       {
         "type": "narration",
-        "text": "The Titan’s hatch hangs open. Rylos reaches for a sidearm he can’t lift.",
-        "duration_seconds": 4.3,
-        "image": "images/rooms/world_4/foundry_titan_dock.webp",
-        "audio_cue": "sfx_door_airlock_open"
+        "text": "The Titan’s hatch hisses open through the smoke. Rylos reaches for a sidearm he can’t lift.",
+        "duration_seconds": 4.4,
+        "image": "images/cinematics/w4_rylos_spared_v1.png",
+        "audio_cue": "sfx_door_airlock_open",
+        "music_cue": "music_gh0st_theme",
+        "transition": "fade",
+        "camera_start_scale": 1.02,
+        "camera_end_scale": 1.1,
+        "camera_start_y": 10.0,
+        "camera_end_y": -6.0
       },
       {
         "type": "dialogue",
         "speaker": "Gh0st",
-        "portrait": "images/characters/emotes/gh0st_idle.png",
+        "emote": "cool",
+        "portrait": "images/characters/emotes/gh0st_cool.png",
         "text": "Leave it. There’s a way out behind you.",
-        "duration_seconds": 3.8,
+        "duration_seconds": 4.2,
         "caption_style": "dialogue",
-        "image": "images/rooms/world_4/foundry_titan_dock.webp"
+        "image": "images/cinematics/w4_rylos_spared_v1.png",
+        "transition": "cut",
+        "camera_start_scale": 1.1,
+        "camera_end_scale": 1.16,
+        "camera_start_x": 0.0,
+        "camera_end_x": 14.0,
+        "camera_start_y": -6.0,
+        "camera_end_y": -2.0
       },
       {
         "type": "narration",
-        "text": "Gh0st lowers his blade and leaves the hatch open.",
-        "duration_seconds": 3.6,
-        "image": "images/rooms/world_4/foundry_titan_dock.webp"
+        "text": "Gh0st lowers his blade, leaves the hatch open, and turns back toward his crew.",
+        "duration_seconds": 4.4,
+        "image": "images/cinematics/w4_rylos_spared_v1.png",
+        "transition": "cut",
+        "camera_start_scale": 1.16,
+        "camera_end_scale": 1.06,
+        "camera_start_x": 14.0,
+        "camera_end_x": 0.0,
+        "camera_start_y": -2.0,
+        "camera_end_y": 4.0
+      },
+      {
+        "type": "narration",
+        "text": "Whatever the Foundry built in these halls, it doesn't own what walks out of them.",
+        "duration_seconds": 4.4,
+        "image": "images/cinematics/w4_rylos_spared_v1.png",
+        "transition": "cut",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.02,
+        "camera_start_y": 4.0,
+        "camera_end_y": 10.0,
+        "fade_out_seconds": 1.4
       }
     ],
     "presentation": "illustrated",
@@ -1796,26 +1893,44 @@
       {
         "type": "narration",
         "text": "The empty engine cradle shakes. Work lights go out along the line.",
-        "duration_seconds": 4,
+        "duration_seconds": 4.2,
         "image": "images/rooms/world_4/foundry_titan_dock.webp",
-        "audio_cue": "sfx_distant_gate_rumble"
+        "audio_cue": "sfx_distant_gate_rumble",
+        "transition": "fade",
+        "camera_start_scale": 1.02,
+        "camera_end_scale": 1.1,
+        "camera_start_y": 10.0,
+        "camera_end_y": -6.0
       },
       {
         "type": "dialogue",
         "speaker": "Zeke",
-        "portrait": "images/characters/emotes/zeke_idle.png",
+        "emote": "confident",
+        "portrait": "images/characters/emotes/zeke_confident.png",
         "text": "Engine’s holding. Give me the arrays. Now.",
-        "duration_seconds": 4,
+        "duration_seconds": 4.2,
         "caption_style": "dialogue",
-        "image": "images/rooms/astra/bridge.webp",
-        "audio_cue": "sfx_w2_astra_launch"
+        "image": "images/cinematics/w2_astra_bridge_crew_v1.png",
+        "audio_cue": "sfx_w2_astra_launch",
+        "transition": "fade",
+        "camera_start_scale": 1.04,
+        "camera_end_scale": 1.12,
+        "camera_start_x": 0.0,
+        "camera_end_x": 14.0,
+        "camera_start_y": 6.0,
+        "camera_end_y": -4.0
       },
       {
         "type": "narration",
-        "text": "The arrays cut a narrow opening. The engine drives the Astra through before it closes.",
-        "duration_seconds": 5.2,
-        "image": "images/rooms/astra/bridge.webp",
-        "audio_cue": "sfx_combat_plasma_arc"
+        "text": "The arrays cut a narrow opening. The Deep-Core Engine drives the Astra through before the planetary Shield slams shut.",
+        "duration_seconds": 5.4,
+        "image": "images/cinematics/w4_outer_shield_breach_v1.png",
+        "audio_cue": "sfx_combat_plasma_arc",
+        "transition": "cut",
+        "camera_start_scale": 1.04,
+        "camera_end_scale": 1.18,
+        "camera_start_y": 18.0,
+        "camera_end_y": -18.0
       },
       {
         "type": "dialogue",
@@ -1826,7 +1941,14 @@
         "caption_style": "dialogue",
         "image": "images/cinematics/w4_coup_display_v2.webp",
         "music_cue": "silence",
-        "audio_cue": "stinger_motif_vale"
+        "audio_cue": "stinger_motif_vale",
+        "transition": "fade",
+        "camera_start_scale": 1.02,
+        "camera_end_scale": 1.08,
+        "camera_start_x": 0.0,
+        "camera_end_x": -10.0,
+        "camera_start_y": 4.0,
+        "camera_end_y": -4.0
       },
       {
         "type": "dialogue",
@@ -1835,7 +1957,14 @@
         "text": "That register includes my name because I paid for everything attached to it. Read it again.",
         "duration_seconds": 6.1,
         "caption_style": "dialogue",
-        "image": "images/cinematics/w4_coup_display_v2.webp"
+        "image": "images/cinematics/w4_coup_display_v2.webp",
+        "transition": "cut",
+        "camera_start_scale": 1.08,
+        "camera_end_scale": 1.12,
+        "camera_start_x": -10.0,
+        "camera_end_x": 14.0,
+        "camera_start_y": -4.0,
+        "camera_end_y": -6.0
       },
       {
         "type": "narration",
@@ -1843,7 +1972,11 @@
         "duration_seconds": 0.75,
         "caption_style": "none",
         "image": "images/cinematics/w4_coup_display_v2.webp",
-        "transition": "cut"
+        "transition": "cut",
+        "camera_start_scale": 1.12,
+        "camera_end_scale": 1.12,
+        "camera_start_x": 14.0,
+        "camera_end_x": 14.0
       },
       {
         "type": "dialogue",
@@ -1853,23 +1986,43 @@
         "duration_seconds": 7.4,
         "caption_style": "dialogue",
         "image": "images/cinematics/w4_coup_display_v2.webp",
-        "music_cue": "music_vale_theme"
+        "music_cue": "music_vale_theme",
+        "transition": "cut",
+        "camera_start_scale": 1.12,
+        "camera_end_scale": 1.16,
+        "camera_start_x": 14.0,
+        "camera_end_x": -14.0,
+        "camera_start_y": -6.0,
+        "camera_end_y": -8.0
       },
       {
         "type": "dialogue",
         "speaker": "Gh0st",
-        "portrait": "images/characters/emotes/gh0st_idle.png",
+        "emote": "worried",
+        "portrait": "images/characters/emotes/gh0st_worried.png",
         "text": "The Ring used to announce whose orders I was following. Listen. It’s stopped saying her name.",
         "duration_seconds": 6.5,
         "caption_style": "dialogue",
-        "image": "images/cinematics/w4_coup_display_v2.webp"
+        "image": "images/cinematics/w4_coup_display_v2.webp",
+        "transition": "cut",
+        "camera_start_scale": 1.14,
+        "camera_end_scale": 1.04,
+        "camera_start_x": -10.0,
+        "camera_end_x": 0.0,
+        "camera_start_y": -4.0,
+        "camera_end_y": 10.0
       },
       {
         "type": "narration",
-        "text": "The Astra drops toward Executive Dock as the Ring seals its other approaches.",
-        "duration_seconds": 4,
-        "image": "images/rooms/world_5/orbital_executive_dock.webp",
-        "transition": "fade"
+        "text": "The Astra drops toward Executive Dock as the Orbital Ring seals its other approaches.",
+        "duration_seconds": 5.2,
+        "image": "images/cinematics/w4_orbital_ring_approach_v1.png",
+        "transition": "fade",
+        "camera_start_scale": 1.02,
+        "camera_end_scale": 1.14,
+        "camera_start_y": 12.0,
+        "camera_end_y": -10.0,
+        "fade_out_seconds": 1.4
       }
     ],
     "presentation": "illustrated",

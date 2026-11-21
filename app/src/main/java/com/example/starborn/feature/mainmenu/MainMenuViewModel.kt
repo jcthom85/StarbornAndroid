@@ -383,6 +383,7 @@ class MainMenuViewModel(
                 "scene_w3_foundry_flight"
             ),
             "World 4 — The Foundry" to listOf(
+                "scene_w4_anvil_forged",
                 "scene_w4_rylos_spared",
                 "scene_w4_outer_shield"
             ),

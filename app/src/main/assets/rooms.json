@@ -7154,9 +7154,7 @@
     "description": "Defective units are dumped into a low bay before the furnace eats them. A rejected droid still twitches when the conveyor shudders, hands opening and closing around nothing. A scorched smelter console rests against the bay wall. The western maintenance shutter leads back to the Pipe Gallery and the Slag Pits. The conveyor floor is east.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "phantom_prototype"
-    ],
+    "enemies": [],
     "connections": {
       "east": "foundry_conveyor_belt",
       "west": "foundry_pipe_gallery"
@@ -7615,9 +7613,7 @@
     "description": "A maintenance ring circles the Deep-Core Engine at arm's length from impossible heat. Every clamp is labeled with launch-grade tolerances the Astra does not currently meet. Thermal clamps surround the core beside an array rack.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "flame_trooper"
-    ],
+    "enemies": [],
     "enemy_instances": [
       {
         "enemy_id": "flame_trooper",

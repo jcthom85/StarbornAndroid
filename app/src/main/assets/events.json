@@ -7711,6 +7711,10 @@
         "quest_id": "w4_mq20"
       },
       {
+        "type": "play_cinematic",
+        "scene_id": "scene_w4_anvil_forged"
+      },
+      {
         "type": "show_message",
         "message": "The broken Construct cools beside the empty cradle. The Anvil is yours. Rylos is moving the Titan Walker into position. If the crew wants the engine, they'll have to go through him."
       }

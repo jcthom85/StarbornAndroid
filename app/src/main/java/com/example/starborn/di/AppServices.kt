@@ -172,7 +172,8 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
                         "sfx_combat_transition_slam",
                         "sfx_w2_astra_launch",
                         "sfx_w2_stasis_release",
-                        "sfx_security_lockdown"
+                        "sfx_security_lockdown",
+                        "sfx_w3_shield_anchor"
                     )
             }
     )
