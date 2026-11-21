@@ -87,6 +87,40 @@
         "sector9_conduit_junction"
       ],
       "protected_rooms": []
+    },
+    {
+      "id": "w3_exec_wing_patrol",
+      "rooms": [
+        "spire_exec_lounge_scale_03",
+        "spire_exec_lounge_scale_04"
+      ],
+      "protected_rooms": [
+        "spire_exec_lounge_bar",
+        "spire_exec_lounge_scale_01",
+        "spire_exec_lounge_scale_02",
+        "spire_exec_lounge_scale_05"
+      ]
+    },
+    {
+      "id": "w3_archive_lockdown_sweep",
+      "rooms": [
+        "spire_archive_scale_01",
+        "spire_archive_scale_02",
+        "spire_archive_scale_03"
+      ],
+      "protected_rooms": [
+        "spire_archive_vault",
+        "spire_prism_gallery",
+        "spire_donor_gallery"
+      ]
+    },
+    {
+      "id": "w3_guard_posts",
+      "rooms": [
+        "spire_sewers_scale_02",
+        "spire_landing_pad_scale_01"
+      ],
+      "protected_rooms": []
     }
   ],
   "parties": [
@@ -258,8 +292,8 @@
       ],
       "behavior": "patrol",
       "aggression": "aggressive",
-      "move_interval_seconds": 22,
-      "engage_delay_seconds": 10,
+      "move_interval_seconds": 16,
+      "engage_delay_seconds": 5,
       "replaces_static_encounter": true,
       "extra_drops": [
         {
@@ -411,6 +445,95 @@
         "enter_room": "A junction sentinel locks onto the crew's heat signatures.",
         "leave_room": "The sentinel returns to its junction hover.",
         "adjacent": "Conduit relays click sharply ahead."
+      }
+    },
+    {
+      "id": "w3_exec_security_patrol",
+      "zone_id": "w3_exec_wing_patrol",
+      "enemies": [
+        "sentinel_mki"
+      ],
+      "start_room": "spire_exec_lounge_scale_04",
+      "route": [
+        "spire_exec_lounge_scale_03",
+        "spire_exec_lounge_scale_04"
+      ],
+      "behavior": "patrol",
+      "aggression": "aggressive",
+      "move_interval_seconds": 15,
+      "engage_delay_seconds": 5,
+      "signals": {
+        "enter_room": "A Dominion sentinel sweeps down the executive corridor, spotlighting the crew.",
+        "leave_room": "The sentinel continues its sweep down the hall.",
+        "adjacent": "Heavy armored servos hum down the executive wing."
+      }
+    },
+    {
+      "id": "w3_archive_lockdown_patrol",
+      "zone_id": "w3_archive_lockdown_sweep",
+      "enemies": [
+        "aero_drone",
+        "concierge_relay"
+      ],
+      "start_room": "spire_archive_scale_02",
+      "route": [
+        "spire_archive_scale_01",
+        "spire_archive_scale_02",
+        "spire_archive_scale_03"
+      ],
+      "behavior": "patrol",
+      "aggression": "aggressive",
+      "move_interval_seconds": 14,
+      "engage_delay_seconds": 5,
+      "requires_milestone": "ms_w3_mq14_complete",
+      "signals": {
+        "enter_room": "Lockdown drones bank through the Archive corridor with targeting lasers hot.",
+        "leave_room": "The lockdown drones sweep deeper down the Archive wing.",
+        "adjacent": "Alarm rotors whine through the nearby crystal gallery."
+      }
+    },
+    {
+      "id": "w3_sewer_sluice_pack",
+      "zone_id": "w3_guard_posts",
+      "enemies": [
+        "sewer_crawler",
+        "sewer_crawler"
+      ],
+      "start_room": "spire_sewers_scale_02",
+      "route": [
+        "spire_sewers_scale_02"
+      ],
+      "behavior": "stationary",
+      "aggression": "aggressive",
+      "move_interval_seconds": 30,
+      "engage_delay_seconds": 5,
+      "replaces_static_encounter": true,
+      "signals": {
+        "enter_room": "A pair of sewer crawlers surges out of the filter sluice toward the crew.",
+        "leave_room": "The crawlers slink back behind the grated outflow.",
+        "adjacent": "Wet claws scrape across the metal sluice ahead."
+      }
+    },
+    {
+      "id": "w3_fuel_bridge_drones",
+      "zone_id": "w3_guard_posts",
+      "enemies": [
+        "aero_drone",
+        "concierge_relay"
+      ],
+      "start_room": "spire_landing_pad_scale_01",
+      "route": [
+        "spire_landing_pad_scale_01"
+      ],
+      "behavior": "stationary",
+      "aggression": "aggressive",
+      "move_interval_seconds": 30,
+      "engage_delay_seconds": 5,
+      "replaces_static_encounter": true,
+      "signals": {
+        "enter_room": "Rooftop patrol drones snap onto the crew across the fuel bridge.",
+        "leave_room": "The drones return to their holding pattern over the fuel lines.",
+        "adjacent": "Turbine whine cuts through the rooftop rain ahead."
       }
     }
   ]

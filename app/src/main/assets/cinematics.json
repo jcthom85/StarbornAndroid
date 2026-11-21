@@ -1606,48 +1606,152 @@
     "skippable": true
   },
   {
+    "id": "scene_w3_lens_heist",
+    "title": "Burn Notice",
+    "steps": [
+      {
+        "type": "narration",
+        "text": "The Lens burns cold in Nova's palm. High above the Spire, the planetary Shield resolves into rotating chords of light.",
+        "duration_seconds": 4.8,
+        "image": "images/cinematics/w3_lens_vault_claim_v1.png",
+        "audio_cue": "wpn_orion_bowl_resonance",
+        "music_cue": "music_w3_archive_stealth",
+        "transition": "fade",
+        "camera_start_scale": 1.02,
+        "camera_end_scale": 1.1,
+        "camera_start_y": 12.0,
+        "camera_end_y": -4.0
+      },
+      {
+        "type": "narration",
+        "text": "It reads her back—tracing a thin, old thread woven straight through her own signal.",
+        "duration_seconds": 4.4,
+        "image": "images/cinematics/w3_lens_vault_claim_v1.png",
+        "transition": "cut",
+        "camera_start_scale": 1.1,
+        "camera_end_scale": 1.18,
+        "camera_start_y": -4.0,
+        "camera_end_y": -16.0
+      },
+      {
+        "type": "message",
+        "speaker": "SPIRE SECURITY",
+        "text": "ANOMALY DETECTED. ARCHIVE CONTAINMENT BREACH. SEALING UPPER TIER.",
+        "caption_style": "system",
+        "duration_seconds": 4.6,
+        "image": "images/cinematics/w3_spire_burn_notice_v1.png",
+        "audio_cue": "sfx_security_lockdown",
+        "music_cue": "music_w3_boss_administrator",
+        "transition": "cut",
+        "camera_start_scale": 1.04,
+        "camera_end_scale": 1.13,
+        "camera_start_y": -8.0,
+        "camera_end_y": 8.0
+      },
+      {
+        "type": "narration",
+        "text": "Blast shutters slam across the glass. Every drone rail lights crimson. The only route left is up to the roof—where the Astra waits.",
+        "duration_seconds": 5.2,
+        "image": "images/cinematics/w3_spire_burn_notice_v1.png",
+        "transition": "cut",
+        "camera_start_scale": 1.13,
+        "camera_end_scale": 1.05,
+        "camera_start_y": 8.0,
+        "camera_end_y": -6.0,
+        "fade_out_seconds": 1.4
+      }
+    ],
+    "presentation": "illustrated",
+    "backdrop": "black",
+    "skippable": true
+  },
+  {
     "id": "scene_w3_foundry_flight",
     "title": "Through the Curtain",
     "steps": [
       {
         "type": "narration",
-        "text": "The rooftop guns fall quiet.",
-        "duration_seconds": 3,
-        "image": "images/rooms/world_3/spire_landing_pad_roof.webp",
+        "text": "The rooftop guns fall quiet. The Astra climbs off the rain-slicked pad into the teeth of the Spire's security curtain.",
+        "duration_seconds": 4.6,
+        "image": "images/cinematics/w3_curtain_breach_v1.png",
         "audio_cue": "sfx_w2_astra_launch",
-        "music_cue": "music_zeke_theme"
+        "music_cue": "music_zeke_theme",
+        "transition": "fade",
+        "camera_start_scale": 1.04,
+        "camera_end_scale": 1.14,
+        "camera_start_y": 16.0,
+        "camera_end_y": -16.0
       },
       {
         "type": "dialogue",
         "speaker": "Orion",
-        "portrait": "images/characters/emotes/orion_idle.png",
+        "emote": "confident",
+        "portrait": "images/characters/emotes/orion_confident.png",
         "text": "Through the seam on my count. Three. Two. Now.",
-        "duration_seconds": 4,
+        "duration_seconds": 4.0,
         "caption_style": "dialogue",
-        "image": "images/rooms/astra/bridge.webp"
+        "image": "images/cinematics/w2_astra_bridge_crew_v1.png",
+        "transition": "fade",
+        "camera_start_scale": 1.05,
+        "camera_end_scale": 1.12,
+        "camera_start_x": 6.0,
+        "camera_end_x": -16.0,
+        "camera_start_y": 2.0,
+        "camera_end_y": -6.0
       },
       {
         "type": "narration",
-        "text": "The curtain flashes across the hull. The outer Shield still holds above them.",
-        "duration_seconds": 4,
-        "image": "images/rooms/astra/bridge.webp",
-        "audio_cue": "sfx_combat_plasma_arc"
+        "text": "The curtain shears across the hull in sparks of crimson and blue. Far above the storm, the planetary Shield still holds unbroken.",
+        "duration_seconds": 4.4,
+        "image": "images/cinematics/w3_curtain_breach_v1.png",
+        "audio_cue": "sfx_combat_plasma_arc",
+        "transition": "cut",
+        "camera_start_scale": 1.1,
+        "camera_end_scale": 1.2,
+        "camera_start_y": -8.0,
+        "camera_end_y": -22.0
       },
       {
         "type": "dialogue",
         "speaker": "Zeke",
-        "portrait": "images/characters/emotes/zeke_idle.png",
-        "text": "I can keep her low. The Foundry has the engine and cutters we need.",
-        "duration_seconds": 4.5,
+        "emote": "confident",
+        "portrait": "images/characters/emotes/zeke_confident.png",
+        "text": "She's through! I can keep her low under the radar. The Foundry has the engine and cutters we need.",
+        "duration_seconds": 4.4,
         "caption_style": "dialogue",
-        "image": "images/rooms/astra/bridge.webp"
+        "image": "images/cinematics/w2_astra_bridge_crew_v1.png",
+        "transition": "cut",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.12,
+        "camera_start_x": -6.0,
+        "camera_end_x": 16.0,
+        "camera_start_y": 4.0,
+        "camera_end_y": -4.0
+      },
+      {
+        "type": "narration",
+        "text": "Neon rain gives way to ash and sulfur. Ahead, the Foundry's slag rivers burn beneath iron arches.",
+        "duration_seconds": 4.8,
+        "image": "images/cinematics/w3_foundry_descent_v1.png",
+        "music_cue": "music_w4_foundry_explore",
+        "transition": "fade",
+        "camera_start_scale": 1.02,
+        "camera_end_scale": 1.12,
+        "camera_start_y": -14.0,
+        "camera_end_y": 12.0
       },
       {
         "type": "narration",
         "text": "The landing struts scrape volcanic glass.",
-        "duration_seconds": 3.8,
-        "image": "images/rooms/world_4/foundry_slag_landing.webp",
-        "transition": "fade"
+        "duration_seconds": 3.4,
+        "image": "images/cinematics/w3_foundry_descent_v1.png",
+        "audio_cue": "sfx_combat_shield_deflect",
+        "transition": "cut",
+        "camera_start_scale": 1.12,
+        "camera_end_scale": 1.16,
+        "camera_start_y": 12.0,
+        "camera_end_y": 20.0,
+        "fade_out_seconds": 1.4
       }
     ],
     "presentation": "illustrated",

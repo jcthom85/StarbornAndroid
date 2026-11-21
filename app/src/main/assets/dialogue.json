@@ -1176,19 +1176,22 @@
     "speaker": "Zeke",
     "condition": "quest_active:w3_mq11,quest_stage:w3_mq11:find_safehouse,quest_task_not_done:w3_mq11:establish_shield",
     "text": "Jax found us a roof, and the terminal works. Same Dominion service menus we had back home in the mines. I can ground the wiring, but I can't hide us from the scans.",
-    "next": "zeke_w3_mq11_safehouse_next"
+    "next": "zeke_w3_mq11_safehouse_next",
+    "emote": "worried"
   },
   {
     "id": "zeke_w3_mq11_safehouse_next",
     "speaker": "Nova",
     "text": "Then we make this room safe. Zeke, check the ground. Orion, can you shield us from the scans before we start planning?",
-    "next": "zeke_w3_mq11_safehouse_end"
+    "next": "zeke_w3_mq11_safehouse_end",
+    "emote": "confident"
   },
   {
     "id": "zeke_w3_mq11_safehouse_end",
     "speaker": "Orion",
     "text": "There. I’ve cut the signal at the stairwell. Zeke, check your meter. Can you still pick us up?",
-    "trigger": "player_action:w3_mq11_establish_shield"
+    "trigger": "player_action:w3_mq11_establish_shield",
+    "emote": "cool"
   },
   {
     "id": "w3_mq12_jax_intro",
@@ -1261,7 +1264,8 @@
         "text": "Not now.",
         "exit": true
       }
-    ]
+    ],
+    "emote": "sad"
   },
   {
     "id": "w3_sq13_mika_intro",
@@ -1327,39 +1331,45 @@
     "id": "zeke_w3_mq13_cover",
     "speaker": "Zeke",
     "text": "[Zeke lowers his voice as the registry clears.] We’re through. Nova, there’s a loose thread on your cuff. Tuck it in before he looks back.",
-    "trigger": "player_action:w3_mq13_blend_in"
+    "trigger": "player_action:w3_mq13_blend_in",
+    "emote": "worried"
   },
   {
     "id": "zeke_w3_mq13_console_intro",
     "speaker": "Zeke",
     "condition": "quest_active:w3_mq13,quest_task_done:w3_mq13:blend_in,quest_task_not_done:w3_mq13:disable_sensors",
-    "text": "Same scanner grid as the mine. Here’s the maintenance login. They left it in the laundry.",
-    "next": "zeke_w3_mq13_console_end"
+    "text": "Same scanner grid as the mine. Here’s the maintenance login—they left it taped inside the laundry cabinet. Billions in Upper City security, beaten by a sticky note.",
+    "next": "zeke_w3_mq13_console_end",
+    "emote": "cool"
   },
   {
     "id": "zeke_w3_mq13_console_end",
     "speaker": "Zeke",
     "text": "There. Scanners are off. The maintenance log says they passed inspection.",
-    "trigger": "player_action:w3_mq13_disable_sensors"
+    "trigger": "player_action:w3_mq13_disable_sensors",
+    "emote": "confident"
   },
   {
     "id": "orion_w3_mq14_puzzle_intro",
     "speaker": "Orion",
     "condition": "quest_active:w3_mq14,quest_task_done:w3_mq14:enter_archive,quest_task_not_done:w3_mq14:solve_light_puzzle",
     "text": "The Prism Gallery forces pressure into light. Read the containment field, shutters, and tether routing before touching the Lens.",
-    "next": "orion_w3_mq14_puzzle_end"
+    "next": "orion_w3_mq14_puzzle_end",
+    "emote": "cool"
   },
   {
     "id": "orion_w3_mq14_puzzle_end",
     "speaker": "Orion",
-    "text": "Listen when the shutters close. The hum will drop out for six seconds. That’s when you reach for it."
+    "text": "Listen when the shutters close. The hum will drop out for six seconds. That’s when you reach for it.",
+    "emote": "confident"
   },
   {
     "id": "zeke_w3_mq14_lens_warning",
     "speaker": "Zeke",
     "condition": "quest_active:w3_mq14,quest_task_done:w3_mq14:solve_light_puzzle,quest_task_not_done:w3_mq14:take_lens",
     "text": "Wait. Energy density is spiking before you touch it. It's reading you back, Nova. Grab it, and the feedback lights us up.",
-    "next": "nova_w3_lens_urgency"
+    "next": "nova_w3_lens_urgency",
+    "emote": "scared"
   },
   {
     "id": "thorne_w3_lens_recovery_order",
@@ -1371,7 +1381,8 @@
     "id": "nova_w3_mq14_lens_take",
     "speaker": "Nova",
     "text": "Zeke, watch the readout. If it spikes again, tell me before it hits the glass.",
-    "trigger": "player_action:w3_mq14_take_lens"
+    "trigger": "player_action:w3_mq14_take_lens",
+    "emote": "confident"
   },
   {
     "id": "thorne_w3_mq14_trap_intro",
@@ -1431,49 +1442,57 @@
     "id": "orion_w3_post_shield_idle",
     "speaker": "Orion",
     "text": "I can hear our footsteps again. If the room starts ringing, tell me before you open the door.",
-    "condition": "milestone:ms_w3_mq11_complete,milestone_not_set:ms_w3_mq12_complete"
+    "condition": "milestone:ms_w3_mq11_complete,milestone_not_set:ms_w3_mq12_complete",
+    "emote": "cool"
   },
   {
     "id": "orion_w3_post_plan_idle",
     "speaker": "Orion",
     "text": "I’ll listen for the freight switch. When it goes quiet, we move.",
-    "condition": "milestone:ms_w3_mq12_complete,milestone_not_set:ms_w3_mq13_complete"
+    "condition": "milestone:ms_w3_mq12_complete,milestone_not_set:ms_w3_mq13_complete",
+    "emote": "confident"
   },
   {
     "id": "orion_w3_post_social_idle",
     "speaker": "Orion",
     "text": "The light in the Archive keeps returning to the same pane. Someone’s holding it there. I’d like to know what happens when they let it go.",
-    "condition": "milestone:ms_w3_mq13_complete,milestone_not_set:ms_w3_mq14_complete"
+    "condition": "milestone:ms_w3_mq13_complete,milestone_not_set:ms_w3_mq14_complete",
+    "emote": "puzzled"
   },
   {
     "id": "orion_w3_post_lens_idle",
     "speaker": "Orion",
     "text": "Turn the Lens a little. There. The pull is strongest toward the Foundry.",
-    "condition": "milestone:ms_w3_mq14_complete,milestone_not_set:ms_w3_mq15_complete"
+    "condition": "milestone:ms_w3_mq14_complete,milestone_not_set:ms_w3_mq15_complete",
+    "emote": "worried"
   },
   {
     "id": "ghost_w3_post_shield_idle",
     "speaker": "Gh0st",
     "text": "I checked the stairwell. If you hear boots, stay away from the door. I’ll take it.",
-    "condition": "milestone:ms_w3_mq11_complete,milestone_not_set:ms_w3_mq12_complete"
+    "condition": "milestone:ms_w3_mq11_complete,milestone_not_set:ms_w3_mq12_complete",
+    "emote": "cool"
   },
   {
     "id": "ghost_w3_post_plan_idle",
     "speaker": "Gh0st",
     "text": "I’ll go first at the service elevator. Wait for me to wave you through.",
-    "condition": "milestone:ms_w3_mq12_complete,milestone_not_set:ms_w3_mq13_complete"
+    "condition": "milestone:ms_w3_mq12_complete,milestone_not_set:ms_w3_mq13_complete",
+    "emote": "confident"
   },
   {
     "id": "ghost_w3_post_social_idle",
     "speaker": "Gh0st",
     "text": "The Curator spoke of Sector 9 as salvage. They categorized Elara the same way before transferring her file.",
-    "condition": "milestone:ms_w3_mq13_complete,milestone_not_set:ms_w3_mq14_complete"
+    "condition": "milestone:ms_w3_mq13_complete,milestone_not_set:ms_w3_mq14_complete",
+    "emote": "angry"
   },
   {
     "id": "ghost_w3_post_lens_idle",
     "speaker": "Gh0st",
     "text": "Thorne signaled Vale directly. Compliance units are mobilizing from the Upper Ring. We cannot be here when they land.",
-    "condition": "milestone:ms_w3_mq14_complete,milestone_not_set:ms_w3_mq15_complete"
+    "condition": "milestone:ms_w3_mq14_complete,milestone_not_set:ms_w3_mq15_complete",
+    "emote": "worried"
   },
   {
     "id": "lab_terminal_w3_sq15_intro",
@@ -3271,9 +3290,10 @@
   },
   {
     "id": "dax_default_talk_2",
-    "speaker": "Player",
+    "speaker": "Nova",
     "text": "Did anyone else approach the glass?",
-    "next": "dax_default_talk_3"
+    "next": "dax_default_talk_3",
+    "emote": "puzzled"
   },
   {
     "id": "dax_default_talk_3",
@@ -4119,7 +4139,8 @@
     "id": "jax_w3_mq11_nova_intro",
     "speaker": "Nova",
     "text": "Nova. We came from the mining colony. We need somewhere to stop moving before those patrols find us.",
-    "next": "jax_w3_mq11_shelter_offer"
+    "next": "jax_w3_mq11_shelter_offer",
+    "emote": "worried"
   },
   {
     "id": "jax_w3_mq11_shelter_offer",
@@ -4178,7 +4199,8 @@
         "id": "w3_cover_recovery_leave",
         "text": "Step away and review the service order."
       }
-    ]
+    ],
+    "emote": "worried"
   },
   {
     "id": "w3_cover_service_verified",
@@ -4210,7 +4232,8 @@
         "id": "w3_case_alibi_leave",
         "text": "Review the evidence before continuing."
       }
-    ]
+    ],
+    "emote": "confident"
   },
   {
     "id": "w3_case_remote_rebuttal",
@@ -4248,7 +4271,8 @@
         "id": "w3_case_physical_leave",
         "text": "Step back and compare the evidence."
       }
-    ]
+    ],
+    "emote": "cool"
   },
   {
     "id": "w3_case_same_record_rebuttal",
@@ -4478,7 +4502,8 @@
     "speaker": "Nova",
     "text": "We need a way past the patrols. Can you help?",
     "next": "w3_mq12_jax_success",
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "worried"
   },
   {
     "id": "vale_w4_mq20_coup_beat_1",
@@ -4596,28 +4621,32 @@
     "speaker": "Nova",
     "text": "We can’t leave it here. I can take the surge.",
     "scripted_only": true,
-    "next": "zeke_w3_lens_precaution"
+    "next": "zeke_w3_lens_precaution",
+    "emote": "angry"
   },
   {
     "id": "zeke_w3_lens_precaution",
     "speaker": "Zeke",
     "text": "The glass can’t. Wait until I cut the return feed.",
     "scripted_only": true,
-    "next": "nova_w3_lens_wait"
+    "next": "nova_w3_lens_wait",
+    "emote": "angry"
   },
   {
     "id": "nova_w3_lens_wait",
     "speaker": "Nova",
     "text": "[Nova draws her hand back.] All right. Tell me when.",
     "scripted_only": true,
-    "next": "zeke_w3_lens_feed_clear"
+    "next": "zeke_w3_lens_feed_clear",
+    "emote": "worried"
   },
   {
     "id": "zeke_w3_lens_feed_clear",
     "speaker": "Zeke",
     "text": "[Zeke pulls the return lead. The second spike drops off the readout.] Now.",
     "scripted_only": true,
-    "next": "thorne_w3_lens_recovery_order"
+    "next": "thorne_w3_lens_recovery_order",
+    "emote": "confident"
   },
   {
     "id": "gh0st_w4_phantom_boundary",
@@ -4715,14 +4744,16 @@
     "speaker": "Nova",
     "text": "Leave it alone. You checked it twice. Let me watch the door.",
     "scripted_only": true,
-    "next": "zeke_w3_pocket_the_scanner"
+    "next": "zeke_w3_pocket_the_scanner",
+    "emote": "cool"
   },
   {
     "id": "zeke_w3_pocket_the_scanner",
     "speaker": "Zeke",
     "text": "[Zeke closes the scanner and puts it away.] Three times. All right. Your turn.",
     "portrait": "images/characters/emotes/zeke_sheepish_v1.png",
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "happy"
   },
   {
     "id": "nova_w4_offer_a_minute",

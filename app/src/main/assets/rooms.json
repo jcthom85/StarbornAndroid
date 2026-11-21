@@ -15920,10 +15920,7 @@
     "description": "A filter sluice strains glittering trash from black water. A caught badge spins behind the grate, too damaged to pass but clean enough to copy. A drainage marker glows faintly above the water line.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "sewer_crawler",
-      "sewer_crawler"
-    ],
+    "enemies": [],
     "connections": {
       "south": "spire_sewers_scale_01",
       "north": "spire_sewers_scale_03"
@@ -16748,10 +16745,7 @@
     "description": "A fuel bridge rattles between the roof and the Astra. Wind shear shoves rain sideways through warning lights and reveals the Shield rhythm in the clouds.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "aero_drone",
-      "concierge_relay"
-    ],
+    "enemies": [],
     "enemy_instances": [
       {
         "enemy_id": "aero_drone",

@@ -112,11 +112,13 @@ class EnemyMovementManagerTest {
         val wreck = "spire_landing_pad_scale_03"
         manager.restore(emptyMap(), session)
         assertEquals(wreck, manager.stateSnapshot().getValue(patrol.id).roomId)
-        val arrival = manager.tick(22_000, sightline, session)
+        val moveMs = patrol.moveIntervalSeconds * 1_000L
+        val engageMs = patrol.engageDelaySeconds * 1_000L
+        val arrival = manager.tick(moveMs, sightline, session)
         assertEquals(sightline, arrival.states.getValue(patrol.id).roomId)
-        assertEquals(10_000L, arrival.aggression?.remainingMs)
+        assertEquals(engageMs, arrival.aggression?.remainingMs)
         assertNull(arrival.autoEngagePartyId)
-        assertEquals(patrol.id, manager.tick(10_000, sightline, session).autoEngagePartyId)
+        assertEquals(patrol.id, manager.tick(engageMs, sightline, session).autoEngagePartyId)
         manager.applyRetreatGrace(patrol.id)
         assertNull(manager.tick(1_000, sightline, session).aggression)
         val unsafeSave = manager.stateSnapshot().getValue(patrol.id).copy(roomId = "spire_landing_pad_roof")

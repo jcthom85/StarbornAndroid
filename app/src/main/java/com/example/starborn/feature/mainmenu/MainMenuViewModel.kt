@@ -379,6 +379,7 @@ class MainMenuViewModel(
                 "scene_w2_astra_departure"
             ),
             "World 3 — The Spire" to listOf(
+                "scene_w3_lens_heist",
                 "scene_w3_foundry_flight"
             ),
             "World 4 — The Foundry" to listOf(

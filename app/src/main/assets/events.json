@@ -6138,12 +6138,14 @@
         "node_id": "spire_landing_pad"
       },
       {
-        "type": "show_message",
-        "message": "The relic burns cold in Nova's hand. The Shield above the Spire becomes visible as rotating chords, and so does the thin old thread running through her own signal. Alarm text blooms across the air: ANOMALY DETECTED. The only route left is through the drone alcove and up to the roof, where the Astra has one impossible launch window."
-      },
-      {
-        "type": "start_dialogue",
-        "npc": "line:thorne_w3_mq14_trap_intro"
+        "type": "play_cinematic",
+        "scene_id": "scene_w3_lens_heist",
+        "on_complete": [
+          {
+            "type": "start_dialogue",
+            "npc": "line:thorne_w3_mq14_trap_intro"
+          }
+        ]
       }
     ]
   },

@@ -8305,7 +8305,8 @@ fun CinematicOverlay(
                 cue == "sfx_combat_shield_deflect" ||
                 cue == "sfx_crash_impact" ||
                 cue == "sfx_w2_astra_launch" ||
-                cue == "sfx_w2_stasis_release"
+                cue == "sfx_w2_stasis_release" ||
+                cue == "sfx_security_lockdown"
             audioCuePlayer?.execute(
                 listOf(
                     AudioCommand.Play(
@@ -8606,7 +8607,8 @@ internal fun IllustratedCinematicOverlay(
                 cue == "sfx_combat_shield_deflect" ||
                 cue == "sfx_crash_impact" ||
                 cue == "sfx_w2_astra_launch" ||
-                cue == "sfx_w2_stasis_release"
+                cue == "sfx_w2_stasis_release" ||
+                cue == "sfx_security_lockdown"
             audioCuePlayer?.execute(
                 listOf(
                     AudioCommand.Play(
@@ -8741,6 +8743,7 @@ internal fun IllustratedCinematicOverlay(
             "sfx_combat_plasma_arc" -> Color(0xFF80F8FF)
             "wpn_orion_bowl_resonance" -> Color(0xFFB3F7FF)
             "sfx_w2_stasis_release" -> Color(0xFFC8F4FF)
+            "sfx_security_lockdown" -> Color(0xFFFF1744)
             "sfx_combat_shield_deflect" -> Color(0xFFFFE0E0)
             else -> Color.White
         }
@@ -8890,6 +8893,28 @@ internal fun IllustratedCinematicOverlay(
             launch {
                 impactFlash.snapTo(0.4f)
                 impactFlash.animateTo(0f, animationSpec = tween(durationMillis = 360, easing = LinearEasing))
+            }
+        } else if (cue == "sfx_security_lockdown") {
+            // Heavy Spire blast-shutter slam + crimson alarm flash
+            val slamAmp = with(density) { 12.dp.toPx() }
+            val rattleAmp = with(density) { 3.5.dp.toPx() }
+            launch {
+                impactShakeY.snapTo(slamAmp)
+                impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 200, easing = FastOutSlowInEasing))
+                for (cycle in 5 downTo 1) {
+                    val decay = cycle / 5f
+                    val sign = if (cycle % 2 == 0) 1f else -1f
+                    impactShakeY.animateTo(rattleAmp * decay * sign, animationSpec = tween(durationMillis = 48, easing = LinearEasing))
+                    impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 48, easing = LinearEasing))
+                }
+            }
+            launch {
+                impactShakeX.snapTo(slamAmp * 0.4f)
+                impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 200, easing = FastOutSlowInEasing))
+            }
+            launch {
+                impactFlash.snapTo(0.45f)
+                impactFlash.animateTo(0f, animationSpec = tween(durationMillis = 340, easing = LinearEasing))
             }
         } else if (cue == "sfx_door_airlock_close") {
             // Heavy blast-shutter slam + brief metallic latch rattle
@@ -9386,6 +9411,95 @@ internal fun IllustratedCinematicOverlay(
                             ),
                             center = Offset(540f, 760f),
                             radius = 920f
+                        )
+                    )
+            )
+        }
+
+        // Atmospheric Layer 10: Spire Lens prism refraction, lockdown alarm & Foundry magma glow
+        val isLensVaultClaim = state.step.imagePath?.contains("w3_lens_vault_claim") == true
+        if (isLensVaultClaim) {
+            val prismTransition = rememberInfiniteTransition(label = "lens_prism_glow")
+            val prismAlpha by prismTransition.animateFloat(
+                initialValue = 0.08f,
+                targetValue = 0.24f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 1500, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "prism_alpha"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = prismAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFFFFE57F).copy(alpha = 0.55f),
+                                Color(0xFF40E8FF).copy(alpha = 0.30f),
+                                Color.Transparent
+                            ),
+                            center = Offset(540f, 520f),
+                            radius = 900f
+                        )
+                    )
+            )
+        }
+        val isSpireBurnNotice = state.step.imagePath?.contains("w3_spire_burn_notice") == true
+        if (isSpireBurnNotice) {
+            val burnTransition = rememberInfiniteTransition(label = "burn_notice_strobe")
+            val burnAlpha by burnTransition.animateFloat(
+                initialValue = 0.06f,
+                targetValue = 0.24f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 480, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "burn_alpha"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = burnAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFFFF1744).copy(alpha = 0.55f),
+                                Color(0xFFD50000).copy(alpha = 0.20f),
+                                Color.Transparent
+                            ),
+                            center = Offset(540f, 580f),
+                            radius = 980f
+                        )
+                    )
+            )
+        }
+        val isFoundryDescent = state.step.imagePath?.contains("w3_foundry_descent") == true
+        if (isFoundryDescent) {
+            val magmaTransition = rememberInfiniteTransition(label = "foundry_magma_glow")
+            val magmaAlpha by magmaTransition.animateFloat(
+                initialValue = 0.08f,
+                targetValue = 0.20f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 1800, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "magma_alpha"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = magmaAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFFFF6D00).copy(alpha = 0.52f),
+                                Color(0xFFFF3D00).copy(alpha = 0.20f),
+                                Color.Transparent
+                            ),
+                            center = Offset(540f, 1280f),
+                            radius = 1040f
                         )
                     )
             )
