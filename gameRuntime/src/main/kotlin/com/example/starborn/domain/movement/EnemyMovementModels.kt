@@ -30,6 +30,8 @@ data class EnemyMovementParty(
     val engageDelaySeconds: Int = 10,
     @Json(name = "requires_active_quest")
     val requiresActiveQuest: String? = null,
+    @Json(name = "requires_milestone")
+    val requiresMilestone: String? = null,
     val signals: EnemyMovementSignals = EnemyMovementSignals(),
     @Json(name = "replaces_static_encounter")
     val replacesStaticEncounter: Boolean = false,

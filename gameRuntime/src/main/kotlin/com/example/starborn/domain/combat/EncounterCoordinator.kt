@@ -27,7 +27,9 @@ class EncounterCoordinator {
 
 data class EncounterDescriptor(
     val enemies: List<EncounterEnemyInstance>,
-    val sourcePartyId: String? = null
+    val sourcePartyId: String? = null,
+    val isAmbush: Boolean = false,
+    val isPreemptive: Boolean = false
 )
 
 data class EncounterEnemyInstance(

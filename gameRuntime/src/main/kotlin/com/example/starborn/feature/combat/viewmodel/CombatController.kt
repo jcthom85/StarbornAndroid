@@ -154,6 +154,8 @@ class CombatController(
     val locationTitle: String?
     val encounterTitle: String
     val encounterSourcePartyId: String?
+    private val encounterIsAmbush: Boolean
+    private val encounterIsPreemptive: Boolean
     val encounterRoomId: String?
     private val timedPromptLock = Any()
     private var timedPromptDeferred: CompletableDeferred<Boolean>? = null
@@ -360,6 +362,8 @@ class CombatController(
         playerDefaultSkillIds = playerParty.associate { member -> member.id to member.skills.toSet() }
         val pendingEncounter = encounterCoordinator.consumePendingEncounter()
         encounterSourcePartyId = pendingEncounter?.sourcePartyId
+        encounterIsAmbush = pendingEncounter?.isAmbush == true
+        encounterIsPreemptive = pendingEncounter?.isPreemptive == true && !encounterIsAmbush
         val pendingSlots = pendingEncounter?.enemies.orEmpty()
         val requestedSlots = enemyIds
             .mapIndexedNotNull { index, id ->
@@ -517,7 +521,8 @@ class CombatController(
                     } else {
                         combatantState.statusEffects
                     }
-                    combatantState.copy(hp = initialHp, statusEffects = initialStatuses)
+                    val initialMomentum = if (encounterIsPreemptive) (combatantState.momentum + 1).coerceAtMost(3) else combatantState.momentum
+                    combatantState.copy(hp = initialHp, statusEffects = initialStatuses, momentum = initialMomentum)
                 } else {
                     combatantState
                 }
@@ -559,6 +564,28 @@ class CombatController(
                 )
             )
             startAtbTicker()
+            when {
+                encounterIsAmbush -> {
+                    _combatBanner.value = CombatBannerMessage(
+                        id = UUID.randomUUID().toString(),
+                        primary = "AMBUSH!",
+                        secondary = "Hostiles seize the opening strike!",
+                        accent = CombatBannerAccent.ENEMY,
+                        icon = CombatBannerIcon.ATTACK,
+                        importance = CombatBannerImportance.IMPORTANT
+                    )
+                }
+                encounterIsPreemptive -> {
+                    _combatBanner.value = CombatBannerMessage(
+                        id = UUID.randomUUID().toString(),
+                        primary = "FIRST STRIKE!",
+                        secondary = "Initiative gained · +1 Momentum",
+                        accent = CombatBannerAccent.SHOCK,
+                        icon = CombatBannerIcon.BURST,
+                        importance = CombatBannerImportance.IMPORTANT
+                    )
+                }
+            }
         }
         refreshSelection(_state.value)
         if (CombatPlaytestBridge.isOpMode) {
@@ -2220,10 +2247,14 @@ class CombatController(
 
     private fun initializeAtbMeters() {
         val initial = (playerCombatants + enemyCombatants).associate { combatant ->
-            val seed = if (combatant.side == CombatSide.PLAYER || combatant.side == CombatSide.ALLY) {
-                random.nextDouble(0.4, 0.8)
-            } else {
-                random.nextDouble(0.2, 0.6)
+            val isFriendly = combatant.side == CombatSide.PLAYER || combatant.side == CombatSide.ALLY
+            val seed = when {
+                encounterIsAmbush && isFriendly -> random.nextDouble(0.10, 0.25)
+                encounterIsAmbush && !isFriendly -> random.nextDouble(0.78, 0.95)
+                encounterIsPreemptive && isFriendly -> random.nextDouble(0.75, 0.92)
+                encounterIsPreemptive && !isFriendly -> random.nextDouble(0.10, 0.30)
+                isFriendly -> random.nextDouble(0.4, 0.8)
+                else -> random.nextDouble(0.2, 0.6)
             }
             val hasOwnTurn = AuthoredEncounterRules.linkedOwner(combatant.id, enemyDefinitions) == null
             combatant.id to if (hasOwnTurn) seed.toFloat() else 0f

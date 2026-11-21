@@ -39,6 +39,20 @@
         "spire_landing_pad_scale_04",
         "spire_drone_test_alcove"
       ]
+    },
+    {
+      "id": "w1_deep_mine_entry",
+      "rooms": [
+        "mine_alpha"
+      ],
+      "protected_rooms": []
+    },
+    {
+      "id": "w1_launch_lockdown",
+      "rooms": [
+        "launch_access"
+      ],
+      "protected_rooms": []
     }
   ],
   "parties": [
@@ -56,14 +70,15 @@
       ],
       "behavior": "patrol",
       "aggression": "aggressive",
-      "move_interval_seconds": 25,
-      "engage_delay_seconds": 10,
+      "move_interval_seconds": 15,
+      "engage_delay_seconds": 5,
       "requires_active_quest": "w1_mq03",
       "signals": {
         "enter_room": "A pressure hauler rounds the bend.",
         "leave_room": "The hauler grinds deeper into the mine.",
         "adjacent": "Heavy treads echo nearby."
-      }
+      },
+      "requires_milestone": "ms_mine_power_on"
     },
     {
       "id": "debug_patrol_2",
@@ -223,6 +238,52 @@
         "enter_room": "An assassin steps onto the roof and sights the crew.",
         "leave_room": "The assassin slips along the roofline.",
         "adjacent": "Quiet boots scrape the rooftop nearby."
+      }
+    },
+    {
+      "id": "w1_mine_alpha_borers",
+      "zone_id": "w1_deep_mine_entry",
+      "enemies": [
+        "echo_borer",
+        "echo_borer"
+      ],
+      "start_room": "mine_alpha",
+      "route": [
+        "mine_alpha"
+      ],
+      "behavior": "stationary",
+      "aggression": "aggressive",
+      "move_interval_seconds": 30,
+      "engage_delay_seconds": 5,
+      "requires_active_quest": "w1_mq03",
+      "replaces_static_encounter": true,
+      "signals": {
+        "enter_room": "Echo borers lock onto the hum in Nova's cutter.",
+        "leave_room": "The borers settle back into the slag.",
+        "adjacent": "Chittering echoes from the main tunnel ahead."
+      }
+    },
+    {
+      "id": "w1_launch_access_sweep",
+      "zone_id": "w1_launch_lockdown",
+      "enemies": [
+        "siren_skimmer",
+        "echo_borer"
+      ],
+      "start_room": "launch_access",
+      "route": [
+        "launch_access"
+      ],
+      "behavior": "stationary",
+      "aggression": "aggressive",
+      "move_interval_seconds": 30,
+      "engage_delay_seconds": 5,
+      "requires_milestone": "ms_w1_mq03_complete",
+      "replaces_static_encounter": true,
+      "signals": {
+        "enter_room": "A lockdown sweep pack snaps toward Nova.",
+        "leave_room": "The sweep pack circles back down the corridor.",
+        "adjacent": "Static screeches along the maintenance conduit."
       }
     }
   ]

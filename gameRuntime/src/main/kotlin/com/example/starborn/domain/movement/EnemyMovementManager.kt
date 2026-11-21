@@ -53,8 +53,13 @@ class EnemyMovementManager(
 
     fun stateSnapshot(): Map<String, EnemyPartyRuntimeState> = states
 
-    fun tick(deltaMs: Long, currentRoomId: String?, session: GameSessionState): EnemyMovementTick {
-        if (deltaMs <= 0) return currentTick(currentRoomId, session)
+    fun tick(
+        deltaMs: Long,
+        currentRoomId: String?,
+        session: GameSessionState,
+        currentRoomDark: Boolean = false
+    ): EnemyMovementTick {
+        if (deltaMs <= 0) return currentTick(currentRoomId, session, currentRoomDark)
         seedMissing(session)
         val events = mutableListOf<EnemyMovementEvent>()
         val graceProtectedAtTickStart = states
@@ -85,7 +90,13 @@ class EnemyMovementManager(
 
         states = mutable
         val newlyArrived = events.filter { it.roomId == currentRoomId }.map { it.partyId }
-        val aggression = updateAggression(deltaMs, currentRoomId, session, graceProtectedAtTickStart + newlyArrived)
+        val aggression = updateAggression(
+            deltaMs,
+            currentRoomId,
+            session,
+            graceProtectedAtTickStart + newlyArrived,
+            currentRoomDark
+        )
         val movementEvents = events.flatMap { event ->
             eventForPlayer(event, currentRoomId, definition = definitionsById[event.partyId])
         }
@@ -97,7 +108,11 @@ class EnemyMovementManager(
         )
     }
 
-    fun onPlayerRoomChanged(currentRoomId: String?, session: GameSessionState): EnemyMovementTick {
+    fun onPlayerRoomChanged(
+        currentRoomId: String?,
+        session: GameSessionState,
+        currentRoomDark: Boolean = false
+    ): EnemyMovementTick {
         seedMissing(session)
         states = states.mapValues { (partyId, state) ->
             val definition = definitionsById[partyId]
@@ -107,7 +122,7 @@ class EnemyMovementManager(
                 state
             }
         }
-        return currentTick(currentRoomId, session)
+        return currentTick(currentRoomId, session, currentRoomDark)
     }
 
     fun markDefeated(partyId: String) {
@@ -125,8 +140,12 @@ class EnemyMovementManager(
         )
     }
 
-    private fun currentTick(currentRoomId: String?, session: GameSessionState): EnemyMovementTick {
-        val aggression = updateAggression(0, currentRoomId, session, emptySet())
+    private fun currentTick(
+        currentRoomId: String?,
+        session: GameSessionState,
+        currentRoomDark: Boolean = false
+    ): EnemyMovementTick {
+        val aggression = updateAggression(0, currentRoomId, session, emptySet(), currentRoomDark)
         return EnemyMovementTick(states, aggression = aggression.first, autoEngagePartyId = aggression.second)
     }
 
@@ -134,8 +153,13 @@ class EnemyMovementManager(
         deltaMs: Long,
         currentRoomId: String?,
         session: GameSessionState,
-        graceProtectedAtTickStart: Set<String>
+        graceProtectedAtTickStart: Set<String>,
+        currentRoomDark: Boolean = false
     ): Pair<EnemyAggressionState?, String?> {
+        if (currentRoomDark) {
+            states = states.mapValues { (_, state) -> state.copy(aggressionRemainingMs = null) }
+            return null to null
+        }
         val party = definitionsById.values.firstOrNull { definition ->
             val state = states[definition.id] ?: return@firstOrNull false
             isActive(definition, session) &&
@@ -279,8 +303,11 @@ class EnemyMovementManager(
             val key = "encounter_cleared:" + definition.enemies.sorted().joinToString("|")
             if (session.roomStates[definition.startRoom]?.get(key) == true) return false
         }
-        return definition.requiresActiveQuest.isNullOrBlank() ||
+        val questOk = definition.requiresActiveQuest.isNullOrBlank() ||
             session.activeQuests.any { it.equals(definition.requiresActiveQuest, ignoreCase = true) }
+        val milestoneOk = definition.requiresMilestone.isNullOrBlank() ||
+            session.completedMilestones.any { it.equals(definition.requiresMilestone, ignoreCase = true) }
+        return questOk && milestoneOk
     }
 
     private fun initialState(definition: EnemyMovementParty): EnemyPartyRuntimeState =

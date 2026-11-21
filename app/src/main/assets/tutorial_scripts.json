@@ -163,9 +163,9 @@
     "id": "dark_rooms_basics",
     "steps": [
       {
-        "title": "Dark Rooms",
+        "title": "Dark Rooms & Aggressive Hostiles",
         "context": "Deep Mine",
-        "message": "Dark rooms hide exits and room details. Look for wall breakers or light switches to restore power and reveal the way forward."
+        "message": "Dark rooms hide exits and details—flip breakers or light switches to restore power. Aggressive hostiles attack if you linger: tap them first for +1 Momentum, or move out to evade an Ambush."
       }
     ]
   }

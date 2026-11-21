@@ -131,7 +131,7 @@ fun PatrolWarning(aggression: EnemyAggressionState, modifier: Modifier = Modifie
                 )
             }
             Text(
-                text = "Tap enemy to engage · Move to evade",
+                text = "Tap first for +1 Momentum · Move to evade Ambush",
                 color = Color(0xFFD6C2B8),
                 style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp)
             )

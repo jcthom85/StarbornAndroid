@@ -4424,7 +4424,13 @@ class ExplorationController(
                 if (!explorationVisible || explorationInteractionBlocked || _uiState.value.isLoading ||
                     session.pendingBattleJson.isNotBlank()) continue
                 val manager = enemyMovementManager ?: continue
-                val tick = manager.tick(delta, _uiState.value.currentRoom?.id, session)
+                val currentRoom = _uiState.value.currentRoom
+                val tick = manager.tick(
+                    deltaMs = delta,
+                    currentRoomId = currentRoom?.id,
+                    session = session,
+                    currentRoomDark = currentRoom?.let(::isRoomDark) == true
+                )
                 sessionStore.setEnemyPartyStates(tick.states)
                 val event = tick.events.lastOrNull()
                 if (event != null) movementNoticeExpiresAtMs = now + 3_500L
@@ -4451,7 +4457,8 @@ class ExplorationController(
     private fun reconcileMovementAfterRoomChange(roomId: String) {
         movementCombatRequested = false
         val manager = enemyMovementManager ?: return
-        val tick = manager.onPlayerRoomChanged(roomId, sessionStore.state.value)
+        val roomIsDark = roomsById[roomId]?.let(::isRoomDark) == true
+        val tick = manager.onPlayerRoomChanged(roomId, sessionStore.state.value, currentRoomDark = roomIsDark)
         sessionStore.setEnemyPartyStates(tick.states)
         _uiState.update {
             it.copy(
@@ -4634,7 +4641,7 @@ class ExplorationController(
         val party = manager.party(partyId) ?: return
         val room = _uiState.value.currentRoom ?: return
         if (manager.partiesInRoom(room.id, sessionStore.state.value).none { it.id == partyId }) return
-        preparePendingEncounter(room, party.enemies, party.id)
+        preparePendingEncounter(room, party.enemies, party.id, isAmbush = true)
         emitEvent(ExplorationEvent.EnterCombat(party.enemies, isAmbush = true))
     }
 
@@ -4666,23 +4673,34 @@ class ExplorationController(
             } ?: parties.firstOrNull().orEmpty()
         }
         if (encounterIds.isNotEmpty()) {
-            val sourcePartyId = room?.id?.let { roomId ->
+            val matchedParty = room?.id?.let { roomId ->
                 enemyMovementManager
                     ?.partiesInRoom(roomId, sessionStore.state.value)
                     ?.firstOrNull { party ->
                         partiesMatch(party.enemies, encounterIds)
                     }
-                    ?.id
             }
-            room?.let { preparePendingEncounter(it, encounterIds, sourcePartyId) } ?: encounterCoordinator.clear()
+            val sourcePartyId = matchedParty?.id
+            val isPreemptive = matchedParty != null &&
+                matchedParty.aggression.equals("aggressive", ignoreCase = true) &&
+                _uiState.value.enemyAggression?.partyId == matchedParty.id
+            room?.let {
+                preparePendingEncounter(it, encounterIds, sourcePartyId, isPreemptive = isPreemptive)
+            } ?: encounterCoordinator.clear()
             emitEvent(ExplorationEvent.EnterCombat(encounterIds))
         } else {
             encounterCoordinator.clear()
         }
     }
 
-    private fun preparePendingEncounter(room: Room, encounterIds: List<String>, sourcePartyId: String? = null) {
-        val descriptor = buildEncounterDescriptor(room, encounterIds, sourcePartyId)
+    private fun preparePendingEncounter(
+        room: Room,
+        encounterIds: List<String>,
+        sourcePartyId: String? = null,
+        isAmbush: Boolean = false,
+        isPreemptive: Boolean = false
+    ) {
+        val descriptor = buildEncounterDescriptor(room, encounterIds, sourcePartyId, isAmbush, isPreemptive)
         setRecoverableEncounter(descriptor)
     }
 
@@ -4698,19 +4716,31 @@ class ExplorationController(
     private fun buildEncounterDescriptor(
         room: Room,
         encounterIds: List<String>,
-        sourcePartyId: String? = null
+        sourcePartyId: String? = null,
+        isAmbush: Boolean = false,
+        isPreemptive: Boolean = false
     ): EncounterDescriptor {
         val patrol = sourcePartyId?.let { enemyMovementManager?.party(it) }
         if (patrol != null) {
-            return EncounterDescriptor(encounterIds.mapIndexed { index, enemyId ->
-                EncounterEnemyInstance(enemyId = enemyId, extraDrops = if (index == 0) patrol.extraDrops else emptyList())
-            }, sourcePartyId = sourcePartyId)
+            return EncounterDescriptor(
+                enemies = encounterIds.mapIndexed { index, enemyId ->
+                    EncounterEnemyInstance(enemyId = enemyId, extraDrops = if (index == 0) patrol.extraDrops else emptyList())
+                },
+                sourcePartyId = sourcePartyId,
+                isAmbush = isAmbush,
+                isPreemptive = isPreemptive
+            )
         }
         val overridesByEnemy = room.enemyInstances.orEmpty().groupBy { it.enemyId }
         if (overridesByEnemy.isEmpty()) {
-            return EncounterDescriptor(encounterIds.map { enemyId ->
-                EncounterEnemyInstance(enemyId = enemyId)
-            }, sourcePartyId = sourcePartyId)
+            return EncounterDescriptor(
+                enemies = encounterIds.map { enemyId ->
+                    EncounterEnemyInstance(enemyId = enemyId)
+                },
+                sourcePartyId = sourcePartyId,
+                isAmbush = isAmbush,
+                isPreemptive = isPreemptive
+            )
         }
         val usedOverrides = mutableSetOf<RoomEnemyInstance>()
         val occurrenceCounters = mutableMapOf<String, Int>()
@@ -4735,7 +4765,12 @@ class ExplorationController(
                 extraDrops = match?.extraDrops.orEmpty()
             )
         }
-        return EncounterDescriptor(slots, sourcePartyId = sourcePartyId)
+        return EncounterDescriptor(
+            enemies = slots,
+            sourcePartyId = sourcePartyId,
+            isAmbush = isAmbush,
+            isPreemptive = isPreemptive
+        )
     }
 
     private fun handleRoomEntryTutorials(room: Room) {
@@ -5112,9 +5147,11 @@ class ExplorationController(
         val currentRoom = _uiState.value.currentRoom ?: return
         val targetRoomId = roomId?.trim().takeUnless { it.isNullOrEmpty() } ?: currentRoom.id
         if (!targetRoomId.equals(currentRoom.id, ignoreCase = true)) return
-        val authoredIds = encounterId
-            ?.split(',')
-            .orEmpty()
+        val rawEncounter = encounterId?.trim().orEmpty()
+        val isAmbush = rawEncounter.startsWith("ambush:", ignoreCase = true)
+        val cleanedEncounter = if (isAmbush) rawEncounter.substringAfter(":") else rawEncounter
+        val authoredIds = cleanedEncounter
+            .split(',')
             .map { it.trim() }
             .filter { it.isNotEmpty() && enemyById.containsKey(it.lowercase(Locale.getDefault())) }
         val enemyIds = if (currentRoom.id == "foundry_crucible_arena") authoredIds else authoredIds.distinct()
@@ -5129,9 +5166,9 @@ class ExplorationController(
                 )
             )
         } else {
-            preparePendingEncounter(currentRoom, enemyIds)
+            preparePendingEncounter(currentRoom, enemyIds, isAmbush = isAmbush)
         }
-        emitEvent(ExplorationEvent.EnterCombat(enemyIds))
+        emitEvent(ExplorationEvent.EnterCombat(enemyIds, isAmbush = isAmbush))
     }
 
     fun openTinkeringShortcut() {

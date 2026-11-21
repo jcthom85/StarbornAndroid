@@ -1964,6 +1964,10 @@
         "room_id": "mine_antechamber",
         "state_key": "light_on",
         "value": true
+      },
+      {
+        "type": "narrate",
+        "message": "Fluorescent strips buzz to life down the shafts—and somewhere deeper along the conveyor line, heavy hydraulic treads grind awake."
       }
     ],
     "repeatable": true
@@ -18047,5 +18051,158 @@
         "npc": "line:w6_sq29_tune_grave_line_1"
       }
     ]
+  },
+  {
+    "id": "w1_mine_gas_ambush_cache",
+    "description": "Prying the glowing ore seam in Toxic Pocket yields salvage and triggers a surprise Echo Borer ambush.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_mine_gas_ambush_cache"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_mine_gas_cache_claimed"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_mine_gas_cache_claimed"
+      },
+      {
+        "type": "give_item",
+        "item_id": "medkit_i",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "scrap_metal",
+        "quantity": 2
+      },
+      {
+        "type": "give_reward",
+        "credits": 60
+      },
+      {
+        "type": "narrate",
+        "message": "Nova wedges a miner's salvage pack out of the seam—and the loose wall behind it caves in as an Echo Borer lunges straight out of the dark!"
+      },
+      {
+        "type": "spawn_encounter",
+        "encounter_id": "ambush:echo_borer",
+        "room_id": "mine_gas"
+      }
+    ],
+    "repeatable": false
+  },
+  {
+    "id": "w1_echo_well_offering",
+    "description": "The Harmonic Well steadies Nova's suit and yields components.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_echo_well_offering"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_echo_well_claimed"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_echo_well_claimed"
+      },
+      {
+        "type": "rest_party",
+        "message": "A cool, clean pulse climbs through Nova's boots, steadying her breathing and restoring her vitals."
+      },
+      {
+        "type": "give_item",
+        "item_id": "power_cell",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "focusing_lens",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "Nova recovers an intact Power Cell and Focusing Lens from the edge of the harmonic basin."
+      }
+    ],
+    "repeatable": false
+  },
+  {
+    "id": "w1_echo_memory_archive",
+    "description": "Uncovers an abandoned Dominion surveyor lockbox in Signal Alcove.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_echo_memory_archive"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_echo_memory_claimed"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_echo_memory_claimed"
+      },
+      {
+        "type": "give_item",
+        "item_id": "pulse_grenade",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "medkit_i",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "Inside the surveyor lockbox sits a scratched tape label—'SURVEY 04: THE SIGNAL IS OLDER THAN THE COLONY'—packed beside a Pulse Grenade and Medkit I."
+      }
+    ],
+    "repeatable": false
+  },
+  {
+    "id": "w1_loot_launch_fuel",
+    "description": "Loots the emergency flight locker in Refueling Bay.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w1_loot_launch_fuel"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w1_launch_fuel_looted"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w1_launch_fuel_looted"
+      },
+      {
+        "type": "give_item",
+        "item_id": "medkit_i",
+        "quantity": 2
+      },
+      {
+        "type": "give_item",
+        "item_id": "pulse_grenade",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "Nova cracks the emergency flight locker, grabbing two Medkits and a Pulse Grenade for the final push to the Pod Bay."
+      }
+    ],
+    "repeatable": false
   }
 ]

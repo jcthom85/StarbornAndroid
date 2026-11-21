@@ -505,6 +505,19 @@ fun ExplorationScreen(
                         approachingAmbush = event.isAmbush
                         approachingCombat = true
                         viewModel.setExplorationInteractionBlocked(true)
+                        if (event.isAmbush) {
+                            audioCuePlayer.execute(
+                                listOf(
+                                    AudioCommand.Play(
+                                        type = AudioCueType.UI,
+                                        cueId = "sfx_combat_transition_slam",
+                                        loop = false,
+                                        fadeMs = 0L,
+                                        triggerHaptic = true
+                                    )
+                                )
+                            )
+                        }
                         delay(if (event.isAmbush) 380L else 350L)
                     }
                     onEnemySelected(event.enemyIds)
@@ -1287,6 +1300,22 @@ fun ExplorationScreen(
             if (!patrolInteractionBlocked) {
                 val aggression = uiState.enemyAggression
                 if (aggression != null) {
+                    val aggroSecond = ((aggression.remainingMs + 999L) / 1_000L).coerceAtLeast(0L)
+                    LaunchedEffect(aggression.partyId, aggroSecond) {
+                        if (aggroSecond in 1L..3L) {
+                            audioCuePlayer.execute(
+                                listOf(
+                                    AudioCommand.Play(
+                                        type = AudioCueType.UI,
+                                        cueId = if (aggroSecond == 1L) "sfx_ui_error" else "ui_click",
+                                        loop = false,
+                                        fadeMs = 0L,
+                                        triggerHaptic = aggroSecond <= 2L
+                                    )
+                                )
+                            )
+                        }
+                    }
                     com.example.starborn.ui.exploration.PatrolWarning(
                         aggression,
                         Modifier

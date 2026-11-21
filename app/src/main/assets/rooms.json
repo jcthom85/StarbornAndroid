@@ -2667,16 +2667,6 @@
     "description": "Scars from giant drills cut across the first excavation tunnel beside an empty ore cart. Route markers blink toward Sector 4. The vibration under the rock is not machinery. It is two of them, circling below the floor, tracking her footfall.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "echo_borer",
-      "echo_borer"
-    ],
-    "enemy_parties": [
-      [
-        "echo_borer",
-        "echo_borer"
-      ]
-    ],
     "connections": {
       "south": "mine_landing",
       "north": "mine_junction",
@@ -2698,7 +2688,8 @@
         "type": "generic",
         "condition_unmet_message": "Empty and forgotten. A relic of a sector that ran dry years ago."
       }
-    ]
+    ],
+    "enemies": []
   },
   {
     "id": "mine_shunt",
@@ -2963,7 +2954,13 @@
         "type": "generic",
         "condition_unmet_message": "A 'Bulwark' class riot shield. It's almost as tall as you are."
       }
-    ]
+    ],
+    "blocked_directions": {
+      "west": {
+        "type": "enemy",
+        "message_locked": "A Dominion riot squad holds the checkpoint barricade. Clear the post to reach the western spur."
+      }
+    }
   },
   {
     "id": "mine_sifter",
@@ -3017,7 +3014,7 @@
     "weather": "gas",
     "title": "Toxic Pocket",
     "background_image": "images/rooms/world_1/mine_gas.webp",
-    "description": "Corrosive fumes fill the air, turning the lights into blurred, orange smears. A cracked pipe hisses with a yellow gas that tastes like copper and makes your eyes water.",
+    "description": "Corrosive fumes fill the air, turning the lights into blurred, orange smears. A cracked pipe hisses with a yellow gas that tastes like copper, right above a glowing cracked ore seam wedged with salvage.",
     "reveal_title_when_dark": true,
     "description_dark": "Unlit. The gas is louder than it looks: a cracked pipe hisses somewhere off to the left, and the air tastes of copper. Nova's respirator holds. Whatever else is in here, she cannot see it.",
     "npcs": [],
@@ -3040,6 +3037,13 @@
         "name": "pipe",
         "type": "generic",
         "condition_unmet_message": "A gas-main that's been breached. The fumes are highly acidic."
+      },
+      {
+        "name": "cracked ore seam",
+        "type": "generic",
+        "action_event": "w1_mine_gas_ambush_cache",
+        "requires_milestone_not_set": "ms_w1_mine_gas_cache_claimed",
+        "condition_unmet_message": "The cracked ore seam has already been pried clear—only shredded rock and an empty burrow remain."
       }
     ]
   },
@@ -3289,7 +3293,7 @@
     "env": "space",
     "title": "The Harmonic Well",
     "background_image": "images/rooms/world_1/echo_well.webp",
-    "description": "A deep service well glows white around a damaged conduit. Cold mist condenses on the rail and leaves a copper taste at the back of Nova's throat.",
+    "description": "A deep service well glows white around a damaged conduit. Cold mist condenses on the rail above a quiet harmonic basin humming with clean energy.",
     "reveal_title_when_dark": true,
     "description_dark": "No light reaches the well. Nova finds the rail by touch, and cold mist beads on her glove. Dominion strung lamps down here at some point. None of them are burning.",
     "npcs": [],
@@ -3310,6 +3314,13 @@
         "name": "mist",
         "type": "generic",
         "condition_unmet_message": "It feels cool against your skin and carries the scent of a storm."
+      },
+      {
+        "name": "harmonic basin",
+        "type": "generic",
+        "action_event": "w1_echo_well_offering",
+        "requires_milestone_not_set": "ms_w1_echo_well_claimed",
+        "condition_unmet_message": "The harmonic basin hums softly. Its surge has already steadied Nova's suit."
       }
     ]
   },
@@ -3318,7 +3329,7 @@
     "env": "space",
     "title": "Signal Alcove",
     "background_image": "images/rooms/world_1/echo_memory.webp",
-    "description": "A small alcove carries the Fork's return pulse through warm walls. Static crosses Nova's visor as her suit clock drops half a second, then resumes without an error code.",
+    "description": "A small alcove carries the Fork's return pulse through warm walls. Static crosses Nova's visor as her suit clock drops half a second beside an abandoned surveyor lockbox.",
     "reveal_title_when_dark": true,
     "description_dark": "The alcove gives nothing back to a lamp. Nova reads it with her hands instead: warm walls that should be cold, and a static she feels in her teeth before she hears it.",
     "npcs": [],
@@ -3344,6 +3355,13 @@
         "name": "static",
         "type": "generic",
         "condition_unmet_message": "The static repeats at the cutter's bypass frequency."
+      },
+      {
+        "name": "surveyor lockbox",
+        "type": "generic",
+        "action_event": "w1_echo_memory_archive",
+        "requires_milestone_not_set": "ms_w1_echo_memory_claimed",
+        "condition_unmet_message": "The surveyor lockbox stands open. Only the faded Dominion survey tag remains inside."
       }
     ]
   },
@@ -3406,16 +3424,6 @@
     ],
     "npcs": [],
     "items": [],
-    "enemies": [
-      "siren_skimmer",
-      "echo_borer"
-    ],
-    "enemy_parties": [
-      [
-        "siren_skimmer",
-        "echo_borer"
-      ]
-    ],
     "connections": {
       "south": "echo_exit",
       "north": "launch_lift",
@@ -3442,7 +3450,8 @@
         "type": "generic",
         "condition_unmet_message": "The cargo lift is half-open while Zeke's spoof keeps the gate sensor in a service loop."
       }
-    ]
+    ],
+    "enemies": []
   },
   {
     "id": "launch_gantry",
@@ -3491,7 +3500,7 @@
     "env": "logistics",
     "title": "Refueling Bay",
     "background_image": "images/rooms/world_1/launch_fuel.webp",
-    "description": "The air is thick with the smell of high-grade propellant and industrial grease. A heavy refueling hose snakes across the floor, its nozzle leaking a shimmering, blue liquid.",
+    "description": "The air is thick with the smell of high-grade propellant and industrial grease. A heavy refueling hose snakes across the floor past a red emergency flight locker bolted to the bulkhead.",
     "description_variants": [
       {
         "requires_milestones": [
@@ -3528,6 +3537,13 @@
         "name": "hose",
         "type": "generic",
         "condition_unmet_message": "Thick and reinforced, built to handle the pressure of ship-grade fuel."
+      },
+      {
+        "name": "emergency flight locker",
+        "type": "generic",
+        "action_event": "w1_loot_launch_fuel",
+        "requires_milestone_not_set": "ms_w1_launch_fuel_looted",
+        "condition_unmet_message": "The emergency flight locker is empty."
       }
     ]
   },
