@@ -71,8 +71,9 @@
     "id": "party_basics",
     "steps": [
       {
-        "message": "Tap a portrait to switch the active character. Each party member has unique abilities.",
-        "context": "Combat"
+        "title": "Party Combat",
+        "context": "Combat",
+        "message": "Zeke is now fighting beside you. Each party member has their own action bar and abilities—tap a ready character to choose their move."
       }
     ]
   },
@@ -146,7 +147,8 @@
     "steps": [
       {
         "title": "Well-Fed Meals",
-        "message": "Cooked meals can be eaten outside combat to grant the entire crew 3 battles of stat bonuses plus the serving companion's perk (Zeke: +25 Max HP & +3 Stability, Nova: +3 Focus, Gh0st: +2 Speed & +10% Resist, Orion: +4% Crit)."
+        "message": "Cooked meals can be eaten outside combat to grant the entire crew 3 battles of stat bonuses plus the serving companion's perk (Zeke: +25 Max HP & +3 Stability, Nova: +3 Focus, Gh0st: +2 Speed & +10% Resist, Orion: +4% Crit).",
+        "context": "Campfire"
       }
     ]
   },
@@ -155,7 +157,8 @@
     "steps": [
       {
         "title": "Equipped Snacks",
-        "message": "Snacks are permanent gear equipped in each crew member's Snack slot. They grant passive stats and a reusable combat boost on a 5-turn cooldown—they are never consumed."
+        "message": "Snacks are permanent gear equipped in each crew member's Snack slot. They grant passive stats and a reusable combat boost on a 5-turn cooldown—they are never consumed.",
+        "context": "Snacks"
       }
     ]
   },
@@ -166,6 +169,16 @@
         "title": "Dark Rooms & Aggressive Hostiles",
         "context": "Deep Mine",
         "message": "Dark rooms hide exits and details—flip breakers or light switches to restore power. Aggressive hostiles attack if you linger: tap them first for +1 Momentum, or move out to evade an Ambush."
+      }
+    ]
+  },
+  {
+    "id": "fishing_basics",
+    "steps": [
+      {
+        "title": "Tide Fishing",
+        "context": "Tide Pools",
+        "message": "Tap Tide Fishing at coastal pools to cast your line. Fresh catches supply ingredients for Campfire Meals and coastal trades."
       }
     ]
   }

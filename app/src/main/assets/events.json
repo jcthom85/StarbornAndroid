@@ -3644,6 +3644,11 @@
       {
         "type": "set_milestone",
         "milestone": "ms_w2_zeke_stabilized"
+      },
+      {
+        "type": "system_tutorial",
+        "scene_id": "party_basics",
+        "context": "Combat"
       }
     ]
   },
@@ -18222,6 +18227,195 @@
       {
         "type": "show_message",
         "message": "Nova cracks the emergency flight locker, grabbing two Medkits and a Pulse Grenade for the final push to the Pod Bay."
+      }
+    ],
+    "repeatable": false
+  },
+  {
+    "id": "w2_loot_landing_perimeter",
+    "description": "Salvages parts from the downed Dominion drone at Security Perimeter.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_loot_landing_perimeter"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w2_landing_perimeter_looted"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_landing_perimeter_looted"
+      },
+      {
+        "type": "give_item",
+        "item_id": "power_cell",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "scrap_metal",
+        "quantity": 2
+      },
+      {
+        "type": "give_item",
+        "item_id": "medkit_i",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "Nova cracks open the downed Dominion recon drone, salvaging a live Power Cell, 2 Scrap Metal, and a field Medkit I."
+      }
+    ],
+    "repeatable": false
+  },
+  {
+    "id": "w2_beach_pillar_surprise",
+    "description": "Inspecting the Sunken Obelisk uncovers a tideglass cache and triggers a surprise Mist Glider ambush.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_beach_pillar_surprise"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w2_beach_pillar_claimed"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_beach_pillar_claimed"
+      },
+      {
+        "type": "give_item",
+        "item_id": "focusing_lens",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "antidote_flask",
+        "quantity": 1
+      },
+      {
+        "type": "give_reward",
+        "credits": 80
+      },
+      {
+        "type": "narrate",
+        "message": "Nova pulls a waterproof salvage satchel from the base of the obelisk—just as a Mist Glider drops silently out of the sea-arch spray!"
+      },
+      {
+        "type": "spawn_encounter",
+        "encounter_id": "ambush:mist_glider",
+        "room_id": "sector9_beach_pillar"
+      }
+    ],
+    "repeatable": false
+  },
+  {
+    "id": "w2_reflection_pool_rest",
+    "description": "The Reflection Pool steadies the crew and reveals an archived sanctuary cache.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w2_reflection_pool_rest"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w2_reflection_pool_claimed"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w2_reflection_pool_claimed"
+      },
+      {
+        "type": "rest_party",
+        "message": "Cool Sanctuary mist rises off the reflection pool, clearing spore fatigue and restoring the crew."
+      },
+      {
+        "type": "give_item",
+        "item_id": "medkit_i",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "pulse_grenade",
+        "quantity": 1
+      },
+      {
+        "type": "show_message",
+        "message": "Beside the basin's stone lip sits an old emergency kit left by Sanctuary technicians: 1 Medkit I and 1 Pulse Grenade."
+      }
+    ],
+    "repeatable": false
+  },
+  {
+    "id": "w2_campfire_meals_tutorial",
+    "description": "Explains Well-Fed Campfire Meals when reaching Chef David's falls camp.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "sector9_stream_falls"
+    },
+    "conditions": [
+      {
+        "type": "tutorial_not_completed",
+        "tutorial_id": "campfire_meals"
+      }
+    ],
+    "actions": [
+      {
+        "type": "system_tutorial",
+        "scene_id": "campfire_meals",
+        "context": "Campfire"
+      }
+    ],
+    "repeatable": false
+  },
+  {
+    "id": "w2_snacks_tutorial",
+    "description": "Explains reusable Equipped Snacks the first time a Snack is acquired.",
+    "trigger": {
+      "type": "item_acquired",
+      "item_type": "snack"
+    },
+    "conditions": [
+      {
+        "type": "tutorial_not_completed",
+        "tutorial_id": "equipped_snacks"
+      }
+    ],
+    "actions": [
+      {
+        "type": "system_tutorial",
+        "scene_id": "equipped_snacks",
+        "context": "Snacks"
+      }
+    ],
+    "repeatable": false
+  },
+  {
+    "id": "w2_fishing_tutorial",
+    "description": "Introduces Tide Fishing upon reaching Tide Pools.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "sector9_beach_pools"
+    },
+    "conditions": [
+      {
+        "type": "tutorial_not_completed",
+        "tutorial_id": "fishing_basics"
+      }
+    ],
+    "actions": [
+      {
+        "type": "system_tutorial",
+        "scene_id": "fishing_basics",
+        "context": "Tide Pools"
       }
     ],
     "repeatable": false

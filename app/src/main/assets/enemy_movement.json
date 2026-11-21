@@ -53,6 +53,40 @@
         "launch_access"
       ],
       "protected_rooms": []
+    },
+    {
+      "id": "w2_wilds_prowl",
+      "rooms": [
+        "sector9_wilds_overlook",
+        "sector9_wilds_canopy_walk",
+        "sector9_wilds_archway",
+        "sector9_wilds_dense_brush",
+        "sector9_wilds_clearance"
+      ],
+      "protected_rooms": [
+        "sector9_wilds_lookout",
+        "sector9_crash_site"
+      ]
+    },
+    {
+      "id": "w2_facility_corridor_patrol",
+      "rooms": [
+        "sector9_foyer_right_gallery",
+        "sector9_foyer_vault_door",
+        "sector9_conduit_crawlspace"
+      ],
+      "protected_rooms": [
+        "sector9_foyer_grand_hall",
+        "sector9_stasis_chamber"
+      ]
+    },
+    {
+      "id": "w2_facility_guard_posts",
+      "rooms": [
+        "sector9_hall_acoustics_lab",
+        "sector9_conduit_junction"
+      ],
+      "protected_rooms": []
     }
   ],
   "parties": [
@@ -284,6 +318,99 @@
         "enter_room": "A lockdown sweep pack snaps toward Nova.",
         "leave_room": "The sweep pack circles back down the corridor.",
         "adjacent": "Static screeches along the maintenance conduit."
+      }
+    },
+    {
+      "id": "w2_wilds_hound_patrol",
+      "zone_id": "w2_wilds_prowl",
+      "enemies": [
+        "shard_hound"
+      ],
+      "start_room": "sector9_wilds_archway",
+      "route": [
+        "sector9_wilds_overlook",
+        "sector9_wilds_canopy_walk",
+        "sector9_wilds_archway",
+        "sector9_wilds_dense_brush",
+        "sector9_wilds_clearance"
+      ],
+      "behavior": "patrol",
+      "aggression": "aggressive",
+      "move_interval_seconds": 16,
+      "engage_delay_seconds": 5,
+      "requires_milestone": "ms_w2_mq01_complete",
+      "signals": {
+        "enter_room": "A shard hound pads out of the brush, jaws low.",
+        "leave_room": "The shard hound slips back into the thickets.",
+        "adjacent": "Crystalline claws scrape root bark nearby."
+      }
+    },
+    {
+      "id": "w2_facility_sentinel_patrol",
+      "zone_id": "w2_facility_corridor_patrol",
+      "enemies": [
+        "sentinel_orb"
+      ],
+      "start_room": "sector9_foyer_vault_door",
+      "route": [
+        "sector9_foyer_right_gallery",
+        "sector9_foyer_vault_door",
+        "sector9_conduit_crawlspace"
+      ],
+      "behavior": "patrol",
+      "aggression": "aggressive",
+      "move_interval_seconds": 15,
+      "engage_delay_seconds": 5,
+      "requires_milestone": "ms_w2_mq02_complete",
+      "signals": {
+        "enter_room": "A sentinel orb glides down the gallery, scanner sweeping red.",
+        "leave_room": "The sentinel orb drifts into the next corridor.",
+        "adjacent": "A cold blue scanner chime hums nearby."
+      }
+    },
+    {
+      "id": "w2_hall_acoustics_ambush",
+      "zone_id": "w2_facility_guard_posts",
+      "enemies": [
+        "sentinel_orb",
+        "spore_spitter"
+      ],
+      "start_room": "sector9_hall_acoustics_lab",
+      "route": [
+        "sector9_hall_acoustics_lab"
+      ],
+      "behavior": "stationary",
+      "aggression": "aggressive",
+      "move_interval_seconds": 30,
+      "engage_delay_seconds": 5,
+      "requires_milestone": "ms_w2_mq02_complete",
+      "replaces_static_encounter": true,
+      "signals": {
+        "enter_room": "A sentinel orb and spore cluster snap toward the doorway.",
+        "leave_room": "The acoustics lab settles back into a low hum.",
+        "adjacent": "Resonant static buzzes from the acoustics lab."
+      }
+    },
+    {
+      "id": "w2_conduit_junction_drone",
+      "zone_id": "w2_facility_guard_posts",
+      "enemies": [
+        "sentinel_orb"
+      ],
+      "start_room": "sector9_conduit_junction",
+      "route": [
+        "sector9_conduit_junction"
+      ],
+      "behavior": "stationary",
+      "aggression": "aggressive",
+      "move_interval_seconds": 30,
+      "engage_delay_seconds": 5,
+      "requires_milestone": "ms_w2_mq02_complete",
+      "replaces_static_encounter": true,
+      "signals": {
+        "enter_room": "A junction sentinel locks onto the crew's heat signatures.",
+        "leave_room": "The sentinel returns to its junction hover.",
+        "adjacent": "Conduit relays click sharply ahead."
       }
     }
   ]

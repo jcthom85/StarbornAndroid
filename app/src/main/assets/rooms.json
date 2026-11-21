@@ -11258,7 +11258,9 @@
       {
         "name": "drone",
         "type": "generic",
-        "condition_unmet_message": "The chassis is crushed, but its recording cells hum faintly."
+        "condition_unmet_message": "The downed Dominion perimeter drone has already been stripped for usable salvage.",
+        "action_event": "w2_loot_landing_perimeter",
+        "requires_milestone_not_set": "ms_w2_landing_perimeter_looted"
       },
       {
         "name": "scanner lens",
@@ -12026,7 +12028,9 @@
       {
         "name": "resonant pillar",
         "type": "generic",
-        "condition_unmet_message": "Touching the pillar sends a clean note through the beach and answers a deeper tone beneath the facility."
+        "condition_unmet_message": "The sunken obelisk hums calmly now that its sea-washed cache has been cleared.",
+        "action_event": "w2_beach_pillar_surprise",
+        "requires_milestone_not_set": "ms_w2_beach_pillar_claimed"
       }
     ]
   },
@@ -13581,9 +13585,7 @@
     "description": "A junction point inside the crawlspace. A service map marks wire channels splitting off to the stasis deck and generator breakers.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "sentinel_orb"
-    ],
+    "enemies": [],
     "connections": {
       "west": "sector9_conduit_crawlspace",
       "north": "sector9_conduit_access_shaft",
@@ -13600,11 +13602,6 @@
         "type": "generic",
         "condition_unmet_message": "The map reveals a return duct linking the Hall of Echoes to the foyer security hub."
       }
-    ],
-    "enemy_parties": [
-      [
-        "sentinel_orb"
-      ]
     ],
     "enemy_instances": [
       {
@@ -13809,10 +13806,7 @@
     ],
     "npcs": [],
     "items": [],
-    "enemies": [
-      "sentinel_orb",
-      "spore_spitter"
-    ],
+    "enemies": [],
     "connections": {
       "south": "sector9_hall_echo_alcoves"
     },
@@ -13830,12 +13824,6 @@
         "condition_unmet_message": "A gold crystal rests inside the test rack.",
         "unavailable_message": "A gold crystal rests inside the test rack. Speak with Orion about the stasis murals before aligning it."
       }
-    ],
-    "enemy_parties": [
-      [
-        "sentinel_orb",
-        "spore_spitter"
-      ]
     ],
     "enemy_instances": [
       {
@@ -13881,7 +13869,9 @@
       {
         "name": "reflection pool",
         "type": "generic",
-        "condition_unmet_message": "Your reflection fractures into ice-bright facets while the water beneath remains a single dark Ocean."
+        "condition_unmet_message": "The stillness of the reflection pool holds steady, mirroring the ancient ceiling.",
+        "action_event": "w2_reflection_pool_rest",
+        "requires_milestone_not_set": "ms_w2_reflection_pool_claimed"
       }
     ]
   },

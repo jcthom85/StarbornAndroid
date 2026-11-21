@@ -262,7 +262,9 @@
     "echo_heart": "amb_w2_architect_facility",
     "echo_well": "amb_w2_architect_facility",
     "echo_memory": "amb_w2_architect_facility",
-    "echo_exit": "amb_w2_architect_facility"
+    "echo_exit": "amb_w2_architect_facility",
+    "sector9_sunken_aethel_vault": "amb_cave_drips+amb_w2_architect_facility",
+    "sector9_coastal_research_station": "amb_w2_tideglass_shore"
   },
   "weather": {
     "dust": "amb_dust_storm",
