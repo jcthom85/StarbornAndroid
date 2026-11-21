@@ -513,7 +513,8 @@
         "camera_start_x": 0.0,
         "camera_end_x": 22.0,
         "camera_start_y": 6.0,
-        "camera_end_y": -4.0
+        "camera_end_y": -4.0,
+        "portrait": "images/characters/emotes/zeke_worried.png"
       },
       {
         "type": "dialogue",
@@ -529,7 +530,8 @@
         "camera_start_x": -10.0,
         "camera_end_x": 10.0,
         "camera_start_y": 6.0,
-        "camera_end_y": -6.0
+        "camera_end_y": -6.0,
+        "portrait": "images/characters/emotes/nova_worried.png"
       },
       {
         "type": "narration",
@@ -783,7 +785,9 @@
         "camera_start_y": -4.0,
         "camera_end_y": -10.0,
         "transition": "cut",
-        "duration_seconds": 2.8
+        "duration_seconds": 2.8,
+        "emote": "confident",
+        "portrait": "images/characters/emotes/nova_confident.png"
       },
       {
         "type": "narration",
@@ -812,7 +816,8 @@
         "camera_start_y": 4.0,
         "camera_end_y": 14.0,
         "transition": "cut",
-        "duration_seconds": 2.6
+        "duration_seconds": 2.6,
+        "portrait": "images/npcs/jed_portrait_v2.webp"
       },
       {
         "type": "dialogue",
@@ -828,7 +833,8 @@
         "camera_start_y": 8.0,
         "camera_end_y": -10.0,
         "transition": "cut",
-        "duration_seconds": 3.8
+        "duration_seconds": 3.8,
+        "portrait": "images/characters/emotes/nova_worried.png"
       },
       {
         "type": "narration",
@@ -868,7 +874,8 @@
         "camera_start_y": 4.0,
         "camera_end_y": -4.0,
         "transition": "fade",
-        "duration_seconds": 4.4
+        "duration_seconds": 4.4,
+        "portrait": "images/characters/emotes/gh0st_puzzled.png"
       },
       {
         "type": "dialogue",
@@ -884,7 +891,8 @@
         "camera_start_y": -4.0,
         "camera_end_y": -2.0,
         "transition": "cut",
-        "duration_seconds": 4.0
+        "duration_seconds": 4.0,
+        "portrait": "images/characters/emotes/nova_confident.png"
       },
       {
         "type": "dialogue",
@@ -900,7 +908,8 @@
         "camera_start_y": -2.0,
         "camera_end_y": 2.0,
         "transition": "cut",
-        "duration_seconds": 4.2
+        "duration_seconds": 4.2,
+        "portrait": "images/characters/emotes/gh0st_confident.png"
       },
       {
         "type": "dialogue",
@@ -916,7 +925,8 @@
         "camera_start_y": 2.0,
         "camera_end_y": -6.0,
         "transition": "cut",
-        "duration_seconds": 4.6
+        "duration_seconds": 4.6,
+        "portrait": "images/characters/emotes/orion_worried.png"
       },
       {
         "type": "narration",
@@ -945,7 +955,8 @@
         "camera_start_y": 8.0,
         "camera_end_y": -12.0,
         "transition": "cut",
-        "duration_seconds": 5.0
+        "duration_seconds": 5.0,
+        "portrait": "images/characters/emotes/orion_worried.png"
       },
       {
         "type": "narration",
@@ -974,7 +985,8 @@
         "camera_start_y": 4.0,
         "camera_end_y": 6.0,
         "transition": "cut",
-        "duration_seconds": 3.4
+        "duration_seconds": 3.4,
+        "portrait": "images/characters/emotes/gh0st_confident.png"
       },
       {
         "type": "narration",
@@ -1001,7 +1013,8 @@
         "camera_end_y": 6.0,
         "transition": "cut",
         "duration_seconds": 5.0,
-        "fade_out_seconds": 1.4
+        "fade_out_seconds": 1.4,
+        "portrait": "images/characters/emotes/nova_confident.png"
       }
     ]
   },
@@ -2440,7 +2453,8 @@
         "camera_start_scale": 1.04,
         "camera_end_scale": 1.07,
         "transition": "cut",
-        "duration_seconds": 3.4
+        "duration_seconds": 3.4,
+        "portrait": "images/npcs/jed_portrait_v2.webp"
       },
       {
         "type": "dialogue",
