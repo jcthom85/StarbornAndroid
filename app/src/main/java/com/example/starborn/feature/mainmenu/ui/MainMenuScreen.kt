@@ -85,7 +85,13 @@ import com.example.starborn.domain.audio.AudioRouter
 import com.example.starborn.feature.exploration.ui.tabs.SettingsTabContent
 import com.example.starborn.feature.exploration.viewmodel.SettingsUiState
 import com.example.starborn.debug.DebugTestRegistry
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import com.example.starborn.domain.cinematic.CinematicScene
+import com.example.starborn.feature.exploration.ui.IllustratedCinematicOverlay
 import com.example.starborn.feature.mainmenu.MainMenuViewModel
+import com.example.starborn.feature.mainmenu.ScreeningRoomEntry
 import com.example.starborn.feature.mainmenu.DebugScenario
 import com.example.starborn.feature.mainmenu.DebugScenarioCategory
 import androidx.compose.ui.platform.testTag
@@ -135,6 +141,10 @@ fun MainMenuScreen(
     var pendingScenario by remember { mutableStateOf<DebugScenario?>(null) }
     var pendingLoadSlot by remember { mutableStateOf<Int?>(null) }
     var showDebugBrowser by remember { mutableStateOf(false) }
+    var showCinematicRoom by remember { mutableStateOf(false) }
+    var screeningDebugHud by remember { mutableStateOf(false) }
+    var screeningQueue by remember { mutableStateOf<List<CinematicScene>>(emptyList()) }
+    var screeningStepIndex by remember { mutableStateOf(0) }
     var showBurgfestDialog by remember { mutableStateOf(false) }
     var showSettings by remember { mutableStateOf(false) }
     var saveLoadMode by remember { mutableStateOf<String?>(null) }
@@ -553,6 +563,12 @@ fun MainMenuScreen(
                     enabled = buttonsInteractable,
                     primary = false
                 )
+                StarbornTitleButton(
+                    text = "Cinematic Screening Room",
+                    onClick = { showCinematicRoom = true },
+                    enabled = buttonsInteractable,
+                    primary = false
+                )
             }
         }
 
@@ -684,6 +700,82 @@ fun MainMenuScreen(
                     } else pendingScenario = scenario
                 },
                 onDismiss = { showDebugBrowser = false }
+            )
+        }
+
+        if (BuildConfig.ENABLE_SCENARIO_MENU && showCinematicRoom && screeningQueue.isEmpty()) {
+            val entries = remember { viewModel.screeningRoomEntries() }
+            CinematicScreeningDialog(
+                entries = entries,
+                showDebugHud = screeningDebugHud,
+                onToggleDebugHud = { screeningDebugHud = it },
+                onPlayScenes = { scenes ->
+                    if (scenes.isNotEmpty()) {
+                        showCinematicRoom = false
+                        screeningStepIndex = 0
+                        screeningQueue = scenes
+                        audioCuePlayer.execute(
+                            audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, stop = true, fadeMs = 250L)
+                        )
+                    }
+                },
+                onDismiss = { showCinematicRoom = false }
+            )
+        }
+
+        val activeScreeningScene = screeningQueue.firstOrNull()
+        LaunchedEffect(activeScreeningScene?.id, screeningStepIndex) {
+            val scene = activeScreeningScene ?: return@LaunchedEffect
+            val cue = scene.steps.getOrNull(screeningStepIndex)?.musicCue?.takeIf { it.isNotBlank() }
+                ?: return@LaunchedEffect
+            if (cue.equals("none", ignoreCase = true) ||
+                cue.equals("stop", ignoreCase = true) ||
+                cue.equals("silence", ignoreCase = true)
+            ) {
+                audioCuePlayer.execute(
+                    audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, stop = true, fadeMs = 450L)
+                )
+            } else {
+                audioCuePlayer.execute(
+                    audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = cue)
+                )
+            }
+        }
+
+        if (activeScreeningScene != null) {
+            val screeningUiState = remember(activeScreeningScene.id, screeningStepIndex) {
+                viewModel.buildScreeningCinematicState(activeScreeningScene, screeningStepIndex)
+            }
+            val finishScreening: (Boolean) -> Unit = { advanceReel ->
+                val remaining = if (advanceReel) screeningQueue.drop(1) else emptyList()
+                if (remaining.isNotEmpty()) {
+                    screeningStepIndex = 0
+                    screeningQueue = remaining
+                    audioCuePlayer.execute(
+                        audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, stop = true, fadeMs = 250L)
+                    )
+                } else {
+                    screeningQueue = emptyList()
+                    screeningStepIndex = 0
+                    showCinematicRoom = true
+                    audioCuePlayer.execute(
+                        audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = "music_title_theme")
+                    )
+                }
+            }
+            IllustratedCinematicOverlay(
+                state = screeningUiState,
+                onAdvance = {
+                    if (screeningStepIndex + 1 < activeScreeningScene.steps.size) {
+                        screeningStepIndex += 1
+                    } else {
+                        finishScreening(true)
+                    }
+                },
+                onSkip = { finishScreening(false) },
+                audioCuePlayer = audioCuePlayer,
+                showDebugHud = screeningDebugHud,
+                modifier = Modifier.fillMaxSize()
             )
         }
 
@@ -1423,4 +1515,131 @@ private fun TitleCosmicStarfield(
             )
         }
     }
+}
+
+@Composable
+private fun CinematicScreeningDialog(
+    entries: List<ScreeningRoomEntry>,
+    showDebugHud: Boolean,
+    onToggleDebugHud: (Boolean) -> Unit,
+    onPlayScenes: (List<CinematicScene>) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val grouped = remember(entries) { entries.groupBy { it.worldLabel } }
+    val world1Reel = remember(entries) {
+        entries.filter { it.worldLabel.startsWith("World 1") && it.scene.id != "new_game_fade_in" }
+            .map { it.scene }
+    }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = TitlePanel,
+        title = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    "Cinematic Screening Room",
+                    color = TitleGold,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        "Review HUD (step / time / cues)",
+                        color = TitleMutedText,
+                        fontSize = 12.sp
+                    )
+                    Switch(
+                        checked = showDebugHud,
+                        onCheckedChange = onToggleDebugHud,
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = TitlePanel,
+                            checkedTrackColor = TitleCyan
+                        )
+                    )
+                }
+                if (world1Reel.isNotEmpty()) {
+                    Button(
+                        onClick = { onPlayScenes(world1Reel) },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = TitleCyan.copy(alpha = 0.2f),
+                            contentColor = TitleCyan
+                        ),
+                        border = BorderStroke(1.dp, TitleCyan.copy(alpha = 0.55f)),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            "Play World 1 Reel (${world1Reel.size} scenes)",
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 13.sp
+                        )
+                    }
+                }
+            }
+        },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 420.dp)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                grouped.forEach { (worldLabel, worldEntries) ->
+                    Text(
+                        worldLabel.uppercase(java.util.Locale.US),
+                        color = TitleCyan,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.sp
+                    )
+                    worldEntries.forEach { entry ->
+                        Surface(
+                            color = Color.White.copy(alpha = 0.05f),
+                            shape = RoundedCornerShape(10.dp),
+                            border = BorderStroke(1.dp, Color.White.copy(alpha = 0.14f)),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onPlayScenes(listOf(entry.scene)) }
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 9.dp),
+                                verticalArrangement = Arrangement.spacedBy(2.dp)
+                            ) {
+                                Text(
+                                    entry.scene.title ?: entry.scene.id,
+                                    color = TitleText,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 14.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                Text(
+                                    String.format(
+                                        java.util.Locale.US,
+                                        "%s · %d beats · %d imgs · %.1fs",
+                                        entry.scene.id,
+                                        entry.scene.steps.size,
+                                        entry.imageCount,
+                                        entry.durationSeconds
+                                    ),
+                                    color = TitleMutedText.copy(alpha = 0.78f),
+                                    fontSize = 11.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Close", color = TitleGold)
+            }
+        }
+    )
 }

@@ -8284,8 +8284,25 @@ fun CinematicOverlay(
     val stepKey = remember(state.sceneId, state.stepIndex) { "${state.sceneId}_${state.stepIndex}" }
     LaunchedEffect(stepKey, audioCuePlayer) {
         state.step.audioCue?.takeIf { it.isNotBlank() }?.let { cue ->
+            val isHeavyImpact = cue == "sfx_intro_beast_strike" ||
+                cue == "sfx_intro_door_collapse" ||
+                cue == "sfx_combat_plasma_arc" ||
+                cue == "sfx_distant_gate_rumble" ||
+                cue == "wpn_orion_bowl_resonance" ||
+                cue == "sfx_door_airlock_close" ||
+                cue == "sfx_pod_launch" ||
+                cue == "sfx_combat_shield_deflect" ||
+                cue == "sfx_crash_impact"
             audioCuePlayer?.execute(
-                listOf(AudioCommand.Play(AudioCueType.UI, cue, loop = false, fadeMs = 0L))
+                listOf(
+                    AudioCommand.Play(
+                        type = AudioCueType.UI,
+                        cueId = cue,
+                        loop = false,
+                        fadeMs = 0L,
+                        triggerHaptic = isHeavyImpact
+                    )
+                )
             )
         }
     }
@@ -8519,16 +8536,18 @@ private data class RenderedCinematicFrame(
     val imagePath: String?,
     val scale: Float,
     val translationX: Float,
-    val translationY: Float
+    val translationY: Float,
+    val alpha: Float = 1f
 )
 
 @Composable
-private fun IllustratedCinematicOverlay(
+internal fun IllustratedCinematicOverlay(
     state: CinematicUiState,
     onAdvance: () -> Unit,
     onSkip: () -> Unit,
     audioCuePlayer: AudioCuePlayer?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showDebugHud: Boolean = false
 ) {
     val stepKey = "${state.sceneId}_${state.stepIndex}"
     val advanceOnce = rememberCinematicAdvance(state.sceneId, state.stepIndex, onAdvance)
@@ -8564,8 +8583,25 @@ private fun IllustratedCinematicOverlay(
 
     LaunchedEffect(stepKey, audioCuePlayer) {
         state.step.audioCue?.takeIf { it.isNotBlank() }?.let { cue ->
+            val isHeavyImpact = cue == "sfx_intro_beast_strike" ||
+                cue == "sfx_intro_door_collapse" ||
+                cue == "sfx_combat_plasma_arc" ||
+                cue == "sfx_distant_gate_rumble" ||
+                cue == "wpn_orion_bowl_resonance" ||
+                cue == "sfx_door_airlock_close" ||
+                cue == "sfx_pod_launch" ||
+                cue == "sfx_combat_shield_deflect" ||
+                cue == "sfx_crash_impact"
             audioCuePlayer?.execute(
-                listOf(AudioCommand.Play(AudioCueType.UI, cue, loop = false, fadeMs = 0L))
+                listOf(
+                    AudioCommand.Play(
+                        type = AudioCueType.UI,
+                        cueId = cue,
+                        loop = false,
+                        fadeMs = 0L,
+                        triggerHaptic = isHeavyImpact
+                    )
+                )
             )
         }
         state.step.voiceCue?.takeIf { it.isNotBlank() }?.let { cue ->
@@ -8648,11 +8684,14 @@ private fun IllustratedCinematicOverlay(
     val continuousShot = outgoing?.takeIf {
         state.sceneId != "intro_prologue" && it.imagePath != null && it.imagePath == state.step.imagePath
     }
-    val startScale = continuousShot?.scale ?: state.step.cameraStartScale?.toFloat() ?: legacyStartScale
+    val safeBleed = if (state.step.imagePath?.contains("title_card") == true) 1.0f else 1.06f
+    val startScale = continuousShot?.let { it.scale / safeBleed }
+        ?: state.step.cameraStartScale?.toFloat()
+        ?: legacyStartScale
     val endScale = state.step.cameraEndScale?.toFloat() ?: legacyEndScale
     val startX = continuousShot?.translationX ?: with(density) { (state.step.cameraStartX ?: 0.0).toFloat().dp.toPx() }
     val startY = continuousShot?.translationY ?: with(density) { (state.step.cameraStartY ?: 0.0).toFloat().dp.toPx() }
-    val scale = lerp(startScale, endScale, progress).coerceAtLeast(1.06f)
+    val scale = lerp(startScale, endScale, progress) * safeBleed
     val driftX = lerp(startX, endX, progress)
     val driftY = lerp(startY, endY, progress)
     // Keep authored cuts between shots. During a dissolve, draw the outgoing frame
@@ -8682,6 +8721,14 @@ private fun IllustratedCinematicOverlay(
     val impactShakeX = remember(stepKey) { CoreAnimatable(0f) }
     val impactShakeY = remember(stepKey) { CoreAnimatable(0f) }
     val impactFlash = remember(stepKey) { CoreAnimatable(0f) }
+    val impactFlashColor = remember(stepKey) {
+        when (state.step.audioCue) {
+            "sfx_combat_plasma_arc" -> Color(0xFF80F8FF)
+            "wpn_orion_bowl_resonance" -> Color(0xFFB3F7FF)
+            "sfx_combat_shield_deflect" -> Color(0xFFFFE0E0)
+            else -> Color.White
+        }
+    }
     LaunchedEffect(stepKey) {
         val cue = state.step.audioCue
         if (cue == "sfx_intro_door_buckle") {
@@ -8772,11 +8819,160 @@ private fun IllustratedCinematicOverlay(
                 impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 220, easing = FastOutSlowInEasing))
                 impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 220, easing = FastOutSlowInEasing))
             }
+        } else if (cue == "sfx_combat_plasma_arc") {
+            // Sharp electrical surge kick + rapid high-frequency buzz tremor
+            val arcAmp = with(density) { 10.dp.toPx() }
+            val buzzAmp = with(density) { 3.dp.toPx() }
+            launch {
+                impactShakeX.snapTo(arcAmp)
+                impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 160, easing = FastOutSlowInEasing))
+                for (cycle in 7 downTo 1) {
+                    val decay = cycle / 7f
+                    val sign = if (cycle % 2 == 0) 1f else -1f
+                    impactShakeX.animateTo(buzzAmp * decay * sign, animationSpec = tween(durationMillis = 36, easing = LinearEasing))
+                    impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 36, easing = LinearEasing))
+                }
+            }
+            launch {
+                impactShakeY.snapTo(-arcAmp * 0.5f)
+                impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 160, easing = FastOutSlowInEasing))
+            }
+        } else if (cue == "sfx_distant_gate_rumble") {
+            // Deep subterranean tremor as the buried chamber seal cracks below the workshop
+            val rumbleAmp = with(density) { 3.5.dp.toPx() }
+            launch {
+                delay(180L)
+                for (cycle in 10 downTo 1) {
+                    val decay = cycle / 10f
+                    val sign = if (cycle % 2 == 0) 1f else -1f
+                    impactShakeY.animateTo(rumbleAmp * decay * sign, animationSpec = tween(durationMillis = 85, easing = LinearEasing))
+                    impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 85, easing = LinearEasing))
+                }
+            }
+            launch {
+                delay(180L)
+                for (cycle in 10 downTo 1) {
+                    val decay = cycle / 10f
+                    val sign = if (cycle % 2 == 0) -1f else 1f
+                    impactShakeX.animateTo(rumbleAmp * 0.45f * decay * sign, animationSpec = tween(durationMillis = 85, easing = LinearEasing))
+                    impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 85, easing = LinearEasing))
+                }
+            }
+        } else if (cue == "sfx_door_airlock_close") {
+            // Heavy blast-shutter slam + brief metallic latch rattle
+            val slamAmp = with(density) { 11.dp.toPx() }
+            val rattleAmp = with(density) { 2.5.dp.toPx() }
+            launch {
+                impactShakeY.snapTo(slamAmp)
+                impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 190, easing = FastOutSlowInEasing))
+                for (cycle in 3 downTo 1) {
+                    val decay = cycle / 3f
+                    val sign = if (cycle % 2 == 0) 1f else -1f
+                    impactShakeY.animateTo(rattleAmp * decay * sign, animationSpec = tween(durationMillis = 45, easing = LinearEasing))
+                    impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 45, easing = LinearEasing))
+                }
+            }
+            launch {
+                impactShakeX.snapTo(slamAmp * 0.35f)
+                impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 190, easing = FastOutSlowInEasing))
+            }
+        } else if (cue == "sfx_pod_launch") {
+            // Rail-launch capacitor kick + sustained thruster acceleration rumble
+            val kickAmp = with(density) { 9.dp.toPx() }
+            val thrustAmp = with(density) { 2.8.dp.toPx() }
+            launch {
+                impactShakeY.snapTo(-kickAmp)
+                impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 220, easing = FastOutSlowInEasing))
+                for (cycle in 12 downTo 1) {
+                    val decay = cycle / 12f
+                    val sign = if (cycle % 2 == 0) 1f else -1f
+                    impactShakeY.animateTo(thrustAmp * decay * sign, animationSpec = tween(durationMillis = 55, easing = LinearEasing))
+                    impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 55, easing = LinearEasing))
+                }
+            }
+            launch {
+                impactShakeX.snapTo(kickAmp * 0.4f)
+                impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 220, easing = FastOutSlowInEasing))
+                for (cycle in 12 downTo 1) {
+                    val decay = cycle / 12f
+                    val sign = if (cycle % 2 == 0) -1f else 1f
+                    impactShakeX.animateTo(thrustAmp * 0.6f * decay * sign, animationSpec = tween(durationMillis = 55, easing = LinearEasing))
+                    impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 55, easing = LinearEasing))
+                }
+            }
+        } else if (cue == "sfx_combat_shield_deflect") {
+            // Violent Planetary Shield rejection jolt + stabilizer shear shudder
+            val hitAmp = with(density) { 16.dp.toPx() }
+            val shudderAmp = with(density) { 4.2.dp.toPx() }
+            launch {
+                impactShakeX.snapTo(-hitAmp)
+                impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 220, easing = FastOutSlowInEasing))
+                for (cycle in 7 downTo 1) {
+                    val decay = cycle / 7f
+                    val sign = if (cycle % 2 == 0) 1f else -1f
+                    impactShakeX.animateTo(shudderAmp * decay * sign, animationSpec = tween(durationMillis = 48, easing = LinearEasing))
+                    impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 48, easing = LinearEasing))
+                }
+            }
+            launch {
+                impactShakeY.snapTo(hitAmp * 0.6f)
+                impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 220, easing = FastOutSlowInEasing))
+                for (cycle in 7 downTo 1) {
+                    val decay = cycle / 7f
+                    val sign = if (cycle % 2 == 0) -1f else 1f
+                    impactShakeY.animateTo(shudderAmp * 0.55f * decay * sign, animationSpec = tween(durationMillis = 48, easing = LinearEasing))
+                    impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 48, easing = LinearEasing))
+                }
+            }
+        } else if (cue == "sfx_crash_impact") {
+            // Violent canopy & ground crash slam + heavy structural reverberation
+            val crashAmp = with(density) { 20.dp.toPx() }
+            val aftershockAmp = with(density) { 5.dp.toPx() }
+            launch {
+                impactShakeX.snapTo(crashAmp)
+                impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 280, easing = FastOutSlowInEasing))
+                for (cycle in 10 downTo 1) {
+                    val decay = cycle / 10f
+                    val sign = if (cycle % 2 == 0) 1f else -1f
+                    impactShakeX.animateTo(aftershockAmp * decay * sign, animationSpec = tween(durationMillis = 65, easing = LinearEasing))
+                    impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 65, easing = LinearEasing))
+                }
+            }
+            launch {
+                impactShakeY.snapTo(-crashAmp * 0.65f)
+                impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 280, easing = FastOutSlowInEasing))
+                for (cycle in 10 downTo 1) {
+                    val decay = cycle / 10f
+                    val sign = if (cycle % 2 == 0) -1f else 1f
+                    impactShakeY.animateTo(aftershockAmp * 0.6f * decay * sign, animationSpec = tween(durationMillis = 65, easing = LinearEasing))
+                    impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 65, easing = LinearEasing))
+                }
+            }
         }
         if (cue == "sfx_intro_beast_strike") {
             launch {
                 impactFlash.snapTo(0.7f)
                 impactFlash.animateTo(0f, animationSpec = tween(durationMillis = 240, easing = LinearEasing))
+            }
+        } else if (cue == "sfx_combat_plasma_arc") {
+            launch {
+                impactFlash.snapTo(0.55f)
+                impactFlash.animateTo(0f, animationSpec = tween(durationMillis = 220, easing = LinearEasing))
+            }
+        } else if (cue == "wpn_orion_bowl_resonance") {
+            launch {
+                impactFlash.snapTo(0.35f)
+                impactFlash.animateTo(0f, animationSpec = tween(durationMillis = 280, easing = LinearEasing))
+            }
+        } else if (cue == "sfx_combat_shield_deflect") {
+            launch {
+                impactFlash.snapTo(0.85f)
+                impactFlash.animateTo(0f, animationSpec = tween(durationMillis = 300, easing = LinearEasing))
+            }
+        } else if (cue == "sfx_crash_impact") {
+            launch {
+                impactFlash.snapTo(0.9f)
+                impactFlash.animateTo(0f, animationSpec = tween(durationMillis = 340, easing = LinearEasing))
             }
         }
     }
@@ -8786,7 +8982,8 @@ private fun IllustratedCinematicOverlay(
             imagePath = state.step.imagePath,
             scale = scale,
             translationX = driftX + impactShakeX.value,
-            translationY = driftY + impactShakeY.value
+            translationY = driftY + impactShakeY.value,
+            alpha = contentAlpha
         )
     }
     val advanceOrReveal: () -> Unit = {
@@ -8809,7 +9006,7 @@ private fun IllustratedCinematicOverlay(
     ) {
         // Outgoing frame, frozen where the previous step left it. Drawn only while the
         // dissolve is running, and skipped entirely on a cut.
-        if (outgoing != null && enter.value < 1f && !outgoing.imagePath.isNullOrBlank()) {
+        if (outgoing != null && outgoing.alpha > 0.001f && enter.value < 1f && !outgoing.imagePath.isNullOrBlank()) {
             val outgoingPainter = rememberAssetPainter(
                 outgoing.imagePath,
                 fallback = ColorPainter(Color.Black),
@@ -8822,7 +9019,7 @@ private fun IllustratedCinematicOverlay(
                 modifier = Modifier
                     .fillMaxSize()
                     .graphicsLayer {
-                        alpha = dimAlpha
+                        alpha = outgoing.alpha * dimAlpha
                         scaleX = outgoing.scale
                         scaleY = outgoing.scale
                         translationX = outgoing.translationX
@@ -8845,19 +9042,202 @@ private fun IllustratedCinematicOverlay(
                 }
         )
 
-        // Impact flash on violent beast strike
+        // Impact flash on violent beast strike or electrical surge
         if (impactFlash.value > 0f) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .graphicsLayer { alpha = impactFlash.value }
-                    .background(Color.White)
+                    .background(impactFlashColor)
+            )
+        }
+
+        // Atmospheric Layer 3: Live plasma cutter welding-arc flicker
+        val isCutterArc = state.step.imagePath?.contains("cutter_surge_arc") == true
+        if (isCutterArc) {
+            val arcTransition = rememberInfiniteTransition(label = "cutter_arc_flicker")
+            val arcAlpha by arcTransition.animateFloat(
+                initialValue = 0.06f,
+                targetValue = 0.26f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 140, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "arc_alpha"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = arcAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFF80F8FF).copy(alpha = 0.72f),
+                                Color(0xFFFFB300).copy(alpha = 0.28f),
+                                Color.Transparent
+                            ),
+                            center = Offset(520f, 1550f),
+                            radius = 950f
+                        )
+                    )
+            )
+        }
+        val isCutterAftermath = state.step.imagePath?.contains("cutter_surge_steady") == true
+        if (isCutterAftermath) {
+            val aftermathTransition = rememberInfiniteTransition(label = "cutter_aftermath_glow")
+            val conduitPulse by aftermathTransition.animateFloat(
+                initialValue = 0.06f,
+                targetValue = 0.24f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 720, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "conduit_pulse"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = conduitPulse * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFF40E8FF).copy(alpha = 0.65f),
+                                Color(0xFF00B8D4).copy(alpha = 0.20f),
+                                Color.Transparent
+                            ),
+                            center = Offset(580f, 1560f),
+                            radius = 780f
+                        )
+                    )
+            )
+        }
+
+        // Atmospheric Layer 4: Relic discharge & levitating Fork resonance glows
+        val isRelicDischarge = state.step.imagePath?.contains("relic_sync_discharge") == true
+        if (isRelicDischarge) {
+            val dischargeTransition = rememberInfiniteTransition(label = "relic_discharge_glow")
+            val dischargeAlpha by dischargeTransition.animateFloat(
+                initialValue = 0.08f,
+                targetValue = 0.28f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 190, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "discharge_alpha"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = dischargeAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFFFFB74D).copy(alpha = 0.65f),
+                                Color(0xFF40E8FF).copy(alpha = 0.30f),
+                                Color.Transparent
+                            ),
+                            center = Offset(540f, 1750f),
+                            radius = 950f
+                        )
+                    )
+            )
+        }
+        val isRelicFork = state.step.imagePath?.contains("relic_sync_fork") == true
+        if (isRelicFork) {
+            val forkTransition = rememberInfiniteTransition(label = "relic_fork_halo")
+            val forkAlpha by forkTransition.animateFloat(
+                initialValue = 0.10f,
+                targetValue = 0.26f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 1600, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "fork_alpha"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = forkAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFF40E8FF).copy(alpha = 0.60f),
+                                Color(0xFF00B8D4).copy(alpha = 0.20f),
+                                Color.Transparent
+                            ),
+                            center = Offset(660f, 680f),
+                            radius = 820f
+                        )
+                    )
+            )
+        }
+
+        // Atmospheric Layer 5: Planetary Shield impact glare & red alarm pulse
+        val isPodShieldImpact = state.step.imagePath?.contains("pod_shield_impact") == true
+        if (isPodShieldImpact) {
+            val shieldTransition = rememberInfiniteTransition(label = "pod_shield_glare")
+            val shieldAlpha by shieldTransition.animateFloat(
+                initialValue = 0.08f,
+                targetValue = 0.28f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 260, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "shield_alpha"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = shieldAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFFFFE5E5).copy(alpha = 0.65f),
+                                Color(0xFFFF2A2A).copy(alpha = 0.32f),
+                                Color.Transparent
+                            ),
+                            center = Offset(540f, 520f),
+                            radius = 1050f
+                        )
+                    )
+            )
+        }
+
+        // Atmospheric Layer 6: Storm-tossed pod red cabin alarm + cold lightning sheen
+        val isPodBraceStorm = state.step.imagePath?.contains("pod_brace_storm") == true
+        if (isPodBraceStorm) {
+            val stormTransition = rememberInfiniteTransition(label = "pod_storm_alarm")
+            val alarmAlpha by stormTransition.animateFloat(
+                initialValue = 0.05f,
+                targetValue = 0.22f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 520, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "alarm_alpha"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = alarmAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFFFF1744).copy(alpha = 0.65f),
+                                Color(0xFFD50000).copy(alpha = 0.20f),
+                                Color.Transparent
+                            ),
+                            center = Offset(180f, 180f),
+                            radius = 720f
+                        )
+                    )
             )
         }
 
         // Atmospheric Layer 1: Emergency breach alarm strobe & telemetry scanlines
         val isEmergency = state.step.captionStyle == CinematicCaptionStyle.SYSTEM ||
-            state.step.imagePath?.contains("breach") == true
+            (state.step.imagePath?.contains("breach") == true &&
+                state.step.captionStyle != CinematicCaptionStyle.LOCATION)
         if (isEmergency) {
             val strobeTransition = rememberInfiniteTransition(label = "emergency_strobe")
             val strobeAlpha by strobeTransition.animateFloat(
@@ -8997,6 +9377,45 @@ private fun IllustratedCinematicOverlay(
                     .navigationBarsPadding()
                     .padding(start = 28.dp, end = 28.dp, bottom = 54.dp)
             )
+        }
+
+        if (showDebugHud) {
+            val elapsedSec = (progress * (durationMs / 1000f)).coerceIn(0f, durationMs / 1000f)
+            val totalSec = durationMs / 1000f
+            val imageName = state.step.imagePath?.substringAfterLast('/') ?: "none"
+            Surface(
+                color = Color.Black.copy(alpha = 0.72f),
+                shape = RoundedCornerShape(10.dp),
+                border = BorderStroke(1.dp, Color(0xFF63E6FF).copy(alpha = 0.45f)),
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .statusBarsPadding()
+                    .padding(18.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp),
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    Text(
+                        "${state.sceneId} · Step ${state.stepIndex + 1}/${state.stepCount}",
+                        color = Color(0xFF63E6FF),
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        String.format(Locale.US, "%.1fs / %.1fs · %s", elapsedSec, totalSec, imageName),
+                        color = Color.White.copy(alpha = 0.9f),
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                    if (!state.step.audioCue.isNullOrBlank() || !state.step.musicCue.isNullOrBlank()) {
+                        Text(
+                            "sfx: ${state.step.audioCue ?: "-"} | mus: ${state.step.musicCue ?: "-"}",
+                            color = Color(0xFFFFC857),
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                }
+            }
         }
 
         if (state.skippable) {

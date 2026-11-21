@@ -153,10 +153,23 @@ class AppServices(context: Context, val isTestSession: Boolean = false, val isBu
             .map { it.id }
             .filter { id ->
                 id.startsWith("sfx_ui_") ||
+                    id.startsWith("sfx_intro_") ||
                     id.startsWith("ui_") ||
                     id.startsWith("voice_murmur_") ||
                     id.startsWith("battle_") ||
-                    id.startsWith("wpn_")
+                    id.startsWith("wpn_") ||
+                    id in setOf(
+                        "sfx_combat_plasma_arc",
+                        "sfx_distant_gate_rumble",
+                        "sfx_chime_splice",
+                        "sfx_pod_launch",
+                        "sfx_crash_impact",
+                        "sfx_security_lockdown",
+                        "sfx_door_unlock",
+                        "sfx_w3_elevator_rise",
+                        "sfx_door_airlock_close",
+                        "sfx_combat_shield_deflect"
+                    )
             }
     )
     val audioRouter = AudioRouter(audioBindings, audioCatalog)

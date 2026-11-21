@@ -395,51 +395,69 @@
     "steps": [
       {
         "type": "narration",
-        "text": "Phase sweep: 87 kHz. Cold loop: 68%. Ground phase: 180 degrees. The three diagnostic bands settle together. For a breath, Nova feels the cutter stop fighting her.",
+        "text": "Phase sweep: 87 kHz. Cold loop: 68%. Ground phase: 180°. The three bands lock together, and the cutter stops fighting her.",
         "music_cue": "music_orion_theme",
+        "audio_cue": "sfx_chime_splice",
         "image": "images/cinematics/w1_relic_sync_lock_v1.webp",
         "camera_start_scale": 1.0,
         "camera_end_scale": 1.05,
+        "camera_start_y": -12.0,
+        "camera_end_y": 2.0,
         "transition": "fade",
-        "duration_seconds": 6.4
+        "duration_seconds": 5.0
       },
       {
         "type": "narration",
-        "text": "The damaged cradle closes its circuit through cutter, suit, and operator. The grip turns hot. Nova tries to pull away; her fingers won't open.",
+        "text": "The damaged cradle closes its circuit through cutter, suit, and operator. The grip turns hot—her fingers won't open.",
         "image": "images/cinematics/w1_relic_sync_lock_v1.webp",
         "camera_start_scale": 1.05,
-        "camera_end_scale": 1.11,
+        "camera_end_scale": 1.12,
+        "camera_start_x": 0.0,
+        "camera_end_x": -10.0,
+        "camera_start_y": 2.0,
+        "camera_end_y": 8.0,
         "transition": "cut",
-        "duration_seconds": 5.6
+        "duration_seconds": 4.4
       },
       {
         "type": "narration",
-        "text": "The functional Cryo-Inductor fuses with a sharp pop. Its last charge is spent; the burned core stays sealed inside the cradle. The Flux Liner carries the discharge into the floor, burning its sacrificial ground strip open. Nova's knees strike the stone.",
+        "text": "The Cryo-Inductor fuses with a sharp pop. Her Flux Liner dumps the discharge into the stone, burning its sacrificial ground strip open.",
         "audio_cue": "sfx_combat_plasma_arc",
         "image": "images/cinematics/w1_relic_sync_discharge_v1.webp",
         "camera_start_scale": 1.0,
-        "camera_end_scale": 1.06,
+        "camera_end_scale": 1.07,
+        "camera_start_y": -18.0,
+        "camera_end_y": -2.0,
         "transition": "cut",
-        "duration_seconds": 7.6
+        "duration_seconds": 5.4
       },
       {
         "type": "narration",
-        "text": "Pain rings through her teeth and left hand. Her suit clock skips half a second. Beneath the fading hum, another pulse keeps time with her breathing.",
+        "text": "Pain rings through her teeth and left hand. Her suit clock skips half a second. Beneath the hum, a second pulse keeps time with her breath.",
         "image": "images/cinematics/w1_relic_sync_discharge_v1.webp",
-        "camera_start_scale": 1.06,
-        "camera_end_scale": 1.11,
+        "camera_start_scale": 1.07,
+        "camera_end_scale": 1.13,
+        "camera_start_x": 0.0,
+        "camera_end_x": 10.0,
+        "camera_start_y": -2.0,
+        "camera_end_y": 16.0,
         "transition": "cut",
-        "duration_seconds": 5.6
+        "duration_seconds": 5.8
       },
       {
         "type": "narration",
-        "text": "Nova lets the cutter fall. Her hand won't stop trembling. The Fork lifts free of its cradle. Above the mine, a Harmony sensor registers the Architect handshake and turns red.",
+        "text": "The cutter drops. The Fork lifts free of its cradle—and above the mine, a Harmony sensor flashes red.",
         "audio_cue": "wpn_orion_bowl_resonance",
         "image": "images/cinematics/w1_relic_sync_fork_v1.webp",
         "camera_start_scale": 1.0,
-        "camera_end_scale": 1.08,
+        "camera_end_scale": 1.09,
+        "camera_start_x": 6.0,
+        "camera_end_x": -6.0,
+        "camera_start_y": -10.0,
+        "camera_end_y": 12.0,
         "transition": "fade",
-        "duration_seconds": 6.8
+        "fade_out_seconds": 1.2,
+        "duration_seconds": 5.8
       }
     ]
   },
@@ -449,23 +467,38 @@
     "steps": [
       {
         "type": "narration",
-        "text": "The pod's capacitors kick it off the rail. Nova catches one last glimpse of the colony. Beside her, the Chime opens the launch interlock, then locks navigation onto its paired beacon.",
+        "text": "The pod’s capacitors kick it off the rail. Nova catches one last glimpse of the colony before the Chime opens the interlock and locks navigation onto its paired beacon.",
         "audio_cue": "sfx_pod_launch",
         "music_cue": "music_crash_flight",
-        "duration_seconds": 7.1,
-        "image": "images/rooms/world_1/launch_bay.webp"
+        "duration_seconds": 6.8,
+        "image": "images/rooms/world_1/launch_bay.webp",
+        "camera_start_scale": 1.02,
+        "camera_end_scale": 1.14,
+        "camera_start_y": 18.0,
+        "camera_end_y": -22.0
       },
       {
         "type": "narration",
-        "text": "Zeke pulls at the route controls. The display snaps back to the same heading. Ahead, the permitted corridor slides out of reach and the planetary shield fills the viewport.",
+        "text": "Zeke wrenches at the controls, but the display snaps back to the same heading. The safe corridor slides away as the planetary shield fills the viewport.",
         "duration_seconds": 5.8,
-        "image": "images/rooms/world_1/launch_pod.webp"
+        "image": "images/rooms/world_1/launch_pod.webp",
+        "transition": "fade",
+        "camera_start_scale": 1.02,
+        "camera_end_scale": 1.1,
+        "camera_start_y": 8.0,
+        "camera_end_y": -10.0
       },
       {
         "type": "narration",
-        "text": "The shield rejects the pod. White light floods the cabin; the impact tears a stabilizer loose and throws them back toward Sector 9.",
-        "duration_seconds": 4.5,
-        "image": "images/rooms/world_1/launch_pod.webp"
+        "text": "The shield rejects the pod. White light floods the cabin—the impact shears a stabilizer loose and hurls them back toward Sector 9.",
+        "audio_cue": "sfx_combat_shield_deflect",
+        "duration_seconds": 5.2,
+        "image": "images/cinematics/w1_pod_shield_impact_v1.png",
+        "transition": "cut",
+        "camera_start_scale": 1.12,
+        "camera_end_scale": 1.04,
+        "camera_start_y": -8.0,
+        "camera_end_y": 6.0
       },
       {
         "type": "dialogue",
@@ -473,30 +506,56 @@
         "emote": "worried",
         "text": "It won't let me turn! Nova, I can't get us clear!",
         "audio_cue": "sfx_security_lockdown",
-        "duration_seconds": 4.2,
-        "image": "images/rooms/world_1/launch_pod.webp"
+        "duration_seconds": 4.0,
+        "image": "images/cinematics/w1_pod_shield_impact_v1.png",
+        "camera_start_scale": 1.04,
+        "camera_end_scale": 1.12,
+        "camera_start_x": 0.0,
+        "camera_end_x": 22.0,
+        "camera_start_y": 6.0,
+        "camera_end_y": -4.0
       },
       {
         "type": "dialogue",
-        "text": "Look at me. Hook your arm through the frame. I'm here.",
-        "audio_cue": "sfx_combat_plasma_arc",
         "speaker": "Nova",
         "emote": "worried",
-        "duration_seconds": 6.8,
-        "image": "images/rooms/world_1/launch_pod.webp"
+        "text": "Look at me. Hook your arm through the frame. I'm here.",
+        "audio_cue": "sfx_combat_plasma_arc",
+        "duration_seconds": 5.8,
+        "image": "images/cinematics/w1_pod_brace_storm_v1.png",
+        "transition": "cut",
+        "camera_start_scale": 1.03,
+        "camera_end_scale": 1.11,
+        "camera_start_x": -10.0,
+        "camera_end_x": 10.0,
+        "camera_start_y": 6.0,
+        "camera_end_y": -6.0
       },
       {
         "type": "narration",
         "text": "The navigation console arcs and goes dark. Zeke grips the frame beside Nova as the pod rolls into the storm. Rain hammers the hull. The thrusters sputter out.",
-        "duration_seconds": 6.5,
-        "image": "images/rooms/world_1/launch_pod.webp"
+        "duration_seconds": 5.8,
+        "image": "images/cinematics/w1_pod_brace_storm_v1.png",
+        "camera_start_scale": 1.11,
+        "camera_end_scale": 1.18,
+        "camera_start_x": 10.0,
+        "camera_end_x": -12.0,
+        "camera_start_y": -6.0,
+        "camera_end_y": -14.0,
+        "fade_out_seconds": 0.7
       },
       {
         "type": "narration",
         "text": "Black branches rush across the viewport. The pod tears through the canopy and hits hard. Nova's hand is still reaching for Zeke when the lights go out.",
         "audio_cue": "sfx_crash_impact",
-        "duration_seconds": 7.0,
-        "image": "images/rooms/world_2/crash_site.webp"
+        "duration_seconds": 6.8,
+        "image": "images/rooms/world_2/crash_site.webp",
+        "transition": "cut",
+        "camera_start_scale": 1.14,
+        "camera_end_scale": 1.02,
+        "camera_start_y": -14.0,
+        "camera_end_y": 10.0,
+        "fade_out_seconds": 1.5
       }
     ],
     "presentation": "illustrated",
@@ -625,7 +684,7 @@
       },
       {
         "type": "narration",
-        "text": "A chord answers through the dark. The receiver needles rise together.",
+        "text": "The Chime clears the shaft. Something in the dark answers its signal.",
         "image": "images/cinematics/intro_chorus_answer_v1.webp",
         "camera_start_scale": 1.0,
         "camera_end_scale": 1.08,
@@ -633,7 +692,6 @@
         "camera_end_x": 0.0,
         "camera_start_y": 10.0,
         "camera_end_y": -6.0,
-        "audio_cue": "sfx_intro_chorus_answer",
         "transition": "fade",
         "duration_seconds": 3.6
       },
@@ -679,6 +737,7 @@
         "camera_end_y": -6.0,
         "transition": "cut",
         "audio_cue": "sfx_intro_beast_strike",
+        "fade_out_seconds": 0.45,
         "duration_seconds": 3.1
       },
       {
@@ -703,13 +762,15 @@
     "steps": [
       {
         "type": "narration",
-        "text": "Nova clamps the Flux Liner's ground strip to the floor bus. Cold loop: 68%. She opens the governor bypass. Jed keeps one hand beside the cut-off.",
+        "text": "Ground strip clamped. Cold loop at 68%. Nova opens the governor bypass while Jed hovers over the cut-off.",
         "music_cue": "music_cinematic_cutter_surge",
         "image": "images/rooms/world_1/workshop_floor_v3.webp",
         "camera_start_scale": 1.0,
         "camera_end_scale": 1.05,
+        "camera_start_y": 8.0,
+        "camera_end_y": -4.0,
         "transition": "fade",
-        "duration_seconds": 5.8
+        "duration_seconds": 4.6
       },
       {
         "type": "dialogue",
@@ -719,18 +780,24 @@
         "image": "images/rooms/world_1/workshop_floor_v3.webp",
         "camera_start_scale": 1.05,
         "camera_end_scale": 1.08,
+        "camera_start_y": -4.0,
+        "camera_end_y": -10.0,
         "transition": "cut",
-        "duration_seconds": 3.4
+        "duration_seconds": 2.8
       },
       {
         "type": "narration",
-        "text": "The cutter fires. Its phase sweep catches the buried conduit under Jed's bench. The breaker slams open. Dust falls into Nova's hair; the hum keeps climbing.",
+        "text": "The cutter arcs straight into a buried conduit beneath the bench. The breaker slams open—yet the hum keeps climbing.",
         "audio_cue": "sfx_combat_plasma_arc",
         "image": "images/cinematics/w1_cutter_surge_arc_v1.webp",
         "camera_start_scale": 1.0,
-        "camera_end_scale": 1.06,
+        "camera_end_scale": 1.07,
+        "camera_start_x": 6.0,
+        "camera_end_x": 0.0,
+        "camera_start_y": -14.0,
+        "camera_end_y": 4.0,
         "transition": "cut",
-        "duration_seconds": 6.0
+        "duration_seconds": 5.2
       },
       {
         "type": "dialogue",
@@ -738,10 +805,14 @@
         "text": "Kill it, Nova!",
         "caption_style": "dialogue",
         "image": "images/cinematics/w1_cutter_surge_arc_v1.webp",
-        "camera_start_scale": 1.06,
-        "camera_end_scale": 1.1,
+        "camera_start_scale": 1.07,
+        "camera_end_scale": 1.12,
+        "camera_start_x": 0.0,
+        "camera_end_x": -18.0,
+        "camera_start_y": 4.0,
+        "camera_end_y": 14.0,
         "transition": "cut",
-        "duration_seconds": 2.8
+        "duration_seconds": 2.6
       },
       {
         "type": "dialogue",
@@ -749,22 +820,30 @@
         "emote": "worried",
         "text": "I have. Jed... it's still answering.",
         "caption_style": "dialogue",
-        "image": "images/cinematics/w1_cutter_surge_steady_v1.webp",
+        "image": "images/cinematics/w1_cutter_surge_steady_v2.png",
         "camera_start_scale": 1.0,
-        "camera_end_scale": 1.05,
-        "transition": "fade",
-        "duration_seconds": 4.2
+        "camera_end_scale": 1.06,
+        "camera_start_x": 10.0,
+        "camera_end_x": 2.0,
+        "camera_start_y": 8.0,
+        "camera_end_y": -10.0,
+        "transition": "cut",
+        "duration_seconds": 3.8
       },
       {
         "type": "narration",
-        "text": "A terminal stamps CUTTER FAULT 4C-117 beside NOVA VANCE. Jed reaches past the report to steady her hand. Far below the workshop, an old chamber seal cracks.",
+        "text": "CUTTER FAULT 4C-117 flashes red beside NOVA VANCE on the terminal. Far beneath the workshop, an old chamber seal cracks.",
         "audio_cue": "sfx_distant_gate_rumble",
-        "image": "images/cinematics/w1_cutter_surge_steady_v1.webp",
-        "camera_start_scale": 1.05,
-        "camera_end_scale": 1.11,
+        "image": "images/cinematics/w1_cutter_surge_steady_v2.png",
+        "camera_start_scale": 1.06,
+        "camera_end_scale": 1.12,
+        "camera_start_x": 2.0,
+        "camera_end_x": -16.0,
+        "camera_start_y": -10.0,
+        "camera_end_y": 8.0,
         "transition": "cut",
-        "duration_seconds": 6.5,
-        "fade_out_seconds": 0.9
+        "duration_seconds": 5.8,
+        "fade_out_seconds": 1.0
       }
     ]
   },
@@ -1344,16 +1423,21 @@
     "steps": [
       {
         "type": "narration",
-        "text": "The car pulls away. Across the gap, Jed still has both hands on the lever.",
-        "duration_seconds": 4.5,
-        "image": "images/rooms/world_1/launch_lift.webp",
-        "audio_cue": "sfx_w3_elevator_rise"
+        "text": "The car pulls away. Across the widening gap, Jed holds the override as the blast shutters slam shut.",
+        "duration_seconds": 4.8,
+        "image": "images/cinematics/w1_lift_separation_gap_v1.png",
+        "audio_cue": "sfx_w3_elevator_rise",
+        "camera_start_scale": 1.04,
+        "camera_end_scale": 1.12,
+        "camera_start_x": -10.0,
+        "camera_end_x": 12.0,
+        "camera_start_y": 14.0,
+        "camera_end_y": -10.0
       },
       {
         "type": "narration",
-        "text": "The shutters meet. Nova presses the radio key and waits. Jed’s end stays quiet.",
-        "duration_seconds": 5.0,
-        "image": "images/rooms/world_1/launch_lift.webp",
+        "text": "The shutters seal. Nova keys her radio and waits. Jed’s channel stays silent.",
+        "duration_seconds": 4.5,
         "audio_cue": "sfx_door_airlock_close",
         "music_cue": "silence",
         "transition": "cut"
@@ -1361,12 +1445,18 @@
       {
         "type": "dialogue",
         "speaker": "Zeke",
-        "portrait": "images/characters/emotes/zeke_idle.png",
+        "portrait": "images/characters/emotes/zeke_sad.png",
         "text": "Nova. I’m still here. Follow my light.",
-        "duration_seconds": 6.8,
+        "duration_seconds": 6.2,
         "image": "images/rooms/world_1/launch_lift.webp",
+        "transition": "fade",
         "caption_style": "dialogue",
-        "audio_cue": "stinger_motif_jed"
+        "audio_cue": "stinger_motif_jed",
+        "camera_start_scale": 1.02,
+        "camera_end_scale": 1.08,
+        "camera_start_y": 12.0,
+        "camera_end_y": -10.0,
+        "fade_out_seconds": 1.2
       }
     ],
     "presentation": "illustrated",

@@ -4,6 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.starborn.di.AppServices
 import com.example.starborn.data.local.Theme
+import com.example.starborn.domain.cinematic.CinematicPlaybackState
+import com.example.starborn.domain.cinematic.CinematicPresentation
+import com.example.starborn.domain.cinematic.CinematicScene
+import com.example.starborn.feature.exploration.viewmodel.CinematicUiState
+import com.example.starborn.feature.exploration.viewmodel.helpers.CinematicPlaybackManager
 import com.example.starborn.domain.session.GameSessionSlotInfo
 import com.example.starborn.domain.session.GameSessionState
 import com.example.starborn.domain.session.SessionSaveRepository
@@ -354,8 +359,105 @@ class MainMenuViewModel(
         }
     }
 
+    fun screeningRoomEntries(): List<ScreeningRoomEntry> {
+        val allIllustrated = services.cinematicService.allScenes()
+            .filter { it.presentation == CinematicPresentation.ILLUSTRATED }
+            .associateBy { it.id }
+
+        val curatedOrder = listOf(
+            "World 1 — Mining Colony" to listOf(
+                "intro_prologue",
+                "new_game_fade_in",
+                "scene_cutter_surge",
+                "scene_relic_sync",
+                "scene_w1_lift_separation",
+                "scene_launch_crash"
+            ),
+            "World 2 — The Wilds" to listOf(
+                "scene_anchor_drill",
+                "scene_w2_astra_departure"
+            ),
+            "World 3 — The Spire" to listOf(
+                "scene_w3_foundry_flight"
+            ),
+            "World 4 — The Foundry" to listOf(
+                "scene_w4_rylos_spared",
+                "scene_w4_outer_shield"
+            ),
+            "World 5 — The Orbital Ring" to listOf(
+                "scene_w5_anchor_stasis",
+                "scene_w5_cross_the_tear"
+            ),
+            "World 6 — The Source" to listOf(
+                "scene_w6_song_fire_reunion",
+                "scene_w6_jed_echo_lesson",
+                "scene_w6_silence_rises",
+                "scene_w6_final_note",
+                "scene_w6_epilogue_credits"
+            )
+        )
+
+        val entries = mutableListOf<ScreeningRoomEntry>()
+        val seen = mutableSetOf<String>()
+        for ((worldLabel, ids) in curatedOrder) {
+            for (id in ids) {
+                val scene = allIllustrated[id] ?: continue
+                seen += id
+                entries += scene.toScreeningEntry(worldLabel)
+            }
+        }
+        allIllustrated.values
+            .filter { it.id !in seen }
+            .sortedBy { it.id }
+            .forEach { scene ->
+                entries += scene.toScreeningEntry("Other")
+            }
+        return entries
+    }
+
+    private fun CinematicScene.toScreeningEntry(worldLabel: String): ScreeningRoomEntry {
+        val durationSec = steps.sumOf { it.durationSeconds ?: 4.0 }
+        val imgCount = steps.mapNotNull { it.imagePath }.distinct().size
+        return ScreeningRoomEntry(
+            worldLabel = worldLabel,
+            scene = this,
+            durationSeconds = durationSec,
+            imageCount = imgCount
+        )
+    }
+
+    fun buildScreeningCinematicState(scene: CinematicScene, stepIndex: Int): CinematicUiState {
+        val playback = CinematicPlaybackState(
+            scene = scene,
+            stepIndex = stepIndex.coerceIn(0, (scene.steps.size - 1).coerceAtLeast(0))
+        )
+        return CinematicPlaybackManager.toUiState(
+            playback = playback,
+            resolveEmotePortrait = { speaker, emote ->
+                val normalized = speaker.trim().lowercase(Locale.US)
+                val cleanEmote = emote?.trim()?.lowercase(Locale.US)?.takeIf { it.isNotBlank() }
+                if (cleanEmote != null) {
+                    "images/characters/${normalized}_${cleanEmote}.png"
+                } else {
+                    null
+                }
+            },
+            resolvePortraitKey = { speaker ->
+                val normalized = speaker.trim().lowercase(Locale.US)
+                "images/characters/${normalized}_portrait.png"
+            }
+        )
+    }
+
     companion object {
         private const val MAIN_MENU_THEME_ID = "starborn"
         private const val DEFAULT_THEME_ID = "default"
     }
 }
+
+data class ScreeningRoomEntry(
+    val worldLabel: String,
+    val scene: CinematicScene,
+    val durationSeconds: Double,
+    val imageCount: Int
+)

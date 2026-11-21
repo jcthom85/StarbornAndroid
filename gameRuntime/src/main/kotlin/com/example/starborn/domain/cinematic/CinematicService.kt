@@ -14,4 +14,6 @@ class CinematicService(
         if (id.isNullOrBlank()) return null
         return scenes[id]
     }
+
+    fun allScenes(): List<CinematicScene> = scenes.values.toList()
 }
