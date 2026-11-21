@@ -4,7 +4,8 @@
     "speaker": "Orion",
     "condition": "quest_active:w2_mq03,quest_task_done:w2_mq03:align_stasis_rings,quest_task_not_done:w2_mq03:talk_to_orion",
     "text": "The ceiling used to be blue. I painted it myself. How long have those roots been here?",
-    "next": "orion_w2_awakening_nova"
+    "next": "orion_w2_awakening_nova",
+    "emote": "puzzled"
   },
   {
     "id": "dlg_bran_intro",
@@ -896,25 +897,29 @@
     "text": "Nova? Say something. I can’t see through this visor.",
     "condition": "quest_active:w2_mq01,quest_task_not_done:w2_mq01:check_on_zeke",
     "next": "zeke_w2_crash_2",
-    "music": "music_cinematic_crash"
+    "music": "music_cinematic_crash",
+    "emote": "worried"
   },
   {
     "id": "zeke_w2_crash_2",
     "speaker": "Nova",
     "text": "Here. Your suit seal is split. Keep it clear of the water until I find a patch.",
-    "next": "zeke_w2_crash_3"
+    "next": "zeke_w2_crash_3",
+    "emote": "worried"
   },
   {
     "id": "zeke_w2_crash_3",
     "speaker": "Zeke",
     "text": "Recycler’s running. One thing I can cross off. The pod core… no. We’re walking.",
-    "next": "zeke_w2_crash_4"
+    "next": "zeke_w2_crash_4",
+    "emote": "sad"
   },
   {
     "id": "zeke_w2_crash_4",
     "speaker": "Zeke",
-    "text": "I put the Chime on navigation without tracing the pair. That's on me. Check the wrecked nav console before the water gets in.",
-    "trigger": "set_quest_task_done:w2_mq01:check_on_zeke,recruit:zeke"
+    "text": "I put Jed's Chime on navigation without tracing the pair. That's on me. It's still glowing in the wrecked console—grab it before the water gets in.",
+    "trigger": "set_quest_task_done:w2_mq01:check_on_zeke,recruit:zeke",
+    "emote": "worried"
   },
   {
     "id": "zeke_w2_crash_repeat_1",
@@ -1107,20 +1112,23 @@
     "text": "Stop there. Hands away from the Chime. My command channel marks you for disposal.",
     "condition": "quest_active:w2_mq04,quest_task_not_done:w2_mq04:confront_stalker",
     "next": "ghost_confrontation_2",
-    "music": "music_gh0st_theme"
+    "music": "music_gh0st_theme",
+    "emote": "angry"
   },
   {
     "id": "ghost_confrontation_2",
-    "speaker": "Player",
+    "speaker": "Nova",
     "text": "We got out of the colony alive. Look at me. Is anyone still on that channel?",
-    "next": "ghost_confrontation_3"
+    "next": "ghost_confrontation_3",
+    "emote": "confident"
   },
   {
     "id": "ghost_confrontation_3",
     "speaker": "Gh0st",
     "text": "No confirmation. No reply. I have never had to decide what follows silence.",
     "trigger": null,
-    "next": "ghost_confrontation_pause"
+    "next": "ghost_confrontation_pause",
+    "emote": "puzzled"
   },
   {
     "id": "ghost_w2_sq05_intro_1",
@@ -2121,7 +2129,7 @@
   {
     "id": "kaelen_favor_turnin",
     "speaker": "Scout Kaelen",
-    "text": "Let's check the supplies first. I need two herbs and one cut of beast meat for the sight.",
+    "text": "Let's see what you brought.",
     "trigger": "player_action:w2_kaelen_favor_turnin",
     "next": "kaelen_repeat_default_talk"
   },
@@ -3602,13 +3610,15 @@
     "id": "orion_w2_awakening_2",
     "speaker": "Orion",
     "text": "Twenty years. I sealed the pod to keep the signal alive. I thought I would hear the evening tide again.",
-    "next": "orion_w2_awakening_zeke"
+    "next": "orion_w2_awakening_zeke",
+    "emote": "sad"
   },
   {
     "id": "orion_w2_awakening_3",
     "speaker": "Orion",
     "text": "I can still hear each voice on its own. You kept the bands apart. Thank you, Nova.",
-    "next": "orion_w2_awakening_depart"
+    "next": "orion_w2_awakening_depart",
+    "emote": "happy"
   },
   {
     "id": "w2_gate_entry",
@@ -3802,19 +3812,22 @@
     "id": "orion_w2_awakening_nova",
     "speaker": "Nova",
     "text": "We just got here. I’m Nova. That clock says twenty years. Is there someone we should look for?",
-    "next": "orion_w2_identity"
+    "next": "orion_w2_identity",
+    "emote": "worried"
   },
   {
     "id": "orion_w2_awakening_zeke",
     "speaker": "Zeke",
     "text": "We can check the records when you’re ready. Here. Sit a minute.",
-    "next": "orion_w2_awakening_3"
+    "next": "orion_w2_awakening_3",
+    "emote": "worried"
   },
   {
     "id": "orion_w2_awakening_depart",
     "speaker": "Orion",
     "text": "I’ve spent long enough in this room. There’s a Bridge in the sealed cradle. It links willing carriers, one voice to a band, but it needs a ground. I’ll show you. Then we should see who’s been watching us from the ridge.",
-    "trigger": "player_action:w2_mq03_talk_to_orion"
+    "trigger": "player_action:w2_mq03_talk_to_orion",
+    "emote": "confident"
   },
   {
     "id": "w1_comms_exit",
@@ -3842,19 +3855,22 @@
     "speaker": "Orion",
     "text": "Orion. My name is Orion. You opened the pod?",
     "next": "orion_w2_awakening_2",
-    "trigger": "set_milestone:ms_w2_orion_identified"
+    "trigger": "set_milestone:ms_w2_orion_identified",
+    "emote": "puzzled"
   },
   {
     "id": "ghost_confrontation_pause",
     "speaker": "Nova",
     "text": "Keep the rifle down while you work it out. We want to get out of here alive.",
-    "next": "ghost_confrontation_warning"
+    "next": "ghost_confrontation_warning",
+    "emote": "angry"
   },
   {
     "id": "ghost_confrontation_warning",
     "speaker": "Gh0st",
     "text": "Wait. Something is moving behind you. Get clear of the roots.",
-    "trigger": "music_restore,player_action:w2_mq04_confront_finished"
+    "trigger": "music_restore,player_action:w2_mq04_confront_finished",
+    "emote": "surprised"
   },
   {
     "id": "echo_awake_reply",

@@ -8303,7 +8303,8 @@ fun CinematicOverlay(
                 cue == "sfx_door_airlock_close" ||
                 cue == "sfx_pod_launch" ||
                 cue == "sfx_combat_shield_deflect" ||
-                cue == "sfx_crash_impact"
+                cue == "sfx_crash_impact" ||
+                cue == "sfx_w2_astra_launch"
             audioCuePlayer?.execute(
                 listOf(
                     AudioCommand.Play(
@@ -8602,7 +8603,8 @@ internal fun IllustratedCinematicOverlay(
                 cue == "sfx_door_airlock_close" ||
                 cue == "sfx_pod_launch" ||
                 cue == "sfx_combat_shield_deflect" ||
-                cue == "sfx_crash_impact"
+                cue == "sfx_crash_impact" ||
+                cue == "sfx_w2_astra_launch"
             audioCuePlayer?.execute(
                 listOf(
                     AudioCommand.Play(
@@ -8887,15 +8889,17 @@ internal fun IllustratedCinematicOverlay(
                 impactShakeX.snapTo(slamAmp * 0.35f)
                 impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 190, easing = FastOutSlowInEasing))
             }
-        } else if (cue == "sfx_pod_launch") {
-            // Rail-launch capacitor kick + sustained thruster acceleration rumble
-            val kickAmp = with(density) { 9.dp.toPx() }
-            val thrustAmp = with(density) { 2.8.dp.toPx() }
+        } else if (cue == "sfx_pod_launch" || cue == "sfx_w2_astra_launch") {
+            // Rail-launch / starship liftoff thrust kick + sustained engine rumble
+            val isAstra = cue == "sfx_w2_astra_launch"
+            val kickAmp = with(density) { (if (isAstra) 7.dp else 9.dp).toPx() }
+            val thrustAmp = with(density) { (if (isAstra) 2.2.dp else 2.8.dp).toPx() }
+            val cycles = if (isAstra) 16 else 12
             launch {
                 impactShakeY.snapTo(-kickAmp)
                 impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 220, easing = FastOutSlowInEasing))
-                for (cycle in 12 downTo 1) {
-                    val decay = cycle / 12f
+                for (cycle in cycles downTo 1) {
+                    val decay = cycle / cycles.toFloat()
                     val sign = if (cycle % 2 == 0) 1f else -1f
                     impactShakeY.animateTo(thrustAmp * decay * sign, animationSpec = tween(durationMillis = 55, easing = LinearEasing))
                     impactShakeY.animateTo(0f, animationSpec = tween(durationMillis = 55, easing = LinearEasing))
@@ -8904,8 +8908,8 @@ internal fun IllustratedCinematicOverlay(
             launch {
                 impactShakeX.snapTo(kickAmp * 0.4f)
                 impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 220, easing = FastOutSlowInEasing))
-                for (cycle in 12 downTo 1) {
-                    val decay = cycle / 12f
+                for (cycle in cycles downTo 1) {
+                    val decay = cycle / cycles.toFloat()
                     val sign = if (cycle % 2 == 0) -1f else 1f
                     impactShakeX.animateTo(thrustAmp * 0.6f * decay * sign, animationSpec = tween(durationMillis = 55, easing = LinearEasing))
                     impactShakeX.animateTo(0f, animationSpec = tween(durationMillis = 55, easing = LinearEasing))
@@ -9240,6 +9244,97 @@ internal fun IllustratedCinematicOverlay(
                             ),
                             center = Offset(180f, 180f),
                             radius = 720f
+                        )
+                    )
+            )
+        }
+
+        // Atmospheric Layer 7: Anchor Drill Bridge overload & grounded circuit resonance
+        val isAnchorBuckle = state.step.imagePath?.contains("anchor_drill_buckle") == true
+        if (isAnchorBuckle) {
+            val buckleTransition = rememberInfiniteTransition(label = "anchor_buckle_glow")
+            val buckleAlpha by buckleTransition.animateFloat(
+                initialValue = 0.08f,
+                targetValue = 0.28f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 180, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "buckle_alpha"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = buckleAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFFFFD54F).copy(alpha = 0.65f),
+                                Color(0xFF40E8FF).copy(alpha = 0.30f),
+                                Color.Transparent
+                            ),
+                            center = Offset(520f, 1280f),
+                            radius = 860f
+                        )
+                    )
+            )
+        }
+        val isAnchorCircuit = state.step.imagePath?.contains("anchor_drill_circuit") == true
+        if (isAnchorCircuit) {
+            val circuitTransition = rememberInfiniteTransition(label = "anchor_circuit_halo")
+            val circuitAlpha by circuitTransition.animateFloat(
+                initialValue = 0.08f,
+                targetValue = 0.22f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 1400, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "circuit_alpha"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = circuitAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFF40E8FF).copy(alpha = 0.55f),
+                                Color(0xFF00B8D4).copy(alpha = 0.18f),
+                                Color.Transparent
+                            ),
+                            center = Offset(540f, 1280f),
+                            radius = 960f
+                        )
+                    )
+            )
+        }
+
+        // Atmospheric Layer 8: Spire approach interference & Astra bridge warning pulse
+        val isSpireInterference = (state.sceneId == "scene_w2_astra_departure" && state.stepIndex in 3..6)
+        if (isSpireInterference) {
+            val interferenceTransition = rememberInfiniteTransition(label = "spire_interference_pulse")
+            val interferenceAlpha by interferenceTransition.animateFloat(
+                initialValue = 0.04f,
+                targetValue = 0.20f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 440, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "interference_alpha"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = interferenceAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFFFF1744).copy(alpha = 0.58f),
+                                Color(0xFFD50000).copy(alpha = 0.18f),
+                                Color.Transparent
+                            ),
+                            center = Offset(540f, 460f),
+                            radius = 900f
                         )
                     )
             )

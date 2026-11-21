@@ -4007,6 +4007,27 @@
     "repeatable": true
   },
   {
+    "id": "w2_mq04_ridge_climb_dread",
+    "description": "Foreshadows both the Beast's sub-audible hum and Gh0st's scope on the climb toward Canopy Ridge.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "sector9_ridge_climb"
+    },
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w2_mq04"
+      }
+    ],
+    "actions": [
+      {
+        "type": "narrate",
+        "message": "A low, sub-audible vibration rolls through the canopy roots, silencing every insect on the slope—and far above in the mist, a pale glint catches the ridge like an optic lens."
+      }
+    ],
+    "repeatable": false
+  },
+  {
     "id": "w2_mq04_reach_canopy",
     "description": "Triggered when entering Canopy Ridge.",
     "trigger": {
@@ -4508,7 +4529,7 @@
       },
       {
         "type": "show_message",
-        "message": "The cargo ramp rings beneath your boots. Inside, amber consoles warm to life and the Astra's low engine hum replaces the hangar echoes. The bridge is through the common room; use its nav console when you are ready to leave."
+        "message": "The cargo ramp rings beneath four pairs of boots. Amber consoles warm to life and the Astra's low engine hum replaces the hangar echoes—Zeke already grinning toward the helm, Gh0st checking the airlock seal, Orion resting a steady hand on the bulkhead. The bridge is through the common room; use its nav console when you are ready to leave."
       }
     ],
     "repeatable": true
