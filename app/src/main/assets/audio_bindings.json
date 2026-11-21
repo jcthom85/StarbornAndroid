@@ -38,7 +38,11 @@
     "source_new_world_node": "music_w6_new_world"
   },
   "room_music": {
-    "astra_bridge": "music_astra_bridge"
+    "astra_bridge": "music_astra_bridge",
+    "workshop_floor": "music_w1_jed_workshop",
+    "workshop_office": "music_w1_jed_workshop",
+    "workshop_loft": "music_w1_jed_workshop",
+    "workshop_shed": "music_w1_jed_workshop"
   },
   "combat_music": {
     "the_iron_warden": "music_w1_boss_warden",
@@ -256,7 +260,13 @@
     "source_memory_stair": "amb_intro_containment_pressure+amb_w2_stasis_chamber",
     "source_spire_thought": "amb_w3_corporate_archive+amb_w2_architect_facility",
     "source_center": "amb_w2_architect_facility+amb_w2_stasis_chamber",
-    "source_new_world": "amb_forest_birds"
+    "source_new_world": "amb_forest_birds",
+    "echo_gap": "amb_w2_architect_facility",
+    "echo_walkway": "amb_w2_architect_facility",
+    "echo_heart": "amb_w2_architect_facility",
+    "echo_well": "amb_w2_architect_facility",
+    "echo_memory": "amb_w2_architect_facility",
+    "echo_exit": "amb_w2_architect_facility"
   },
   "weather": {
     "dust": "amb_dust_storm",

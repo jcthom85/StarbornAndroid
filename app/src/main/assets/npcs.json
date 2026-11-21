@@ -404,7 +404,7 @@
     ],
     "role": "Scrapyard Welder",
     "description": "A pragmatic scrapper who spends more time yelling at hydraulic seals than sleeping.",
-    "portrait": "images/npcs/mira.webp",
+    "portrait": "images/npcs/mira_portrait_v2.png",
     "dialogue": {},
     "interactions": [
       {
