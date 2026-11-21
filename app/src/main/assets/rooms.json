@@ -1469,12 +1469,12 @@
       {
         "name": "stalls",
         "type": "generic",
-        "condition_unmet_message": "A chaotic collection of tents and crates where anything can be bought for the right price."
+        "condition_unmet_message": "Patched tarps, salvaged wire, and mystery skewers that smell suspiciously good after a double shift."
       },
       {
         "name": "power cells",
         "type": "generic",
-        "condition_unmet_message": "Standard issue cells with the Dominion logos scratched off."
+        "condition_unmet_message": "Standard Dominion cells with the corporate serial numbers filed off—neatly enough that nobody asks questions."
       }
     ]
   },
@@ -2042,12 +2042,12 @@
       {
         "name": "booths",
         "type": "generic",
-        "condition_unmet_message": "Each booth is a small island of corporate authority."
+        "condition_unmet_message": "Identical glass booths staffed by people trained to say 'please resubmit in triplicate' without blinking."
       },
       {
         "name": "badges",
         "type": "generic",
-        "condition_unmet_message": "Each verified badge produces the same soft chime."
+        "condition_unmet_message": "Every verified badge triggers the same cheerful two-note chime, as if clocking into a fourteen-hour shift were a prize."
       },
       {
         "id": "inspect_call_queue_headset",

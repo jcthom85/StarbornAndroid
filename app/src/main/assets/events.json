@@ -2439,6 +2439,10 @@
         "type": "advance_quest_stage",
         "quest_id": "w1_mq03",
         "to_stage_id": "relic_sync"
+      },
+      {
+        "type": "narrate",
+        "message": "The Dominion concrete ends in a sheared seam. Beyond it, dark stone rises in smooth, impossible angles—and the hum in Nova's cutter answers through the soles of her boots."
       }
     ]
   },
@@ -2632,8 +2636,12 @@
         "task_id": "survive_lockdown_broadcast"
       },
       {
+        "type": "narrate",
+        "message": "Nova's knees nearly buckle. The burnt smell of her Flux Liner's spent ground strip hangs in the cold air—and overhead, the colony PA cuts straight through the hum."
+      },
+      {
         "type": "show_message",
-        "message": "WARNING: unregistered resonance event detected. Asset 942-D reclassified from labor to containment threat. Sector lockdown active."
+        "message": "WARDEN BROADCAST: Unregistered resonance event confirmed. Asset 942-D reclassified from labor to containment threat. All exits sealed. Stay where you are, Nova Vance."
       }
     ]
   },
@@ -2689,7 +2697,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "Red strobes mark the maintenance route. Each alarm pulse closes another door behind Nova."
+        "message": "Red strobes sweep the maintenance route. Heavy boots echo behind the closing bulkheads—the Warden's sweep teams are already sealing the levels behind Nova."
       }
     ]
   },

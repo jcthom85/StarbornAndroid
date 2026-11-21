@@ -445,12 +445,25 @@
     "speaker": "Nova",
     "emote": "confident",
     "text": "Morning to you too.",
+    "next": "hank_w1_mq02_denial_2a"
+  },
+  {
+    "id": "hank_w1_mq02_denial_2a",
+    "speaker": "Guard Hank",
+    "text": "[The scanner chimes flat and red. Hank's hand stops over the reader. He doesn't look up.]",
+    "next": "hank_w1_mq02_denial_2b"
+  },
+  {
+    "id": "hank_w1_mq02_denial_2b",
+    "speaker": "Nova",
+    "emote": "worried",
+    "text": "Hank? It's just a cutter surge flag. What does it say?",
     "next": "hank_w1_mq02_denial_3"
   },
   {
     "id": "hank_w1_mq02_denial_3",
     "speaker": "Guard Hank",
-    "text": "Rejected. Don't make me read the reason out loud. Booth's east of here; Zeke handles the forms.",
+    "text": "Rejected. Don't make me read the reason out loud. If the Warden's office pulls your file before Zeke touches it, nobody here can stop it. Booth's east of here.",
     "trigger": "set_quest_task_done:w1_mq02:request_clearance,set_milestone:ms_w1_mq02_hank_denied"
   },
   {
@@ -468,7 +481,7 @@
     "id": "zeke_w1_mq02_override_1",
     "speaker": "Zeke",
     "emote": "surprised",
-    "text": "Name, ID, clearance... Nova? You're early. Did Hank send you over, or did you just miss the queue?",
+    "text": "Name, ID, clearance—hang on, the printer's eating its own ribbon again... oh, Nova! You're early. Did Hank send you over, or do you need me to 'accidentally' misfile another late slip?",
     "condition": "quest_active:w1_mq02,milestone:ms_w1_mq02_hank_denied,milestone_not_set:ms_w1_mq02_zeke_override,room:checkpoint_booth",
     "next": "zeke_w1_mq02_override_2"
   },
@@ -557,7 +570,7 @@
     "id": "zeke_w1_booth_idle",
     "speaker": "Zeke",
     "condition": "room:checkpoint_booth",
-    "text": "Keep your voice down. This booth records everything. I’ll show you where to stand so it can’t hear you."
+    "text": "Keep your voice down. This booth records everything—mostly me sighing at jammed printers, but still. Stand by the corner vent; the mic skips there."
   },
   {
     "id": "zeke_w1_warden_wait",
@@ -690,7 +703,7 @@
   {
     "id": "bogs_w1_mq03_review_3",
     "speaker": "Foreman Boggs",
-    "text": "Sector 4 needs a cutter. I won't sign another injury report because someone skipped shield training. Pass the Security Post drill and I'll clear the lift.",
+    "text": "Sector 4 needs a cutter, and Compliance fines my shift twice as much for an uncertified injury as a certified one. Pass the Security Post drill and I'll clear the lift.",
     "next": "bogs_w1_mq03_review_4"
   },
   {
@@ -734,19 +747,20 @@
   {
     "id": "bogs_w1_mq03_intro_3",
     "speaker": "Foreman Boggs",
-    "text": "Sector 4’s relays are failing. Thorne’s office froze the whole shift’s pay. Get that junction running so I can release it.",
+    "text": "Sector 4’s relays are failing, and Thorne’s office froze the whole shift’s pay. Nobody else is going down there while the Warden’s sweep teams are patrolling the shafts. You need a clean work log before your override expires; I need that junction running.",
     "next": "bogs_w1_mq03_intro_4"
   },
   {
     "id": "bogs_w1_mq03_intro_4",
     "speaker": "Nova",
-    "text": "And my disposal review? Does fixing your mine make that disappear?",
-    "next": "bogs_w1_mq03_intro_5"
+    "text": "You know my disposal review is still active. You're sending me down there because if the mine takes me, you don't have to file the paperwork.",
+    "next": "bogs_w1_mq03_intro_5",
+    "emote": "angry"
   },
   {
     "id": "bogs_w1_mq03_intro_5",
     "speaker": "Foreman Boggs",
-    "text": "It puts completed work beside your name. That's what I can authorize. The lift west of the lobby is cleared for Sector 4. Restore the junction and trace the failed relays. Come back with something I can put in the report.",
+    "text": "I'm giving you the only thing that buys you another shift: completed work beside your name. The lift west of the lobby is cleared for Sector 4. Restore the junction and trace the failed relays. Come back with something I can put in the report.",
     "trigger": "set_quest_task_done:w1_mq03:talk_to_bogs,player_action:bogs_talked,set_milestone:ms_w1_mq03_bogs_talked,reveal_node:deep_mine,unlock_node:deep_mine"
   },
   {
@@ -846,6 +860,20 @@
     "speaker": "Nova",
     "emote": "worried",
     "text": "Neither have I. Tell me where it goes. We'll do the next bit together.",
+    "next": "zeke_w1_mq05_pod_core_2a"
+  },
+  {
+    "id": "zeke_w1_mq05_pod_core_2a",
+    "speaker": "Zeke",
+    "emote": "sad",
+    "text": "[He takes the Chime gently from her palm.] Jed really stayed at that lever... didn't he?",
+    "next": "zeke_w1_mq05_pod_core_2b"
+  },
+  {
+    "id": "zeke_w1_mq05_pod_core_2b",
+    "speaker": "Nova",
+    "emote": "sad",
+    "text": "He told me to get somewhere they can't send us back. Let's make sure he didn't hold that shutter for nothing.",
     "next": "zeke_w1_mq05_pod_core_3"
   },
   {
