@@ -38,11 +38,7 @@
     "source_new_world_node": "music_w6_new_world"
   },
   "room_music": {
-    "astra_bridge": "music_astra_bridge",
-    "workshop_floor": "music_w1_jed_workshop",
-    "workshop_office": "music_w1_jed_workshop",
-    "workshop_loft": "music_w1_jed_workshop",
-    "workshop_shed": "music_w1_jed_workshop"
+    "astra_bridge": "music_astra_bridge"
   },
   "combat_music": {
     "the_iron_warden": "music_w1_boss_warden",
