@@ -9714,6 +9714,67 @@ internal fun IllustratedCinematicOverlay(
             )
         }
 
+        // Atmospheric Layer 13: World 6 Source campfire warmth & Ascended Silence radiance
+        val isCampfireReunion = state.step.imagePath?.contains("w6_campfire_reunion") == true ||
+            state.step.imagePath?.contains("w5_tear_nova_wakes") == true
+        if (isCampfireReunion) {
+            val fireTransition = rememberInfiniteTransition(label = "w6_source_fire_glow")
+            val fireAlpha by fireTransition.animateFloat(
+                initialValue = 0.06f,
+                targetValue = 0.18f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 1500, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "fire_alpha"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = fireAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFF40E8FF).copy(alpha = 0.52f),
+                                Color(0xFF00B8D4).copy(alpha = 0.20f),
+                                Color.Transparent
+                            ),
+                            center = Offset(520f, 1140f),
+                            radius = 860f
+                        )
+                    )
+            )
+        }
+        val isSilenceRises = state.step.imagePath?.contains("w6_silence_rises") == true
+        if (isSilenceRises) {
+            val silenceTransition = rememberInfiniteTransition(label = "w6_silence_radiance")
+            val silenceAlpha by silenceTransition.animateFloat(
+                initialValue = 0.08f,
+                targetValue = 0.26f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 1200, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "silence_alpha"
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer { alpha = silenceAlpha * contentAlpha }
+                    .background(
+                        Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFFFFFFFF).copy(alpha = 0.48f),
+                                Color(0xFFB388FF).copy(alpha = 0.30f),
+                                Color.Transparent
+                            ),
+                            center = Offset(540f, 520f),
+                            radius = 980f
+                        )
+                    )
+            )
+        }
+
         // Atmospheric Layer 1: Emergency breach alarm strobe & telemetry scanlines
         val isEmergency = state.step.captionStyle == CinematicCaptionStyle.SYSTEM ||
             (state.step.imagePath?.contains("breach") == true &&

@@ -210,6 +210,40 @@
         "deep_firewall_beta"
       ],
       "protected_rooms": []
+    },
+    {
+      "id": "w6_echo_mines_sweep",
+      "rooms": [
+        "source_echo_mines_node_scale_03",
+        "source_echo_mines_node_scale_04"
+      ],
+      "protected_rooms": [
+        "source_echo_mines",
+        "source_echo_mines_node_scale_01",
+        "source_echo_mines_node_scale_02",
+        "source_echo_mines_node_scale_final"
+      ]
+    },
+    {
+      "id": "w6_memory_stair_sweep",
+      "rooms": [
+        "source_memory_stair_node_scale_03",
+        "source_memory_stair_node_scale_04"
+      ],
+      "protected_rooms": [
+        "source_memory_stair",
+        "source_memory_stair_node_scale_01",
+        "source_memory_stair_node_scale_02",
+        "source_memory_stair_node_scale_final"
+      ]
+    },
+    {
+      "id": "w6_guard_posts",
+      "rooms": [
+        "source_echo_patrol",
+        "source_spire_thought_node_scale_03"
+      ],
+      "protected_rooms": []
     }
   ],
   "parties": [
@@ -839,6 +873,90 @@
         "enter_room": "Firewall Beta defenses spin online, locking onto the crew's intrusion signal.",
         "leave_room": "The firewall turrets return to cold standby.",
         "adjacent": "Hard-light relays buzz sharply inside Firewall Beta ahead."
+      }
+    },
+    {
+      "id": "w6_echo_mines_shadow_patrol",
+      "zone_id": "w6_echo_mines_sweep",
+      "enemies": [
+        "source_shadow"
+      ],
+      "start_room": "source_echo_mines_node_scale_04",
+      "route": [
+        "source_echo_mines_node_scale_03",
+        "source_echo_mines_node_scale_04"
+      ],
+      "behavior": "patrol",
+      "aggression": "aggressive",
+      "move_interval_seconds": 15,
+      "engage_delay_seconds": 5,
+      "signals": {
+        "enter_room": "A Source shadow drifts along the remembered mine rail, turning sharply toward Nova.",
+        "leave_room": "The shadow dissolves deeper down the echoed tunnel.",
+        "adjacent": "Distorted pickaxe echoes ring down the adjacent drift."
+      }
+    },
+    {
+      "id": "w6_memory_stair_sentinel_patrol",
+      "zone_id": "w6_memory_stair_sweep",
+      "enemies": [
+        "distorted_sentinel"
+      ],
+      "start_room": "source_memory_stair_node_scale_04",
+      "route": [
+        "source_memory_stair_node_scale_03",
+        "source_memory_stair_node_scale_04"
+      ],
+      "behavior": "patrol",
+      "aggression": "aggressive",
+      "move_interval_seconds": 14,
+      "engage_delay_seconds": 5,
+      "signals": {
+        "enter_room": "A distorted sentinel glides down the memory stair, snapping a red lock onto the crew.",
+        "leave_room": "The distorted sentinel continues patrolling the upper steps.",
+        "adjacent": "Static-warped thruster pulses reverberate along the nearby stairs."
+      }
+    },
+    {
+      "id": "w6_echo_patrol_shadow",
+      "zone_id": "w6_guard_posts",
+      "enemies": [
+        "source_shadow"
+      ],
+      "start_room": "source_echo_patrol",
+      "route": [
+        "source_echo_patrol"
+      ],
+      "behavior": "stationary",
+      "aggression": "aggressive",
+      "move_interval_seconds": 30,
+      "engage_delay_seconds": 5,
+      "replaces_static_encounter": true,
+      "signals": {
+        "enter_room": "A shadow wearing a Dominion shift supervisor's silhouette lunges down the mine corridor.",
+        "leave_room": "The shadow retreats back into the flickering work lamps.",
+        "adjacent": "Heavy supervisor boots pace endlessly down the patrol route ahead."
+      }
+    },
+    {
+      "id": "w6_spire_thought_guard",
+      "zone_id": "w6_guard_posts",
+      "enemies": [
+        "nightmare_guard"
+      ],
+      "start_room": "source_spire_thought_node_scale_03",
+      "route": [
+        "source_spire_thought_node_scale_03"
+      ],
+      "behavior": "stationary",
+      "aggression": "aggressive",
+      "move_interval_seconds": 30,
+      "engage_delay_seconds": 5,
+      "replaces_static_encounter": true,
+      "signals": {
+        "enter_room": "A nightmare guard steps out of the crystal memory wall and raises a hard-light halberd.",
+        "leave_room": "The nightmare guard resumes its rigid watch on the defense line.",
+        "adjacent": "Hollow armor plates chime along the memory defense line ahead."
       }
     }
   ]

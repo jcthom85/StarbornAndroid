@@ -10051,9 +10051,7 @@
     "description": "A manager patrol of projections marches through overlapping shifts, checking Nova against every rule that ever tried to make her small. An open shift gate waits beyond their route.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "source_shadow"
-    ],
+    "enemies": [],
     "connections": {
       "west": "source_echo_workbench",
       "east": "source_echo_elevator"
@@ -21993,9 +21991,7 @@
     "description": "A memory defense line assembles from Warden armor, Phantom plating, and Ring hard-light. The patchwork shield exposes Vale's last lie: he calls deletion new, but it is built from old cruelty.",
     "npcs": [],
     "items": [],
-    "enemies": [
-      "nightmare_guard"
-    ],
+    "enemies": [],
     "connections": {
       "south": "source_spire_thought_node_scale_02",
       "north": "source_spire_thought_node_scale_04"

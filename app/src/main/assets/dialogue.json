@@ -1873,19 +1873,22 @@
     "id": "zeke_w6_nightmare_release",
     "speaker": "Zeke",
     "condition": "quest_active:w6_mq26,quest_task_done:w6_mq26:rescue_zeke",
-    "text": "I could hear you outside the glass. Kept thinking I’d missed my chance to get up. [Zeke takes a breath.] Can we sit a minute?"
+    "text": "I could hear you outside the glass. Kept thinking I’d missed my chance to get up. [Zeke takes a breath.] Can we sit a minute?",
+    "emote": "sad"
   },
   {
     "id": "gh0st_w6_nightmare_release",
     "speaker": "Gh0st",
     "condition": "quest_active:w6_mq26,quest_task_done:w6_mq26:rescue_gh0st",
-    "text": "I couldn’t save her. The order kept coming anyway. [Gh0st lowers his hands.] I can let it go quiet now."
+    "text": "I couldn’t save her. The order kept coming anyway. [Gh0st lowers his hands.] I can let it go quiet now.",
+    "emote": "sad"
   },
   {
     "id": "orion_w6_nightmare_release",
     "speaker": "Orion",
     "condition": "quest_active:w6_mq26,quest_task_done:w6_mq26:rescue_orion",
-    "text": "I can still hear them in the current. I thought if I waited long enough, someone would come back for me. You did."
+    "text": "I can still hear them in the current. I thought if I waited long enough, someone would come back for me. You did.",
+    "emote": "happy"
   },
   {
     "id": "vale_w6_final_confrontation",
@@ -1901,79 +1904,92 @@
     "speaker": "Nova",
     "condition": "quest_active:w6_mq30",
     "text": "I wanted to open that door. Then I heard Orion behind me, and Gh0st asking about the people behind the glass. Open the corridor, Vale. Let them decide where they go.",
-    "next": "vale_w6_final_refusal"
+    "next": "vale_w6_final_refusal",
+    "emote": "confident"
   },
   {
     "id": "zeke_w6_post_nightmare_idle",
     "speaker": "Zeke",
     "text": "My hands are still shaking. Give me a minute by the fire, then I’ll check on the others.",
-    "condition": "milestone:ms_w6_mq26_complete,milestone_not_set:ms_w6_mq27_complete"
+    "condition": "milestone:ms_w6_mq26_complete,milestone_not_set:ms_w6_mq27_complete",
+    "emote": "worried"
   },
   {
     "id": "zeke_w6_post_mines_idle",
     "speaker": "Zeke",
     "text": "The old clock was running slow again. I almost put it right before I remembered whose version of the mine we were in.",
-    "condition": "milestone:ms_w6_mq27_complete,milestone_not_set:ms_w6_mq28_complete"
+    "condition": "milestone:ms_w6_mq27_complete,milestone_not_set:ms_w6_mq28_complete",
+    "emote": "puzzled"
   },
   {
     "id": "zeke_w6_post_bridge_idle",
     "speaker": "Zeke",
     "text": "I thought the plank would drop when I took my foot off it. Look. It’s still there.",
-    "condition": "milestone:ms_w6_mq28_complete,milestone_not_set:ms_w6_mq29_complete"
+    "condition": "milestone:ms_w6_mq28_complete,milestone_not_set:ms_w6_mq29_complete",
+    "emote": "happy"
   },
   {
     "id": "zeke_w6_post_spire_idle",
     "speaker": "Zeke",
     "text": "I’ve got the lead clipped on. If it comes loose up there, call my name. I’ll hear you.",
-    "condition": "milestone:ms_w6_mq29_complete,milestone_not_set:ms_w6_mq30_complete"
+    "condition": "milestone:ms_w6_mq29_complete,milestone_not_set:ms_w6_mq30_complete",
+    "emote": "confident"
   },
   {
     "id": "orion_w6_post_nightmare_idle",
     "speaker": "Orion",
     "text": "I spent so long waiting to hear footsteps on that shore. Would you walk with me a little farther?",
-    "condition": "milestone:ms_w6_mq26_complete,milestone_not_set:ms_w6_mq27_complete"
+    "condition": "milestone:ms_w6_mq26_complete,milestone_not_set:ms_w6_mq27_complete",
+    "emote": "sad"
   },
   {
     "id": "orion_w6_post_mines_idle",
     "speaker": "Orion",
     "text": "You stopped at the lift before you went in. Was that where you used to wait for Jed?",
-    "condition": "milestone:ms_w6_mq27_complete,milestone_not_set:ms_w6_mq28_complete"
+    "condition": "milestone:ms_w6_mq27_complete,milestone_not_set:ms_w6_mq28_complete",
+    "emote": "worried"
   },
   {
     "id": "orion_w6_post_bridge_idle",
     "speaker": "Orion",
     "text": "I could hear the shore behind us. For a second I wanted to go back. Then I heard you up ahead.",
-    "condition": "milestone:ms_w6_mq28_complete,milestone_not_set:ms_w6_mq29_complete"
+    "condition": "milestone:ms_w6_mq28_complete,milestone_not_set:ms_w6_mq29_complete",
+    "emote": "happy"
   },
   {
     "id": "orion_w6_post_spire_idle",
     "speaker": "Orion",
     "text": "It’s quiet ahead. Keep talking when we go through. It’ll help me find you.",
-    "condition": "milestone:ms_w6_mq29_complete,milestone_not_set:ms_w6_mq30_complete"
+    "condition": "milestone:ms_w6_mq29_complete,milestone_not_set:ms_w6_mq30_complete",
+    "emote": "cool"
   },
   {
     "id": "ghost_w6_post_nightmare_idle",
     "speaker": "Gh0st",
     "text": "The order stopped. I stayed anyway. I wanted to be here when the rest of you got back.",
-    "condition": "milestone:ms_w6_mq26_complete,milestone_not_set:ms_w6_mq27_complete"
+    "condition": "milestone:ms_w6_mq26_complete,milestone_not_set:ms_w6_mq27_complete",
+    "emote": "cool"
   },
   {
     "id": "ghost_w6_post_mines_idle",
     "speaker": "Gh0st",
     "text": "That lift looked new. I watched you check the bypass before you stepped on. Did Jed teach you that?",
-    "condition": "milestone:ms_w6_mq27_complete,milestone_not_set:ms_w6_mq28_complete"
+    "condition": "milestone:ms_w6_mq27_complete,milestone_not_set:ms_w6_mq28_complete",
+    "emote": "puzzled"
   },
   {
     "id": "ghost_w6_post_bridge_idle",
     "speaker": "Gh0st",
     "text": "I heard Elara on the bridge. Just once. She said my name.",
-    "condition": "milestone:ms_w6_mq28_complete,milestone_not_set:ms_w6_mq29_complete"
+    "condition": "milestone:ms_w6_mq28_complete,milestone_not_set:ms_w6_mq29_complete",
+    "emote": "sad"
   },
   {
     "id": "ghost_w6_post_spire_idle",
     "speaker": "Gh0st",
     "text": "If you lose sight of me, call once. I’ll be close.",
-    "condition": "milestone:ms_w6_mq29_complete,milestone_not_set:ms_w6_mq30_complete"
+    "condition": "milestone:ms_w6_mq29_complete,milestone_not_set:ms_w6_mq30_complete",
+    "emote": "confident"
   },
   {
     "id": "sentinel_shop_intro",
@@ -4341,35 +4357,40 @@
     "speaker": "Nova",
     "text": "[Nova cups her hands around the little flame.] If we lose sight of each other up there, say something I’ll recognize.",
     "next": "w6_mq28_final_banter_line_2",
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "worried"
   },
   {
     "id": "w6_mq28_final_banter_line_2",
     "speaker": "Zeke",
     "text": "Your left boot squeaks. I’ve been listening to it since the mine.",
     "next": "w6_mq28_final_banter_line_3",
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "happy"
   },
   {
     "id": "w6_mq28_final_banter_line_3",
     "speaker": "Gh0st",
     "text": "[Gh0st rests one hand on the bridge.] I’ll be close enough to hear it.",
     "next": "w6_mq28_final_banter_line_4",
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "cool"
   },
   {
     "id": "w6_mq28_final_banter_line_4",
     "speaker": "Orion",
     "text": "Then I’ll listen for four sets of footsteps.",
     "next": "w6_mq28_final_banter_line_5",
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "happy"
   },
   {
     "id": "w6_mq28_final_banter_line_5",
     "speaker": "Nova",
     "text": "Four, all the way across.",
     "trigger": "player_action:w6_mq28_final_banter",
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "confident"
   },
   {
     "id": "w6_mq29_refuse_jed_revision_line_1",
@@ -4383,7 +4404,8 @@
     "speaker": "Nova",
     "text": "I know what you say next. I’ve been trying to remember how you said it.",
     "next": "w6_mq29_refuse_jed_revision_line_3",
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "sad"
   },
   {
     "id": "w6_mq29_refuse_jed_revision_line_3",
@@ -4407,14 +4429,16 @@
         "text": "Step away for now."
       }
     ],
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "scared"
   },
   {
     "id": "w6_mq29_refuse_astra_revision_line_1",
     "speaker": "Orion",
     "text": "[Orion touches the unbroken hull.] The cargo pod you came down in. There’s no damage.",
     "next": "w6_mq29_refuse_astra_revision_line_2",
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "puzzled"
   },
   {
     "id": "w6_mq29_refuse_astra_revision_line_2",
@@ -4428,7 +4452,8 @@
     "speaker": "Orion",
     "text": "You never reach Sector 9. My pod stays closed.",
     "next": "w6_mq29_refuse_astra_revision_line_4",
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "sad"
   },
   {
     "id": "w6_mq29_refuse_astra_revision_line_4",
@@ -4445,7 +4470,8 @@
         "text": "Step away for now."
       }
     ],
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "confident"
   },
   {
     "id": "w6_mq29_refuse_foundry_revision_line_1",
@@ -4459,7 +4485,8 @@
     "speaker": "Gh0st",
     "text": "There were people behind that glass. Do they get to cross?",
     "next": "w6_mq29_refuse_foundry_revision_line_3",
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "angry"
   },
   {
     "id": "w6_mq29_refuse_foundry_revision_line_3",
@@ -4483,34 +4510,39 @@
         "text": "Step away for now."
       }
     ],
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "confident"
   },
   {
     "id": "w6_sq29_tune_grave_line_1",
     "speaker": "Orion",
     "text": "[Orion brushes the dust from one of the names.] I used to pass this one without saying it. I was afraid I’d get it wrong.",
     "next": "w6_sq29_tune_grave_line_2",
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "sad"
   },
   {
     "id": "w6_sq29_tune_grave_line_2",
     "speaker": "Orion",
     "text": "Say it with me. Take a breath between the names.",
     "next": "w6_sq29_tune_grave_line_3",
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "cool"
   },
   {
     "id": "w6_sq29_tune_grave_line_3",
     "speaker": "Nova",
     "text": "[One voice answers, then another. Nova waits for the last one.] I hear them.",
     "trigger": "player_action:w6_sq29_tune_grave",
-    "scripted_only": true
+    "scripted_only": true,
+    "emote": "sad"
   },
   {
     "id": "nova_w6_final_jed",
     "speaker": "Nova",
     "text": "At the stair you had Jed tap the wrench twice. You remembered the sound. What happens when he says something you didn’t plan?",
-    "next": "vale_w6_final_reply"
+    "next": "vale_w6_final_reply",
+    "emote": "angry"
   },
   {
     "id": "vale_w6_final_reply",
@@ -4528,7 +4560,8 @@
     "id": "nova_w6_final_resolve",
     "speaker": "Nova",
     "text": "[Nova looks back at the crew.] When he tries to pull us into step, keep your own count.",
-    "trigger": "player_action:w6_mq30_confront_vale"
+    "trigger": "player_action:w6_mq30_confront_vale",
+    "emote": "confident"
   },
   {
     "id": "nova_w3_mq12_request_codes",

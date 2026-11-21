@@ -1029,7 +1029,9 @@
         "image": "images/cinematics/w6_ending_circuit_v1.webp",
         "camera_start_scale": 1.09,
         "camera_end_scale": 1.11,
-        "caption_style": "dialogue"
+        "caption_style": "dialogue",
+        "emote": "worried",
+        "portrait": "images/characters/emotes/gh0st_worried.png"
       },
       {
         "type": "dialogue",
@@ -1040,7 +1042,9 @@
         "image": "images/cinematics/w6_ending_circuit_v1.webp",
         "camera_start_scale": 1.06,
         "camera_end_scale": 1.09,
-        "caption_style": "dialogue"
+        "caption_style": "dialogue",
+        "emote": "confident",
+        "portrait": "images/characters/emotes/orion_confident.png"
       },
       {
         "type": "narration",
@@ -1061,7 +1065,8 @@
         "image": "images/cinematics/w6_ending_circuit_v1.webp",
         "camera_start_scale": 1.06,
         "camera_end_scale": 1.09,
-        "caption_style": "dialogue"
+        "caption_style": "dialogue",
+        "portrait": "images/characters/emotes/nova_confident.png"
       },
       {
         "type": "narration",
@@ -1083,7 +1088,8 @@
         "image": "images/cinematics/w6_ending_circuit_v1.webp",
         "camera_start_scale": 1.06,
         "camera_end_scale": 1.09,
-        "caption_style": "dialogue"
+        "caption_style": "dialogue",
+        "portrait": "images/characters/emotes/orion_confident.png"
       },
       {
         "type": "narration",
@@ -1122,7 +1128,9 @@
         "image": "images/cinematics/w6_ending_crossing_v1.webp",
         "camera_start_scale": 1.06,
         "camera_end_scale": 1.09,
-        "caption_style": "dialogue"
+        "caption_style": "dialogue",
+        "emote": "worried",
+        "portrait": "images/characters/emotes/zeke_worried.png"
       },
       {
         "type": "narration",
@@ -1143,7 +1151,9 @@
         "camera_start_scale": 1.06,
         "camera_end_scale": 1.09,
         "caption_style": "dialogue",
-        "music_cue": "music_nova_theme"
+        "music_cue": "music_nova_theme",
+        "emote": "happy",
+        "portrait": "images/characters/emotes/nova_happy.png"
       },
       {
         "type": "dialogue",
@@ -1154,22 +1164,29 @@
         "image": "images/cinematics/w6_ending_crossing_v1.webp",
         "camera_start_scale": 1.09,
         "camera_end_scale": 1.11,
-        "caption_style": "dialogue"
+        "caption_style": "dialogue",
+        "emote": "confident",
+        "portrait": "images/characters/emotes/orion_confident.png"
       },
       {
         "type": "dialogue",
         "speaker": "Gh0st",
-        "portrait": "images/characters/emotes/gh0st_idle.png",
+        "portrait": "images/characters/emotes/gh0st_worried.png",
         "text": "Elara? If you hear me, wait at the opening. We’re coming through.",
         "duration_seconds": 5.6,
         "caption_style": "dialogue",
-        "image": "images/cinematics/w6_ending_crossing_v1.webp"
+        "image": "images/cinematics/w6_ending_crossing_v1.webp",
+        "emote": "worried",
+        "camera_start_scale": 1.04,
+        "camera_end_scale": 1.1
       },
       {
         "type": "narration",
         "text": "A hand reaches back through the corridor. Gh0st catches it. “I’ve got you, Elara.”",
         "duration_seconds": 5.8,
-        "image": "images/cinematics/w6_ending_crossing_v1.webp"
+        "image": "images/cinematics/w6_ending_crossing_v1.webp",
+        "camera_start_scale": 1.1,
+        "camera_end_scale": 1.14
       },
       {
         "type": "narration",
@@ -1212,14 +1229,15 @@
       {
         "type": "dialogue",
         "speaker": "Zeke",
-        "emote": "idle",
+        "emote": "happy",
         "text": "You caught him like that on our first flight. I thought we’d lost him when the deck tilted.",
         "duration_seconds": 5.1,
         "transition": "cut",
         "image": "images/cinematics/w6_ending_diner_v1.webp",
         "camera_start_scale": 1.06,
         "camera_end_scale": 1.09,
-        "caption_style": "dialogue"
+        "caption_style": "dialogue",
+        "portrait": "images/characters/emotes/zeke_happy.png"
       },
       {
         "type": "dialogue",
@@ -1231,7 +1249,8 @@
         "image": "images/cinematics/w6_ending_diner_v1.webp",
         "camera_start_scale": 1.09,
         "camera_end_scale": 1.11,
-        "caption_style": "dialogue"
+        "caption_style": "dialogue",
+        "portrait": "images/characters/emotes/gh0st_cool.png"
       },
       {
         "type": "dialogue",
@@ -1243,7 +1262,8 @@
         "image": "images/cinematics/w6_ending_diner_v1.webp",
         "camera_start_scale": 1.06,
         "camera_end_scale": 1.09,
-        "caption_style": "dialogue"
+        "caption_style": "dialogue",
+        "portrait": "images/characters/emotes/nova_happy.png"
       },
       {
         "type": "dialogue",
@@ -1255,7 +1275,8 @@
         "image": "images/cinematics/w6_ending_diner_v1.webp",
         "camera_start_scale": 1.09,
         "camera_end_scale": 1.11,
-        "caption_style": "dialogue"
+        "caption_style": "dialogue",
+        "portrait": "images/characters/emotes/orion_happy.png"
       },
       {
         "type": "narration",
@@ -1275,7 +1296,9 @@
         "image": "images/cinematics/w6_ending_diner_v1.webp",
         "camera_start_scale": 1.06,
         "camera_end_scale": 1.09,
-        "caption_style": "dialogue"
+        "caption_style": "dialogue",
+        "emote": "happy",
+        "portrait": "images/characters/emotes/zeke_happy.png"
       },
       {
         "type": "dialogue",
@@ -1286,7 +1309,9 @@
         "image": "images/cinematics/w6_ending_diner_v1.webp",
         "camera_start_scale": 1.06,
         "camera_end_scale": 1.09,
-        "caption_style": "dialogue"
+        "caption_style": "dialogue",
+        "emote": "happy",
+        "portrait": "images/characters/emotes/gh0st_happy.png"
       },
       {
         "type": "dialogue",
@@ -1297,7 +1322,9 @@
         "image": "images/cinematics/w6_ending_diner_v1.webp",
         "camera_start_scale": 1.09,
         "camera_end_scale": 1.11,
-        "caption_style": "dialogue"
+        "caption_style": "dialogue",
+        "emote": "cool",
+        "portrait": "images/characters/emotes/orion_cool.png"
       },
       {
         "type": "narration",
@@ -1317,7 +1344,9 @@
         "image": "images/cinematics/w6_ending_diner_v1.webp",
         "camera_start_scale": 1.09,
         "camera_end_scale": 1.11,
-        "caption_style": "dialogue"
+        "caption_style": "dialogue",
+        "emote": "sad",
+        "portrait": "images/characters/emotes/nova_sad.png"
       },
       {
         "type": "dialogue",
@@ -1328,7 +1357,9 @@
         "image": "images/cinematics/w6_ending_diner_v1.webp",
         "camera_start_scale": 1.06,
         "camera_end_scale": 1.09,
-        "caption_style": "dialogue"
+        "caption_style": "dialogue",
+        "emote": "happy",
+        "portrait": "images/characters/emotes/zeke_happy.png"
       },
       {
         "type": "dialogue",
@@ -1339,7 +1370,9 @@
         "image": "images/cinematics/w6_ending_diner_v1.webp",
         "camera_start_scale": 1.09,
         "camera_end_scale": 1.11,
-        "caption_style": "dialogue"
+        "caption_style": "dialogue",
+        "emote": "happy",
+        "portrait": "images/characters/emotes/nova_happy.png"
       },
       {
         "type": "narration",
@@ -2267,33 +2300,62 @@
       {
         "type": "narration",
         "text": "Three sets of footsteps reach the fire from different directions.",
-        "duration_seconds": 4.2,
-        "image": "images/rooms/world_6/source_campfire.webp"
+        "duration_seconds": 4.4,
+        "image": "images/cinematics/w6_campfire_reunion_v1.png",
+        "audio_cue": "stinger_motif_source",
+        "transition": "fade",
+        "camera_start_scale": 1.02,
+        "camera_end_scale": 1.09,
+        "camera_start_y": 10.0,
+        "camera_end_y": -4.0
       },
       {
         "type": "dialogue",
         "speaker": "Zeke",
-        "portrait": "images/characters/emotes/zeke_idle.png",
+        "emote": "happy",
+        "portrait": "images/characters/emotes/zeke_happy.png",
         "text": "Nova? I’ve got an extra glove. Your hand’s shaking.",
-        "duration_seconds": 4.3,
+        "duration_seconds": 4.4,
         "caption_style": "dialogue",
-        "image": "images/rooms/world_6/source_campfire.webp"
+        "image": "images/cinematics/w6_campfire_reunion_v1.png",
+        "transition": "cut",
+        "camera_start_scale": 1.09,
+        "camera_end_scale": 1.15,
+        "camera_start_x": 0.0,
+        "camera_end_x": 14.0,
+        "camera_start_y": -4.0,
+        "camera_end_y": -6.0
       },
       {
         "type": "dialogue",
         "speaker": "Orion",
-        "portrait": "images/characters/emotes/orion_idle.png",
+        "emote": "happy",
+        "portrait": "images/characters/emotes/orion_happy.png",
         "text": "Listen. I can hear all four of us.",
-        "duration_seconds": 3.6,
+        "duration_seconds": 3.8,
         "caption_style": "dialogue",
-        "image": "images/rooms/world_6/source_campfire.webp",
-        "audio_cue": "sfx_chime_splice"
+        "image": "images/cinematics/w6_campfire_reunion_v1.png",
+        "transition": "cut",
+        "camera_start_scale": 1.15,
+        "camera_end_scale": 1.1,
+        "camera_start_x": 14.0,
+        "camera_end_x": -12.0,
+        "camera_start_y": -6.0,
+        "camera_end_y": -2.0
       },
       {
         "type": "narration",
         "text": "Gh0st draws up beside them. Four shadows fall across the Key.",
-        "duration_seconds": 4,
-        "image": "images/rooms/world_6/source_campfire.webp"
+        "duration_seconds": 4.4,
+        "image": "images/cinematics/w6_campfire_reunion_v1.png",
+        "transition": "cut",
+        "camera_start_scale": 1.1,
+        "camera_end_scale": 1.02,
+        "camera_start_x": -12.0,
+        "camera_end_x": 0.0,
+        "camera_start_y": -2.0,
+        "camera_end_y": 8.0,
+        "fade_out_seconds": 1.4
       }
     ],
     "presentation": "illustrated",
@@ -2307,25 +2369,44 @@
       {
         "type": "narration",
         "text": "Vale’s knees buckle. His outline cracks, and the sound goes with it.",
-        "duration_seconds": 4.5,
+        "duration_seconds": 4.4,
         "image": "images/rooms/world_6/source_center.webp",
-        "audio_cue": "battle_stability_shatter"
+        "audio_cue": "sfx_distant_gate_rumble",
+        "music_cue": "silence",
+        "transition": "fade",
+        "camera_start_scale": 1.02,
+        "camera_end_scale": 1.12,
+        "camera_start_y": 10.0,
+        "camera_end_y": -8.0
       },
       {
         "type": "narration",
-        "text": "Two anchors catch the pieces in midair. A new shape pulls itself upright between them.",
-        "duration_seconds": 4.8,
-        "image": "images/rooms/world_6/source_center_node_scale_03.webp",
-        "transition": "fade"
+        "text": "Two anchors catch the pieces in midair. A new shape pulls itself upright out of blinding white silence.",
+        "duration_seconds": 5.2,
+        "image": "images/cinematics/w6_silence_rises_v1.png",
+        "audio_cue": "sfx_combat_enemy_void_blast",
+        "music_cue": "music_w6_boss_final",
+        "transition": "cut",
+        "camera_start_scale": 1.04,
+        "camera_end_scale": 1.14,
+        "camera_start_y": 16.0,
+        "camera_end_y": -14.0
       },
       {
         "type": "dialogue",
         "speaker": "Nova",
-        "portrait": "images/characters/emotes/nova_idle.png",
+        "emote": "confident",
+        "portrait": "images/characters/emotes/nova_confident.png",
         "text": "Stay together. Check your gear before we go again.",
-        "duration_seconds": 4,
+        "duration_seconds": 4.4,
         "caption_style": "dialogue",
-        "image": "images/rooms/world_6/source_center.webp"
+        "image": "images/cinematics/w6_silence_rises_v1.png",
+        "transition": "cut",
+        "camera_start_scale": 1.14,
+        "camera_end_scale": 1.04,
+        "camera_start_y": -14.0,
+        "camera_end_y": 8.0,
+        "fade_out_seconds": 1.4
       }
     ],
     "presentation": "illustrated",
@@ -2370,7 +2451,9 @@
         "camera_start_scale": 1.07,
         "camera_end_scale": 1.1,
         "transition": "cut",
-        "duration_seconds": 5.0
+        "duration_seconds": 5.0,
+        "emote": "confident",
+        "portrait": "images/characters/emotes/nova_confident.png"
       },
       {
         "type": "narration",
@@ -2391,7 +2474,10 @@
         "camera_start_scale": 1.06,
         "camera_end_scale": 1.1,
         "transition": "cut",
-        "duration_seconds": 3.4
+        "duration_seconds": 3.4,
+        "emote": "happy",
+        "portrait": "images/characters/emotes/nova_happy.png",
+        "fade_out_seconds": 1.4
       }
     ]
   }
