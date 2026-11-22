@@ -507,4 +507,39 @@ class EventManagerTest {
         assertEquals("inventory", receivedContext)
         assertTrue("Completion callback should run", completionInvoked)
     }
+
+    @Test
+    fun itemAcquiredTriggerMatchesExplicitItemTypesForSnacksAndMods() {
+        val sessionStore = GameSessionStore()
+        val fired = mutableListOf<String>()
+        val snackEvent = GameEvent(
+            id = "w2_snacks_tutorial",
+            trigger = EventTrigger(type = "item_acquired", itemType = "snack"),
+            actions = listOf(EventAction(type = "system_tutorial", sceneId = "equipped_snacks", context = "Snacks"))
+        )
+        val modEvent = GameEvent(
+            id = "w1_mod_acquired_tutorial",
+            trigger = EventTrigger(type = "item_acquired", itemType = "mod"),
+            actions = listOf(EventAction(type = "system_tutorial", sceneId = "mod_slots_basics", context = "Tinker"))
+        )
+        val manager = EventManager(
+            events = listOf(snackEvent, modEvent),
+            sessionStore = sessionStore,
+            eventHooks = EventHooks(
+                onSystemTutorial = { sceneId, _, _, done ->
+                    if (sceneId != null) fired += sceneId
+                    done()
+                }
+            )
+        )
+
+        manager.handleTrigger("item_acquired", EventPayload.ItemAcquired("medkit", "consumable"))
+        assertTrue("Consumables should not trigger snack or mod tutorials", fired.isEmpty())
+
+        manager.handleTrigger("item_acquired", EventPayload.ItemAcquired("starbar_crunch", "snack"))
+        assertEquals(listOf("equipped_snacks"), fired)
+
+        manager.handleTrigger("item_acquired", EventPayload.ItemAcquired("armor_plating_mk_i", "mod"))
+        assertEquals(listOf("equipped_snacks", "mod_slots_basics"), fired)
+    }
 }

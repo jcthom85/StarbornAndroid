@@ -124,16 +124,22 @@ class EventManager(
             "encounter_defeat" -> matchesOutcome(trigger, payload, EventPayload.EncounterOutcome.Outcome.DEFEAT, state)
             "encounter_retreat" -> matchesOutcome(trigger, payload, EventPayload.EncounterOutcome.Outcome.RETREAT, state)
             "item_acquired" -> {
-                val itemPayload = (payload as? EventPayload.ItemAcquired)?.itemId
+                val itemPayload = payload as? EventPayload.ItemAcquired
+                val itemId = itemPayload?.itemId
+                val itemType = itemPayload?.itemType
                 val triggerItem = trigger.itemId ?: trigger.item
                 val triggerType = trigger.itemType
                 if (!triggerItem.isNullOrBlank()) {
-                    triggerItem.equals(itemPayload, ignoreCase = true)
+                    triggerItem.equals(itemId, ignoreCase = true)
                 } else if (!triggerType.isNullOrBlank()) {
-                    val isMod = itemPayload != null && (itemPayload.contains("mod") || itemPayload.contains("lens") || itemPayload.contains("core") || itemPayload.contains("grip"))
-                    triggerType.equals("mod", ignoreCase = true) && isMod
+                    if (!itemType.isNullOrBlank()) {
+                        triggerType.equals(itemType, ignoreCase = true)
+                    } else {
+                        val isMod = itemId != null && (itemId.contains("mod") || itemId.contains("lens") || itemId.contains("core") || itemId.contains("grip"))
+                        triggerType.equals("mod", ignoreCase = true) && isMod
+                    }
                 } else {
-                    itemPayload != null
+                    itemId != null
                 }
             }
             else -> true
@@ -655,7 +661,7 @@ sealed interface EventPayload {
     data class EnterRoom(val roomId: String) : EventPayload
     data class QuestStage(val questId: String) : EventPayload
     data class EnemyVictory(val enemyIds: List<String>) : EventPayload
-    data class ItemAcquired(val itemId: String) : EventPayload
+    data class ItemAcquired(val itemId: String, val itemType: String? = null) : EventPayload
     data class EncounterOutcome(
         val enemyIds: List<String>,
         val outcome: Outcome,

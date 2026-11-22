@@ -1698,9 +1698,10 @@ class ExplorationController(
 
     private fun handleItemAcquired(itemId: String) {
         if (itemId.isBlank()) return
+        val itemType = inventoryService.itemDetail(itemId)?.type
         eventManager.handleTrigger(
             type = "item_acquired",
-            payload = EventPayload.ItemAcquired(itemId)
+            payload = EventPayload.ItemAcquired(itemId, itemType)
         )
     }
 

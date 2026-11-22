@@ -106,15 +106,6 @@
     ]
   },
   {
-    "id": "snack_slot",
-    "steps": [
-      {
-        "message": "Snacks are reusable combat tools. Use them like abilities - they recharge after a cooldown.",
-        "context": "Combat"
-      }
-    ]
-  },
-  {
     "id": "gear_equip_basics",
     "steps": [
       {
