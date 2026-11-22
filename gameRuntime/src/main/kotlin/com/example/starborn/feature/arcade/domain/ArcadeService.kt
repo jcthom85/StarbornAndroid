@@ -64,7 +64,8 @@ enum class HarmonicRewardTier(val threshold: Int) {
 data class ArcadeRunSubmission(
     val score: Int,
     val highScore: Int,
-    val newlyClaimed: List<String>
+    val newlyClaimed: List<String>,
+    val tokensEarned: Int = 0
 )
 
 class ArcadeService(
@@ -73,6 +74,60 @@ class ArcadeService(
 ) {
     fun progress(cabinetId: String): ArcadeCabinetProgress =
         sessionStore.state.value.arcadeProgress[cabinetId] ?: ArcadeCabinetProgress()
+
+    fun tokenBalance(): Int =
+        inventoryService.snapshot()[ArcadeIds.TOKEN_ITEM_ID] ?: 0
+
+    fun completeRepairForCraftedItem(itemId: String): String? {
+        val message = when {
+            itemId.equals(ArcadeIds.REPAIRED_CORE, ignoreCase = true) && completeDeepMineRepair() ->
+                "The Hyperion cabinet wakes with an amber pulse, ready to play aboard the Astra."
+            itemId.equals(ArcadeIds.REPAIRED_CANOPY_CORE, ignoreCase = true) && completeCanopyHopperRepair() ->
+                "Canopy Hopper's optic board locks in with an emerald glow — installed in the Astra Recreation Lounge."
+            itemId.equals(ArcadeIds.REPAIRED_SPIRE_CORE, ignoreCase = true) && completeSpireInfiltratorRepair() ->
+                "Spire Infiltrator's mainframe core boots clean — installed in the Astra Recreation Lounge."
+            itemId.equals(ArcadeIds.REPAIRED_SLAG_CORE, ignoreCase = true) && completeSlagCatcherRepair() ->
+                "Slag Catcher's thermite gate calibrates — installed in the Astra Recreation Lounge."
+            itemId.equals(ArcadeIds.REPAIRED_ORBITAL_CORE, ignoreCase = true) && completeOrbitalDefenseRepair() ->
+                "Orbital Defense 2000 locks onto Zenith telemetry — installed in the Astra Recreation Lounge."
+            itemId.equals(ArcadeIds.REPAIRED_HARMONIC_CORE, ignoreCase = true) && completeHarmonicPulseRepair() ->
+                "Harmonic Pulse resonates at full pitch — installed in the Astra Recreation Lounge."
+            else -> return null
+        }
+        return if ("ms_all_arcade_cabinets_restored" in sessionStore.state.value.completedMilestones) {
+            "$message All 6 Astra arcade cabinets are now restored!"
+        } else {
+            message
+        }
+    }
+
+    fun reconcileCraftedCoresInInventory(): Int {
+        val coreIds = listOf(
+            ArcadeIds.REPAIRED_CORE,
+            ArcadeIds.REPAIRED_CANOPY_CORE,
+            ArcadeIds.REPAIRED_SPIRE_CORE,
+            ArcadeIds.REPAIRED_SLAG_CORE,
+            ArcadeIds.REPAIRED_ORBITAL_CORE,
+            ArcadeIds.REPAIRED_HARMONIC_CORE
+        )
+        var installedCount = 0
+        for (coreId in coreIds) {
+            if (inventoryService.hasItem(coreId) && completeRepairForCraftedItem(coreId) != null) {
+                installedCount++
+            }
+        }
+        return installedCount
+    }
+
+    private fun runParticipationTokens(score: Int): Int =
+        if (score >= 1000) (score / 4000).coerceIn(1, 6) else 0
+
+    private fun tierBonusTokens(tierName: String): Int = when (tierName) {
+        "BRONZE" -> 2
+        "SILVER" -> 5
+        "GOLD" -> 10
+        else -> 0
+    }
 
     fun discoverDeepMine(): Boolean {
         val current = progress(ArcadeIds.DEEP_MINE)
@@ -107,9 +162,11 @@ class ArcadeService(
         val newlyClaimed = earned.filter { it.name !in current.claimedTiers }
         newlyClaimed.forEach(::grantDeepMineReward)
         val claimed = current.claimedTiers + newlyClaimed.map { it.name }
-        if (score >= 1000) {
-            inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, (score / 4000).coerceIn(1, 6))
+        val runTokens = runParticipationTokens(score)
+        if (runTokens > 0) {
+            inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, runTokens)
         }
+        val totalTokensEarned = runTokens + newlyClaimed.sumOf { tierBonusTokens(it.name) }
         sessionStore.updateArcadeProgress(ArcadeIds.DEEP_MINE) {
             it.copy(
                 highScore = maxOf(it.highScore, score),
@@ -118,7 +175,7 @@ class ArcadeService(
             )
         }
         sessionStore.setInventory(inventoryService.snapshot())
-        return ArcadeRunSubmission(score, maxOf(current.highScore, score), newlyClaimed.map { it.name })
+        return ArcadeRunSubmission(score, maxOf(current.highScore, score), newlyClaimed.map { it.name }, totalTokensEarned)
     }
 
     private fun grantDeepMineReward(tier: ArcadeRewardTier) {
@@ -175,9 +232,11 @@ class ArcadeService(
         val newlyClaimed = earned.filter { it.name !in current.claimedTiers }
         newlyClaimed.forEach(::grantCanopyReward)
         val claimed = current.claimedTiers + newlyClaimed.map { it.name }
-        if (score >= 1000) {
-            inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, (score / 4000).coerceIn(1, 6))
+        val runTokens = runParticipationTokens(score)
+        if (runTokens > 0) {
+            inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, runTokens)
         }
+        val totalTokensEarned = runTokens + newlyClaimed.sumOf { tierBonusTokens(it.name) }
         sessionStore.updateArcadeProgress(ArcadeIds.CANOPY_HOPPER) {
             it.copy(
                 highScore = maxOf(it.highScore, score),
@@ -186,7 +245,7 @@ class ArcadeService(
             )
         }
         sessionStore.setInventory(inventoryService.snapshot())
-        return ArcadeRunSubmission(score, maxOf(current.highScore, score), newlyClaimed.map { it.name })
+        return ArcadeRunSubmission(score, maxOf(current.highScore, score), newlyClaimed.map { it.name }, totalTokensEarned)
     }
 
     private fun grantCanopyReward(tier: CanopyRewardTier) {
@@ -243,9 +302,11 @@ class ArcadeService(
         val newlyClaimed = earned.filter { it.name !in current.claimedTiers }
         newlyClaimed.forEach(::grantSpireReward)
         val claimed = current.claimedTiers + newlyClaimed.map { it.name }
-        if (score >= 1000) {
-            inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, (score / 4000).coerceIn(1, 6))
+        val runTokens = runParticipationTokens(score)
+        if (runTokens > 0) {
+            inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, runTokens)
         }
+        val totalTokensEarned = runTokens + newlyClaimed.sumOf { tierBonusTokens(it.name) }
         sessionStore.updateArcadeProgress(ArcadeIds.SPIRE_INFILTRATOR) {
             it.copy(
                 highScore = maxOf(it.highScore, score),
@@ -254,7 +315,7 @@ class ArcadeService(
             )
         }
         sessionStore.setInventory(inventoryService.snapshot())
-        return ArcadeRunSubmission(score, maxOf(current.highScore, score), newlyClaimed.map { it.name })
+        return ArcadeRunSubmission(score, maxOf(current.highScore, score), newlyClaimed.map { it.name }, totalTokensEarned)
     }
 
     private fun grantSpireReward(tier: SpireRewardTier) {
@@ -311,9 +372,11 @@ class ArcadeService(
         val newlyClaimed = earned.filter { it.name !in current.claimedTiers }
         newlyClaimed.forEach(::grantSlagReward)
         val claimed = current.claimedTiers + newlyClaimed.map { it.name }
-        if (score >= 1000) {
-            inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, (score / 4000).coerceIn(1, 6))
+        val runTokens = runParticipationTokens(score)
+        if (runTokens > 0) {
+            inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, runTokens)
         }
+        val totalTokensEarned = runTokens + newlyClaimed.sumOf { tierBonusTokens(it.name) }
         sessionStore.updateArcadeProgress(ArcadeIds.SLAG_CATCHER) {
             it.copy(
                 highScore = maxOf(it.highScore, score),
@@ -322,7 +385,7 @@ class ArcadeService(
             )
         }
         sessionStore.setInventory(inventoryService.snapshot())
-        return ArcadeRunSubmission(score, maxOf(current.highScore, score), newlyClaimed.map { it.name })
+        return ArcadeRunSubmission(score, maxOf(current.highScore, score), newlyClaimed.map { it.name }, totalTokensEarned)
     }
 
     private fun grantSlagReward(tier: SlagRewardTier) {
@@ -379,9 +442,11 @@ class ArcadeService(
         val newlyClaimed = earned.filter { it.name !in current.claimedTiers }
         newlyClaimed.forEach(::grantOrbitalReward)
         val claimed = current.claimedTiers + newlyClaimed.map { it.name }
-        if (score >= 1000) {
-            inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, (score / 4000).coerceIn(1, 6))
+        val runTokens = runParticipationTokens(score)
+        if (runTokens > 0) {
+            inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, runTokens)
         }
+        val totalTokensEarned = runTokens + newlyClaimed.sumOf { tierBonusTokens(it.name) }
         sessionStore.updateArcadeProgress(ArcadeIds.ORBITAL_DEFENSE) {
             it.copy(
                 highScore = maxOf(it.highScore, score),
@@ -390,7 +455,7 @@ class ArcadeService(
             )
         }
         sessionStore.setInventory(inventoryService.snapshot())
-        return ArcadeRunSubmission(score, maxOf(current.highScore, score), newlyClaimed.map { it.name })
+        return ArcadeRunSubmission(score, maxOf(current.highScore, score), newlyClaimed.map { it.name }, totalTokensEarned)
     }
 
     private fun grantOrbitalReward(tier: OrbitalRewardTier) {
@@ -447,9 +512,11 @@ class ArcadeService(
         val newlyClaimed = earned.filter { it.name !in current.claimedTiers }
         newlyClaimed.forEach(::grantHarmonicReward)
         val claimed = current.claimedTiers + newlyClaimed.map { it.name }
-        if (score >= 1000) {
-            inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, (score / 4000).coerceIn(1, 6))
+        val runTokens = runParticipationTokens(score)
+        if (runTokens > 0) {
+            inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, runTokens)
         }
+        val totalTokensEarned = runTokens + newlyClaimed.sumOf { tierBonusTokens(it.name) }
         sessionStore.updateArcadeProgress(ArcadeIds.HARMONIC_PULSE) {
             it.copy(
                 highScore = maxOf(it.highScore, score),
@@ -458,7 +525,7 @@ class ArcadeService(
             )
         }
         sessionStore.setInventory(inventoryService.snapshot())
-        return ArcadeRunSubmission(score, maxOf(current.highScore, score), newlyClaimed.map { it.name })
+        return ArcadeRunSubmission(score, maxOf(current.highScore, score), newlyClaimed.map { it.name }, totalTokensEarned)
     }
 
     private fun grantHarmonicReward(tier: HarmonicRewardTier) {

@@ -24,6 +24,8 @@ data class ShopSells(
     val items: List<String> = emptyList(),
     val rules: ShopSellsRules = ShopSellsRules(),
     val gates: Map<String, ShopGate> = emptyMap(),
+    @Json(name = "item_prices")
+    val itemPrices: Map<String, Int> = emptyMap(),
     @Json(name = "rotation_pool")
     val rotationPool: List<String> = emptyList(),
     @Json(name = "rotation_size")
@@ -52,6 +54,10 @@ data class ShopDefinition(
     val greeting: String? = null,
     @Json(name = "vo_cue")
     val voCue: String? = null,
+    @Json(name = "currency_item_id")
+    val currencyItemId: String? = null,
+    @Json(name = "currency_label")
+    val currencyLabel: String? = null,
     val pricing: ShopPricing? = null,
     val sells: ShopSells = ShopSells(),
     val buys: ShopBuys? = null,

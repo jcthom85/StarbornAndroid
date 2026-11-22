@@ -3573,12 +3573,11 @@
   {
     "id": "item_arcade_token",
     "name": "Arcade Token",
-    "description": "A stamped Hyperion arcade token earned from high-score runs. Sell at the Arcade Prize Dispenser for 100 credits each toward prizes and supplies.",
-    "type": "consumable",
-    "value": 100,
-    "buy_price": 50,
+    "description": "A stamped Hyperion arcade token earned from high-score runs. Redeem at the Astra Arcade Prize Dispenser for rare modifications and supplies.",
+    "type": "key_item",
+    "value": 0,
     "rarity": "uncommon",
-    "resale_value": 200
+    "unsellable": true
   },
   {
     "id": "relic_retro_overclock",

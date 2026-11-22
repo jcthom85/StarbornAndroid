@@ -1,5 +1,6 @@
 package com.example.starborn.feature.arcade.ui
 
+import android.graphics.BitmapFactory
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -20,13 +21,21 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.starborn.feature.arcade.domain.ArcadeIds
@@ -51,9 +60,17 @@ fun SlagCatcherArcadeScreen(
     onBack: () -> Unit,
     largeTouchTargets: Boolean,
     reducedFlashes: Boolean,
-    onPlayCue: (String) -> Unit
+    onPlayCue: (String) -> Unit,
+    hapticsDisabled: Boolean = false
 ) {
     val engine = remember { SlagCatcherEngine() }
+    val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
+    val backdrop = remember {
+        runCatching {
+            context.assets.open("images/arcade/slag_catcher/foundry_smelter_v1.png").use { BitmapFactory.decodeStream(it)?.asImageBitmap() }
+        }.getOrNull()
+    }
     var snapshot by remember { mutableStateOf(engine.snapshot()) }
     var input by remember { mutableStateOf(SlagCatcherInput()) }
     var paused by remember { mutableStateOf(false) }
@@ -71,7 +88,39 @@ fun SlagCatcherArcadeScreen(
             withFrameNanos { now ->
                 if (previous != 0L && !paused && !tutorial) {
                     engine.advance((now - previous) / 1_000_000_000f, input)
-                    snapshot = engine.snapshot()
+                    val next = engine.snapshot()
+                    snapshot = next
+                    when (next.audioEvent) {
+                        SlagAudioEvent.CATCH_DROPLET -> {
+                            onPlayCue("sfx_arcade_laser")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        }
+                        SlagAudioEvent.CATCH_INGOT -> {
+                            onPlayCue("confirm")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        }
+                        SlagAudioEvent.CATCH_CORE -> {
+                            onPlayCue("sfx_arcade_jump")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        SlagAudioEvent.HIT_BOMB, SlagAudioEvent.BUCKET_LOST -> {
+                            onPlayCue("action_inspect")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        SlagAudioEvent.VENT_STEAM -> {
+                            onPlayCue("sfx_arcade_laser")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        }
+                        SlagAudioEvent.ROUND_CLEAR -> {
+                            onPlayCue("confirm")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        SlagAudioEvent.GAME_OVER -> {
+                            onPlayCue("sfx_arcade_game_over")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        SlagAudioEvent.NONE -> Unit
+                    }
                 }
                 previous = now
             }
@@ -81,20 +130,9 @@ fun SlagCatcherArcadeScreen(
     LaunchedEffect(snapshot.gameOver) {
         if (snapshot.gameOver && submitted == null) {
             submitted = arcadeService.submitSlagCatcherScore(snapshot.score)
-            onPlayCue("sfx_arcade_game_over")
-        }
-    }
-
-    LaunchedEffect(snapshot.audioEvent) {
-        when (snapshot.audioEvent) {
-            SlagAudioEvent.CATCH_DROPLET -> onPlayCue("sfx_arcade_laser")
-            SlagAudioEvent.CATCH_INGOT -> onPlayCue("confirm")
-            SlagAudioEvent.CATCH_CORE -> onPlayCue("sfx_arcade_jump")
-            SlagAudioEvent.HIT_BOMB, SlagAudioEvent.BUCKET_LOST -> onPlayCue("action_inspect")
-            SlagAudioEvent.VENT_STEAM -> onPlayCue("sfx_arcade_laser")
-            SlagAudioEvent.ROUND_CLEAR -> onPlayCue("confirm")
-            SlagAudioEvent.GAME_OVER -> onPlayCue("sfx_arcade_game_over")
-            SlagAudioEvent.NONE -> Unit
+            if (snapshot.audioEvent != SlagAudioEvent.GAME_OVER) {
+                onPlayCue("sfx_arcade_game_over")
+            }
         }
     }
 
@@ -125,8 +163,9 @@ fun SlagCatcherArcadeScreen(
         ) {
             SlagCanvas(
                 snapshot = snapshot,
+                backdrop = backdrop,
                 reducedFlashes = reducedFlashes,
-                onDirectTouch = { input = input.copy(paddleTargetX = it) },
+                onDirectTouch = { targetX -> input = input.copy(paddleTargetX = targetX) },
                 modifier = Modifier
                     .fillMaxSize()
                     .testTag("slag_catcher_viewport")
@@ -144,19 +183,30 @@ fun SlagCatcherArcadeScreen(
                         "Don't let valuable slag drop into the waste drain."
                     ),
                     action = "START SHIFT",
-                    onAction = { tutorial = false; onPlayCue("confirm") }
+                    onAction = { tutorial = false; onPlayCue("sfx_arcade_coin_insert") },
+                    secondaryAction = "LEAVE CABINET",
+                    onSecondaryAction = onBack
                 )
             } else if (paused) {
-                SlagOverlay("SHIFT PAUSED", listOf("Crucible locked on maintenance rail."), "RESUME") { paused = false }
+                SlagOverlay(
+                    title = "SHIFT PAUSED",
+                    lines = listOf("Crucible locked on maintenance rail."),
+                    action = "RESUME",
+                    onAction = { paused = false },
+                    secondaryAction = "LEAVE CABINET",
+                    onSecondaryAction = onBack
+                )
             } else if (snapshot.gameOver) {
                 val tiers = submitted?.newlyClaimed.orEmpty().joinToString()
+                val tokens = submitted?.tokensEarned ?: 0
                 SlagOverlay(
                     title = snapshot.message,
                     lines = buildList {
                         add("FINAL SCORE: ${snapshot.score}")
                         add("SHIFT REACHED: ROUND ${snapshot.round}")
+                        if (tokens > 0) add("+$tokens ARCADE ${if (tokens == 1) "TOKEN" else "TOKENS"} EARNED")
                         if (tiers.isNotBlank()) add("REWARD UNLOCKED: $tiers")
-                        else add("Drop one more coin to beat the high score.")
+                        else if (tokens == 0) add("Drop one more coin to beat the high score.")
                     },
                     action = "TRY AGAIN",
                     onAction = {
@@ -164,17 +214,25 @@ fun SlagCatcherArcadeScreen(
                         snapshot = engine.snapshot()
                         submitted = null
                         input = SlagCatcherInput()
-                        onPlayCue("confirm")
-                    }
+                        onPlayCue("sfx_arcade_coin_insert")
+                    },
+                    secondaryAction = "LEAVE CABINET",
+                    onSecondaryAction = onBack
                 )
             }
         }
 
         SlagStatusLamp(snapshot.message, snapshot.gameOver)
         Spacer(Modifier.height(4.dp))
-        SlagControls(input, snapshot.heat, largeTouchTargets) { input = it }
+        SlagControls(input, snapshot.heat, largeTouchTargets) { transform -> input = transform(input) }
         Spacer(Modifier.height(4.dp))
-        SlagServiceKey { paused = true }
+        Row(
+            modifier = Modifier.fillMaxWidth(.88f),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            SlagServiceKey(text = "SERVICE  •  PAUSE", onClick = { paused = true }, modifier = Modifier.weight(1f))
+            SlagServiceKey(text = "LEAVE CABINET", onClick = onBack, modifier = Modifier.weight(1f))
+        }
     }
 }
 
@@ -286,22 +344,37 @@ private fun SlagStatusLamp(message: String, failure: Boolean) {
 @Composable
 private fun SlagCanvas(
     snapshot: SlagCatcherSnapshot,
+    backdrop: ImageBitmap?,
     reducedFlashes: Boolean,
     onDirectTouch: (Float) -> Unit,
     modifier: Modifier
 ) {
+    val latestDirectTouch by rememberUpdatedState(onDirectTouch)
     Canvas(
         modifier
             .background(Color(0xFF0D0604), RoundedCornerShape(8.dp))
             .pointerInput(Unit) {
                 detectDragGestures { change, _ ->
                     val fraction = (change.position.x / size.width.toFloat()).coerceIn(0f, 1f)
-                    onDirectTouch(fraction)
+                    latestDirectTouch(fraction)
                 }
             }
     ) {
         val w = size.width
         val h = size.height
+
+        backdrop?.let { bg ->
+            drawImage(
+                image = bg,
+                srcOffset = IntOffset.Zero,
+                srcSize = IntSize(bg.width, bg.height),
+                dstOffset = IntOffset.Zero,
+                dstSize = IntSize(w.toInt(), h.toInt()),
+                alpha = 0.72f,
+                filterQuality = FilterQuality.Low
+            )
+            drawRect(Color(0xFF0A0402).copy(alpha = 0.25f))
+        }
 
         // 1. Top Blast Furnace Chute Header
         drawRect(Color(0xFF261208), topLeft = Offset(0f, 0f), size = Size(w, 24.dp.toPx()))
@@ -395,11 +468,12 @@ private fun SlagControls(
     input: SlagCatcherInput,
     heat: Float,
     large: Boolean,
-    onInput: (SlagCatcherInput) -> Unit
+    onUpdateInput: ((SlagCatcherInput) -> SlagCatcherInput) -> Unit
 ) {
     val buttonSize = if (large) 58.dp else 48.dp
     val ventSize = if (large) 76.dp else 64.dp
     val canVent = heat > 20f
+    val latestUpdate by rememberUpdatedState(onUpdateInput)
 
     Row(
         Modifier
@@ -412,8 +486,8 @@ private fun SlagControls(
     ) {
         // LEFT: Steer Left / Right
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            SteerButton("◀ STEER", buttonSize, input.moveLeft) { onInput(input.copy(moveLeft = it, paddleTargetX = null)) }
-            SteerButton("STEER ▶", buttonSize, input.moveRight) { onInput(input.copy(moveRight = it, paddleTargetX = null)) }
+            SteerButton("◀ STEER", buttonSize, input.moveLeft) { held -> onUpdateInput { it.copy(moveLeft = held, paddleTargetX = null) } }
+            SteerButton("STEER ▶", buttonSize, input.moveRight) { held -> onUpdateInput { it.copy(moveRight = held, paddleTargetX = null) } }
         }
 
         // CENTER DIVIDER
@@ -450,9 +524,9 @@ private fun SlagControls(
                         .pointerInput(Unit) {
                             awaitEachGesture {
                                 awaitFirstDown(requireUnconsumed = false)
-                                onInput(input.copy(ventSteam = true))
+                                latestUpdate { it.copy(ventSteam = true) }
                                 waitForUpOrCancellation()
-                                onInput(input.copy(ventSteam = false))
+                                latestUpdate { it.copy(ventSteam = false) }
                             }
                         }
                         .testTag("arcade_slag_vent"),
@@ -472,6 +546,7 @@ private fun SteerButton(
     pressed: Boolean,
     onHeld: (Boolean) -> Unit
 ) {
+    val latestOnHeld by rememberUpdatedState(onHeld)
     Box(
         Modifier
             .width(size * 1.5f)
@@ -492,9 +567,9 @@ private fun SteerButton(
                 .pointerInput(Unit) {
                     awaitEachGesture {
                         awaitFirstDown(requireUnconsumed = false)
-                        onHeld(true)
+                        latestOnHeld(true)
                         waitForUpOrCancellation()
-                        onHeld(false)
+                        latestOnHeld(false)
                     }
                 }
                 .testTag("steer_$glyph"),
@@ -506,21 +581,29 @@ private fun SteerButton(
 }
 
 @Composable
-private fun SlagServiceKey(onClick: () -> Unit) {
+private fun SlagServiceKey(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF140804), contentColor = Color(0xFFB89682)),
         shape = RoundedCornerShape(4.dp),
-        modifier = Modifier
-            .height(30.dp)
-            .border(1.dp, Color(0xFF38190B), RoundedCornerShape(4.dp))
+        modifier = modifier
+            .height(32.dp)
+            .border(1.dp, Color(0xFF38190B), RoundedCornerShape(4.dp)),
+        contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
     ) {
-        Text("SERVICE  •  PAUSE / EXIT", fontFamily = FontFamily.Monospace, fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = .8.sp)
+        Text(text, fontFamily = FontFamily.Monospace, fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = .8.sp)
     }
 }
 
 @Composable
-private fun SlagOverlay(title: String, lines: List<String>, action: String, onAction: () -> Unit) {
+private fun SlagOverlay(
+    title: String,
+    lines: List<String>,
+    action: String,
+    onAction: () -> Unit,
+    secondaryAction: String? = null,
+    onSecondaryAction: (() -> Unit)? = null
+) {
     Column(
         Modifier
             .fillMaxWidth(.85f)
@@ -548,6 +631,21 @@ private fun SlagOverlay(title: String, lines: List<String>, action: String, onAc
                 .height(38.dp)
         ) {
             Text(action, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Black, fontSize = 11.sp, letterSpacing = 1.sp)
+        }
+        if (secondaryAction != null && onSecondaryAction != null) {
+            Spacer(Modifier.height(6.dp))
+            Button(
+                onClick = onSecondaryAction,
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1F0E07), contentColor = Color(0xFFE6CBB8)),
+                shape = RoundedCornerShape(4.dp),
+                modifier = Modifier
+                    .fillMaxWidth(.75f)
+                    .height(36.dp)
+                    .border(1.dp, Color(0xFF5C2D16), RoundedCornerShape(4.dp)),
+                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
+            ) {
+                Text(secondaryAction, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, fontSize = 10.sp, letterSpacing = .8.sp)
+            }
         }
     }
 }

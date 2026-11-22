@@ -80,6 +80,8 @@ data class ExplorationUiState(
     val isCatchLogVisible: Boolean = false,
     val isAstraRecreationVisible: Boolean = false,
     val astraArcades: List<com.example.starborn.feature.exploration.presentation.AstraArcadeDefinition> = emptyList(),
+    val astraArcadeEntries: List<com.example.starborn.feature.exploration.presentation.AstraArcadeStatusUi> = emptyList(),
+    val astraArcadeTokens: Int = 0,
     val astraPrizesAvailable: Boolean = true,
     val astraFacility: com.example.starborn.feature.exploration.presentation.AstraFacilityUi? = null,
     val isMenuOverlayVisible: Boolean = false,

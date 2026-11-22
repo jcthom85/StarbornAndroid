@@ -1722,10 +1722,39 @@ class ExplorationController(
             _uiState.update { it.copy(isSimulationDeckVisible = true, availableSimulations = com.example.starborn.feature.exploration.presentation.AstraCatalog.availableSimulations(sessionStore.state.value)) }
         }
         if (actionId == "astra_recreation" && sessionStore.state.value.hubId == AstraTravel.HUB_ID) {
-            _uiState.update { it.copy(isAstraRecreationVisible = true,
-                astraArcades = com.example.starborn.feature.exploration.presentation.AstraCatalog.arcades.filter { game ->
-                    arcadeService.progress(game.id).installed && (!isBurgQuestSession || game.id == ArcadeIds.DEEP_MINE)
-                }, astraPrizesAvailable = !isBurgQuestSession) }
+            val reconciled = arcadeService.reconcileCraftedCoresInInventory()
+            if (reconciled > 0) {
+                postStatus(
+                    if (reconciled == 1) "Installed a restored arcade cabinet in the Recreation Lounge."
+                    else "Installed $reconciled restored arcade cabinets in the Recreation Lounge."
+                )
+            }
+            val catalogArcades = com.example.starborn.feature.exploration.presentation.AstraCatalog.arcades
+            val entries = catalogArcades
+                .filter { !isBurgQuestSession || it.id == ArcadeIds.DEEP_MINE }
+                .map { game ->
+                    val prog = arcadeService.progress(game.id)
+                    com.example.starborn.feature.exploration.presentation.AstraArcadeStatusUi(
+                        id = game.id,
+                        title = game.title,
+                        worldHint = game.worldHint,
+                        discovered = prog.discovered,
+                        installed = prog.installed,
+                        highScore = prog.highScore,
+                        claimedTiers = prog.claimedTiers
+                    )
+                }
+            _uiState.update {
+                it.copy(
+                    isAstraRecreationVisible = true,
+                    astraArcades = catalogArcades.filter { game ->
+                        arcadeService.progress(game.id).installed && (!isBurgQuestSession || game.id == ArcadeIds.DEEP_MINE)
+                    },
+                    astraArcadeEntries = entries,
+                    astraArcadeTokens = arcadeService.tokenBalance(),
+                    astraPrizesAvailable = !isBurgQuestSession
+                )
+            }
         }
         val facilityId = mapOf("astra_cargo_records" to "cargo", "astra_cargo_manifest" to "cargo", "astra_relic_array" to "relics",
             "astra_chime_archive" to "chime", "astra_crew_checkin" to "crew", "astra_crew_downtime" to "quarters")[actionId]
@@ -5137,8 +5166,8 @@ class ExplorationController(
             closeMenuOverlay()
         }
         triggerPlayerAction("tinkering_craft", normalized)
-        if (normalized.equals(ArcadeIds.REPAIRED_CORE, ignoreCase = true) && arcadeService.completeDeepMineRepair()) {
-            postStatus("The Hyperion cabinet wakes with an amber pulse, ready for installation aboard the Astra.")
+        arcadeService.completeRepairForCraftedItem(normalized)?.let { message ->
+            postStatus(message)
             updateActionHints(_uiState.value.currentRoom)
         }
     }

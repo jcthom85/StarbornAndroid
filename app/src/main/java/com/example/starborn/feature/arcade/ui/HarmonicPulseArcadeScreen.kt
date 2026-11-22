@@ -1,5 +1,6 @@
 package com.example.starborn.feature.arcade.ui
 
+import android.graphics.BitmapFactory
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -20,13 +21,21 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.starborn.feature.arcade.domain.ArcadeIds
@@ -50,9 +59,17 @@ fun HarmonicPulseArcadeScreen(
     onBack: () -> Unit,
     largeTouchTargets: Boolean,
     reducedFlashes: Boolean,
-    onPlayCue: (String) -> Unit
+    onPlayCue: (String) -> Unit,
+    hapticsDisabled: Boolean = false
 ) {
     val engine = remember { HarmonicPulseEngine() }
+    val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
+    val backdrop = remember {
+        runCatching {
+            context.assets.open("images/arcade/harmonic_pulse/source_prism_v1.png").use { BitmapFactory.decodeStream(it)?.asImageBitmap() }
+        }.getOrNull()
+    }
     var snapshot by remember { mutableStateOf(engine.snapshot()) }
     var input by remember { mutableStateOf(HarmonicPulseInput()) }
     var paused by remember { mutableStateOf(false) }
@@ -70,7 +87,35 @@ fun HarmonicPulseArcadeScreen(
             withFrameNanos { now ->
                 if (previous != 0L && !paused && !tutorial) {
                     engine.advance((now - previous) / 1_000_000_000f, input)
-                    snapshot = engine.snapshot()
+                    val next = engine.snapshot()
+                    snapshot = next
+                    when (next.audioEvent) {
+                        PulseAudioEvent.HIT_NOTE -> {
+                            onPlayCue("sfx_arcade_laser")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        }
+                        PulseAudioEvent.HIT_PERFECT -> {
+                            onPlayCue("sfx_arcade_jump")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        }
+                        PulseAudioEvent.OVERDRIVE_TRIGGER -> {
+                            onPlayCue("confirm")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        PulseAudioEvent.MISS_NOTE -> {
+                            onPlayCue("action_inspect")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        PulseAudioEvent.TRACK_CLEAR -> {
+                            onPlayCue("confirm")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        PulseAudioEvent.GAME_OVER -> {
+                            onPlayCue("sfx_arcade_game_over")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        PulseAudioEvent.NONE -> Unit
+                    }
                 }
                 previous = now
             }
@@ -80,19 +125,9 @@ fun HarmonicPulseArcadeScreen(
     LaunchedEffect(snapshot.gameOver) {
         if (snapshot.gameOver && submitted == null) {
             submitted = arcadeService.submitHarmonicPulseScore(snapshot.score)
-            onPlayCue("sfx_arcade_game_over")
-        }
-    }
-
-    LaunchedEffect(snapshot.audioEvent) {
-        when (snapshot.audioEvent) {
-            PulseAudioEvent.HIT_NOTE -> onPlayCue("sfx_arcade_laser")
-            PulseAudioEvent.HIT_PERFECT -> onPlayCue("sfx_arcade_jump")
-            PulseAudioEvent.OVERDRIVE_TRIGGER -> onPlayCue("confirm")
-            PulseAudioEvent.MISS_NOTE -> onPlayCue("action_inspect")
-            PulseAudioEvent.TRACK_CLEAR -> onPlayCue("confirm")
-            PulseAudioEvent.GAME_OVER -> onPlayCue("sfx_arcade_game_over")
-            PulseAudioEvent.NONE -> Unit
+            if (snapshot.audioEvent != PulseAudioEvent.GAME_OVER) {
+                onPlayCue("sfx_arcade_game_over")
+            }
         }
     }
 
@@ -123,6 +158,7 @@ fun HarmonicPulseArcadeScreen(
         ) {
             HarmonicCanvas(
                 snapshot = snapshot,
+                backdrop = backdrop,
                 reducedFlashes = reducedFlashes,
                 modifier = Modifier
                     .fillMaxSize()
@@ -141,20 +177,31 @@ fun HarmonicPulseArcadeScreen(
                         "Clear all 3 cadence tracks to achieve resonance mastery."
                     ),
                     action = "START RESONANCE",
-                    onAction = { tutorial = false; onPlayCue("confirm") }
+                    onAction = { tutorial = false; onPlayCue("sfx_arcade_coin_insert") },
+                    secondaryAction = "LEAVE CABINET",
+                    onSecondaryAction = onBack
                 )
             } else if (paused) {
-                HarmonicOverlay("CADENCE PAUSED", listOf("Prismatic tuning fork held in stasis."), "RESUME") { paused = false }
+                HarmonicOverlay(
+                    title = "CADENCE PAUSED",
+                    lines = listOf("Prismatic tuning fork held in stasis."),
+                    action = "RESUME",
+                    onAction = { paused = false },
+                    secondaryAction = "LEAVE CABINET",
+                    onSecondaryAction = onBack
+                )
             } else if (snapshot.gameOver) {
                 val tiers = submitted?.newlyClaimed.orEmpty().joinToString()
+                val tokens = submitted?.tokensEarned ?: 0
                 HarmonicOverlay(
                     title = snapshot.message,
                     lines = buildList {
                         add("FINAL SCORE: ${snapshot.score}")
                         add("MAX COMBO: ${snapshot.maxCombo}")
                         add("LAYER REACHED: CADENCE ${snapshot.round}")
+                        if (tokens > 0) add("+$tokens ARCADE ${if (tokens == 1) "TOKEN" else "TOKENS"} EARNED")
                         if (tiers.isNotBlank()) add("REWARD UNLOCKED: $tiers")
-                        else add("Drop one more coin to beat the high score.")
+                        else if (tokens == 0) add("Drop one more coin to beat the high score.")
                     },
                     action = "TRY AGAIN",
                     onAction = {
@@ -162,17 +209,25 @@ fun HarmonicPulseArcadeScreen(
                         snapshot = engine.snapshot()
                         submitted = null
                         input = HarmonicPulseInput()
-                        onPlayCue("confirm")
-                    }
+                        onPlayCue("sfx_arcade_coin_insert")
+                    },
+                    secondaryAction = "LEAVE CABINET",
+                    onSecondaryAction = onBack
                 )
             }
         }
 
         HarmonicStatusLamp(snapshot.message, snapshot.gameOver)
         Spacer(Modifier.height(4.dp))
-        HarmonicStrikeDeck(input, largeTouchTargets) { input = it }
+        HarmonicStrikeDeck(input, largeTouchTargets) { transform -> input = transform(input) }
         Spacer(Modifier.height(4.dp))
-        HarmonicServiceKey { paused = true }
+        Row(
+            modifier = Modifier.fillMaxWidth(.88f),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            HarmonicServiceKey(text = "SERVICE  •  PAUSE", onClick = { paused = true }, modifier = Modifier.weight(1f))
+            HarmonicServiceKey(text = "LEAVE CABINET", onClick = onBack, modifier = Modifier.weight(1f))
+        }
     }
 }
 
@@ -301,6 +356,7 @@ private fun HarmonicStatusLamp(message: String, failure: Boolean) {
 @Composable
 private fun HarmonicCanvas(
     snapshot: HarmonicPulseSnapshot,
+    backdrop: ImageBitmap?,
     reducedFlashes: Boolean,
     modifier: Modifier
 ) {
@@ -311,6 +367,19 @@ private fun HarmonicCanvas(
         val h = size.height
         val laneWidth = w / 4f
         val strikeY = HarmonicPulseEngine.STRIKE_LINE_Y * h
+
+        backdrop?.let { bg ->
+            drawImage(
+                image = bg,
+                srcOffset = IntOffset.Zero,
+                srcSize = IntSize(bg.width, bg.height),
+                dstOffset = IntOffset.Zero,
+                dstSize = IntSize(w.toInt(), h.toInt()),
+                alpha = 0.72f,
+                filterQuality = FilterQuality.Low
+            )
+            drawRect(Color(0xFF07020E).copy(alpha = 0.28f))
+        }
 
         // 1. Overdrive Rainbow Ambient Aura
         if (snapshot.overdriveSeconds > 0f) {
@@ -379,7 +448,7 @@ private fun HarmonicCanvas(
 private fun HarmonicStrikeDeck(
     input: HarmonicPulseInput,
     large: Boolean,
-    onInput: (HarmonicPulseInput) -> Unit
+    onUpdateInput: ((HarmonicPulseInput) -> HarmonicPulseInput) -> Unit
 ) {
     val deckHeight = if (large) 72.dp else 60.dp
 
@@ -392,10 +461,10 @@ private fun HarmonicStrikeDeck(
             .padding(4.dp),
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        StrikePad("ALPHA", LaneCyan, input.tapLane0, Modifier.weight(1f)) { onInput(input.copy(tapLane0 = it)) }
-        StrikePad("THETA", LaneGold, input.tapLane1, Modifier.weight(1f)) { onInput(input.copy(tapLane1 = it)) }
-        StrikePad("GAMMA", LaneMagenta, input.tapLane2, Modifier.weight(1f)) { onInput(input.copy(tapLane2 = it)) }
-        StrikePad("DELTA", LaneEmerald, input.tapLane3, Modifier.weight(1f)) { onInput(input.copy(tapLane3 = it)) }
+        StrikePad("ALPHA", LaneCyan, input.tapLane0, Modifier.weight(1f)) { held -> onUpdateInput { it.copy(tapLane0 = held) } }
+        StrikePad("THETA", LaneGold, input.tapLane1, Modifier.weight(1f)) { held -> onUpdateInput { it.copy(tapLane1 = held) } }
+        StrikePad("GAMMA", LaneMagenta, input.tapLane2, Modifier.weight(1f)) { held -> onUpdateInput { it.copy(tapLane2 = held) } }
+        StrikePad("DELTA", LaneEmerald, input.tapLane3, Modifier.weight(1f)) { held -> onUpdateInput { it.copy(tapLane3 = held) } }
     }
 }
 
@@ -407,6 +476,7 @@ private fun StrikePad(
     modifier: Modifier,
     onHeld: (Boolean) -> Unit
 ) {
+    val latestOnHeld by rememberUpdatedState(onHeld)
     Box(
         modifier
             .fillMaxHeight()
@@ -426,9 +496,9 @@ private fun StrikePad(
                 .pointerInput(Unit) {
                     awaitEachGesture {
                         awaitFirstDown(requireUnconsumed = false)
-                        onHeld(true)
+                        latestOnHeld(true)
                         waitForUpOrCancellation()
-                        onHeld(false)
+                        latestOnHeld(false)
                     }
                 }
                 .testTag("strike_pad_$label"),
@@ -443,21 +513,29 @@ private fun StrikePad(
 }
 
 @Composable
-private fun HarmonicServiceKey(onClick: () -> Unit) {
+private fun HarmonicServiceKey(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0F031E), contentColor = Color(0xFFBE9FE1)),
         shape = RoundedCornerShape(4.dp),
-        modifier = Modifier
-            .height(30.dp)
-            .border(1.dp, Color(0xFF38105C), RoundedCornerShape(4.dp))
+        modifier = modifier
+            .height(32.dp)
+            .border(1.dp, Color(0xFF38105C), RoundedCornerShape(4.dp)),
+        contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
     ) {
-        Text("SERVICE  •  PAUSE / EXIT", fontFamily = FontFamily.Monospace, fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = .8.sp)
+        Text(text, fontFamily = FontFamily.Monospace, fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = .8.sp)
     }
 }
 
 @Composable
-private fun HarmonicOverlay(title: String, lines: List<String>, action: String, onAction: () -> Unit) {
+private fun HarmonicOverlay(
+    title: String,
+    lines: List<String>,
+    action: String,
+    onAction: () -> Unit,
+    secondaryAction: String? = null,
+    onSecondaryAction: (() -> Unit)? = null
+) {
     Column(
         Modifier
             .fillMaxWidth(.85f)
@@ -485,6 +563,21 @@ private fun HarmonicOverlay(title: String, lines: List<String>, action: String, 
                 .height(38.dp)
         ) {
             Text(action, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Black, fontSize = 11.sp, letterSpacing = 1.sp)
+        }
+        if (secondaryAction != null && onSecondaryAction != null) {
+            Spacer(Modifier.height(6.dp))
+            Button(
+                onClick = onSecondaryAction,
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1A0830), contentColor = Color(0xFFDDC8F5)),
+                shape = RoundedCornerShape(4.dp),
+                modifier = Modifier
+                    .fillMaxWidth(.75f)
+                    .height(36.dp)
+                    .border(1.dp, Color(0xFF5A189A), RoundedCornerShape(4.dp)),
+                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
+            ) {
+                Text(secondaryAction, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, fontSize = 10.sp, letterSpacing = .8.sp)
+            }
         }
     }
 }

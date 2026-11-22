@@ -201,6 +201,51 @@ class ShopViewModelTest {
         assertTrue(inventory.snapshot().isEmpty())
     }
 
+    @Test fun tokenCurrencyShopConsumesTokensAndBlocksSales() = runTest(dispatcher) {
+        val tokenItem = Item(id = "item_arcade_token", name = "Arcade Token", type = "key_item", value = 0, unsellable = true)
+        val prizeItem = Item(id = "relic_retro_overclock", name = "Retro Overclock Core", type = "accessory", value = 500, buyPrice = 1000)
+        val catalog = FakeItemCatalog(mapOf(tokenItem.id to tokenItem, prizeItem.id to prizeItem))
+        val inventory = InventoryService(catalog).apply {
+            loadItems()
+            addItem(tokenItem.id, 20)
+        }
+        val shop = ShopDefinition(
+            id = "arcade_prize_shop",
+            name = "Arcade Prize Dispenser",
+            currencyItemId = tokenItem.id,
+            currencyLabel = "Tokens",
+            sells = ShopSells(
+                items = listOf(prizeItem.id),
+                itemPrices = mapOf(prizeItem.id to 15)
+            ),
+            buys = ShopBuys(acceptTypes = emptyList())
+        )
+        val vm = ShopViewModel(shop.id, FakeShopCatalog(mapOf(shop.id to shop)), catalog, inventory, sessionStore)
+        advanceUntilIdle()
+
+        assertTrue(vm.uiState.value.isTokenCurrency)
+        assertEquals("Tokens", vm.uiState.value.currencyLabel)
+        assertEquals(20, vm.uiState.value.credits)
+        assertEquals(false, vm.uiState.value.allowSell)
+        assertEquals(15, vm.uiState.value.itemsForSale.single().price)
+        assertEquals(1, vm.uiState.value.itemsForSale.single().maxQuantity)
+
+        val messageDeferred = async { vm.messages.first() }
+        vm.buyItem(prizeItem.id, 1)
+        advanceUntilIdle()
+
+        assertEquals("Redeemed Retro Overclock Core for 15 tokens.", messageDeferred.await())
+        assertEquals(5, inventory.snapshot()[tokenItem.id])
+        assertEquals(1, inventory.snapshot()[prizeItem.id])
+        assertEquals(500, sessionStore.state.value.playerCredits)
+
+        // Second purchase should fail for insufficient tokens
+        vm.buyItem(prizeItem.id, 1)
+        advanceUntilIdle()
+        assertEquals(5, inventory.snapshot()[tokenItem.id])
+        assertEquals(1, inventory.snapshot()[prizeItem.id])
+    }
+
     private class FakeItemCatalog(
         private val items: Map<String, Item>
     ) : ItemCatalog {

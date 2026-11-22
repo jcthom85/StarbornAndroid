@@ -1966,9 +1966,15 @@ fun ExplorationScreen(
         }
 
         if (uiState.isAstraRecreationVisible) {
-            com.example.starborn.feature.exploration.ui.components.AstraRecreationDialog(uiState.astraArcades,
-                uiState.astraPrizesAvailable, viewModel::openRecreationArcade, viewModel::openRecreationFilms,
-                viewModel::openRecreationPrizes, viewModel::closeAstraRecreation)
+            com.example.starborn.feature.exploration.ui.components.AstraRecreationDialog(
+                games = uiState.astraArcadeEntries,
+                tokenBalance = uiState.astraArcadeTokens,
+                prizesAvailable = uiState.astraPrizesAvailable,
+                onGame = viewModel::openRecreationArcade,
+                onFilms = viewModel::openRecreationFilms,
+                onPrizes = viewModel::openRecreationPrizes,
+                onClose = viewModel::closeAstraRecreation
+            )
         }
 
         uiState.astraFacility?.let { facility ->

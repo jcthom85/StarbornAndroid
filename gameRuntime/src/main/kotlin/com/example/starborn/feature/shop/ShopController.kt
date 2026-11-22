@@ -31,6 +31,10 @@ data class ShopUiState(
     val shopName: String = "",
     val portraitPath: String? = null,
     val credits: Int = 0,
+    val currencyLabel: String = "Credits",
+    val currencyShortLabel: String = "CR",
+    val isTokenCurrency: Boolean = false,
+    val allowSell: Boolean = true,
     val itemsForSale: List<ShopItemUi> = emptyList(),
     val sellInventory: List<SellItemUi> = emptyList(),
     val unavailableMessage: String? = null,
@@ -117,12 +121,21 @@ class ShopController(
         val prefaceLog = shop.dialogue?.preface.orEmpty().mapIndexed { index, line ->
             line.toUi("${shop.id}_preface_$index")
         }
+        val isToken = !shop.currencyItemId.isNullOrBlank()
+        val label = shop.currencyLabel?.takeIf { it.isNotBlank() } ?: if (isToken) "Tokens" else "Credits"
+        val shortLabel = if (isToken) "TKN" else "CR"
+        val canSell = !isToken && (shop.buys == null || shop.buys.acceptTypes.isNotEmpty())
         _uiState.update {
             it.copy(
                 isLoading = false,
                 shopName = shop.name,
                 portraitPath = shop.portrait,
-                credits = sessionStore.state.value.playerCredits,
+                credits = availableCurrency(shop, sessionStore.state.value, inventoryService.state.value),
+                currencyLabel = label,
+                currencyShortLabel = shortLabel,
+                isTokenCurrency = isToken,
+                allowSell = canSell,
+                activeTab = ShopTab.BUY,
                 unavailableMessage = null,
                 smalltalkTopics = shop.dialogue?.smalltalk.orEmpty().map { topic ->
                     ShopDialogueTopicUi(
@@ -153,24 +166,41 @@ class ShopController(
         }
     }
 
+    private fun availableCurrency(
+        shop: ShopDefinition,
+        session: GameSessionState,
+        inventory: List<InventoryEntry>
+    ): Int {
+        val currencyId = shop.currencyItemId?.takeIf { it.isNotBlank() } ?: return session.playerCredits
+        return inventory.firstOrNull { it.item.id.equals(currencyId, ignoreCase = true) }?.quantity
+            ?: inventoryService.snapshot()[currencyId]
+            ?: 0
+    }
+
     private fun refreshState(session: GameSessionState, inventory: List<InventoryEntry>) {
         latestSessionState = session
         latestInventory = inventory
         val shop = definition ?: return
         val rotationSelection = selectRotatingItems(shop)
         rotatingItems = rotationSelection
-        val items = buildItems(shop, session, rotationSelection)
-        val sellItems = buildSellItems(shop, inventory)
+        val balance = availableCurrency(shop, session, inventory)
+        val items = buildItems(shop, session, rotationSelection, balance)
+        val sellItems = if (!shop.currencyItemId.isNullOrBlank()) emptyList() else buildSellItems(shop, inventory)
         _uiState.update {
             it.copy(
-                credits = session.playerCredits,
+                credits = balance,
                 itemsForSale = items,
                 sellInventory = sellItems
             )
         }
     }
 
-    private fun buildItems(shop: ShopDefinition, state: GameSessionState, rotating: Set<String>): List<ShopItemUi> {
+    private fun buildItems(
+        shop: ShopDefinition,
+        state: GameSessionState,
+        rotating: Set<String>,
+        balance: Int
+    ): List<ShopItemUi> {
         val orderedIds = (shop.sells.items + rotating).distinct()
         if (orderedIds.isEmpty()) return emptyList()
         return orderedIds.mapNotNull { idOrAlias ->
@@ -187,10 +217,10 @@ class ShopController(
                 name = item.name,
                 description = item.description,
                 price = price,
-                canAfford = !locked && state.playerCredits >= price,
+                canAfford = !locked && balance >= price,
                 locked = locked,
                 lockedMessage = lockedMessage,
-                maxQuantity = if (locked || price <= 0) 0 else state.playerCredits / price,
+                maxQuantity = if (locked || price <= 0) 0 else balance / price,
                 rotating = rotating.contains(idOrAlias)
             )
         }
@@ -269,6 +299,20 @@ class ShopController(
             return
         }
         val totalCost = total.toInt()
+        val currencyItemId = shop.currencyItemId?.takeIf { it.isNotBlank() }
+        if (currencyItemId != null) {
+            val currencyName = (shop.currencyLabel?.takeIf { it.isNotBlank() } ?: "tokens").lowercase()
+            if (!inventoryService.consumeItems(mapOf(currencyItemId to totalCost))) {
+                emitMessage("Not enough $currencyName for that redemption.")
+                return
+            }
+            inventoryService.addItem(item.id, quantity)
+            val label = if (quantity == 1) item.name else "${item.name} x$quantity"
+            emitMessage("Redeemed $label for $totalCost $currencyName.")
+            sessionStore.setInventory(inventoryService.snapshot())
+            refreshState(sessionStore.state.value, inventoryService.state.value)
+            return
+        }
         if (!sessionStore.spendCredits(totalCost)) {
             emitMessage("Not enough credits for that purchase.")
             return
@@ -313,6 +357,10 @@ class ShopController(
             return
         }
         val shop = definition ?: return
+        if (!shop.currencyItemId.isNullOrBlank()) {
+            emitMessage("This dispenser only redeems tokens.")
+            return
+        }
         val entry = inventoryService.state.value.firstOrNull { it.item.id == itemId }
         if (entry == null) {
             emitMessage("Nothing to sell.")
@@ -349,10 +397,15 @@ class ShopController(
     }
 
     fun switchTab(tab: ShopTab) {
+        if (tab == ShopTab.SELL && !_uiState.value.allowSell) return
         _uiState.update { it.copy(activeTab = tab) }
     }
 
     private fun priceFor(item: Item, shop: ShopDefinition): Int {
+        val overridePrice = shop.sells.itemPrices[item.id]
+            ?: shop.sells.itemPrices[item.name]
+            ?: shop.sells.itemPrices.entries.firstOrNull { itemCatalog.findItem(it.key)?.id == item.id }?.value
+        if (overridePrice != null && overridePrice > 0) return overridePrice
         val base = (item.buyPrice ?: item.value).coerceAtLeast(1)
         val markup = shop.pricing?.sellMarkup ?: 1.0
         return max(1, (base * markup).roundToInt())

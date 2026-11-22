@@ -1,5 +1,6 @@
 package com.example.starborn.feature.arcade.ui
 
+import android.graphics.BitmapFactory
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -20,14 +21,22 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.starborn.feature.arcade.domain.ArcadeIds
@@ -52,9 +61,17 @@ fun OrbitalDefenseArcadeScreen(
     onBack: () -> Unit,
     largeTouchTargets: Boolean,
     reducedFlashes: Boolean,
-    onPlayCue: (String) -> Unit
+    onPlayCue: (String) -> Unit,
+    hapticsDisabled: Boolean = false
 ) {
     val engine = remember { OrbitalDefenseEngine() }
+    val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
+    val backdrop = remember {
+        runCatching {
+            context.assets.open("images/arcade/orbital_defense/orbital_starfield_v1.png").use { BitmapFactory.decodeStream(it)?.asImageBitmap() }
+        }.getOrNull()
+    }
     var snapshot by remember { mutableStateOf(engine.snapshot()) }
     var input by remember { mutableStateOf(OrbitalDefenseInput()) }
     var paused by remember { mutableStateOf(false) }
@@ -72,7 +89,33 @@ fun OrbitalDefenseArcadeScreen(
             withFrameNanos { now ->
                 if (previous != 0L && !paused && !tutorial) {
                     engine.advance((now - previous) / 1_000_000_000f, input)
-                    snapshot = engine.snapshot()
+                    val next = engine.snapshot()
+                    snapshot = next
+                    when (next.audioEvent) {
+                        OrbitalAudioEvent.PLAYER_FIRE -> onPlayCue("sfx_arcade_laser")
+                        OrbitalAudioEvent.ENEMY_EXPLODE -> {
+                            onPlayCue("sfx_arcade_laser")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        }
+                        OrbitalAudioEvent.MYSTERY_SPAWN -> onPlayCue("confirm")
+                        OrbitalAudioEvent.EMP_BLAST -> {
+                            onPlayCue("sfx_arcade_jump")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        OrbitalAudioEvent.PLAYER_HIT -> {
+                            onPlayCue("action_inspect")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        OrbitalAudioEvent.ROUND_CLEAR -> {
+                            onPlayCue("confirm")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        OrbitalAudioEvent.GAME_OVER -> {
+                            onPlayCue("sfx_arcade_game_over")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        OrbitalAudioEvent.NONE -> Unit
+                    }
                 }
                 previous = now
             }
@@ -82,20 +125,9 @@ fun OrbitalDefenseArcadeScreen(
     LaunchedEffect(snapshot.gameOver) {
         if (snapshot.gameOver && submitted == null) {
             submitted = arcadeService.submitOrbitalDefenseScore(snapshot.score)
-            onPlayCue("sfx_arcade_game_over")
-        }
-    }
-
-    LaunchedEffect(snapshot.audioEvent) {
-        when (snapshot.audioEvent) {
-            OrbitalAudioEvent.PLAYER_FIRE -> onPlayCue("sfx_arcade_laser")
-            OrbitalAudioEvent.ENEMY_EXPLODE -> onPlayCue("sfx_arcade_laser")
-            OrbitalAudioEvent.MYSTERY_SPAWN -> onPlayCue("confirm")
-            OrbitalAudioEvent.EMP_BLAST -> onPlayCue("sfx_arcade_jump")
-            OrbitalAudioEvent.PLAYER_HIT -> onPlayCue("action_inspect")
-            OrbitalAudioEvent.ROUND_CLEAR -> onPlayCue("confirm")
-            OrbitalAudioEvent.GAME_OVER -> onPlayCue("sfx_arcade_game_over")
-            OrbitalAudioEvent.NONE -> Unit
+            if (snapshot.audioEvent != OrbitalAudioEvent.GAME_OVER) {
+                onPlayCue("sfx_arcade_game_over")
+            }
         }
     }
 
@@ -126,8 +158,9 @@ fun OrbitalDefenseArcadeScreen(
         ) {
             OrbitalCanvas(
                 snapshot = snapshot,
+                backdrop = backdrop,
                 reducedFlashes = reducedFlashes,
-                onDirectTouch = { input = input.copy(shipTargetX = it) },
+                onDirectTouch = { targetX -> input = input.copy(shipTargetX = targetX) },
                 modifier = Modifier
                     .fillMaxSize()
                     .testTag("orbital_defense_viewport")
@@ -145,19 +178,30 @@ fun OrbitalDefenseArcadeScreen(
                         "Trigger EMP BOMBS to clear all enemy plasma volleys."
                     ),
                     action = "ENGAGE ENEMY FLEET",
-                    onAction = { tutorial = false; onPlayCue("confirm") }
+                    onAction = { tutorial = false; onPlayCue("sfx_arcade_coin_insert") },
+                    secondaryAction = "LEAVE CABINET",
+                    onSecondaryAction = onBack
                 )
             } else if (paused) {
-                OrbitalOverlay("PATROL PAUSED", listOf("Starfighter holding orbital perimeter."), "RESUME") { paused = false }
+                OrbitalOverlay(
+                    title = "PATROL PAUSED",
+                    lines = listOf("Starfighter holding orbital perimeter."),
+                    action = "RESUME",
+                    onAction = { paused = false },
+                    secondaryAction = "LEAVE CABINET",
+                    onSecondaryAction = onBack
+                )
             } else if (snapshot.gameOver) {
                 val tiers = submitted?.newlyClaimed.orEmpty().joinToString()
+                val tokens = submitted?.tokensEarned ?: 0
                 OrbitalOverlay(
                     title = snapshot.message,
                     lines = buildList {
                         add("FINAL SCORE: ${snapshot.score}")
                         add("SECTOR DEFENDED: ROUND ${snapshot.round}")
+                        if (tokens > 0) add("+$tokens ARCADE ${if (tokens == 1) "TOKEN" else "TOKENS"} EARNED")
                         if (tiers.isNotBlank()) add("REWARD UNLOCKED: $tiers")
-                        else add("Drop one more coin to beat the high score.")
+                        else if (tokens == 0) add("Drop one more coin to beat the high score.")
                     },
                     action = "TRY AGAIN",
                     onAction = {
@@ -165,17 +209,25 @@ fun OrbitalDefenseArcadeScreen(
                         snapshot = engine.snapshot()
                         submitted = null
                         input = OrbitalDefenseInput()
-                        onPlayCue("confirm")
-                    }
+                        onPlayCue("sfx_arcade_coin_insert")
+                    },
+                    secondaryAction = "LEAVE CABINET",
+                    onSecondaryAction = onBack
                 )
             }
         }
 
         OrbitalStatusLamp(snapshot.message, snapshot.gameOver)
         Spacer(Modifier.height(4.dp))
-        OrbitalControls(input, snapshot.empBombs, largeTouchTargets) { input = it }
+        OrbitalControls(input, snapshot.empBombs, largeTouchTargets) { transform -> input = transform(input) }
         Spacer(Modifier.height(4.dp))
-        OrbitalServiceKey { paused = true }
+        Row(
+            modifier = Modifier.fillMaxWidth(.88f),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            OrbitalServiceKey(text = "SERVICE  •  PAUSE", onClick = { paused = true }, modifier = Modifier.weight(1f))
+            OrbitalServiceKey(text = "LEAVE CABINET", onClick = onBack, modifier = Modifier.weight(1f))
+        }
     }
 }
 
@@ -288,22 +340,37 @@ private fun OrbitalStatusLamp(message: String, failure: Boolean) {
 @Composable
 private fun OrbitalCanvas(
     snapshot: OrbitalDefenseSnapshot,
+    backdrop: ImageBitmap?,
     reducedFlashes: Boolean,
     onDirectTouch: (Float) -> Unit,
     modifier: Modifier
 ) {
+    val latestDirectTouch by rememberUpdatedState(onDirectTouch)
     Canvas(
         modifier
             .background(Color(0xFF020409), RoundedCornerShape(8.dp))
             .pointerInput(Unit) {
                 detectDragGestures { change, _ ->
                     val fraction = (change.position.x / size.width.toFloat()).coerceIn(0f, 1f)
-                    onDirectTouch(fraction)
+                    latestDirectTouch(fraction)
                 }
             }
     ) {
         val w = size.width
         val h = size.height
+
+        backdrop?.let { bg ->
+            drawImage(
+                image = bg,
+                srcOffset = IntOffset.Zero,
+                srcSize = IntSize(bg.width, bg.height),
+                dstOffset = IntOffset.Zero,
+                dstSize = IntSize(w.toInt(), h.toInt()),
+                alpha = 0.78f,
+                filterQuality = FilterQuality.Low
+            )
+            drawRect(Color(0xFF020409).copy(alpha = 0.16f))
+        }
 
         // 1. Parallax Starfield
         repeat(24) { i ->
@@ -415,10 +482,11 @@ private fun OrbitalControls(
     input: OrbitalDefenseInput,
     empBombs: Int,
     large: Boolean,
-    onInput: (OrbitalDefenseInput) -> Unit
+    onUpdateInput: ((OrbitalDefenseInput) -> OrbitalDefenseInput) -> Unit
 ) {
     val buttonSize = if (large) 58.dp else 48.dp
     val actionSize = if (large) 76.dp else 64.dp
+    val latestUpdate by rememberUpdatedState(onUpdateInput)
 
     Row(
         Modifier
@@ -431,8 +499,8 @@ private fun OrbitalControls(
     ) {
         // LEFT: Steer Left / Right
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            SteerButton("◀", buttonSize, input.moveLeft) { onInput(input.copy(moveLeft = it, shipTargetX = null)) }
-            SteerButton("▶", buttonSize, input.moveRight) { onInput(input.copy(moveRight = it, shipTargetX = null)) }
+            SteerButton("◀", buttonSize, input.moveLeft) { held -> onUpdateInput { it.copy(moveLeft = held, shipTargetX = null) } }
+            SteerButton("▶", buttonSize, input.moveRight) { held -> onUpdateInput { it.copy(moveRight = held, shipTargetX = null) } }
         }
 
         // CENTER DIVIDER
@@ -465,9 +533,9 @@ private fun OrbitalControls(
                         .pointerInput(Unit) {
                             awaitEachGesture {
                                 awaitFirstDown(requireUnconsumed = false)
-                                onInput(input.copy(triggerEmp = true))
+                                latestUpdate { it.copy(triggerEmp = true) }
                                 waitForUpOrCancellation()
-                                onInput(input.copy(triggerEmp = false))
+                                latestUpdate { it.copy(triggerEmp = false) }
                             }
                         }
                         .testTag("arcade_orbital_emp"),
@@ -497,9 +565,9 @@ private fun OrbitalControls(
                         .pointerInput(Unit) {
                             awaitEachGesture {
                                 awaitFirstDown(requireUnconsumed = false)
-                                onInput(input.copy(fire = true))
+                                latestUpdate { it.copy(fire = true) }
                                 waitForUpOrCancellation()
-                                onInput(input.copy(fire = false))
+                                latestUpdate { it.copy(fire = false) }
                             }
                         }
                         .testTag("arcade_orbital_fire"),
@@ -519,6 +587,7 @@ private fun SteerButton(
     pressed: Boolean,
     onHeld: (Boolean) -> Unit
 ) {
+    val latestOnHeld by rememberUpdatedState(onHeld)
     Box(
         Modifier
             .size(size)
@@ -538,9 +607,9 @@ private fun SteerButton(
                 .pointerInput(Unit) {
                     awaitEachGesture {
                         awaitFirstDown(requireUnconsumed = false)
-                        onHeld(true)
+                        latestOnHeld(true)
                         waitForUpOrCancellation()
-                        onHeld(false)
+                        latestOnHeld(false)
                     }
                 }
                 .testTag("steer_$glyph"),
@@ -552,21 +621,29 @@ private fun SteerButton(
 }
 
 @Composable
-private fun OrbitalServiceKey(onClick: () -> Unit) {
+private fun OrbitalServiceKey(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF071220), contentColor = Color(0xFF8BB5DA)),
         shape = RoundedCornerShape(4.dp),
-        modifier = Modifier
-            .height(30.dp)
-            .border(1.dp, Color(0xFF152E4A), RoundedCornerShape(4.dp))
+        modifier = modifier
+            .height(32.dp)
+            .border(1.dp, Color(0xFF152E4A), RoundedCornerShape(4.dp)),
+        contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
     ) {
-        Text("SERVICE  •  PAUSE / EXIT", fontFamily = FontFamily.Monospace, fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = .8.sp)
+        Text(text, fontFamily = FontFamily.Monospace, fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = .8.sp)
     }
 }
 
 @Composable
-private fun OrbitalOverlay(title: String, lines: List<String>, action: String, onAction: () -> Unit) {
+private fun OrbitalOverlay(
+    title: String,
+    lines: List<String>,
+    action: String,
+    onAction: () -> Unit,
+    secondaryAction: String? = null,
+    onSecondaryAction: (() -> Unit)? = null
+) {
     Column(
         Modifier
             .fillMaxWidth(.85f)
@@ -594,6 +671,21 @@ private fun OrbitalOverlay(title: String, lines: List<String>, action: String, o
                 .height(38.dp)
         ) {
             Text(action, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Black, fontSize = 11.sp, letterSpacing = 1.sp)
+        }
+        if (secondaryAction != null && onSecondaryAction != null) {
+            Spacer(Modifier.height(6.dp))
+            Button(
+                onClick = onSecondaryAction,
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF091726), contentColor = Color(0xFFC2DCF2)),
+                shape = RoundedCornerShape(4.dp),
+                modifier = Modifier
+                    .fillMaxWidth(.75f)
+                    .height(36.dp)
+                    .border(1.dp, Color(0xFF1E3E62), RoundedCornerShape(4.dp)),
+                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
+            ) {
+                Text(secondaryAction, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, fontSize = 10.sp, letterSpacing = .8.sp)
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.starborn.feature.arcade.ui
 
+import android.graphics.BitmapFactory
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -18,14 +19,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.starborn.feature.arcade.domain.ArcadeIds
@@ -50,9 +59,17 @@ fun CanopyHopperArcadeScreen(
     onBack: () -> Unit,
     largeTouchTargets: Boolean,
     reducedFlashes: Boolean,
-    onPlayCue: (String) -> Unit
+    onPlayCue: (String) -> Unit,
+    hapticsDisabled: Boolean = false
 ) {
     val engine = remember { CanopyHopperEngine() }
+    val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
+    val backdrop = remember {
+        runCatching {
+            context.assets.open("images/arcade/canopy_hopper/canopy_swamp_v1.png").use { BitmapFactory.decodeStream(it)?.asImageBitmap() }
+        }.getOrNull()
+    }
     var snapshot by remember { mutableStateOf(engine.snapshot()) }
     var input by remember { mutableStateOf(CanopyHopperInput()) }
     var paused by remember { mutableStateOf(false) }
@@ -70,7 +87,35 @@ fun CanopyHopperArcadeScreen(
             withFrameNanos { now ->
                 if (previous != 0L && !paused && !tutorial) {
                     engine.advance((now - previous) / 1_000_000_000f, input)
-                    snapshot = engine.snapshot()
+                    val next = engine.snapshot()
+                    snapshot = next
+                    when (next.audioEvent) {
+                        CanopyHopperAudioEvent.HOP -> {
+                            onPlayCue("sfx_arcade_jump")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        }
+                        CanopyHopperAudioEvent.NEST_CLAIMED -> {
+                            onPlayCue("confirm")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        CanopyHopperAudioEvent.PICKUP -> {
+                            onPlayCue("sfx_arcade_laser")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        }
+                        CanopyHopperAudioEvent.ROUND_CLEAR -> {
+                            onPlayCue("confirm")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        CanopyHopperAudioEvent.SPLAT, CanopyHopperAudioEvent.SPLASH -> {
+                            onPlayCue("action_inspect")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        CanopyHopperAudioEvent.GAME_OVER -> {
+                            onPlayCue("sfx_arcade_game_over")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        CanopyHopperAudioEvent.NONE -> Unit
+                    }
                 }
                 previous = now
             }
@@ -80,19 +125,9 @@ fun CanopyHopperArcadeScreen(
     LaunchedEffect(snapshot.gameOver) {
         if (snapshot.gameOver && submitted == null) {
             submitted = arcadeService.submitCanopyHopperScore(snapshot.score)
-            onPlayCue("sfx_arcade_game_over")
-        }
-    }
-
-    LaunchedEffect(snapshot.audioEvent) {
-        when (snapshot.audioEvent) {
-            CanopyHopperAudioEvent.HOP -> onPlayCue("sfx_arcade_jump")
-            CanopyHopperAudioEvent.NEST_CLAIMED -> onPlayCue("confirm")
-            CanopyHopperAudioEvent.PICKUP -> onPlayCue("sfx_arcade_laser")
-            CanopyHopperAudioEvent.ROUND_CLEAR -> onPlayCue("confirm")
-            CanopyHopperAudioEvent.SPLAT, CanopyHopperAudioEvent.SPLASH -> onPlayCue("action_inspect")
-            CanopyHopperAudioEvent.GAME_OVER -> onPlayCue("sfx_arcade_game_over")
-            CanopyHopperAudioEvent.NONE -> Unit
+            if (snapshot.audioEvent != CanopyHopperAudioEvent.GAME_OVER) {
+                onPlayCue("sfx_arcade_game_over")
+            }
         }
     }
 
@@ -123,6 +158,7 @@ fun CanopyHopperArcadeScreen(
         ) {
             CanopyCanvas(
                 snapshot = snapshot,
+                backdrop = backdrop,
                 reducedFlashes = reducedFlashes,
                 modifier = Modifier
                     .fillMaxSize()
@@ -141,19 +177,30 @@ fun CanopyHopperArcadeScreen(
                         "Fill all 5 nests before Poison Fog fills the swamp."
                     ),
                     action = "START RUN",
-                    onAction = { tutorial = false; onPlayCue("confirm") }
+                    onAction = { tutorial = false; onPlayCue("sfx_arcade_coin_insert") },
+                    secondaryAction = "LEAVE CABINET",
+                    onSecondaryAction = onBack
                 )
             } else if (paused) {
-                CanopyOverlay("RUN PAUSED", listOf("Bog hopper is holding position."), "RESUME") { paused = false }
+                CanopyOverlay(
+                    title = "RUN PAUSED",
+                    lines = listOf("Bog hopper is holding position."),
+                    action = "RESUME",
+                    onAction = { paused = false },
+                    secondaryAction = "LEAVE CABINET",
+                    onSecondaryAction = onBack
+                )
             } else if (snapshot.gameOver) {
                 val tiers = submitted?.newlyClaimed.orEmpty().joinToString()
+                val tokens = submitted?.tokensEarned ?: 0
                 CanopyOverlay(
                     title = snapshot.message,
                     lines = buildList {
                         add("FINAL SCORE: ${snapshot.score}")
                         add("TIER REACHED: ROUND ${snapshot.round}")
+                        if (tokens > 0) add("+$tokens ARCADE ${if (tokens == 1) "TOKEN" else "TOKENS"} EARNED")
                         if (tiers.isNotBlank()) add("REWARD UNLOCKED: $tiers")
-                        else add("Drop one more coin to beat the high score.")
+                        else if (tokens == 0) add("Drop one more coin to beat the high score.")
                     },
                     action = "TRY AGAIN",
                     onAction = {
@@ -161,17 +208,25 @@ fun CanopyHopperArcadeScreen(
                         snapshot = engine.snapshot()
                         submitted = null
                         input = CanopyHopperInput()
-                        onPlayCue("confirm")
-                    }
+                        onPlayCue("sfx_arcade_coin_insert")
+                    },
+                    secondaryAction = "LEAVE CABINET",
+                    onSecondaryAction = onBack
                 )
             }
         }
 
         CanopyStatusLamp(snapshot.message, snapshot.gameOver)
         Spacer(Modifier.height(4.dp))
-        CanopyControls(input, largeTouchTargets) { input = it }
+        CanopyControls(input, largeTouchTargets) { transform -> input = transform(input) }
         Spacer(Modifier.height(4.dp))
-        CanopyServiceKey { paused = true }
+        Row(
+            modifier = Modifier.fillMaxWidth(.88f),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            CanopyServiceKey(text = "SERVICE  •  PAUSE", onClick = { paused = true }, modifier = Modifier.weight(1f))
+            CanopyServiceKey(text = "LEAVE CABINET", onClick = onBack, modifier = Modifier.weight(1f))
+        }
     }
 }
 
@@ -281,6 +336,7 @@ private fun CanopyStatusLamp(message: String, failure: Boolean) {
 @Composable
 private fun CanopyCanvas(
     snapshot: CanopyHopperSnapshot,
+    backdrop: ImageBitmap?,
     reducedFlashes: Boolean,
     modifier: Modifier
 ) {
@@ -288,8 +344,20 @@ private fun CanopyCanvas(
         val sx = size.width / CanopyHopperEngine.WORLD_WIDTH
         val sy = size.height / CanopyHopperEngine.WORLD_HEIGHT
 
+        backdrop?.let { bg ->
+            drawImage(
+                image = bg,
+                srcOffset = IntOffset.Zero,
+                srcSize = IntSize(bg.width, bg.height),
+                dstOffset = IntOffset.Zero,
+                dstSize = IntSize(size.width.toInt(), size.height.toInt()),
+                alpha = 0.78f,
+                filterQuality = FilterQuality.Low
+            )
+        }
+
         // 1. Lane 0: Canopy Nests (Top Safe Zone)
-        drawRect(Color(0xFF0E2A1C), topLeft = Offset(0f, 0f), size = Size(size.width, 36f * sy))
+        drawRect(Color(0xB80E2A1C), topLeft = Offset(0f, 0f), size = Size(size.width, 36f * sy))
         repeat(5) { i ->
             val nestX = (i * 2 + 1) * 32f * sx
             val nestW = 32f * sx
@@ -302,7 +370,7 @@ private fun CanopyCanvas(
         }
 
         // 2. Lanes 1, 2, 3: Swamp Rapids (Water)
-        drawRect(SwampWater, topLeft = Offset(0f, 36f * sy), size = Size(size.width, 108f * sy))
+        drawRect(SwampWater.copy(alpha = 0.72f), topLeft = Offset(0f, 36f * sy), size = Size(size.width, 108f * sy))
         // Water ripples
         repeat(12) { index ->
             val rippleY = (36f + (index * 9f + snapshot.elapsedSeconds * 12f) % 108f) * sy
@@ -335,12 +403,12 @@ private fun CanopyCanvas(
         }
 
         // 3. Lane 4: Mud Bank Island (Center Safe Zone)
-        drawRect(Color(0xFF26190E), topLeft = Offset(0f, 144f * sy), size = Size(size.width, 36f * sy))
+        drawRect(Color(0xBD26190E), topLeft = Offset(0f, 144f * sy), size = Size(size.width, 36f * sy))
         drawLine(Color(0xFF4A3420), Offset(0f, 144f * sy), Offset(size.width, 144f * sy), 2f)
         drawLine(Color(0xFF4A3420), Offset(0f, 180f * sy), Offset(size.width, 180f * sy), 2f)
 
         // 4. Lanes 5, 6, 7: Predator Thicket (Road Hazards)
-        drawRect(Color(0xFF101712), topLeft = Offset(0f, 180f * sy), size = Size(size.width, 108f * sy))
+        drawRect(Color(0xA8101712), topLeft = Offset(0f, 180f * sy), size = Size(size.width, 108f * sy))
         // Thicket lines
         for (lane in 5..7) {
             val y = (lane * 36f + 35f) * sy
@@ -370,7 +438,7 @@ private fun CanopyCanvas(
         }
 
         // 5. Lane 8: Starting Shore (Bottom Safe Zone)
-        drawRect(Color(0xFF1A2E22), topLeft = Offset(0f, 288f * sy), size = Size(size.width, 72f * sy))
+        drawRect(Color(0xB81A2E22), topLeft = Offset(0f, 288f * sy), size = Size(size.width, 72f * sy))
         drawLine(Color(0xFF38664D), Offset(0f, 288f * sy), Offset(size.width, 288f * sy), 2f)
 
         // Pickups (Golden Spores & Fireflies)
@@ -432,10 +500,11 @@ private fun CanopyCanvas(
 private fun CanopyControls(
     input: CanopyHopperInput,
     large: Boolean,
-    onInput: (CanopyHopperInput) -> Unit
+    onUpdateInput: ((CanopyHopperInput) -> CanopyHopperInput) -> Unit
 ) {
     val buttonSize = if (large) 58.dp else 48.dp
     val hopSize = if (large) 76.dp else 64.dp
+    val latestUpdate by rememberUpdatedState(onUpdateInput)
 
     Row(
         Modifier
@@ -451,11 +520,11 @@ private fun CanopyControls(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            DpadButton("▲", buttonSize, input.up) { onInput(input.copy(up = it)) }
+            DpadButton("▲", buttonSize, input.up) { held -> onUpdateInput { it.copy(up = held) } }
             Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                DpadButton("◀", buttonSize, input.left) { onInput(input.copy(left = it)) }
-                DpadButton("▼", buttonSize, input.down) { onInput(input.copy(down = it)) }
-                DpadButton("▶", buttonSize, input.right) { onInput(input.copy(right = it)) }
+                DpadButton("◀", buttonSize, input.left) { held -> onUpdateInput { it.copy(left = held) } }
+                DpadButton("▼", buttonSize, input.down) { held -> onUpdateInput { it.copy(down = held) } }
+                DpadButton("▶", buttonSize, input.right) { held -> onUpdateInput { it.copy(right = held) } }
             }
         }
 
@@ -493,9 +562,9 @@ private fun CanopyControls(
                         .pointerInput(Unit) {
                             awaitEachGesture {
                                 awaitFirstDown(requireUnconsumed = false)
-                                onInput(input.copy(hop = true))
+                                latestUpdate { it.copy(hop = true) }
                                 waitForUpOrCancellation()
-                                onInput(input.copy(hop = false))
+                                latestUpdate { it.copy(hop = false) }
                             }
                         }
                         .testTag("arcade_canopy_hop"),
@@ -515,6 +584,7 @@ private fun DpadButton(
     pressed: Boolean,
     onHeld: (Boolean) -> Unit
 ) {
+    val latestOnHeld by rememberUpdatedState(onHeld)
     Box(
         Modifier
             .size(size)
@@ -534,9 +604,9 @@ private fun DpadButton(
                 .pointerInput(Unit) {
                     awaitEachGesture {
                         awaitFirstDown(requireUnconsumed = false)
-                        onHeld(true)
+                        latestOnHeld(true)
                         waitForUpOrCancellation()
-                        onHeld(false)
+                        latestOnHeld(false)
                     }
                 }
                 .testTag("dpad_$glyph"),
@@ -548,21 +618,29 @@ private fun DpadButton(
 }
 
 @Composable
-private fun CanopyServiceKey(onClick: () -> Unit) {
+private fun CanopyServiceKey(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0C1913), contentColor = Color(0xFF8DB8A3)),
         shape = RoundedCornerShape(4.dp),
-        modifier = Modifier
-            .height(30.dp)
-            .border(1.dp, Color(0xFF204232), RoundedCornerShape(4.dp))
+        modifier = modifier
+            .height(32.dp)
+            .border(1.dp, Color(0xFF204232), RoundedCornerShape(4.dp)),
+        contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
     ) {
-        Text("SERVICE  •  PAUSE / EXIT", fontFamily = FontFamily.Monospace, fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = .8.sp)
+        Text(text, fontFamily = FontFamily.Monospace, fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = .8.sp)
     }
 }
 
 @Composable
-private fun CanopyOverlay(title: String, lines: List<String>, action: String, onAction: () -> Unit) {
+private fun CanopyOverlay(
+    title: String,
+    lines: List<String>,
+    action: String,
+    onAction: () -> Unit,
+    secondaryAction: String? = null,
+    onSecondaryAction: (() -> Unit)? = null
+) {
     Column(
         Modifier
             .fillMaxWidth(.85f)
@@ -590,6 +668,21 @@ private fun CanopyOverlay(title: String, lines: List<String>, action: String, on
                 .height(38.dp)
         ) {
             Text(action, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Black, fontSize = 11.sp, letterSpacing = 1.sp)
+        }
+        if (secondaryAction != null && onSecondaryAction != null) {
+            Spacer(Modifier.height(6.dp))
+            Button(
+                onClick = onSecondaryAction,
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0C1D16), contentColor = Color(0xFFBDE5D1)),
+                shape = RoundedCornerShape(4.dp),
+                modifier = Modifier
+                    .fillMaxWidth(.75f)
+                    .height(36.dp)
+                    .border(1.dp, Color(0xFF266147), RoundedCornerShape(4.dp)),
+                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
+            ) {
+                Text(secondaryAction, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, fontSize = 10.sp, letterSpacing = .8.sp)
+            }
         }
     }
 }

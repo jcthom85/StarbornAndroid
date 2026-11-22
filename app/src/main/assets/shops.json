@@ -570,19 +570,32 @@
   "arcade_prize_shop": {
     "name": "Arcade Prize Dispenser",
     "portrait": "images/npcs/arcade_prize_dispenser_portrait_v2.webp",
-    "greeting": "PRIZE DISPENSER ONLINE: Insert tokens to redeem rare modifications and consumables.",
+    "greeting": "PRIZE DISPENSER ONLINE: Insert arcade tokens to redeem rare modifications and consumables.",
+    "currency_item_id": "item_arcade_token",
+    "currency_label": "Tokens",
     "pricing": {
       "sell_markup": 1.0,
-      "buy_markdown": 0.5
+      "buy_markdown": 0.0
     },
     "sells": {
       "items": [
+        "medkit",
+        "pulse_grenade",
+        "tideglass_delight",
         "miner_gyro_mod",
         "drill_bit_mod",
-        "relic_retro_overclock",
-        "medkit",
-        "pulse_grenade"
+        "cyber_visor",
+        "relic_retro_overclock"
       ],
+      "item_prices": {
+        "medkit": 2,
+        "pulse_grenade": 3,
+        "tideglass_delight": 4,
+        "miner_gyro_mod": 8,
+        "drill_bit_mod": 12,
+        "cyber_visor": 14,
+        "relic_retro_overclock": 15
+      },
       "rules": {
         "types_in": [],
         "subtypes_in": []
@@ -590,17 +603,14 @@
       "gates": {}
     },
     "buys": {
-      "accept_types": [
-        "consumable",
-        "component"
-      ],
+      "accept_types": [],
       "blacklist": []
     },
     "dialogue": {
       "preface": [
         {
           "speaker": "Arcade Dispenser",
-          "text": "Insert Astra arcade tokens to claim rare components."
+          "text": "Insert Astra arcade tokens to claim rare modifications and supplies."
         }
       ],
       "smalltalk": [
@@ -610,14 +620,14 @@
           "response": [
             {
               "speaker": "Arcade Dispenser",
-              "text": "High scores recorded across all restored cabinets earn tokens."
+              "text": "High scores and Bronze/Silver/Gold tiers across all restored cabinets dispense tokens."
             }
           ]
         }
-      ]
-    },
-    "trade_label": "Insert Tokens (Shop)",
-    "leave_label": "Step Away"
+      ],
+      "trade_label": "Redeem Tokens",
+      "leave_label": "Step Away"
+    }
   },
   "noodle_row_stall": {
     "name": "Noodle Row Counter",

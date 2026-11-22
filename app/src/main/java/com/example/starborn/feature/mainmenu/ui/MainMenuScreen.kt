@@ -133,7 +133,9 @@ fun MainMenuScreen(
     enableDemoSampler: Boolean = false,
     onPlaytestLaunch: ((DebugScenario?) -> Unit)? = null,
     onPlaytestExit: (() -> Unit)? = null,
-    isTestSession: Boolean = false
+    isTestSession: Boolean = false,
+    onDebugLaunchArcade: ((String) -> Unit)? = null,
+    onDebugLaunchPrizeDispenser: (() -> Unit)? = null
 ) {
     var startingGame by remember { mutableStateOf(false) }
     var startingGamePlus by remember { mutableStateOf(false) }
@@ -142,6 +144,7 @@ fun MainMenuScreen(
     var pendingLoadSlot by remember { mutableStateOf<Int?>(null) }
     var showDebugBrowser by remember { mutableStateOf(false) }
     var showCinematicRoom by remember { mutableStateOf(false) }
+    var showArcadeLauncher by remember { mutableStateOf(false) }
     var screeningDebugHud by remember { mutableStateOf(false) }
     var screeningQueue by remember { mutableStateOf<List<CinematicScene>>(emptyList()) }
     var screeningStepIndex by remember { mutableStateOf(0) }
@@ -569,6 +572,14 @@ fun MainMenuScreen(
                     enabled = buttonsInteractable,
                     primary = false
                 )
+                if (onDebugLaunchArcade != null) {
+                    StarbornTitleButton(
+                        text = "Arcade Debug Launcher",
+                        onClick = { showArcadeLauncher = true },
+                        enabled = buttonsInteractable,
+                        primary = false
+                    )
+                }
             }
         }
 
@@ -720,6 +731,22 @@ fun MainMenuScreen(
                     }
                 },
                 onDismiss = { showCinematicRoom = false }
+            )
+        }
+
+        if (showArcadeLauncher && onDebugLaunchArcade != null) {
+            ArcadeDebugLauncherDialog(
+                onLaunchCabinet = { cabinetId ->
+                    showArcadeLauncher = false
+                    onDebugLaunchArcade(cabinetId)
+                },
+                onLaunchPrizeDispenser = onDebugLaunchPrizeDispenser?.let { launch ->
+                    {
+                        showArcadeLauncher = false
+                        launch()
+                    }
+                },
+                onDismiss = { showArcadeLauncher = false }
             )
         }
 
@@ -1631,6 +1658,93 @@ private fun CinematicScreeningDialog(
                                     overflow = TextOverflow.Ellipsis
                                 )
                             }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Close", color = TitleGold)
+            }
+        }
+    )
+}
+
+@Composable
+private fun ArcadeDebugLauncherDialog(
+    onLaunchCabinet: (String) -> Unit,
+    onLaunchPrizeDispenser: (() -> Unit)?,
+    onDismiss: () -> Unit
+) {
+    val cabinets = remember { com.example.starborn.feature.exploration.presentation.AstraCatalog.arcades }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = TitlePanel,
+        title = {
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text(
+                    "Arcade Debug Launcher",
+                    color = TitleGold,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                )
+                Text(
+                    "Test any restored cabinet or redeem tokens at the Prize Dispenser.",
+                    color = TitleMutedText,
+                    fontSize = 12.sp
+                )
+            }
+        },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 420.dp)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                if (onLaunchPrizeDispenser != null) {
+                    Button(
+                        onClick = onLaunchPrizeDispenser,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = TitleGold.copy(alpha = 0.20f),
+                            contentColor = TitleGold
+                        ),
+                        border = BorderStroke(1.dp, TitleGold.copy(alpha = 0.65f)),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            "Prize Dispenser (+25 Test Tokens)",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 13.sp
+                        )
+                    }
+                }
+                cabinets.forEachIndexed { index, cabinet ->
+                    Surface(
+                        color = Color.White.copy(alpha = 0.05f),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(1.dp, TitleCyan.copy(alpha = 0.25f)),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onLaunchCabinet(cabinet.id) }
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 9.dp),
+                            verticalArrangement = Arrangement.spacedBy(2.dp)
+                        ) {
+                            Text(
+                                "0${index + 1}. ${cabinet.title}",
+                                color = TitleText,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 14.sp
+                            )
+                            Text(
+                                cabinet.worldHint,
+                                color = TitleMutedText.copy(alpha = 0.78f),
+                                fontSize = 11.sp
+                            )
                         }
                     }
                 }

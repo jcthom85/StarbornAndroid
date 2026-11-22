@@ -90,7 +90,11 @@ fun ShopRoute(
 
     LaunchedEffect(Unit) {
         viewModel.messages.collectLatest { message ->
-            val cue = if (message.startsWith("Purchased ") || message.startsWith("Sold ")) "confirm" else "error"
+            val cue = when {
+                message.startsWith("Redeemed ") -> "sfx_arcade_coin_insert"
+                message.startsWith("Purchased ") || message.startsWith("Sold ") -> "confirm"
+                else -> "error"
+            }
             onPlayAudio(cue)
             snackbarHostState.showSnackbar(message)
         }
@@ -221,6 +225,10 @@ private fun ShopScreen(
                 ShopControlPanel(
                     activeTab = state.activeTab,
                     credits = state.credits,
+                    currencyLabel = state.currencyLabel,
+                    currencyShortLabel = state.currencyShortLabel,
+                    isTokenCurrency = state.isTokenCurrency,
+                    allowSell = state.allowSell,
                     onTabSelected = onTabSelected,
                     colors = colors,
                     largeTouchTargets = largeTouchTargets
@@ -228,6 +236,7 @@ private fun ShopScreen(
 
                 ShopInventoryPanel(
                     activeTab = state.activeTab,
+                    isTokenCurrency = state.isTokenCurrency,
                     itemCount = if (state.activeTab == ShopTab.BUY) state.itemsForSale.size else state.sellInventory.size,
                     colors = colors,
                     modifier = Modifier
@@ -253,6 +262,8 @@ private fun ShopScreen(
                                 items(state.itemsForSale, key = { it.id }) { item ->
                                     ShopItemCard(
                                         item = item,
+                                        currencyLabel = state.currencyLabel,
+                                        isTokenCurrency = state.isTokenCurrency,
                                         onRequestQuantity = { pendingPurchase = it },
                                         colors = colors,
                                         largeTouchTargets = largeTouchTargets
@@ -292,10 +303,11 @@ private fun ShopScreen(
     }
 
     pendingPurchase?.let { target ->
+        val verb = if (state.isTokenCurrency) "Redeem" else "Buy"
         QuantityPickerDialog(
-            title = "Buy ${target.name}",
+            title = "$verb ${target.name}",
             maxQuantity = target.maxQuantity,
-            confirmLabel = "Buy",
+            confirmLabel = verb,
             onConfirm = { quantity ->
                 onBuy(target.id, quantity)
                 pendingPurchase = null
@@ -325,6 +337,10 @@ private fun ShopScreen(
 private fun ShopControlPanel(
     activeTab: ShopTab,
     credits: Int,
+    currencyLabel: String,
+    currencyShortLabel: String,
+    isTokenCurrency: Boolean,
+    allowSell: Boolean,
     onTabSelected: (ShopTab) -> Unit,
     colors: ShopColors,
     largeTouchTargets: Boolean,
@@ -358,22 +374,27 @@ private fun ShopControlPanel(
             ) {
                 CreditsPill(
                     credits = credits,
+                    currencyLabel = currencyLabel,
+                    currencyShortLabel = currencyShortLabel,
+                    isTokenCurrency = isTokenCurrency,
                     colors = colors,
                     modifier = Modifier.weight(1f)
                 )
             }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                ShopTabSelector(
-                    activeTab = activeTab,
-                    onTabSelected = onTabSelected,
-                    modifier = Modifier.weight(1f),
-                    colors = colors,
-                    largeTouchTargets = largeTouchTargets
-                )
+            if (allowSell) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    ShopTabSelector(
+                        activeTab = activeTab,
+                        onTabSelected = onTabSelected,
+                        modifier = Modifier.weight(1f),
+                        colors = colors,
+                        largeTouchTargets = largeTouchTargets
+                    )
+                }
             }
         }
     }
@@ -382,12 +403,17 @@ private fun ShopControlPanel(
 @Composable
 private fun ShopInventoryPanel(
     activeTab: ShopTab,
+    isTokenCurrency: Boolean,
     itemCount: Int,
     colors: ShopColors,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    val title = if (activeTab == ShopTab.BUY) "Available Stock" else "Buyback Manifest"
+    val title = when {
+        isTokenCurrency -> "Prize Catalog"
+        activeTab == ShopTab.BUY -> "Available Stock"
+        else -> "Buyback Manifest"
+    }
     Surface(
         modifier = modifier,
         color = colors.panel,
@@ -454,6 +480,8 @@ private fun ShopInventoryPanel(
 @Composable
 private fun ShopItemCard(
     item: ShopItemUi,
+    currencyLabel: String,
+    isTokenCurrency: Boolean,
     onRequestQuantity: (ShopItemUi) -> Unit,
     colors: ShopColors,
     largeTouchTargets: Boolean,
@@ -462,8 +490,8 @@ private fun ShopItemCard(
     val canBuy = item.canAfford && !item.locked && item.maxQuantity > 0
     val availabilityText = when {
         item.locked -> item.lockedMessage ?: "Currently unavailable"
-        item.maxQuantity <= 0 -> "Not enough credits"
-        else -> "Limit ${item.maxQuantity.coerceAtLeast(0)}"
+        item.maxQuantity <= 0 -> "Not enough ${currencyLabel.lowercase()}"
+        else -> "Can claim up to ${item.maxQuantity.coerceAtLeast(0)}"
     }
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -533,7 +561,12 @@ private fun ShopItemCard(
                         )
                     }
                 }
-                PriceChip(price = item.price, colors = colors)
+                PriceChip(
+                    price = item.price,
+                    currencyLabel = currencyLabel,
+                    isTokenCurrency = isTokenCurrency,
+                    colors = colors
+                )
             }
 
             Row(
@@ -563,7 +596,7 @@ private fun ShopItemCard(
                         .heightIn(min = if (largeTouchTargets) 52.dp else 42.dp)
                         .widthIn(min = 104.dp)
                 ) {
-                    Text(text = "Buy", fontWeight = FontWeight.Bold)
+                    Text(text = if (isTokenCurrency) "Redeem" else "Buy", fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -574,8 +607,11 @@ private fun ShopItemCard(
 private fun PriceChip(
     price: Int,
     colors: ShopColors,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    currencyLabel: String = "Credits",
+    isTokenCurrency: Boolean = false
 ) {
+    val glyph = if (isTokenCurrency) "★" else "◈"
     Surface(
         modifier = modifier,
         color = Color(0xFF08121D),
@@ -587,13 +623,13 @@ private fun PriceChip(
             horizontalAlignment = Alignment.End
         ) {
             Text(
-                text = "◈ $price",
+                text = "$glyph $price",
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold,
                 color = colors.accent
             )
             Text(
-                text = "CREDITS",
+                text = currencyLabel.uppercase(),
                 style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
                 color = colors.textSecondary
             )
@@ -758,9 +794,13 @@ private fun ShopTabSelector(
 @Composable
 private fun CreditsPill(
     credits: Int,
+    currencyLabel: String,
+    currencyShortLabel: String,
+    isTokenCurrency: Boolean,
     colors: ShopColors,
     modifier: Modifier = Modifier
 ) {
+    val glyph = if (isTokenCurrency) "★" else "◈"
     Surface(
         modifier = modifier,
         color = Color(0xFF071018).copy(alpha = 0.70f),
@@ -773,7 +813,7 @@ private fun CreditsPill(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "BALANCE",
+                text = if (isTokenCurrency) "${currencyLabel.uppercase()} BALANCE" else "BALANCE",
                 style = MaterialTheme.typography.labelSmall,
                 color = colors.textSecondary,
                 fontWeight = FontWeight.SemiBold
@@ -783,13 +823,13 @@ private fun CreditsPill(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "◈ $credits",
+                    text = "$glyph $credits",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = colors.accent
                 )
                 Text(
-                    text = "CR",
+                    text = currencyShortLabel,
                     style = MaterialTheme.typography.labelSmall,
                     color = colors.accent.copy(alpha = 0.85f),
                     fontWeight = FontWeight.Bold

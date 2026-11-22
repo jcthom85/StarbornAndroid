@@ -24,8 +24,10 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -60,10 +62,12 @@ fun DeepMineArcadeScreen(
     onBack: () -> Unit,
     largeTouchTargets: Boolean,
     reducedFlashes: Boolean,
-    onPlayCue: (String) -> Unit
+    onPlayCue: (String) -> Unit,
+    hapticsDisabled: Boolean = false
 ) {
     val engine = remember { DeepMineEngine() }
     val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
     val mineBackdrop = remember {
         context.assets.open("images/arcade/deep_mine/mine_shaft_v1.webp").use { BitmapFactory.decodeStream(it)?.asImageBitmap() }
     }
@@ -87,7 +91,32 @@ fun DeepMineArcadeScreen(
             withFrameNanos { now ->
                 if (previous != 0L && !paused && !tutorial) {
                     engine.advance((now - previous) / 1_000_000_000f, input)
-                    snapshot = engine.snapshot()
+                    val next = engine.snapshot()
+                    snapshot = next
+                    when (next.audioEvent) {
+                        DeepMineAudioEvent.PICKUP -> {
+                            onPlayCue("sfx_arcade_jump")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        }
+                        DeepMineAudioEvent.THRUST -> onPlayCue("sfx_arcade_laser")
+                        DeepMineAudioEvent.CLEAN_LANDING -> {
+                            onPlayCue("confirm")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        }
+                        DeepMineAudioEvent.HARD_LANDING -> {
+                            onPlayCue("action_inspect")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        DeepMineAudioEvent.STAGE_CLEAR -> {
+                            onPlayCue("confirm")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        DeepMineAudioEvent.CRASH -> {
+                            onPlayCue("sfx_arcade_game_over")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        DeepMineAudioEvent.NONE, DeepMineAudioEvent.DRILL, DeepMineAudioEvent.ALARM -> Unit
+                    }
                 }
                 previous = now
             }
@@ -97,19 +126,9 @@ fun DeepMineArcadeScreen(
     LaunchedEffect(snapshot.gameOver) {
         if (snapshot.gameOver && submitted == null) {
             submitted = arcadeService.submitDeepMineScore(snapshot.score)
-            onPlayCue("sfx_arcade_game_over")
-        }
-    }
-
-    LaunchedEffect(snapshot.audioEvent) {
-        when (snapshot.audioEvent) {
-            DeepMineAudioEvent.PICKUP -> onPlayCue("sfx_arcade_jump")
-            DeepMineAudioEvent.THRUST -> onPlayCue("sfx_arcade_laser")
-            DeepMineAudioEvent.CLEAN_LANDING -> onPlayCue("confirm")
-            DeepMineAudioEvent.HARD_LANDING -> onPlayCue("action_inspect")
-            DeepMineAudioEvent.STAGE_CLEAR -> onPlayCue("confirm")
-            DeepMineAudioEvent.CRASH -> onPlayCue("sfx_arcade_game_over")
-            DeepMineAudioEvent.NONE, DeepMineAudioEvent.DRILL, DeepMineAudioEvent.ALARM -> Unit
+            if (snapshot.audioEvent != DeepMineAudioEvent.CRASH) {
+                onPlayCue("sfx_arcade_game_over")
+            }
         }
     }
 
@@ -162,7 +181,7 @@ fun DeepMineArcadeScreen(
                         "Snag drifting Coolant Pods for instant +22% fuel!"
                     ),
                     action = "START RUN",
-                    onAction = { tutorial = false; onPlayCue("confirm") },
+                    onAction = { tutorial = false; onPlayCue("sfx_arcade_coin_insert") },
                     secondaryAction = "LEAVE CABINET",
                     onSecondaryAction = onBack
                 )
@@ -177,13 +196,15 @@ fun DeepMineArcadeScreen(
                 )
             } else if (snapshot.gameOver) {
                 val tiers = submitted?.newlyClaimed.orEmpty().joinToString()
+                val tokens = submitted?.tokensEarned ?: 0
                 ArcadeOverlay(
                     title = snapshot.message,
                     lines = buildList {
                         add("FINAL SCORE ${snapshot.score}")
                         add("DEPTH REACHED: ${snapshot.depth}M")
+                        if (tokens > 0) add("+$tokens ARCADE ${if (tokens == 1) "TOKEN" else "TOKENS"} EARNED")
                         if (tiers.isNotBlank()) add("NEW REWARD UNLOCKED: $tiers")
-                        else add("Drop one more coin to beat high score.")
+                        else if (tokens == 0) add("Drop one more coin to beat high score.")
                     },
                     action = "TRY AGAIN",
                     onAction = {
@@ -191,7 +212,7 @@ fun DeepMineArcadeScreen(
                         snapshot = engine.snapshot()
                         submitted = null
                         input = DeepMineInput()
-                        onPlayCue("confirm")
+                        onPlayCue("sfx_arcade_coin_insert")
                     },
                     secondaryAction = "LEAVE CABINET",
                     onSecondaryAction = onBack
@@ -200,7 +221,7 @@ fun DeepMineArcadeScreen(
         }
         StatusLamp(snapshot.message, snapshot.gameOver)
         Spacer(Modifier.height(5.dp))
-        ArcadeControls(input, largeTouchTargets) { input = it }
+        ArcadeControls(input, largeTouchTargets) { transform -> input = transform(input) }
         Spacer(Modifier.height(5.dp))
         Row(
             modifier = Modifier.fillMaxWidth(.88f),
@@ -511,7 +532,7 @@ private fun DeepMineCanvas(
 private fun ArcadeControls(
     input: DeepMineInput,
     large: Boolean,
-    onInput: (DeepMineInput) -> Unit
+    onUpdateInput: ((DeepMineInput) -> DeepMineInput) -> Unit
 ) {
     val buttonSize = if (large) 70.dp else 58.dp
     val boostWidth = if (large) 84.dp else 70.dp
@@ -532,8 +553,8 @@ private fun ArcadeControls(
         ) {
             Text("LATERAL THRUST", color = Color(0xFF948A76), fontFamily = FontFamily.Monospace, fontSize = 7.5.sp, fontWeight = FontWeight.Bold)
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                CabinetControl("◀", "PORT", "LEFT", buttonSize, Color(0xFF1F3D35), input.left) { onInput(input.copy(left = it)) }
-                CabinetControl("▶", "STBD", "RIGHT", buttonSize, Color(0xFF1F3D35), input.right) { onInput(input.copy(right = it)) }
+                CabinetControl("◀", "PORT", "LEFT", buttonSize, Color(0xFF1F3D35), input.left) { held -> onUpdateInput { it.copy(left = held) } }
+                CabinetControl("▶", "STBD", "RIGHT", buttonSize, Color(0xFF1F3D35), input.right) { held -> onUpdateInput { it.copy(right = held) } }
             }
         }
 
@@ -552,8 +573,8 @@ private fun ArcadeControls(
         ) {
             Text("PRIMARY SYSTEMS", color = Color(0xFF948A76), fontFamily = FontFamily.Monospace, fontSize = 7.5.sp, fontWeight = FontWeight.Bold)
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                CabinetControl("▲", "MAIN", "BOOST", buttonSize, Color(0xFF8D352B), input.boost, customWidth = boostWidth) { onInput(input.copy(boost = it)) }
-                CabinetControl("◆", "ORE", "DRILL", buttonSize, Color(0xFF8E6F18), input.drill) { onInput(input.copy(drill = it)) }
+                CabinetControl("▲", "MAIN", "BOOST", buttonSize, Color(0xFF8D352B), input.boost, customWidth = boostWidth) { held -> onUpdateInput { it.copy(boost = held) } }
+                CabinetControl("◆", "ORE", "DRILL", buttonSize, Color(0xFF8E6F18), input.drill) { held -> onUpdateInput { it.copy(drill = held) } }
             }
         }
     }
@@ -571,6 +592,7 @@ private fun CabinetControl(
     onHeld: (Boolean) -> Unit
 ) {
     val effectiveWidth = customWidth ?: size
+    val latestOnHeld by rememberUpdatedState(onHeld)
     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(2.dp)) {
         Box(
             Modifier
@@ -594,9 +616,9 @@ private fun CabinetControl(
                 .pointerInput(Unit) {
                     awaitEachGesture {
                         awaitFirstDown(requireUnconsumed = false)
-                        onHeld(true)
+                        latestOnHeld(true)
                         waitForUpOrCancellation()
-                        onHeld(false)
+                        latestOnHeld(false)
                     }
                 }
                 .testTag("arcade_${label.lowercase()}_${function.lowercase()}"),

@@ -2,16 +2,26 @@ package com.example.starborn.feature.exploration.presentation
 
 /** Authored Android catalogs, shared without rewriting titles, descriptions or identifiers. */
 data class SimulationProgramDefinition(val title: String, val category: String, val enemyIds: List<String>, val description: String, val accentArgb: Long)
-data class AstraArcadeDefinition(val id: String, val title: String)
+data class AstraArcadeDefinition(val id: String, val title: String, val worldHint: String = "")
+
+data class AstraArcadeStatusUi(
+    val id: String,
+    val title: String,
+    val worldHint: String,
+    val discovered: Boolean,
+    val installed: Boolean,
+    val highScore: Int,
+    val claimedTiers: Set<String>
+)
 
 object AstraCatalog {
     val arcades = listOf(
-        AstraArcadeDefinition("deep_mine_asteroid_drill", "Deep Mine Asteroid Drill"),
-        AstraArcadeDefinition("canopy_hopper", "Canopy Hopper"),
-        AstraArcadeDefinition("spire_infiltrator", "Spire Infiltrator"),
-        AstraArcadeDefinition("slag_catcher", "Slag Catcher"),
-        AstraArcadeDefinition("orbital_defense", "Orbital Defense 2000"),
-        AstraArcadeDefinition("harmonic_pulse", "Harmonic Pulse"))
+        AstraArcadeDefinition("deep_mine_asteroid_drill", "Deep Mine Asteroid Drill", "World 1 · Mining Colony"),
+        AstraArcadeDefinition("canopy_hopper", "Canopy Hopper", "World 2 · Sector 9 Canopy"),
+        AstraArcadeDefinition("spire_infiltrator", "Spire Infiltrator", "World 3 · Executive Spire"),
+        AstraArcadeDefinition("slag_catcher", "Slag Catcher", "World 4 · Foundry Smelter"),
+        AstraArcadeDefinition("orbital_defense", "Orbital Defense 2000", "World 5 · Zenith Ring"),
+        AstraArcadeDefinition("harmonic_pulse", "Harmonic Pulse", "World 6 · The Source"))
     const val simulationRules = "Simulations use your current equipment. Standard combat rewards and consumable costs apply; rest in Quarters afterward to recover."
 
     fun availableSimulations(state: com.example.starborn.domain.session.GameSessionState): List<SimulationProgramDefinition> {

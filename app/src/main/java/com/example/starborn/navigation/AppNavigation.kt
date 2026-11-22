@@ -222,6 +222,14 @@ internal fun CampaignNavigationHost(
                         popUpTo(MainMenu.route) { inclusive = true }
                         launchSingleTop = true
                     }
+                },
+                onDebugLaunchArcade = { cabinetId ->
+                    navController.navigate(Arcade.create(cabinetId))
+                },
+                onDebugLaunchPrizeDispenser = {
+                    services.inventoryService.addItem(ArcadeIds.TOKEN_ITEM_ID, 25)
+                    services.sessionStore.setInventory(services.inventoryService.snapshot())
+                    navController.navigate(Shop.create("arcade_prize_shop"))
                 }
             )
         }
@@ -634,7 +642,8 @@ internal fun CampaignNavigationHost(
                             onBack = { navController.popBackStack() },
                             largeTouchTargets = userSettings.largeTouchTargets,
                             reducedFlashes = userSettings.disableFlashes,
-                            onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) }
+                            onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) },
+                            hapticsDisabled = userSettings.disableHaptics
                         )
                     }
                     ArcadeIds.SPIRE_INFILTRATOR -> {
@@ -643,7 +652,8 @@ internal fun CampaignNavigationHost(
                             onBack = { navController.popBackStack() },
                             largeTouchTargets = userSettings.largeTouchTargets,
                             reducedFlashes = userSettings.disableFlashes,
-                            onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) }
+                            onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) },
+                            hapticsDisabled = userSettings.disableHaptics
                         )
                     }
                     ArcadeIds.SLAG_CATCHER -> {
@@ -652,7 +662,8 @@ internal fun CampaignNavigationHost(
                             onBack = { navController.popBackStack() },
                             largeTouchTargets = userSettings.largeTouchTargets,
                             reducedFlashes = userSettings.disableFlashes,
-                            onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) }
+                            onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) },
+                            hapticsDisabled = userSettings.disableHaptics
                         )
                     }
                     ArcadeIds.ORBITAL_DEFENSE -> {
@@ -661,7 +672,8 @@ internal fun CampaignNavigationHost(
                             onBack = { navController.popBackStack() },
                             largeTouchTargets = userSettings.largeTouchTargets,
                             reducedFlashes = userSettings.disableFlashes,
-                            onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) }
+                            onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) },
+                            hapticsDisabled = userSettings.disableHaptics
                         )
                     }
                     ArcadeIds.HARMONIC_PULSE -> {
@@ -670,7 +682,8 @@ internal fun CampaignNavigationHost(
                             onBack = { navController.popBackStack() },
                             largeTouchTargets = userSettings.largeTouchTargets,
                             reducedFlashes = userSettings.disableFlashes,
-                            onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) }
+                            onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) },
+                            hapticsDisabled = userSettings.disableHaptics
                         )
                     }
                     else -> {
@@ -679,7 +692,8 @@ internal fun CampaignNavigationHost(
                             onBack = { navController.popBackStack() },
                             largeTouchTargets = userSettings.largeTouchTargets,
                             reducedFlashes = userSettings.disableFlashes,
-                            onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) }
+                            onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) },
+                            hapticsDisabled = userSettings.disableHaptics
                         )
                     }
                 }

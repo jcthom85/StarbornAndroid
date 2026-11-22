@@ -1,5 +1,6 @@
 package com.example.starborn.feature.arcade.ui
 
+import android.graphics.BitmapFactory
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -18,13 +19,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.starborn.feature.arcade.domain.ArcadeIds
@@ -49,9 +58,17 @@ fun SpireInfiltratorArcadeScreen(
     onBack: () -> Unit,
     largeTouchTargets: Boolean,
     reducedFlashes: Boolean,
-    onPlayCue: (String) -> Unit
+    onPlayCue: (String) -> Unit,
+    hapticsDisabled: Boolean = false
 ) {
     val engine = remember { SpireInfiltratorEngine() }
+    val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
+    val backdrop = remember {
+        runCatching {
+            context.assets.open("images/arcade/spire_infiltrator/spire_grid_v1.png").use { BitmapFactory.decodeStream(it)?.asImageBitmap() }
+        }.getOrNull()
+    }
     var snapshot by remember { mutableStateOf(engine.snapshot()) }
     var input by remember { mutableStateOf(InfiltratorInput()) }
     var paused by remember { mutableStateOf(false) }
@@ -69,7 +86,32 @@ fun SpireInfiltratorArcadeScreen(
             withFrameNanos { now ->
                 if (previous != 0L && !paused && !tutorial) {
                     engine.advance((now - previous) / 1_000_000_000f, input)
-                    snapshot = engine.snapshot()
+                    val next = engine.snapshot()
+                    snapshot = next
+                    when (next.audioEvent) {
+                        SpireAudioEvent.EAT_NODE -> onPlayCue("sfx_arcade_laser")
+                        SpireAudioEvent.OVERCLOCK_START -> {
+                            onPlayCue("confirm")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        SpireAudioEvent.EAT_SENTINEL -> {
+                            onPlayCue("sfx_arcade_jump")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        }
+                        SpireAudioEvent.ROUND_CLEAR -> {
+                            onPlayCue("confirm")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        SpireAudioEvent.DEATH -> {
+                            onPlayCue("action_inspect")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        SpireAudioEvent.GAME_OVER -> {
+                            onPlayCue("sfx_arcade_game_over")
+                            if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        }
+                        SpireAudioEvent.NONE -> Unit
+                    }
                 }
                 previous = now
             }
@@ -79,19 +121,9 @@ fun SpireInfiltratorArcadeScreen(
     LaunchedEffect(snapshot.gameOver) {
         if (snapshot.gameOver && submitted == null) {
             submitted = arcadeService.submitSpireInfiltratorScore(snapshot.score)
-            onPlayCue("sfx_arcade_game_over")
-        }
-    }
-
-    LaunchedEffect(snapshot.audioEvent) {
-        when (snapshot.audioEvent) {
-            SpireAudioEvent.EAT_NODE -> onPlayCue("sfx_arcade_laser")
-            SpireAudioEvent.OVERCLOCK_START -> onPlayCue("confirm")
-            SpireAudioEvent.EAT_SENTINEL -> onPlayCue("sfx_arcade_jump")
-            SpireAudioEvent.ROUND_CLEAR -> onPlayCue("confirm")
-            SpireAudioEvent.DEATH -> onPlayCue("action_inspect")
-            SpireAudioEvent.GAME_OVER -> onPlayCue("sfx_arcade_game_over")
-            SpireAudioEvent.NONE -> Unit
+            if (snapshot.audioEvent != SpireAudioEvent.GAME_OVER) {
+                onPlayCue("sfx_arcade_game_over")
+            }
         }
     }
 
@@ -122,6 +154,7 @@ fun SpireInfiltratorArcadeScreen(
         ) {
             SpireCanvas(
                 snapshot = snapshot,
+                backdrop = backdrop,
                 reducedFlashes = reducedFlashes,
                 modifier = Modifier
                     .fillMaxSize()
@@ -139,19 +172,30 @@ fun SpireInfiltratorArcadeScreen(
                         "Clear all nodes in the sector to access the next mainframe layer."
                     ),
                     action = "START INFILTRATION",
-                    onAction = { tutorial = false; onPlayCue("confirm") }
+                    onAction = { tutorial = false; onPlayCue("sfx_arcade_coin_insert") },
+                    secondaryAction = "LEAVE CABINET",
+                    onSecondaryAction = onBack
                 )
             } else if (paused) {
-                SpireOverlay("RUN PAUSED", listOf("Data packet holding connection."), "RESUME") { paused = false }
+                SpireOverlay(
+                    title = "RUN PAUSED",
+                    lines = listOf("Data packet holding connection."),
+                    action = "RESUME",
+                    onAction = { paused = false },
+                    secondaryAction = "LEAVE CABINET",
+                    onSecondaryAction = onBack
+                )
             } else if (snapshot.gameOver) {
                 val tiers = submitted?.newlyClaimed.orEmpty().joinToString()
+                val tokens = submitted?.tokensEarned ?: 0
                 SpireOverlay(
                     title = snapshot.message,
                     lines = buildList {
                         add("FINAL SCORE: ${snapshot.score}")
                         add("SECTOR LAYER: ROUND ${snapshot.round}")
+                        if (tokens > 0) add("+$tokens ARCADE ${if (tokens == 1) "TOKEN" else "TOKENS"} EARNED")
                         if (tiers.isNotBlank()) add("REWARD UNLOCKED: $tiers")
-                        else add("Drop one more coin to beat the high score.")
+                        else if (tokens == 0) add("Drop one more coin to beat the high score.")
                     },
                     action = "TRY AGAIN",
                     onAction = {
@@ -159,17 +203,25 @@ fun SpireInfiltratorArcadeScreen(
                         snapshot = engine.snapshot()
                         submitted = null
                         input = InfiltratorInput()
-                        onPlayCue("confirm")
-                    }
+                        onPlayCue("sfx_arcade_coin_insert")
+                    },
+                    secondaryAction = "LEAVE CABINET",
+                    onSecondaryAction = onBack
                 )
             }
         }
 
         SpireStatusLamp(snapshot.message, snapshot.gameOver)
         Spacer(Modifier.height(4.dp))
-        SpireControls(input, largeTouchTargets) { input = it }
+        SpireControls(input, largeTouchTargets) { transform -> input = transform(input) }
         Spacer(Modifier.height(4.dp))
-        SpireServiceKey { paused = true }
+        Row(
+            modifier = Modifier.fillMaxWidth(.88f),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            SpireServiceKey(text = "SERVICE  •  PAUSE", onClick = { paused = true }, modifier = Modifier.weight(1f))
+            SpireServiceKey(text = "LEAVE CABINET", onClick = onBack, modifier = Modifier.weight(1f))
+        }
     }
 }
 
@@ -280,12 +332,26 @@ private fun SpireStatusLamp(message: String, failure: Boolean) {
 @Composable
 private fun SpireCanvas(
     snapshot: SpireInfiltratorSnapshot,
+    backdrop: ImageBitmap?,
     reducedFlashes: Boolean,
     modifier: Modifier
 ) {
     Canvas(modifier.background(GridFloor, RoundedCornerShape(8.dp))) {
         val sx = size.width / (SpireInfiltratorEngine.COLS * SpireInfiltratorEngine.TILE_SIZE + 20f)
         val sy = size.height / (SpireInfiltratorEngine.ROWS * SpireInfiltratorEngine.TILE_SIZE + 40f)
+
+        backdrop?.let { bg ->
+            drawImage(
+                image = bg,
+                srcOffset = IntOffset.Zero,
+                srcSize = IntSize(bg.width, bg.height),
+                dstOffset = IntOffset.Zero,
+                dstSize = IntSize(size.width.toInt(), size.height.toInt()),
+                alpha = 0.65f,
+                filterQuality = FilterQuality.Low
+            )
+            drawRect(GridFloor.copy(alpha = 0.30f))
+        }
 
         // 1. Draw Maze Circuit Grid
         for (r in 0 until SpireInfiltratorEngine.ROWS) {
@@ -299,7 +365,7 @@ private fun SpireCanvas(
                 when (char) {
                     '#' -> {
                         // Neon Wall
-                        drawRect(Color(0xFF110B22), topLeft = Offset(tileX, tileY), size = Size(tileW, tileH))
+                        drawRect(Color(0xD9110B22), topLeft = Offset(tileX, tileY), size = Size(tileW, tileH))
                         drawRect(CircuitBlue, topLeft = Offset(tileX + 1f, tileY + 1f), size = Size(tileW - 2f, tileH - 2f), style = Stroke(1f))
                     }
                     '.' -> {
@@ -376,10 +442,11 @@ private fun SpireCanvas(
 private fun SpireControls(
     input: InfiltratorInput,
     large: Boolean,
-    onInput: (InfiltratorInput) -> Unit
+    onUpdateInput: ((InfiltratorInput) -> InfiltratorInput) -> Unit
 ) {
     val buttonSize = if (large) 58.dp else 48.dp
     val boostSize = if (large) 76.dp else 64.dp
+    val latestUpdate by rememberUpdatedState(onUpdateInput)
 
     Row(
         Modifier
@@ -395,11 +462,11 @@ private fun SpireControls(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            DpadButton("▲", buttonSize, input.up) { onInput(input.copy(up = it)) }
+            DpadButton("▲", buttonSize, input.up) { held -> onUpdateInput { it.copy(up = held) } }
             Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                DpadButton("◀", buttonSize, input.left) { onInput(input.copy(left = it)) }
-                DpadButton("▼", buttonSize, input.down) { onInput(input.copy(down = it)) }
-                DpadButton("▶", buttonSize, input.right) { onInput(input.copy(right = it)) }
+                DpadButton("◀", buttonSize, input.left) { held -> onUpdateInput { it.copy(left = held) } }
+                DpadButton("▼", buttonSize, input.down) { held -> onUpdateInput { it.copy(down = held) } }
+                DpadButton("▶", buttonSize, input.right) { held -> onUpdateInput { it.copy(right = held) } }
             }
         }
 
@@ -437,9 +504,9 @@ private fun SpireControls(
                         .pointerInput(Unit) {
                             awaitEachGesture {
                                 awaitFirstDown(requireUnconsumed = false)
-                                onInput(input.copy(boost = true))
+                                latestUpdate { it.copy(boost = true) }
                                 waitForUpOrCancellation()
-                                onInput(input.copy(boost = false))
+                                latestUpdate { it.copy(boost = false) }
                             }
                         }
                         .testTag("arcade_spire_boost"),
@@ -459,6 +526,7 @@ private fun DpadButton(
     pressed: Boolean,
     onHeld: (Boolean) -> Unit
 ) {
+    val latestOnHeld by rememberUpdatedState(onHeld)
     Box(
         Modifier
             .size(size)
@@ -478,9 +546,9 @@ private fun DpadButton(
                 .pointerInput(Unit) {
                     awaitEachGesture {
                         awaitFirstDown(requireUnconsumed = false)
-                        onHeld(true)
+                        latestOnHeld(true)
                         waitForUpOrCancellation()
-                        onHeld(false)
+                        latestOnHeld(false)
                     }
                 }
                 .testTag("dpad_$glyph"),
@@ -492,21 +560,29 @@ private fun DpadButton(
 }
 
 @Composable
-private fun SpireServiceKey(onClick: () -> Unit) {
+private fun SpireServiceKey(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0E071A), contentColor = Color(0xFF9E8DB8)),
         shape = RoundedCornerShape(4.dp),
-        modifier = Modifier
-            .height(30.dp)
-            .border(1.dp, Color(0xFF2E1754), RoundedCornerShape(4.dp))
+        modifier = modifier
+            .height(32.dp)
+            .border(1.dp, Color(0xFF2E1754), RoundedCornerShape(4.dp)),
+        contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
     ) {
-        Text("SERVICE  •  PAUSE / EXIT", fontFamily = FontFamily.Monospace, fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = .8.sp)
+        Text(text, fontFamily = FontFamily.Monospace, fontSize = 8.sp, fontWeight = FontWeight.Bold, letterSpacing = .8.sp)
     }
 }
 
 @Composable
-private fun SpireOverlay(title: String, lines: List<String>, action: String, onAction: () -> Unit) {
+private fun SpireOverlay(
+    title: String,
+    lines: List<String>,
+    action: String,
+    onAction: () -> Unit,
+    secondaryAction: String? = null,
+    onSecondaryAction: (() -> Unit)? = null
+) {
     Column(
         Modifier
             .fillMaxWidth(.85f)
@@ -534,6 +610,21 @@ private fun SpireOverlay(title: String, lines: List<String>, action: String, onA
                 .height(38.dp)
         ) {
             Text(action, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Black, fontSize = 11.sp, letterSpacing = 1.sp)
+        }
+        if (secondaryAction != null && onSecondaryAction != null) {
+            Spacer(Modifier.height(6.dp))
+            Button(
+                onClick = onSecondaryAction,
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF140B26), contentColor = Color(0xFFD0C1E6)),
+                shape = RoundedCornerShape(4.dp),
+                modifier = Modifier
+                    .fillMaxWidth(.75f)
+                    .height(36.dp)
+                    .border(1.dp, Color(0xFF4C2782), RoundedCornerShape(4.dp)),
+                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
+            ) {
+                Text(secondaryAction, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, fontSize = 10.sp, letterSpacing = .8.sp)
+            }
         }
     }
 }

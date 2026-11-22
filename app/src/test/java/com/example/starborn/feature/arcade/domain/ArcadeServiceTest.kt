@@ -160,8 +160,53 @@ class ArcadeServiceTest {
     @Test
     fun tokensAreAwardedOnScoreSubmission() {
         val before = inventory.snapshot()[ArcadeIds.TOKEN_ITEM_ID] ?: 0
-        service.submitDeepMineScore(15_000)
+        val submission = service.submitDeepMineScore(15_000)
         val after = inventory.snapshot()[ArcadeIds.TOKEN_ITEM_ID] ?: 0
         assertTrue("Tokens should be awarded for Bronze + Silver tiers + participation", after > before)
+        assertEquals(after - before, submission.tokensEarned)
+
+        val repeatBefore = after
+        val repeatSubmission = service.submitDeepMineScore(15_000)
+        val repeatAfter = inventory.snapshot()[ArcadeIds.TOKEN_ITEM_ID] ?: 0
+        assertEquals(repeatAfter - repeatBefore, repeatSubmission.tokensEarned)
+        assertEquals(3, repeatSubmission.tokensEarned)
+    }
+
+    @Test
+    fun completeRepairForCraftedItem_installsAllSixCabinetsAndTriggersMasterMilestone() {
+        val cores = listOf(
+            ArcadeIds.REPAIRED_CORE to ArcadeIds.DEEP_MINE,
+            ArcadeIds.REPAIRED_CANOPY_CORE to ArcadeIds.CANOPY_HOPPER,
+            ArcadeIds.REPAIRED_SPIRE_CORE to ArcadeIds.SPIRE_INFILTRATOR,
+            ArcadeIds.REPAIRED_SLAG_CORE to ArcadeIds.SLAG_CATCHER,
+            ArcadeIds.REPAIRED_ORBITAL_CORE to ArcadeIds.ORBITAL_DEFENSE,
+            ArcadeIds.REPAIRED_HARMONIC_CORE to ArcadeIds.HARMONIC_PULSE
+        )
+        cores.forEach { (coreId, _) -> inventory.addItem(coreId) }
+
+        cores.forEachIndexed { idx, (coreId, cabinetId) ->
+            val msg = service.completeRepairForCraftedItem(coreId)
+            assertTrue("Expected install message for $coreId", !msg.isNullOrBlank())
+            assertTrue("Cabinet $cabinetId should be installed", service.progress(cabinetId).installed)
+            assertFalse("Core $coreId should be consumed", inventory.hasItem(coreId))
+            if (idx < cores.lastIndex) {
+                assertFalse("Master milestone should not fire early", "ms_all_arcade_cabinets_restored" in store.state.value.completedMilestones)
+            }
+        }
+        assertTrue("ms_all_arcade_cabinets_restored" in store.state.value.completedMilestones)
+    }
+
+    @Test
+    fun reconcileCraftedCoresInInventory_installsLegacyCraftedCores() {
+        inventory.addItem(ArcadeIds.REPAIRED_CANOPY_CORE)
+        inventory.addItem(ArcadeIds.REPAIRED_SPIRE_CORE)
+        assertFalse(service.progress(ArcadeIds.CANOPY_HOPPER).installed)
+        assertFalse(service.progress(ArcadeIds.SPIRE_INFILTRATOR).installed)
+
+        val installedCount = service.reconcileCraftedCoresInInventory()
+        assertEquals(2, installedCount)
+        assertTrue(service.progress(ArcadeIds.CANOPY_HOPPER).installed)
+        assertTrue(service.progress(ArcadeIds.SPIRE_INFILTRATOR).installed)
+        assertEquals(0, service.reconcileCraftedCoresInInventory())
     }
 }
