@@ -1407,17 +1407,27 @@ class CombatActionProcessor(
     ): Int {
         if (rawDamage <= 0) return 0
         var result = rawDamage.toDouble()
+        val pierce = AccessoryPassives.defensePierceFraction(attacker)
         var flatReduction = target.combatant.stats.flatDamageReduction + target.totalBuffValue("flat_defense")
         target.statusEffects.forEach { status ->
             statusRegistry.definition(status.id)?.let { definition ->
-                definition.incomingMultiplier?.let { result *= it }
+                definition.incomingMultiplier?.let { mult ->
+                    val effectiveMult = if (pierce > 0.0 && mult in 0.01..0.999) {
+                        1.0 - (1.0 - mult) * (1.0 - pierce)
+                    } else mult
+                    result *= effectiveMult
+                }
                 if (element == PHYSICAL_ELEMENT) {
-                    definition.incomingMultiplierPhysical?.let { result *= it }
+                    definition.incomingMultiplierPhysical?.let { mult ->
+                        val effectiveMult = if (pierce > 0.0 && mult in 0.01..0.999) {
+                            1.0 - (1.0 - mult) * (1.0 - pierce)
+                        } else mult
+                        result *= effectiveMult
+                    }
                 }
                 definition.flatDefenseBonus?.let { flatReduction += it }
             }
         }
-        val pierce = AccessoryPassives.defensePierceFraction(attacker)
         val effectiveReduction = if (pierce > 0.0 && flatReduction > 0) {
             (flatReduction * (1.0 - pierce)).roundToInt()
         } else {

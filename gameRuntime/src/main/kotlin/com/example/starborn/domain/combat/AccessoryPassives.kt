@@ -60,7 +60,7 @@ object AccessoryPassives {
         ) 12.0 else 0.0
 
     fun critDamageMultiplier(attacker: CombatantState): Double =
-        if (attacker.combatant.accessoryPassiveId == DEFENSE_PIERCE_25) 0.10 else 0.0
+        if (attacker.combatant.accessoryPassiveId == DEFENSE_PIERCE_25) 0.15 else 0.0
 
     fun defensePierceFraction(attacker: CombatantState?): Double =
         if (attacker?.combatant?.accessoryPassiveId == DEFENSE_PIERCE_25) 0.25 else 0.0
@@ -302,7 +302,8 @@ object AccessoryPassives {
                 if (wasShielded && victimPassive == SHIELD_REFLECT_STABILITY) {
                     val attackerNow = working.combatants[action.actorId]
                     if (attackerNow != null && attackerNow.isAlive) {
-                        val nextStab = (attackerNow.stability - 18).coerceAtLeast(0)
+                        val reflectAmt = (attackerNow.combatant.stats.stability * 0.15).roundToInt().coerceIn(18, 40)
+                        val nextStab = (attackerNow.stability - reflectAmt).coerceAtLeast(0)
                         val broke = nextStab == 0 && attackerNow.breakTurns == 0
                         working = working.copy(
                             combatants = working.combatants + (action.actorId to attackerNow.copy(
@@ -310,7 +311,7 @@ object AccessoryPassives {
                                 breakTurns = if (broke) attackerNow.combatant.brokenTurns.coerceAtLeast(1) else attackerNow.breakTurns
                             ))
                         )
-                        working = logPassive(working, victimId, victimLabel, if (broke) "Counter Break!" else "Counter -18 Stability")
+                        working = logPassive(working, victimId, victimLabel, if (broke) "Counter Break!" else "Counter -$reflectAmt Stability")
                     }
                 }
             }

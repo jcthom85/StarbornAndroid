@@ -682,7 +682,7 @@
       "scrap_metal": 2
     },
     "result": "reactive_plating",
-    "description": "Charge nano-filament plates with a shock capacitor that discharges on impact. Passive: Taking a hit while Shielded deals 18 Shock Stability damage back.",
+    "description": "Charge nano-filament plates with a shock capacitor that discharges on impact. Passive: Taking a hit while Shielded reflects 15% max Stability (18–40) as Shock.",
     "success_message": "You seal the Reactive Plating—any strike against your Shield will jolt the attacker back.",
     "salvage": {
       "scrap_metal": 1

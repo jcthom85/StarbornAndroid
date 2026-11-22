@@ -368,8 +368,8 @@
         "str": 2,
         "accuracy": 2
       },
-      "passive_id": "break_bonus_stability",
-      "passive_text": "Direct attacks deal +20% Stability damage."
+      "passive_id": "broken_punisher",
+      "passive_text": "Direct hits against Broken enemies deal +15% HP damage."
     }
   },
   {
@@ -2489,7 +2489,7 @@
         "luck": 4
       },
       "passive_id": "defense_pierce_25",
-      "passive_text": "Direct hits ignore 25% flat Defense and gain +10% Crit damage."
+      "passive_text": "Direct hits pierce 25% of Guard, Shield & resistance mitigation and gain +15% Crit damage."
     }
   },
   {
@@ -2507,7 +2507,7 @@
         "evasion": 4
       },
       "passive_id": "shield_reflect_stability",
-      "passive_text": "Taking a hit while Shielded deals 18 Shock Stability damage back."
+      "passive_text": "Taking a hit while Shielded reflects 15% max Stability (18–40) as Shock."
     }
   },
   {
@@ -3052,7 +3052,7 @@
         "focus": 2
       },
       "passive_id": "defense_pierce_25",
-      "passive_text": "Direct hits ignore 25% flat Defense and gain +10% Crit damage."
+      "passive_text": "Direct hits pierce 25% of Guard, Shield & resistance mitigation and gain +15% Crit damage."
     }
   },
   {
@@ -3107,7 +3107,7 @@
         "crit_rate": 3
       },
       "passive_id": "defense_pierce_25",
-      "passive_text": "Direct hits ignore 25% flat Defense and gain +10% Crit damage."
+      "passive_text": "Direct hits pierce 25% of Guard, Shield & resistance mitigation and gain +15% Crit damage."
     }
   },
   {
@@ -3151,7 +3151,7 @@
         "luck": 1
       },
       "passive_id": "defense_pierce_25",
-      "passive_text": "Direct hits ignore 25% flat Defense and gain +10% Crit damage."
+      "passive_text": "Direct hits pierce 25% of Guard, Shield & resistance mitigation and gain +15% Crit damage."
     }
   },
   {
@@ -3895,7 +3895,7 @@
         "defense": 3
       },
       "passive_id": "shield_reflect_stability",
-      "passive_text": "Taking a hit while Shielded deals 18 Shock Stability damage back."
+      "passive_text": "Taking a hit while Shielded reflects 15% max Stability (18–40) as Shock."
     }
   },
   {

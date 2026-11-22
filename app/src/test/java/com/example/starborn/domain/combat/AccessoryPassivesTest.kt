@@ -231,6 +231,26 @@ class AccessoryPassivesTest {
             .log.filterIsInstance<CombatLogEntry.Damage>().last().amount
         assertTrue("Expected defense pierce ($pierceDmg) > baseline ($baseNormalDmg)", pierceDmg > baseNormalDmg)
 
+        // Also verify piercing Shield & Physical Resistance when flatDefense == 0 (matching real enemies.json)
+        val shieldedEnemy = Combatant(
+            id = "e_res",
+            name = "Armored Drone",
+            side = CombatSide.ENEMY,
+            stats = StatBlock(1000, 40, 20, 20, 20, 10, 10, stability = 200, flatDamageReduction = 0),
+            resistances = ResistanceProfile(physical = 50)
+        )
+        val sBaseRes = engine.beginEncounter(CombatSetup(listOf(basePlayer), listOf(shieldedEnemy))).let { st ->
+            st.copy(combatants = st.combatants + ("e_res" to st.combatants.getValue("e_res").copy(statusEffects = listOf(StatusEffect("shield", 2)))))
+        }
+        val sPierceRes = engine.beginEncounter(CombatSetup(listOf(piercer), listOf(shieldedEnemy))).let { st ->
+            st.copy(combatants = st.combatants + ("e_res" to st.combatants.getValue("e_res").copy(statusEffects = listOf(StatusEffect("shield", 2)))))
+        }
+        val baseResDmg = processor().execute(sBaseRes, CombatAction.SkillUse("p1", "test_strike", listOf("e_res"))) { CombatReward() }
+            .log.filterIsInstance<CombatLogEntry.Damage>().last().amount
+        val pierceResDmg = processor().execute(sPierceRes, CombatAction.SkillUse("p1", "test_strike", listOf("e_res"))) { CombatReward() }
+            .log.filterIsInstance<CombatLogEntry.Damage>().last().amount
+        assertTrue("Expected pierce vs Shield+Resist ($pierceResDmg) > baseline ($baseResDmg)", pierceResDmg > baseResDmg)
+
         val baseBrokenDmg = processor().execute(sBaseBroken, CombatAction.SkillUse("p1", "test_strike", listOf("e1"))) { CombatReward() }
             .log.filterIsInstance<CombatLogEntry.Damage>().last().amount
         val punishDmg = processor().execute(sPunish, CombatAction.SkillUse("p1", "test_strike", listOf("e1"))) { CombatReward() }
@@ -297,6 +317,15 @@ class AccessoryPassivesTest {
         assertTrue(afterHit.combatants.getValue("t1").hp < 350)
         assertNotNull(afterHit.combatants.getValue("g1").statusEffects.firstOrNull { it.id == "shield" })
         assertEquals(1, afterHit.combatants.getValue("g1").momentum)
+
+        // Verify boss-scale stability reflect (15% of 260 = 39, capped at 40)
+        val boss = combatant("boss", CombatSide.ENEMY, attack = 80, stability = 260)
+        var bossState = engine.beginEncounter(CombatSetup(listOf(tank), listOf(boss)))
+        bossState = bossState.copy(
+            combatants = bossState.combatants + ("t1" to bossState.combatants.getValue("t1").copy(statusEffects = listOf(StatusEffect("shield", 2))))
+        )
+        val afterBossHit = processor().execute(bossState, CombatAction.SkillUse("boss", "enemy_hit", listOf("t1"))) { CombatReward() }
+        assertEquals(221, afterBossHit.combatants.getValue("boss").stability)
     }
 
     @Test

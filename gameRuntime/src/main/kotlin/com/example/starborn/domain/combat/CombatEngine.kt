@@ -55,7 +55,13 @@ class CombatEngine(
     ): Int {
         if (baseDamage <= 0) return 0
         val tier = resolveAffinityTier(targetState, element)
-        val scaled = baseDamage * tier.multiplier
+        val pierce = AccessoryPassives.defensePierceFraction(attackerState)
+        val mult = if (pierce > 0.0 && tier.multiplier in 0.01..0.999) {
+            1.0 - (1.0 - tier.multiplier) * (1.0 - pierce)
+        } else {
+            tier.multiplier
+        }
+        val scaled = baseDamage * mult
         return when {
             scaled <= 0.0 -> 0
             else -> scaled.roundToInt().coerceAtLeast(1)
