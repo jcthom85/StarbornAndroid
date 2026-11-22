@@ -110,8 +110,9 @@ class CombatActionProcessor(
                 advance = false
             )
         }
-        return TalentEffects.afterDirectAction(state,
+        val afterTalents = TalentEffects.afterDirectAction(state,
             appendWeaknessRewardIfNeeded(state, action, resolved, beforeLogSize), action, engine)
+        return AccessoryPassives.afterAction(state, afterTalents, action, engine)
     }
 
     private fun processBasicAttack(
@@ -747,7 +748,9 @@ class CombatActionProcessor(
         val hasBuff = effect.singleBuff != null || !effect.buffs.isNullOrEmpty()
 
         // Set snackCooldown + 1 because tickEndOfTurn will immediately decrement it by 1 at the end of the turn.
-        val baseCooldown = effect.cooldown?.coerceAtLeast(0) ?: DEFAULT_SNACK_COOLDOWN
+        val rawCooldown = effect.cooldown?.coerceAtLeast(0) ?: DEFAULT_SNACK_COOLDOWN
+        val reducedCooldown = (rawCooldown - AccessoryPassives.snackCooldownReduction(actor)).coerceAtLeast(2)
+        val baseCooldown = if (rawCooldown <= 2) rawCooldown else reducedCooldown
         val updatedActor = actor.copy(snackCooldown = baseCooldown + 1)
         val stateWithCooldown = state.copy(combatants = state.combatants + (action.actorId to updatedActor))
 
@@ -798,7 +801,7 @@ class CombatActionProcessor(
             duration = DEFEND_DURATION,
             stacks = 1
         )
-        return working
+        return AccessoryPassives.onDefend(working, action.actorId)
     }
 
     private fun processFlee(state: CombatState): CombatState {
@@ -845,8 +848,9 @@ class CombatActionProcessor(
         val target = state.combatants[targetId] ?: return state
         fun resolved(base: Int): Int {
             val raw = engine.calculateDamage(attacker, target, base, element)
-            val crit = if (critical) (raw * CombatFormulas.CRIT_DAMAGE_MULT).roundToInt().coerceAtLeast(1) else raw
-            return adjustIncomingDamage(target, applyBrokenDamageBonus(crit, brokenBonus), element).coerceAtLeast(minimum)
+            val critMult = CombatFormulas.CRIT_DAMAGE_MULT + AccessoryPassives.critDamageMultiplier(attacker)
+            val crit = if (critical) (raw * critMult).roundToInt().coerceAtLeast(1) else raw
+            return adjustIncomingDamage(target, applyBrokenDamageBonus(crit, brokenBonus), element, attacker).coerceAtLeast(minimum)
         }
         val hpDamage = resolved((outgoing * TalentEffects.hpMultiplier(attacker, target, skillId, skillId != null && skillLookup(skillId)?.targeting?.contains("all") != true)).roundToInt())
         val stabilityBase = resolved(outgoing)
@@ -897,7 +901,8 @@ class CombatActionProcessor(
                     working = working.logMiss(attackerId, targetId)
                     return@forEach
                 }
-                val bonus = if (com.example.starborn.domain.leveling.CrewBuildPrototype.STEADY_AIM in currentAttacker.combatant.talents) 5.0 else 0.0
+                val bonus = (if (com.example.starborn.domain.leveling.CrewBuildPrototype.STEADY_AIM in currentAttacker.combatant.talents) 5.0 else 0.0) +
+                    AccessoryPassives.critChanceBonus(currentAttacker, targetState)
                 isCrit = isCrit || random.nextDouble(0.0, 100.0) <= (currentAttacker.critChance() + bonus).coerceIn(0.0, 100.0)
             }
             val brokenBonus = qualifiesForBrokenDamageBonus(currentAttacker, targetState)
@@ -1096,7 +1101,7 @@ class CombatActionProcessor(
         if (roll > hitChance) return HitRoll.Miss
         val baseDamage = basePhysicalDamage(attacker, target)
         val critRoll = random.nextDouble(0.0, 100.0)
-        val critChance = (attacker.critChance() + critBonus).coerceIn(0.0, 100.0)
+        val critChance = (attacker.critChance() + critBonus + AccessoryPassives.critChanceBonus(attacker, target)).coerceIn(0.0, 100.0)
         
         val forceCrit = target.statusEffects.any { status ->
             statusRegistry.definition(status.id)?.forceCrit == true
@@ -1394,7 +1399,12 @@ class CombatActionProcessor(
         return if (baseDamage <= 0) adjusted.coerceAtLeast(0) else adjusted.coerceAtLeast(1)
     }
 
-    private fun adjustIncomingDamage(target: CombatantState, rawDamage: Int, element: String? = null): Int {
+    private fun adjustIncomingDamage(
+        target: CombatantState,
+        rawDamage: Int,
+        element: String? = null,
+        attacker: CombatantState? = null
+    ): Int {
         if (rawDamage <= 0) return 0
         var result = rawDamage.toDouble()
         var flatReduction = target.combatant.stats.flatDamageReduction + target.totalBuffValue("flat_defense")
@@ -1407,7 +1417,13 @@ class CombatActionProcessor(
                 definition.flatDefenseBonus?.let { flatReduction += it }
             }
         }
-        val adjusted = result.roundToInt() - flatReduction
+        val pierce = AccessoryPassives.defensePierceFraction(attacker)
+        val effectiveReduction = if (pierce > 0.0 && flatReduction > 0) {
+            (flatReduction * (1.0 - pierce)).roundToInt()
+        } else {
+            flatReduction
+        }
+        val adjusted = result.roundToInt() - effectiveReduction
         return adjusted.coerceAtLeast(0)
     }
 

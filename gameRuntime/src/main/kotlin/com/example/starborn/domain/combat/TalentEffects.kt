@@ -20,7 +20,8 @@ object TalentEffects {
         if (Crew.COOL_HEAD in owned && skillId == "gh0st_headshot" && attacker.talentTriggers.getOrDefault(Crew.COOL_HEAD, 0) > 0) bonus += .15
         if (attacker.combatant.side == CombatSide.PLAYER && target.statusEffects.any {
                 it.id == Crew.OPENING_STATUS && it.sourceId != null && it.sourceId != attacker.combatant.id }) bonus += .10
-        return 1.0 + bonus.coerceAtMost(.25)
+        val accessoryBonus = AccessoryPassives.hpBonus(attacker, target)
+        return 1.0 + (bonus.coerceAtMost(.25) + accessoryBonus).coerceAtMost(.35)
     }
 
     fun stabilityMultiplier(attacker: CombatantState, skillId: String?, target: CombatantState? = null, physical: Boolean = false): Double {
@@ -32,7 +33,8 @@ object TalentEffects {
         if (skillId == "orion_prism_lance" && Crew.PRISM_LENS in owned) bonus += .20
         if (skillId == null && Crew.SURGICAL_STRIKE in owned) bonus += .20
         if (physical && Crew.CONTROLLED_DEMOLITION in owned && target?.statusEffects?.any { it.id == "weak" } == true) bonus += .15
-        return 1.0 + bonus.coerceAtMost(.50)
+        val accessoryBonus = AccessoryPassives.stabilityBonus(attacker)
+        return 1.0 + (bonus.coerceAtMost(.50) + accessoryBonus).coerceAtMost(.60)
     }
 
     fun canEmergencyCover(state: CombatState, actorId: String, skillId: String, targetIds: List<String>?): Boolean {

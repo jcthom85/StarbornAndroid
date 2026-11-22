@@ -26,11 +26,28 @@ import java.util.Locale
 internal fun EquipmentComparison(candidate: Equipment?, current: Equipment?, currentName: String?) {
     if (!LocalModernFieldMenu.current || candidate == null) return
     if (current == null) {
-        Text(
-            text = if (currentName == null) "No item equipped" else "Comparison unavailable for $currentName",
-            color = FieldMenuDesign.textMuted,
-            style = MaterialTheme.typography.bodySmall
-        )
+        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            candidate.passiveText?.takeIf { it.isNotBlank() }?.let { passive ->
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    color = FieldMenuDesign.gold.copy(alpha = 0.12f),
+                    border = BorderStroke(1.dp, FieldMenuDesign.gold.copy(alpha = 0.45f))
+                ) {
+                    Text(
+                        text = "★ PASSIVE: $passive",
+                        color = FieldMenuDesign.gold,
+                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp)
+                    )
+                }
+            }
+            Text(
+                text = if (currentName == null) "No item equipped" else "Comparison unavailable for $currentName",
+                color = FieldMenuDesign.textMuted,
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
         return
     }
     fun number(value: Double) = equipmentNumber(value)
@@ -52,6 +69,7 @@ internal fun EquipmentComparison(candidate: Equipment?, current: Equipment?, cur
         equipment.attackElement?.let { put("Element", label(it)) }
         equipment.statusOnHit?.let { put("Status on hit", label(it)) }
         equipment.statusChance?.let { put("Status chance", percent(it)) }
+        equipment.passiveText?.takeIf { it.isNotBlank() }?.let { put("Passive", it) }
         equipment.statMods?.forEach { (stat, value) -> put(label(stat), "${if (value > 0) "+" else ""}$value") }
     }
     val before = values(current)
@@ -103,22 +121,47 @@ internal fun EquipmentComparison(candidate: Equipment?, current: Equipment?, cur
                     difference != null && difference < 0 -> FieldMenuDesign.coral
                     else -> FieldMenuDesign.cyan
                 }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = statName,
-                        color = FieldMenuDesign.textMuted,
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.weight(1f)
-                    )
-                    Text(
-                        text = "${before[statName] ?: "None"} → ${after[statName] ?: "None"}$deltaText",
-                        color = deltaColor,
-                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold)
-                    )
+                if (statName == "Passive") {
+                    Column(
+                        modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
+                        Text(
+                            text = "★ Passive",
+                            color = FieldMenuDesign.gold,
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
+                        )
+                        before[statName]?.let { prev ->
+                            Text(
+                                text = "Current: $prev",
+                                color = FieldMenuDesign.textMuted,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                        Text(
+                            text = "New: ${after[statName] ?: "None"}",
+                            color = FieldMenuDesign.gold,
+                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold)
+                        )
+                    }
+                } else {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = statName,
+                            color = FieldMenuDesign.textMuted,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text(
+                            text = "${before[statName] ?: "None"} → ${after[statName] ?: "None"}$deltaText",
+                            color = deltaColor,
+                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold)
+                        )
+                    }
                 }
             }
         }

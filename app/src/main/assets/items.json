@@ -126,7 +126,9 @@
       "stat_mods": {
         "foc": 3,
         "accuracy": 4
-      }
+      },
+      "passive_id": "status_hunter_bonus",
+      "passive_text": "+15% HP damage vs. afflicted targets; applying a debuff restores +10 Stability."
     }
   },
   {
@@ -159,7 +161,9 @@
       "stat_mods": {
         "vit": 3,
         "str": 2
-      }
+      },
+      "passive_id": "guard_stability_restore",
+      "passive_text": "Using Guard restores +20 Stability and cleanses 1 debuff."
     }
   },
   {
@@ -175,7 +179,9 @@
       "stat_mods": {
         "atk": 5,
         "foc": 3
-      }
+      },
+      "passive_id": "broken_punisher",
+      "passive_text": "Direct hits against Broken enemies deal +15% HP damage."
     }
   },
   {
@@ -208,7 +214,9 @@
       "stat_mods": {
         "accuracy": 4,
         "atk": 3
-      }
+      },
+      "passive_id": "break_momentum_gain",
+      "passive_text": "Causing a Stability Break grants +1 Momentum (once/round)."
     }
   },
   {
@@ -224,7 +232,9 @@
       "stat_mods": {
         "foc": 4,
         "vit": 3
-      }
+      },
+      "passive_id": "opening_shield_2",
+      "passive_text": "Start battle with Shield for 2 turns."
     }
   },
   {
@@ -257,7 +267,9 @@
       "stat_mods": {
         "foc": 4,
         "int": 3
-      }
+      },
+      "passive_id": "support_stability_boost",
+      "passive_text": "Healing or Shielding an ally also restores +20 Stability."
     }
   },
   {
@@ -273,7 +285,9 @@
       "stat_mods": {
         "foc": 6,
         "int": 6
-      }
+      },
+      "passive_id": "legendary_cadence_crown",
+      "passive_text": "Spending 3 Momentum on a skill reduces other active cooldowns by 1 turn."
     }
   },
   {
@@ -335,7 +349,9 @@
       "stat_mods": {
         "accuracy": 4,
         "foc": 1
-      }
+      },
+      "passive_id": "break_bonus_stability",
+      "passive_text": "Direct attacks deal +20% Stability damage."
     }
   },
   {
@@ -351,7 +367,9 @@
       "stat_mods": {
         "str": 2,
         "accuracy": 2
-      }
+      },
+      "passive_id": "break_bonus_stability",
+      "passive_text": "Direct attacks deal +20% Stability damage."
     }
   },
   {
@@ -1030,7 +1048,9 @@
     "rarity": "common",
     "equipment": {
       "slot": "accessory",
-      "accuracy": 5
+      "accuracy": 5,
+      "passive_id": "atb_headstart_20",
+      "passive_text": "Start battle with +20% ATB gauge."
     }
   },
   {
@@ -1060,7 +1080,9 @@
     "rarity": "common",
     "equipment": {
       "slot": "accessory",
-      "crit_rate": 5
+      "crit_rate": 5,
+      "passive_id": "snack_cooldown_minus_1",
+      "passive_text": "Equipped Snack cooldown reduced by 1 turn (min 2)."
     }
   },
   {
@@ -2323,7 +2345,9 @@
       "slot": "accessory",
       "stat_mods": {
         "luck": 3
-      }
+      },
+      "passive_id": "opening_shield_2",
+      "passive_text": "Start battle with Shield for 2 turns."
     }
   },
   {
@@ -2339,7 +2363,9 @@
       "defense": 6,
       "stat_mods": {
         "spd": 2
-      }
+      },
+      "passive_id": "guard_shield_momentum",
+      "passive_text": "Guarding or taking a hit while Shielded grants +1 Momentum (once/round)."
     }
   },
   {
@@ -2353,7 +2379,9 @@
     "equipment": {
       "slot": "accessory",
       "accuracy": 8,
-      "crit_rate": 4
+      "crit_rate": 4,
+      "passive_id": "opening_crit_12",
+      "passive_text": "Direct hits vs. enemies at ≥75% HP gain +12% Crit chance."
     }
   },
   {
@@ -2369,7 +2397,9 @@
       "defense": 4,
       "stat_mods": {
         "spd": 3
-      }
+      },
+      "passive_id": "guard_stability_restore",
+      "passive_text": "Using Guard restores +20 Stability and cleanses 1 debuff."
     }
   },
   {
@@ -2385,7 +2415,9 @@
       "hp_bonus": 120,
       "stat_mods": {
         "vit": 2
-      }
+      },
+      "passive_id": "low_hp_regen",
+      "passive_text": "Restore 6% Max HP at turn end while below 60% HP or Shielded."
     }
   },
   {
@@ -2401,7 +2433,9 @@
       "accuracy": 4,
       "stat_mods": {
         "foc": 4
-      }
+      },
+      "passive_id": "support_stability_boost",
+      "passive_text": "Healing or Shielding an ally also restores +20 Stability."
     }
   },
   {
@@ -2417,7 +2451,9 @@
       "stat_mods": {
         "evasion": 8,
         "spd": 2
-      }
+      },
+      "passive_id": "opening_crit_12",
+      "passive_text": "Direct hits vs. enemies at ≥75% HP gain +12% Crit chance."
     }
   },
   {
@@ -2433,7 +2469,9 @@
       "crit_rate": 5,
       "stat_mods": {
         "str": 4
-      }
+      },
+      "passive_id": "broken_punisher",
+      "passive_text": "Direct hits against Broken enemies deal +15% HP damage."
     }
   },
   {
@@ -2449,7 +2487,9 @@
       "accuracy": 2,
       "stat_mods": {
         "luck": 4
-      }
+      },
+      "passive_id": "defense_pierce_25",
+      "passive_text": "Direct hits ignore 25% flat Defense and gain +10% Crit damage."
     }
   },
   {
@@ -2465,7 +2505,9 @@
       "defense": 7,
       "stat_mods": {
         "evasion": 4
-      }
+      },
+      "passive_id": "shield_reflect_stability",
+      "passive_text": "Taking a hit while Shielded deals 18 Shock Stability damage back."
     }
   },
   {
@@ -3008,7 +3050,9 @@
       "crit_rate": 5,
       "stat_mods": {
         "focus": 2
-      }
+      },
+      "passive_id": "defense_pierce_25",
+      "passive_text": "Direct hits ignore 25% flat Defense and gain +10% Crit damage."
     }
   },
   {
@@ -3061,7 +3105,9 @@
         "agility": 3,
         "focus": 3,
         "crit_rate": 3
-      }
+      },
+      "passive_id": "defense_pierce_25",
+      "passive_text": "Direct hits ignore 25% flat Defense and gain +10% Crit damage."
     }
   },
   {
@@ -3103,7 +3149,9 @@
       "stat_mods": {
         "strength": 2,
         "luck": 1
-      }
+      },
+      "passive_id": "defense_pierce_25",
+      "passive_text": "Direct hits ignore 25% flat Defense and gain +10% Crit damage."
     }
   },
   {
@@ -3119,7 +3167,9 @@
       "hp_bonus": 25,
       "stat_mods": {
         "vitality": 3
-      }
+      },
+      "passive_id": "guard_stability_restore",
+      "passive_text": "Using Guard restores +20 Stability and cleanses 1 debuff."
     }
   },
   {
@@ -3162,7 +3212,9 @@
       "stat_mods": {
         "strength": 4,
         "focus": 2
-      }
+      },
+      "passive_id": "status_hunter_bonus",
+      "passive_text": "+15% HP damage vs. afflicted targets; applying a debuff restores +10 Stability."
     }
   },
   {
@@ -3179,7 +3231,9 @@
       "stat_mods": {
         "agility": 2,
         "vitality": 1
-      }
+      },
+      "passive_id": "atb_headstart_evasion",
+      "passive_text": "Start battle with +25% ATB gauge and +10 Evasion for 2 turns."
     }
   },
   {
@@ -3195,7 +3249,9 @@
       "defense": 2,
       "stat_mods": {
         "vitality": 2
-      }
+      },
+      "passive_id": "guard_stability_restore",
+      "passive_text": "Using Guard restores +20 Stability and cleanses 1 debuff."
     }
   },
   {
@@ -3229,7 +3285,9 @@
       "stat_mods": {
         "strength": 2,
         "focus": 2
-      }
+      },
+      "passive_id": "status_hunter_bonus",
+      "passive_text": "+15% HP damage vs. afflicted targets; applying a debuff restores +10 Stability."
     }
   },
   {
@@ -3256,7 +3314,9 @@
         "strength": 5,
         "focus": 5,
         "luck": 3
-      }
+      },
+      "passive_id": "legendary_starborn_surge",
+      "passive_text": "Reaching 3 Momentum grants Shield (1t) & +15 Stability (once/round)."
     }
   },
   {
@@ -3593,7 +3653,9 @@
       "stat_mods": {
         "agility": 4,
         "focus": 4
-      }
+      },
+      "passive_id": "legendary_retro_overclock",
+      "passive_text": "Start battle with +1 Momentum; first Critical Hit grants +1 Momentum."
     }
   },
   {
@@ -3609,7 +3671,9 @@
         "vitality": 3,
         "stability": 4,
         "defense": 5
-      }
+      },
+      "passive_id": "support_stability_boost",
+      "passive_text": "Healing or Shielding an ally also restores +20 Stability."
     }
   },
   {
@@ -3625,7 +3689,9 @@
         "focus": 4,
         "agility": 3,
         "accuracy": 3
-      }
+      },
+      "passive_id": "opening_crit_12",
+      "passive_text": "Direct hits vs. enemies at ≥75% HP gain +12% Crit chance."
     }
   },
   {
@@ -3642,7 +3708,9 @@
         "vitality": 3,
         "defense": 4,
         "stability": 3
-      }
+      },
+      "passive_id": "broken_punisher",
+      "passive_text": "Direct hits against Broken enemies deal +15% HP damage."
     }
   },
   {
@@ -3659,7 +3727,9 @@
         "accuracy": 4,
         "defense": 3,
         "stability": 3
-      }
+      },
+      "passive_id": "status_hunter_bonus",
+      "passive_text": "+15% HP damage vs. afflicted targets; applying a debuff restores +10 Stability."
     }
   },
   {
@@ -3675,7 +3745,9 @@
         "vitality": 2,
         "stability": 4,
         "focus": 2
-      }
+      },
+      "passive_id": "low_hp_regen",
+      "passive_text": "Restore 6% Max HP at turn end while below 60% HP or Shielded."
     }
   },
   {
@@ -3692,7 +3764,9 @@
         "stability": 4,
         "vitality": 2,
         "accuracy": 3
-      }
+      },
+      "passive_id": "guard_shield_momentum",
+      "passive_text": "Guarding or taking a hit while Shielded grants +1 Momentum (once/round)."
     }
   },
   {
@@ -3708,7 +3782,9 @@
         "stability": 4,
         "vitality": 2,
         "defense": 2
-      }
+      },
+      "passive_id": "break_bonus_stability",
+      "passive_text": "Direct attacks deal +20% Stability damage."
     }
   },
   {
@@ -3724,7 +3800,9 @@
         "defense": 2,
         "vitality": 2,
         "stability": 4
-      }
+      },
+      "passive_id": "pack_guardian_clutch",
+      "passive_text": "Once/battle, when an ally drops below 35% HP, gain Shield (2t) & +1 Momentum."
     }
   },
   {
@@ -3741,7 +3819,9 @@
         "stability": 4,
         "defense": 3,
         "focus": 2
-      }
+      },
+      "passive_id": "heal_cleanse_1",
+      "passive_text": "Direct heals also cleanse 1 debuff from healed allies."
     }
   },
   {
@@ -3757,7 +3837,9 @@
         "focus": 3,
         "vitality": 2,
         "stability": 3
-      }
+      },
+      "passive_id": "heal_cleanse_1",
+      "passive_text": "Direct heals also cleanse 1 debuff from healed allies."
     }
   },
   {
@@ -3773,7 +3855,9 @@
         "stability": 4,
         "defense": 3,
         "agility": 2
-      }
+      },
+      "passive_id": "break_momentum_gain",
+      "passive_text": "Causing a Stability Break grants +1 Momentum (once/round)."
     }
   },
   {
@@ -3809,7 +3893,9 @@
         "stability": 4,
         "vitality": 2,
         "defense": 3
-      }
+      },
+      "passive_id": "shield_reflect_stability",
+      "passive_text": "Taking a hit while Shielded deals 18 Shock Stability damage back."
     }
   },
   {
@@ -3825,7 +3911,9 @@
         "focus": 3,
         "tech": 2,
         "defense": 2
-      }
+      },
+      "passive_id": "status_hunter_bonus",
+      "passive_text": "+15% HP damage vs. afflicted targets; applying a debuff restores +10 Stability."
     }
   },
   {
@@ -3841,7 +3929,9 @@
         "agility": 3,
         "vitality": 2,
         "focus": 2
-      }
+      },
+      "passive_id": "snack_cooldown_minus_1",
+      "passive_text": "Equipped Snack cooldown reduced by 1 turn (min 2)."
     }
   },
   {

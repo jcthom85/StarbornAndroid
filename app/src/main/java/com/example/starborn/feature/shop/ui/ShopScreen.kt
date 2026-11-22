@@ -560,6 +560,22 @@ private fun ShopItemCard(
                             overflow = TextOverflow.Ellipsis
                         )
                     }
+                    item.passiveText?.takeIf { it.isNotBlank() }?.let { passive ->
+                        Surface(
+                            color = Color(0xFFFFC857).copy(alpha = 0.13f),
+                            shape = RoundedCornerShape(8.dp),
+                            border = BorderStroke(1.dp, Color(0xFFFFC857).copy(alpha = 0.45f))
+                        ) {
+                            Text(
+                                text = "★ PASSIVE: $passive",
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
+                                color = Color(0xFFFFD875),
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            )
+                        }
+                    }
                 }
                 PriceChip(
                     price = item.price,

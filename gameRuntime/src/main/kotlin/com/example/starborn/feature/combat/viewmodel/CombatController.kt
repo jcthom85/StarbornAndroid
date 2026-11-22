@@ -1958,7 +1958,8 @@ class CombatController(
                     }
                 }
                 is CombatLogEntry.StatusExpired,
-                is CombatLogEntry.TurnSkipped -> setCombatBanner(entry, updated, previous = previous)
+                is CombatLogEntry.TurnSkipped,
+                is CombatLogEntry.PassiveTriggered -> setCombatBanner(entry, updated, previous = previous)
             }
         }
         if (currentAction != null) {
@@ -2256,8 +2257,13 @@ class CombatController(
                 isFriendly -> random.nextDouble(0.4, 0.8)
                 else -> random.nextDouble(0.2, 0.6)
             }
+            val atbBonus = if (isFriendly) {
+                com.example.starborn.domain.combat.AccessoryPassives.initialAtbBonus(combatant.accessoryPassiveId)
+            } else {
+                0f
+            }
             val hasOwnTurn = AuthoredEncounterRules.linkedOwner(combatant.id, enemyDefinitions) == null
-            combatant.id to if (hasOwnTurn) seed.toFloat() else 0f
+            combatant.id to if (hasOwnTurn) (seed.toFloat() + atbBonus).coerceAtMost(0.98f) else 0f
         }
         _atbMeters.value = initial
     }
@@ -2411,6 +2417,7 @@ class CombatController(
             is CombatLogEntry.TurnSkipped -> bannerForTurnSkipped(entry, state)
             is CombatLogEntry.Outcome -> bannerForOutcome(entry)
             is CombatLogEntry.WeaknessReward -> bannerForWeaknessReward(entry, state)
+            is CombatLogEntry.PassiveTriggered -> bannerForPassiveTriggered(entry, state)
         }
         if (update != null) {
             _combatBanner.value = update
@@ -2624,6 +2631,20 @@ class CombatController(
             accent = CombatBannerAccent.SHOCK,
             icon = CombatBannerIcon.BURST,
             tags = listOf("Weakness", "Cooldown -1"),
+            importance = CombatBannerImportance.IMPORTANT,
+            actorLabel = combatantName(state, entry.actorId),
+            isPlayerActor = entry.actorId in playerIdList
+        )
+    }
+
+    private fun bannerForPassiveTriggered(entry: CombatLogEntry.PassiveTriggered, state: CombatState): CombatBannerMessage {
+        return CombatBannerMessage(
+            id = UUID.randomUUID().toString(),
+            primary = entry.label,
+            secondary = entry.detail,
+            accent = CombatBannerAccent.SHOCK,
+            icon = CombatBannerIcon.BURST,
+            tags = listOf("Passive"),
             importance = CombatBannerImportance.IMPORTANT,
             actorLabel = combatantName(state, entry.actorId),
             isPlayerActor = entry.actorId in playerIdList
@@ -3215,6 +3236,8 @@ class CombatController(
             skills = skills,
             weapon = resolveCombatWeapon(id, equippedItems, equippedWeapons),
             talents = com.example.starborn.domain.leveling.CrewBuildPrototype.ownedTalents(sessionStore.state.value, id),
+            accessoryPassiveId = equippedItemId(id, "accessory", equippedItems)?.let(itemCatalog::findItem)?.equipment?.passiveId,
+            accessoryName = equippedItemId(id, "accessory", equippedItems)?.let(itemCatalog::findItem)?.name,
             brokenTurns = 1
         )
         }
@@ -4082,6 +4105,7 @@ private fun determineSkillTargeting(skill: Skill): SkillTargeting {
                 "$actorName lines up an action"
             }
             is CombatLogEntry.WeaknessReward -> "Weakness exploited. Active cooldowns reduced by 1."
+            is CombatLogEntry.PassiveTriggered -> "${entry.label}: ${entry.detail}"
             is CombatLogEntry.Outcome -> when (entry.result) {
                 is CombatOutcome.Victory -> "All foes defeated!"
                 is CombatOutcome.Defeat -> "Party overwhelmed..."

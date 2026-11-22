@@ -596,5 +596,120 @@
       "astral_thread": 1
     },
     "discovery_hint": "Enter the Echo Mines in the Source to obtain this schematic, then weave astral thread with source resin and nano filament."
+  },
+  {
+    "id": "gear_gadget_belt",
+    "name": "Assemble Gadget Belt",
+    "category": "gear",
+    "method": "assemble",
+    "base": "wiring_bundle",
+    "components": [
+      "battery",
+      "scrap_metal"
+    ],
+    "ingredients": {
+      "wiring_bundle": 1,
+      "battery": 1,
+      "scrap_metal": 2
+    },
+    "result": "gadget_belt",
+    "description": "Rig quick-release pouches with a micro-warmer cell so equipped combat snacks cycle faster. Passive: Equipped Snack cooldown reduced by 1 turn (min 2).",
+    "success_message": "You strap together a quick-draw Gadget Belt ready for fast snack cycling.",
+    "salvage": {
+      "wiring_bundle": 1
+    },
+    "discovery_hint": "Start with wiring bundle. Try battery, scrap metal."
+  },
+  {
+    "id": "gear_holo_charm",
+    "name": "Assemble Holo Charm",
+    "category": "gear",
+    "method": "assemble",
+    "base": "focusing_lens",
+    "components": [
+      "battery",
+      "ballistic_weave"
+    ],
+    "ingredients": {
+      "focusing_lens": 1,
+      "battery": 1,
+      "ballistic_weave": 1
+    },
+    "result": "holo_charm",
+    "description": "Project a compact hard-light ward through a tuned focusing lens. Passive: Start battle with Shield for 2 turns.",
+    "success_message": "A crisp hard-light shimmer snaps around the Holo Charm.",
+    "salvage": {
+      "focusing_lens": 1
+    },
+    "discovery_hint": "Start with focusing lens. Try battery, ballistic weave."
+  },
+  {
+    "id": "gear_shadow_coil",
+    "name": "Assemble Shadow Coil",
+    "category": "gear",
+    "method": "assemble",
+    "base": "circuit_board",
+    "components": [
+      "ballistic_weave",
+      "focusing_lens"
+    ],
+    "ingredients": {
+      "circuit_board": 2,
+      "ballistic_weave": 1,
+      "focusing_lens": 1
+    },
+    "result": "shadow_coil",
+    "description": "Wire an optical ambush coil into dark weave for opening strikes. Passive: Direct hits vs. enemies at ≥75% HP gain +12% Crit chance.",
+    "success_message": "The Shadow Coil hums silently, primed for lethal opening strikes.",
+    "salvage": {
+      "circuit_board": 1
+    },
+    "discovery_hint": "Start with circuit board. Try ballistic weave, focusing lens."
+  },
+  {
+    "id": "gear_reactive_plating",
+    "name": "Assemble Reactive Plating",
+    "category": "gear",
+    "method": "assemble",
+    "base": "nano_filament",
+    "components": [
+      "battery",
+      "scrap_metal"
+    ],
+    "ingredients": {
+      "nano_filament": 1,
+      "battery": 1,
+      "scrap_metal": 2
+    },
+    "result": "reactive_plating",
+    "description": "Charge nano-filament plates with a shock capacitor that discharges on impact. Passive: Taking a hit while Shielded deals 18 Shock Stability damage back.",
+    "success_message": "You seal the Reactive Plating—any strike against your Shield will jolt the attacker back.",
+    "salvage": {
+      "scrap_metal": 1
+    },
+    "discovery_hint": "Start with nano filament. Try battery, scrap metal."
+  },
+  {
+    "id": "gear_brutal_charm",
+    "name": "Forge Brutal Charm",
+    "category": "gear",
+    "method": "assemble",
+    "base": "pure_iron",
+    "components": [
+      "ballistic_weave",
+      "focusing_lens"
+    ],
+    "ingredients": {
+      "pure_iron": 2,
+      "ballistic_weave": 1,
+      "focusing_lens": 1
+    },
+    "result": "brutal_charm",
+    "description": "Temper pure Foundry iron into a heavy impact talisman calibrated to punish staggered foes. Passive: Direct hits against Broken enemies deal +15% HP damage.",
+    "success_message": "You forge a heavy Brutal Charm that rings with kinetic force.",
+    "salvage": {
+      "pure_iron": 1
+    },
+    "discovery_hint": "Start with pure iron. Try ballistic weave, focusing lens."
   }
 ]

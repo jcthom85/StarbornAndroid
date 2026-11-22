@@ -52,7 +52,8 @@ data class ShopItemUi(
     val locked: Boolean,
     val lockedMessage: String?,
     val maxQuantity: Int,
-    val rotating: Boolean = false
+    val rotating: Boolean = false,
+    val passiveText: String? = null
 )
 
 data class SellItemUi(
@@ -221,7 +222,8 @@ class ShopController(
                 locked = locked,
                 lockedMessage = lockedMessage,
                 maxQuantity = if (locked || price <= 0) 0 else balance / price,
-                rotating = rotating.contains(idOrAlias)
+                rotating = rotating.contains(idOrAlias),
+                passiveText = item.equipment?.passiveText?.takeIf { it.isNotBlank() }
             )
         }
     }

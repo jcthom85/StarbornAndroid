@@ -12,7 +12,9 @@ data class Combatant(
     val initiativeModifier: Int = 0,
     val weapon: CombatWeapon? = null,
     val brokenTurns: Int = 1,
-    val talents: Set<String> = emptySet()
+    val talents: Set<String> = emptySet(),
+    val accessoryPassiveId: String? = null,
+    val accessoryName: String? = null
 )
 
 enum class CombatSide {
@@ -202,6 +204,13 @@ sealed interface CombatLogEntry {
         val cooldownReductions: List<CooldownReduction> = emptyList(),
         val snackCooldownFrom: Int? = null,
         val snackCooldownTo: Int? = null
+    ) : CombatLogEntry
+
+    data class PassiveTriggered(
+        override val turn: Int,
+        val actorId: String,
+        val label: String,
+        val detail: String
     ) : CombatLogEntry
 }
 

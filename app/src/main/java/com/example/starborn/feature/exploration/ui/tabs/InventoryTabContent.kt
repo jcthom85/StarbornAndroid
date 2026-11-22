@@ -796,6 +796,33 @@ fun InventoryItemDetailsContent(
             )
 
             item.equipment?.let { gear ->
+                gear.passiveText?.takeIf { it.isNotBlank() }?.let { passive ->
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(10.dp),
+                        color = FieldMenuDesign.gold.copy(alpha = 0.13f),
+                        border = BorderStroke(1.dp, FieldMenuDesign.gold.copy(alpha = 0.50f))
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 9.dp),
+                            verticalArrangement = Arrangement.spacedBy(3.dp)
+                        ) {
+                            Text(
+                                text = "★ PASSIVE",
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    letterSpacing = 0.8.sp
+                                ),
+                                color = FieldMenuDesign.gold
+                            )
+                            Text(
+                                text = passive,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color.White.copy(alpha = 0.94f)
+                            )
+                        }
+                    }
+                }
                 val gearRows = buildList {
                     gear.damageMin?.let { add("Damage" to "$it–${gear.damageMax ?: it}") }
                     gear.defense?.let { add("Defense" to "+$it") }
@@ -1154,12 +1181,16 @@ internal fun InventoryEquipmentPreview(
                                         "Locked"
                                     }
                                 }
+                                val equippedPassive = if (normalized == "accessory" && equippedId.isNotBlank()) {
+                                    inventoryItems.firstOrNull { it.id.equals(equippedId, ignoreCase = true) }?.equipment?.passiveText
+                                } else null
                                 GearSlotTile(
                                     isTutorialTarget = isGearTutorialActive && normalizedMemberId == "nova" &&
                                         normalized == (if (equippedWeapons["nova"].isNullOrBlank()) "weapon" else "armor"),
                                     slot = normalized,
                                     equippedItemId = equippedId.takeIf { it.isNotBlank() },
                                     equippedName = equippedName,
+                                    equippedPassiveText = equippedPassive,
                                     modsLocked = modSlots.isNotEmpty() && equippedId.isBlank(),
                                     modNames = modNames,
                                     completedMilestones = completedMilestones,
@@ -1306,6 +1337,7 @@ private fun GearSlotTile(
     slot: String,
     equippedItemId: String? = null,
     equippedName: String,
+    equippedPassiveText: String? = null,
     modsLocked: Boolean,
     modNames: Map<String, String>,
     completedMilestones: Set<String>,
@@ -1364,6 +1396,16 @@ private fun GearSlotTile(
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
+                    equippedPassiveText?.takeIf { it.isNotBlank() }?.let { passive ->
+                        Text(
+                            text = "★ $passive",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = FieldMenuDesign.gold.copy(alpha = 0.92f),
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(top = 2.dp)
+                        )
+                    }
                 }
             }
             if (emptyModHint != null) {

@@ -95,7 +95,11 @@ data class Equipment(
     @Json(name = "crit_rate")
     val critRate: Double? = null,
     @Json(name = "stat_mods")
-    val statMods: Map<String, Int>? = null
+    val statMods: Map<String, Int>? = null,
+    @Json(name = "passive_id")
+    val passiveId: String? = null,
+    @Json(name = "passive_text")
+    val passiveText: String? = null
 )
 
 @JsonClass(generateAdapter = true)

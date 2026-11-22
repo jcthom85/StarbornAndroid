@@ -20,11 +20,12 @@ class CombatEngine(
                 stability = combatant.stats.stability
             )
         }
-        return CombatState(
+        val initial = CombatState(
             turnOrder = turnOrder,
             activeTurnIndex = 0,
             combatants = combatants
         )
+        return AccessoryPassives.onBattleStart(initial)
     }
 
     fun queueAction(state: CombatState, action: CombatAction): CombatState {
@@ -345,6 +346,7 @@ class CombatEngine(
             working = working.copy(
                 combatants = working.combatants + (combatantId to replacement)
             )
+            working = AccessoryPassives.onTurnEnd(working, combatantId, this)
         }
 
         return if (expiredLogs.isEmpty()) working else working.copy(log = working.log + expiredLogs)

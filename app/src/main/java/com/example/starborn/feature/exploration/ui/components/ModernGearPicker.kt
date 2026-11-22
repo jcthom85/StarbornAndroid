@@ -327,6 +327,35 @@ internal fun ModernGearPicker(
                                             )
                                         }
 
+                                        item.equipment?.passiveText?.takeIf { it.isNotBlank() }?.let { passive ->
+                                            Surface(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                shape = RoundedCornerShape(10.dp),
+                                                color = FieldMenuDesign.gold.copy(alpha = 0.13f),
+                                                border = BorderStroke(1.dp, FieldMenuDesign.gold.copy(alpha = 0.50f))
+                                            ) {
+                                                Column(
+                                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp),
+                                                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                                                ) {
+                                                    Text(
+                                                        text = "★ PASSIVE",
+                                                        color = FieldMenuDesign.gold,
+                                                        style = MaterialTheme.typography.labelSmall.copy(
+                                                            fontSize = 9.sp,
+                                                            fontWeight = FontWeight.Bold,
+                                                            letterSpacing = 0.8.sp
+                                                        )
+                                                    )
+                                                    Text(
+                                                        text = passive,
+                                                        color = FieldMenuDesign.text,
+                                                        style = MaterialTheme.typography.bodySmall.copy(lineHeight = 17.sp)
+                                                    )
+                                                }
+                                            }
+                                        }
+
                                         if (chips.isNotEmpty()) {
                                             FlowRow(
                                                 horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -433,6 +462,15 @@ internal fun ModernGearPicker(
                                                 Text(
                                                     text = headline,
                                                     color = FieldMenuDesign.textMuted,
+                                                    style = MaterialTheme.typography.labelSmall,
+                                                    maxLines = 1,
+                                                    overflow = TextOverflow.Ellipsis
+                                                )
+                                            }
+                                            option.equipment?.passiveText?.takeIf { it.isNotBlank() }?.let { passive ->
+                                                Text(
+                                                    text = "★ $passive",
+                                                    color = FieldMenuDesign.gold.copy(alpha = 0.92f),
                                                     style = MaterialTheme.typography.labelSmall,
                                                     maxLines = 1,
                                                     overflow = TextOverflow.Ellipsis

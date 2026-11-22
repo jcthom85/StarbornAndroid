@@ -219,6 +219,15 @@ fun GearSelectionDialog(
                                             EquipmentComparison(option.equipment, current?.equipment,
                                                 current?.name ?: equippedId?.takeIf { it.isNotBlank() })
                                         }
+                                        option.equipment?.passiveText?.takeIf { it.isNotBlank() }?.let { passive ->
+                                            Text(
+                                                text = "★ PASSIVE: $passive",
+                                                style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp, fontWeight = FontWeight.SemiBold),
+                                                color = Color(0xFFFFC857),
+                                                maxLines = 2,
+                                                overflow = TextOverflow.Ellipsis
+                                            )
+                                        }
                                         itemDetailSummary(option)?.let { effect ->
                                             Text(
                                                 text = effect,
