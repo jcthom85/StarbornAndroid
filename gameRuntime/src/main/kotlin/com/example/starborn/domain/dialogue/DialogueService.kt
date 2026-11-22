@@ -58,19 +58,61 @@ class DialogueSession(
     private val conditionEvaluator: DialogueConditionEvaluator,
     private val triggerHandler: DialogueTriggerHandler
 ) {
-    companion object { const val RESPONSE_EXIT_ID = "__response_leave" }
+    companion object {
+        const val RESPONSE_EXIT_ID = "__response_leave"
+        private val REWARD_TRIGGER_TOKENS = listOf("give_item:", "start_quest:", "complete_quest:", "advance_quest_stage:")
+        private val PET_SPEAKERS = setOf("oliver", "penny", "meeko", "charlie")
+    }
     private var currentId: String? = start.id
+    private val visitedLineIds = mutableSetOf<String>()
+    private val chosenOptionIds = mutableSetOf<String>()
+    private var currentLineRevisited: Boolean = false
 
     fun current(): DialogueLine? = currentId?.let { dialogueById[it] }
+
+    fun isCurrentLineRevisited(): Boolean = currentLineRevisited
+
+    fun isTopicHub(): Boolean {
+        val line = current() ?: return false
+        if (line.id.endsWith("_default_talk")) return true
+        val opts = line.options ?: return false
+        return opts.any { opt ->
+            val targetId = opt.next ?: return@any false
+            dialogueById[targetId]?.next == line.id
+        }
+    }
+
+    fun isExitOption(option: DialogueOption): Boolean =
+        option.id == RESPONSE_EXIT_ID || option.exit ||
+            (option.next == null && option.trigger.isNullOrBlank() &&
+                (option.id.contains("leave", true) || option.text.contains("later", true) ||
+                    option.text.contains("step away", true) || option.text.contains("never mind", true) ||
+                    option.text.contains("busy", true) || option.text.contains("back to it", true)))
+
+    fun isOptionVisited(optionId: String): Boolean = optionId in chosenOptionIds
+
+    fun hasFavorOrReward(option: DialogueOption): Boolean {
+        val line = current() ?: return false
+        if (!line.id.endsWith("_default_talk") || isExitOption(option)) return false
+        if (line.speaker.trim().lowercase(Locale.getDefault()) in PET_SPEAKERS) return false
+        val optTrigger = option.trigger.orEmpty()
+        val nextTrigger = option.next?.let { dialogueById[it]?.trigger }.orEmpty()
+        val combined = "$optTrigger $nextTrigger"
+        if (REWARD_TRIGGER_TOKENS.any { combined.contains(it, ignoreCase = true) }) return true
+        return option.id.contains("favor", ignoreCase = true) ||
+            (option.next?.contains("favor", ignoreCase = true) == true)
+    }
 
     fun advance(): DialogueLine? {
         val currentLine = current()
         if (currentLine != null && choices().isNotEmpty()) {
             return currentLine
         }
+        currentLine?.id?.let { visitedLineIds.add(it) }
         currentLine?.trigger?.let { triggerHandler.handleTrigger(it) }
 
         val nextLine = resolveNext(currentLine?.next)
+        currentLineRevisited = nextLine?.id != null && nextLine.id in visitedLineIds
         currentId = nextLine?.id
         return nextLine
     }
@@ -82,12 +124,7 @@ class DialogueSession(
         val options = line.options ?: return emptyList()
         val available = options.filter { conditionEvaluator.isConditionMet(it.condition) }
         if (available.isEmpty()) return emptyList()
-        val exits = available.filter { option ->
-            option.exit || (option.next == null && option.trigger.isNullOrBlank() &&
-                (option.id.contains("leave", true) || option.text.contains("later", true) ||
-                    option.text.contains("step away", true) || option.text.contains("never mind", true) ||
-                    option.text.contains("busy", true)))
-        }
+        val exits = available.filter(::isExitOption)
         return if (exits.isNotEmpty()) available.filterNot { it in exits } + exits
         else {
             val isControl = listOf("control", "console", "terminal").any { line.speaker.contains(it, true) }
@@ -102,11 +139,15 @@ class DialogueSession(
             ?: return currentLine
         if (choice.id == RESPONSE_EXIT_ID) {
             currentId = null
+            currentLineRevisited = false
             return null
         }
+        currentLine?.id?.let { visitedLineIds.add(it) }
+        chosenOptionIds.add(choice.id)
         currentLine?.trigger?.let { triggerHandler.handleTrigger(it) }
         choice.trigger?.let { triggerHandler.handleTrigger(it) }
         val nextLine = resolveNext(choice.next)
+        currentLineRevisited = nextLine?.id != null && nextLine.id in visitedLineIds
         currentId = nextLine?.id
         return nextLine
     }

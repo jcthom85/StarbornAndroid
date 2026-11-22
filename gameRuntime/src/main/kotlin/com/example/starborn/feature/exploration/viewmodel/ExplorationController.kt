@@ -1599,14 +1599,30 @@ class ExplorationController(
         val portrait = if (line.speaker == "Prism Controls") null else line.portrait?.takeIf { it.isNotBlank() }?.let { sanitizePortraitPath(it) }
             ?: resolveEmotePortrait(line.speaker, line.emote)
             ?: resolvePortraitKey(line.speaker)
+        val session = activeDialogueSession
         return DialogueUi(
             line = line,
             portrait = portrait,
             voiceCue = line.voiceCue,
-            canDismiss = activeDialogueSession?.choices()?.isNotEmpty() == true,
+            canDismiss = session?.choices()?.isNotEmpty() == true,
+            isTopicHub = session?.isTopicHub() == true,
+            skipTypewriter = session?.isCurrentLineRevisited() == true,
             displaySpeaker = if (line.speaker.equals("Orion", true) &&
                 !orionIdentityKnown(sessionStore.state.value)) "???" else null
         )
+    }
+
+    private fun buildDialogueChoices(session: DialogueSession?): List<DialogueChoiceUi> {
+        if (session == null) return emptyList()
+        return session.choices().map { option ->
+            DialogueChoiceUi(
+                id = option.id,
+                label = option.text,
+                isExit = session.isExitOption(option),
+                isVisited = session.isOptionVisited(option.id),
+                isFavorOrReward = session.hasFavorOrReward(option)
+            )
+        }
     }
 
     private fun sceneIdForBlock(block: BlockedDirection?): String? {
@@ -3038,9 +3054,7 @@ class ExplorationController(
         _uiState.update {
             it.copy(
                 activeDialogue = buildDialogueUi(session.current()),
-                dialogueChoices = session.choices().map { option ->
-                    DialogueChoiceUi(option.id, option.text)
-                },
+                dialogueChoices = buildDialogueChoices(session),
                 statusMessage = null
             )
         }
@@ -3098,9 +3112,7 @@ class ExplorationController(
         _uiState.update {
             it.copy(
                 activeDialogue = buildDialogueUi(session?.current()),
-                dialogueChoices = session?.choices()?.map { option ->
-                    DialogueChoiceUi(option.id, option.text)
-                } ?: emptyList(),
+                dialogueChoices = buildDialogueChoices(session),
                 statusMessage = null
             )
         }
@@ -3183,9 +3195,7 @@ class ExplorationController(
             _uiState.update {
                 it.copy(
                     activeDialogue = buildDialogueUi(nextLine),
-                    dialogueChoices = session.choices().map { option ->
-                        DialogueChoiceUi(option.id, option.text)
-                    }
+                    dialogueChoices = buildDialogueChoices(session)
                 )
             }
             nextLine.voiceCue?.let { playVoiceCue(it) }
@@ -3236,9 +3246,7 @@ class ExplorationController(
             _uiState.update {
                 it.copy(
                     activeDialogue = buildDialogueUi(nextLine),
-                    dialogueChoices = session.choices().map { option ->
-                        DialogueChoiceUi(option.id, option.text)
-                    }
+                    dialogueChoices = buildDialogueChoices(session)
                 )
             }
             nextLine.voiceCue?.let { playVoiceCue(it) }

@@ -10310,40 +10310,192 @@ fun ShopGreetingOverlay(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val accentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.88f)
+    val goldAccent = Color(0xFFFFC857)
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             modifier = modifier.widthIn(max = 480.dp).heightIn(max = 600.dp),
-            color = Color.Black.copy(alpha = 0.88f)
+            shape = RoundedCornerShape(18.dp),
+            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.98f),
+            contentColor = MaterialTheme.colorScheme.onSurface,
+            shadowElevation = 10.dp,
+            border = BorderStroke(1.2.dp, accentColor.copy(alpha = 0.55f))
         ) {
             Column(
-                modifier = Modifier.verticalScroll(rememberScrollState()).padding(20.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                greeting.portraitPath?.let { portrait ->
-                    Image(
-                        painter = rememberAssetPainter(portrait, fallback = painterResource(R.drawable.shop_icon)),
-                        contentDescription = greeting.shopName,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.size(64.dp).clip(CircleShape)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                accentColor.copy(alpha = 0.10f),
+                                Color.Transparent,
+                                Color.Black.copy(alpha = 0.16f)
+                            )
+                        )
                     )
-                }
-                Text(greeting.shopName, color = Color.White, style = MaterialTheme.typography.titleMedium)
-                greeting.lines.forEach { line ->
-                    Column(horizontalAlignment = Alignment.Start) {
-                        line.speaker?.let { Text(it, color = Color.White.copy(alpha = 0.75f)) }
-                        Text(line.text, color = Color.White)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 18.dp, vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    greeting.portraitPath?.let { portrait ->
+                        Surface(
+                            shape = RoundedCornerShape(12.dp),
+                            border = BorderStroke(1.dp, accentColor.copy(alpha = 0.45f)),
+                            shadowElevation = 4.dp,
+                            modifier = Modifier.size(60.dp)
+                        ) {
+                            Image(
+                                painter = rememberAssetPainter(portrait, fallback = painterResource(R.drawable.shop_icon)),
+                                contentDescription = greeting.shopName,
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                    }
+                    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text(
+                            text = greeting.shopName,
+                            color = accentColor,
+                            style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp, fontWeight = FontWeight.Bold),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Text(
+                            text = "MERCHANT",
+                            color = goldAccent.copy(alpha = 0.85f),
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, letterSpacing = 1.sp)
+                        )
                     }
                 }
-                greeting.choices.forEach { choice ->
-                    Button(
-                        onClick = { onChoice(choice.id) },
-                        enabled = choice.enabled
+
+                Row(
+                    modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .width(2.dp)
+                            .fillMaxHeight()
+                            .clip(RoundedCornerShape(999.dp))
+                            .background(accentColor.copy(alpha = 0.7f))
+                    )
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text(choice.label)
+                        greeting.lines.forEach { line ->
+                            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                                line.speaker?.takeIf { it.isNotBlank() }?.let { speaker ->
+                                    Text(
+                                        text = speaker,
+                                        color = accentColor.copy(alpha = 0.85f),
+                                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
+                                    )
+                                }
+                                Text(
+                                    text = line.text,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                            }
+                        }
                     }
-                    if (!choice.enabled && choice.action == ShopDialogueAction.SMALLTALK) {
-                        Text("Already discussed", color = Color.White.copy(alpha = 0.6f), style = MaterialTheme.typography.labelSmall)
+                }
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(7.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 2.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "OPTIONS",
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, letterSpacing = 1.sp),
+                            color = accentColor.copy(alpha = 0.85f)
+                        )
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(1.dp)
+                                .background(Brush.horizontalGradient(listOf(accentColor.copy(alpha = 0.35f), Color.Transparent)))
+                        )
+                    }
+                    greeting.choices.forEach { choice ->
+                        val isOpenShop = choice.action == ShopDialogueAction.ENTER_SHOP
+                        val isLeave = choice.action == ShopDialogueAction.LEAVE
+                        val isDoneSmalltalk = !choice.enabled && choice.action == ShopDialogueAction.SMALLTALK
+                        val rowTint = when {
+                            isOpenShop -> goldAccent
+                            isLeave -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f)
+                            isDoneSmalltalk -> accentColor.copy(alpha = 0.45f)
+                            else -> accentColor
+                        }
+                        Surface(
+                            onClick = { onChoice(choice.id) },
+                            enabled = choice.enabled,
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(12.dp),
+                            color = when {
+                                isOpenShop -> goldAccent.copy(alpha = 0.15f)
+                                isLeave -> Color.Transparent
+                                isDoneSmalltalk -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.22f)
+                                else -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.50f)
+                            },
+                            border = BorderStroke(
+                                if (isOpenShop) 1.2.dp else 1.dp,
+                                when {
+                                    isOpenShop -> goldAccent.copy(alpha = 0.60f)
+                                    isLeave -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.20f)
+                                    isDoneSmalltalk -> accentColor.copy(alpha = 0.15f)
+                                    else -> accentColor.copy(alpha = 0.34f)
+                                }
+                            )
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 13.dp, vertical = 10.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                Text(
+                                    text = when {
+                                        isOpenShop -> "◈"
+                                        isLeave -> "←"
+                                        else -> "▸"
+                                    },
+                                    color = rowTint,
+                                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                                )
+                                Text(
+                                    text = choice.label,
+                                    color = when {
+                                        isOpenShop -> goldAccent
+                                        isDoneSmalltalk -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.52f)
+                                        isLeave -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.72f)
+                                        else -> MaterialTheme.colorScheme.onSurface
+                                    },
+                                    style = MaterialTheme.typography.bodyLarge.copy(
+                                        fontWeight = if (isOpenShop) FontWeight.SemiBold else FontWeight.Normal
+                                    ),
+                                    modifier = Modifier.weight(1f)
+                                )
+                                if (isDoneSmalltalk) {
+                                    Text(
+                                        text = "✓",
+                                        color = accentColor.copy(alpha = 0.55f),
+                                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }

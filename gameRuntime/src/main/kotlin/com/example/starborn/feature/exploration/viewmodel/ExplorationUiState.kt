@@ -181,7 +181,10 @@ data class NarrationPrompt(
 
 data class DialogueChoiceUi(
     val id: String,
-    val label: String
+    val label: String,
+    val isExit: Boolean = false,
+    val isVisited: Boolean = false,
+    val isFavorOrReward: Boolean = false
 )
 
 data class LevelUpPrompt(
@@ -309,7 +312,9 @@ data class DialogueUi(
     val portrait: String?,
     val voiceCue: String?,
     val displaySpeaker: String? = null,
-    val canDismiss: Boolean = false
+    val canDismiss: Boolean = false,
+    val isTopicHub: Boolean = false,
+    val skipTypewriter: Boolean = false
 )
 
 data class MinimapUiState(

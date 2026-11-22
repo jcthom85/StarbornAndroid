@@ -60,6 +60,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
@@ -115,10 +116,14 @@ fun DialogueOverlay(
         textScroll.scrollTo(0)
         choiceScroll.scrollTo(0)
     }
-    var revealedCount by remember(line.id, fullText) { mutableIntStateOf(0) }
-    val textEntrance = remember(line.id, fullText) { Animatable(0f) }
-    LaunchedEffect(line.id, fullText) {
-        textEntrance.animateTo(1f, tween(durationMillis = 120))
+    var revealedCount by remember(line.id, fullText, dialogue.skipTypewriter) {
+        mutableIntStateOf(if (dialogue.skipTypewriter) fullText.length else 0)
+    }
+    val textEntrance = remember(line.id, fullText) { Animatable(if (dialogue.skipTypewriter) 1f else 0f) }
+    LaunchedEffect(line.id, fullText, dialogue.skipTypewriter) {
+        if (!dialogue.skipTypewriter) {
+            textEntrance.animateTo(1f, tween(durationMillis = 120))
+        }
     }
     val revealFinished = revealedCount >= fullText.length
     val displayedText = fullText.take(revealedCount.coerceIn(0, fullText.length))
@@ -131,7 +136,11 @@ fun DialogueOverlay(
     val latestOnPlayMurmur by rememberUpdatedState(onPlayMurmur)
     val latestOnRevealFinished by rememberUpdatedState(onRevealFinished)
 
-    LaunchedEffect(line.id, fullText, voiceProfile) {
+    LaunchedEffect(line.id, fullText, voiceProfile, dialogue.skipTypewriter) {
+        if (dialogue.skipTypewriter) {
+            revealedCount = fullText.length
+            return@LaunchedEffect
+        }
         revealedCount = 0
         if (fullText.isBlank()) {
             revealedCount = fullText.length
@@ -199,14 +208,23 @@ fun DialogueOverlay(
             modifier = containerModifier,
             color = surfaceColor,
             contentColor = MaterialTheme.colorScheme.onSurface,
-            shadowElevation = 6.dp,
-            tonalElevation = 1.dp,
-            border = BorderStroke(1.dp, outlineColor),
+            shadowElevation = 8.dp,
+            tonalElevation = 2.dp,
+            border = BorderStroke(1.2.dp, outlineColor),
             shape = RoundedCornerShape(18.dp)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                accentColor.copy(alpha = 0.09f),
+                                Color.Transparent,
+                                Color.Black.copy(alpha = 0.14f)
+                            )
+                        )
+                    )
                     .heightIn(max = maximumCardHeight)
                     .padding(horizontal = 16.dp, vertical = 14.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -284,10 +302,11 @@ fun DialogueOverlay(
                 }
 
                 if (choices.isNotEmpty()) {
-                    Box(Modifier.fillMaxWidth().weight(1f, fill = false).heightIn(max = 220.dp)) {
+                    val choiceViewportMaxHeight = 280.dp
+                    Box(Modifier.fillMaxWidth().weight(1f, fill = false).heightIn(max = choiceViewportMaxHeight)) {
                     Column(
                         modifier = Modifier
-                            .heightIn(max = 220.dp)
+                            .heightIn(max = choiceViewportMaxHeight)
                             .verticalScroll(choiceScroll)
                             .padding(bottom = if (choiceScroll.maxValue > 0 && choiceScroll.maxValue != Int.MAX_VALUE) 28.dp else 0.dp)
                             .alpha(if (revealFinished) 1f else 0f)
@@ -295,13 +314,32 @@ fun DialogueOverlay(
                                 if (revealFinished) Modifier
                                 else Modifier.clearAndSetSemantics { }
                             ),
-                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                        verticalArrangement = Arrangement.spacedBy(7.dp)
                     ) {
-                        Text(
-                            text = "Responses",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = accentColor.copy(alpha = 0.8f)
-                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(bottom = 2.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(
+                                text = if (dialogue.isTopicHub) "CONVERSATION TOPICS" else "CHOOSE A RESPONSE",
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    letterSpacing = 1.0.sp
+                                ),
+                                color = accentColor.copy(alpha = 0.88f)
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(1.dp)
+                                    .background(
+                                        Brush.horizontalGradient(
+                                            listOf(accentColor.copy(alpha = 0.35f), Color.Transparent)
+                                        )
+                                    )
+                            )
+                        }
                         choices.forEach { choice ->
                             val parsed = remember(choice.label) { parseChoiceLabel(choice.label) }
                             DialogueChoiceButton(
@@ -445,30 +483,109 @@ private fun DialogueChoiceButton(
     accentColor: Color,
     enabled: Boolean
 ) {
+    val favorGold = Color(0xFFFFC857)
+    val isFavor = choice.isFavorOrReward && !choice.isVisited && !choice.isExit
+    val isVisited = choice.isVisited && !choice.isExit
+    val tint = when {
+        choice.isExit -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f)
+        isFavor -> favorGold
+        isVisited -> accentColor.copy(alpha = 0.50f)
+        else -> accentColor
+    }
+    val containerColor = when {
+        choice.isExit -> Color.Transparent
+        isFavor -> favorGold.copy(alpha = 0.13f)
+        isVisited -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.24f)
+        else -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.52f)
+    }
+    val borderColor = when {
+        choice.isExit -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.20f)
+        isFavor -> favorGold.copy(alpha = 0.58f)
+        isVisited -> accentColor.copy(alpha = 0.16f)
+        else -> accentColor.copy(alpha = 0.34f)
+    }
+    val leadingGlyph = when {
+        choice.isExit -> "←"
+        isFavor -> "✦"
+        else -> "▸"
+    }
+    val textColor = when {
+        choice.isExit -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.72f)
+        isVisited -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.62f)
+        else -> MaterialTheme.colorScheme.onSurface
+    }
     Surface(
         onClick = { onChoice(choice.id) },
         enabled = enabled,
         modifier = Modifier.fillMaxWidth(),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f),
-        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.16f)),
-        shape = RoundedCornerShape(14.dp)
+        color = containerColor,
+        border = BorderStroke(if (isFavor) 1.2.dp else 1.dp, borderColor),
+        shape = RoundedCornerShape(12.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 14.dp, vertical = 9.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .then(
+                    if (!choice.isExit) {
+                        Modifier.background(
+                            Brush.horizontalGradient(
+                                listOf(tint.copy(alpha = if (isFavor) 0.14f else 0.08f), Color.Transparent)
+                            )
+                        )
+                    } else Modifier
+                )
+                .padding(horizontal = 13.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
-                text = parsed.text,
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontStyle = if (ChoiceTag.ACTION in parsed.tags) FontStyle.Italic else FontStyle.Normal),
-                color = MaterialTheme.colorScheme.onSurface
+                text = leadingGlyph,
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                color = tint
             )
-            if (parsed.tags.any { it != ChoiceTag.ACTION }) {
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    parsed.tags.filter { it != ChoiceTag.ACTION }.forEach { tag ->
-                        ChoiceTagChip(tag)
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(5.dp)
+            ) {
+                Text(
+                    text = parsed.text,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = if (isFavor) FontWeight.SemiBold else FontWeight.Normal,
+                        fontStyle = if (ChoiceTag.ACTION in parsed.tags) FontStyle.Italic else FontStyle.Normal
+                    ),
+                    color = textColor
+                )
+                if (parsed.tags.any { it != ChoiceTag.ACTION }) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        parsed.tags.filter { it != ChoiceTag.ACTION }.forEach { tag ->
+                            ChoiceTagChip(tag)
+                        }
                     }
                 }
+            }
+            if (isFavor && parsed.tags.none { it == ChoiceTag.QUEST || it == ChoiceTag.SHOP }) {
+                Surface(
+                    shape = RoundedCornerShape(6.dp),
+                    color = favorGold.copy(alpha = 0.16f),
+                    border = BorderStroke(1.dp, favorGold.copy(alpha = 0.55f))
+                ) {
+                    Text(
+                        text = "FAVOR",
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontSize = 9.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 0.6.sp
+                        ),
+                        color = favorGold,
+                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                    )
+                }
+            } else if (isVisited) {
+                Text(
+                    text = "✓",
+                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                    color = accentColor.copy(alpha = 0.60f)
+                )
             }
         }
     }
@@ -589,13 +706,31 @@ internal enum class DialogueVoiceProfile(
                 "pasha",
                 "rana",
                 "sima",
-                "schoolteacher kasey" -> FEMALE
+                "schoolteacher kasey",
+                "pam",
+                "megan",
+                "evelyn",
+                "selene",
+                "angela",
+                "kasey",
+                "nancy" -> FEMALE
 
                 "sentinel-3" -> MACHINE
 
                 "system",
                 "lab terminal",
-                "maintenance bot" -> NONE
+                "maintenance bot",
+                "stasis console",
+                "source gate console",
+                "rebel terminal",
+                "prism controls",
+                "dock interlock",
+                "mural array",
+                "vent scanner",
+                "oliver",
+                "penny",
+                "meeko",
+                "charlie" -> NONE
 
                 "vale",
                 "arden vale" -> MALE
