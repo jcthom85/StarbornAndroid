@@ -1251,8 +1251,8 @@
   {
     "id": "w3_sq12_ghost_intro",
     "speaker": "Gh0st",
-    "condition": "quest_not_started:w3_sq12,quest_completed:w3_mq11,milestone_not_set:ms_w3_mq15_complete",
-    "text": "Nova. Transit Plaza databases might hold records on Elara, my sister. If I log in, alarms trigger. Search it for me.",
+    "condition": "quest_not_started:w3_sq12,quest_completed:w3_mq11,milestone:ms_w3_security_records_pulled,milestone_not_set:ms_w3_mq15_complete",
+    "text": "Nova. That deleted transfer we pulled at the security kiosk—Elara’s case number still links back to Upper City sorting records. If I log into Transit Plaza databases myself, alarms trigger. Help me trace where they moved her.",
     "options": [
       {
         "id": "ghost_w3_sq12_accept",
@@ -1265,6 +1265,29 @@
         "exit": true
       }
     ],
+    "emote": "sad"
+  },
+  {
+    "id": "gh0st_w3_elara_discovery",
+    "speaker": "Gh0st",
+    "scripted_only": true,
+    "text": "Wait. Stop the scroll. That deleted transfer at the bottom of the staff routes... “Elara.” That’s my sister.",
+    "next": "nova_w3_elara_discovery_reply",
+    "emote": "surprised"
+  },
+  {
+    "id": "nova_w3_elara_discovery_reply",
+    "speaker": "Nova",
+    "scripted_only": true,
+    "text": "Your sister? You never mentioned you had family in the Spire.",
+    "next": "gh0st_w3_elara_discovery_close",
+    "emote": "worried"
+  },
+  {
+    "id": "gh0st_w3_elara_discovery_close",
+    "speaker": "Gh0st",
+    "scripted_only": true,
+    "text": "The compliance chip stripped almost everything before my unit number. Seeing her name... I remember her handwriting, and I remember they took her first. I’m copying the case number. Help me trace it when we have an opening.",
     "emote": "sad"
   },
   {
@@ -1543,7 +1566,7 @@
   {
     "id": "gh0st_w4_springs_key",
     "speaker": "Gh0st",
-    "text": "Take this. If I lock up, it buys me time. Wait for me to tell you when I’m ready.",
+    "text": "Take this. If I lock up, it buys me time. Wait for me to tell you when I’m ready—and help me bring her down from that Ring.",
     "trigger": "player_action:w4_mq17_regroup_springs",
     "emote": "cool"
   },
@@ -1759,6 +1782,7 @@
   {
     "id": "elara_w5_mq24_reunion",
     "speaker": "Elara",
+    "portrait": "images/npcs/elara_portrait_v2.webp",
     "condition": "quest_active:w5_mq24,quest_task_done:w5_mq24:enter_chamber,quest_task_not_done:w5_mq24:find_elara",
     "text": "734. You’re late. I can hold the firewall long enough to open the cradle. Take the Anchor, brother.",
     "music": "music_elaras_song",
@@ -1767,12 +1791,14 @@
   {
     "id": "elara_w5_take_anchor_prompt",
     "speaker": "Elara",
+    "portrait": "images/npcs/elara_portrait_v2.webp",
     "condition": "quest_active:w5_mq24,quest_task_done:w5_mq24:find_elara,quest_task_not_done:w5_mq24:take_anchor",
     "text": "The cradle lock is open. Lift the Anchor out before the Hunter-Killer reaches the tank."
   },
   {
     "id": "elara_w5_post_mq24_idle",
     "speaker": "Elara",
+    "portrait": "images/npcs/elara_portrait_v2.webp",
     "condition": "quest_completed:w5_mq24,milestone_not_set:ms_w5_mq25_complete",
     "text": "Follow the cable east to the Throne Room. I can hold the door open from inside the tank."
   },
@@ -4705,6 +4731,7 @@
   {
     "id": "elara_w5_release_cradle",
     "speaker": "Elara",
+    "portrait": "images/npcs/elara_portrait_v2.webp",
     "text": "On the glass. There. Now help Nova lift it. I’ll open the lock from here.",
     "trigger": "music_persist:music_elaras_song,player_action:w5_mq24_find_elara",
     "scripted_only": true
@@ -4775,7 +4802,7 @@
   {
     "id": "gh0st_w4_springs_elara",
     "speaker": "Gh0st",
-    "text": "Elara’s. She used to ask whether I wanted the light left on. Then she’d wait.",
+    "text": "Elara’s. Dominion pulled both of us into Project Phantom when I was small. They mapped her mind first for Harmony’s neural bridge, then put the compliance chip in me. She kept sneaking onto the ward at night to cross out their protocol sheets—and to ask whether I wanted the light left on. Then she’d wait.",
     "scripted_only": true,
     "next": "nova_w4_springs_answer",
     "emote": "sad"
@@ -4791,7 +4818,7 @@
   {
     "id": "gh0st_w4_springs_light",
     "speaker": "Gh0st",
-    "text": "Nothing, at first. She came back the next night and asked again.",
+    "text": "Nothing, at first. The chip wouldn’t let me answer without an order. She came back the next night and asked again—until they flagged her as a witness risk and shipped her up to the Orbital Ring.",
     "scripted_only": true,
     "next": "gh0st_w4_springs_key",
     "emote": "sad"
@@ -4807,6 +4834,7 @@
   {
     "id": "elara_w5_lamp_answer",
     "speaker": "Elara",
+    "portrait": "images/npcs/elara_portrait_v2.webp",
     "text": "Please. I want to see you.",
     "scripted_only": true,
     "next": "gh0st_w5_answer_elara"

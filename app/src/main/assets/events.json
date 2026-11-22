@@ -5249,6 +5249,10 @@
       {
         "type": "show_message",
         "message": "Gh0st copies the staff routes. His finger stops on a deleted transfer. “Elara. That’s my sister.” He copies the case number too."
+      },
+      {
+        "type": "start_dialogue",
+        "npc": "line:gh0st_w3_elara_discovery"
       }
     ]
   },

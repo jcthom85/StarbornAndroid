@@ -1195,16 +1195,42 @@
       },
       {
         "type": "narration",
-        "text": "A hand reaches back through the corridor. Gh0st catches it. “I’ve got you, Elara.”",
-        "duration_seconds": 5.8,
+        "text": "A hand reaches back through the corridor. Gh0st catches it and pulls her clear of the closing light.",
+        "duration_seconds": 5.2,
         "image": "images/cinematics/w6_ending_crossing_v1.webp",
         "camera_start_scale": 1.1,
         "camera_end_scale": 1.14
       },
       {
+        "type": "dialogue",
+        "speaker": "Elara",
+        "portrait": "images/npcs/elara_portrait_v2.webp",
+        "text": "I’m here, brother. You left the light on.",
+        "duration_seconds": 4.4,
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w6_ending_crossing_v1.webp",
+        "music_cue": "music_elaras_song",
+        "camera_start_scale": 1.12,
+        "camera_end_scale": 1.15,
+        "transition": "cut"
+      },
+      {
+        "type": "dialogue",
+        "speaker": "Gh0st",
+        "emote": "happy",
+        "portrait": "images/characters/emotes/gh0st_happy.png",
+        "text": "I’ve got you, Elara. And I waited.",
+        "duration_seconds": 4.0,
+        "caption_style": "dialogue",
+        "image": "images/cinematics/w6_ending_crossing_v1.webp",
+        "camera_start_scale": 1.14,
+        "camera_end_scale": 1.16,
+        "transition": "cut"
+      },
+      {
         "type": "narration",
-        "text": "The crew crosses together. Behind them, the last forced link goes dark.",
-        "duration_seconds": 4.8,
+        "text": "The crew crosses together—five silhouettes stepping into open air. Behind them, the last forced link goes dark.",
+        "duration_seconds": 5.0,
         "transition": "cut",
         "image": "images/cinematics/w6_ending_crossing_v1.webp",
         "camera_start_scale": 1.06,
@@ -1316,8 +1342,8 @@
       {
         "type": "dialogue",
         "speaker": "Gh0st",
-        "text": "Elara said she’d meet us there. I told her we’d wait.",
-        "duration_seconds": 4.4,
+        "text": "Elara’s already down at the relay yard checking the wiring. She told me to finish breakfast first—and she’d wait.",
+        "duration_seconds": 5.6,
         "transition": "cut",
         "image": "images/cinematics/w6_ending_diner_v1.webp",
         "camera_start_scale": 1.06,
@@ -2230,8 +2256,8 @@
     "steps": [
       {
         "type": "narration",
-        "text": "Through the fracture, Elara grips the last cable. It peels away from the deck.",
-        "duration_seconds": 4.2,
+        "text": "The Tear shears straight down through the Anchor Chamber below—shattering the conductive tank. Through the breach, Elara clings to the last live cable as it peels away from the deck.",
+        "duration_seconds": 5.6,
         "image": "images/rooms/world_5/deep_tear.webp",
         "transition": "fade",
         "camera_start_scale": 1.02,
