@@ -931,7 +931,7 @@
         "name": "shipwright's slide rule",
         "type": "inspect",
         "description": "Inspect the vintage brass-and-boxwood slide rule on the drafting desk.",
-        "inspect_message": "A precision calculating slide rule engraved: 'C. Thomas — Master Shipwright & Marine Engineer'. Beside it lie handwritten hull stress calculations and a postcard from Paris. A note in the leather case reads: 'Math is honest, steel holds true, and family is everything.'"
+        "inspect_message": "A precision calculating slide rule engraved: 'C. Thomas — Master Shipwright & Marine Engineer'. Beside it lie handwritten hull stress calculations and a faded harbor postcard. A note in the leather case reads: 'Math is honest, steel holds true, and family is everything.'"
       }
     ]
   },

@@ -2884,7 +2884,7 @@
   {
     "id": "jason_what_reply",
     "speaker": "Jason",
-    "text": "[Jason looks from the star chart to the open guitar pedal.] Which thing? I’ve got a synth patch, a star map, and a nutrition tracker running. I sat down to fix the guitar. Ask my wife what time that was.",
+    "text": "[Jason looks from the star chart to the open guitar pedal.] Which thing? I’ve got a synth patch, a star map, and a ration log running. I sat down to fix the guitar. Ask my wife what time that was.",
     "next": "creator_jason_default_talk"
   },
   {
