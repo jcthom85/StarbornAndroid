@@ -1,7 +1,6 @@
 appId: ${APP_ID}
 ---
 - runFlow: ../opening_equipment.yaml
-- tapOn: Close field menu
 - runFlow:
     file: _shared/travel.yaml
     env:
@@ -12,15 +11,11 @@ appId: ${APP_ID}
     env:
       DIRECTION: south
       ROOM: pit_L1_landing
-- back
-- runFlow: _shared/drain.yaml
-- tapOn: Enter Jed's Workshop
-- tapOn: Enter
-- runFlow: _shared/drain.yaml
-- extendedWaitUntil:
-    visible:
-      id: room-workshop_yard
-    timeout: 20000
+- runFlow:
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: west
+      ROOM: workshop_yard
 - runFlow:
     file: _shared/action.yaml
     env:

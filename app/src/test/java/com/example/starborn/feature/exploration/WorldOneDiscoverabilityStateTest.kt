@@ -66,10 +66,12 @@ class WorldOneDiscoverabilityStateTest {
         }
     }
 
-    @Test fun `clearance instructions name the hub destination and pre-badge booth route`() {
+    @Test fun `clearance instructions follow the walkable yard and pre-badge booth route`() {
         val rooms = reader.readList<Room>("rooms.json").associateBy { it.id }
         val node = reader.readList<HubNode>("hub_nodes.json").single { it.id == "admin_gate" }
-        assertEquals("hub", node.entryPolicy)
+        assertEquals("transition", node.entryPolicy)
+        assertEquals(node.entryRoom, rooms.getValue("workshop_yard").connections["west"])
+        assertEquals("workshop_yard", rooms.getValue(node.entryRoom).connections["east"])
         assertEquals("checkpoint_queue", node.entryRoom)
         assertTrue(node.unlockConditions.any { it.type == "quest_completed" && it.questId == "w1_mq01" })
         assertEquals("checkpoint_bay", rooms.getValue(node.entryRoom).connections["north"])
@@ -78,14 +80,14 @@ class WorldOneDiscoverabilityStateTest {
             .stages.flatMap { it.tasks }.associateBy { it.id }
         val approach = tasks.getValue("approach_admin_gate").text
         assertTrue(approach.contains(node.title))
-        assertTrue(approach.contains("hub map"))
+        assertTrue(approach.contains("west"))
         assertTrue(tasks.getValue("meet_zeke").text.contains(rooms.getValue("checkpoint_booth").title))
         val directions = reader.readList<DialogueLine>("dialogue.json").filter {
             it.id in setOf("jed_w1_mq02_handoff_3", "jed_w1_mq02_reminder")
         }
         assertEquals(2, directions.size)
         directions.forEach {
-            assertTrue(it.text.contains(node.title))
+            assertTrue(it.text.contains("west"))
             assertTrue(it.text.contains("east"))
             assertTrue(it.text.contains(rooms.getValue("checkpoint_bay").title))
             assertTrue(it.text.contains(rooms.getValue("checkpoint_booth").title))

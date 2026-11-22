@@ -34,6 +34,7 @@ data class TutorialScript(
 )
 
 fun TutorialEntry.formattedTitle(): String {
+    metadata["heading"]?.let { return it }
     val title = (metadata["title"] ?: context ?: "").replace(Regex("""\[[^]]*]\s*"""), "").trim()
     return when {
         title.isBlank() -> "Tutorial"

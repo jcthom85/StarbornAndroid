@@ -140,7 +140,8 @@ data class EventReward(
     val xp: Int? = null,
     val credits: Int? = null,
     val ap: Int? = null,
-    val items: List<RewardItem> = emptyList()
+    val items: List<RewardItem> = emptyList(),
+    val presentation: String? = null
 )
 
 data class RewardItem(

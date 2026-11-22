@@ -1670,7 +1670,7 @@ class ExplorationController(
             emitEvent(ExplorationEvent.ItemGranted(name, qty))
             Triple(itemId, name, qty)
         }
-        if (grantedItems.isNotEmpty()) {
+        if (grantedItems.isNotEmpty() && reward.presentation != "opening_kit") {
             val sequenceId = "reward_${UUID.randomUUID()}"
             grantedItems.forEachIndexed { index, (itemId, _, qty) ->
                 promptManager.enqueue(
@@ -1684,7 +1684,7 @@ class ExplorationController(
                 )
             }
         }
-        if (parts.isNotEmpty()) {
+        if (parts.isNotEmpty() && reward.presentation != "opening_kit") {
             postStatus("Reward: ${parts.joinToString(", ")}")
         }
         refreshCurrentRoomBlockedDirections()
@@ -4351,19 +4351,18 @@ class ExplorationController(
     private fun maybeOfferOpeningEquipment(session: GameSessionState) {
         if (OpeningEquipmentGuide.MANUAL_KIT !in session.completedMilestones ||
             !OpeningEquipmentGuide.needsGuidance(session) || tutorialManager.hasSeen(OpeningEquipmentGuide.OFFER)) return
-        sessionStore.markTutorialSeen(OpeningEquipmentGuide.OFFER)
-        // Appended after all reward cards; choosing Later never completes the tutorial.
         promptManager.enqueue(com.example.starborn.domain.prompt.TutorialPrompt(
             entry = TutorialEntry(
                 key = OpeningEquipmentGuide.OFFER,
                 context = "Equipment",
-                message = "Jed gave you a Mining Pistol and Flux Liner. They are ready to equip in Party before you face the loader.",
-                metadata = mapOf("title" to "New equipment", "action_label" to
-                    if (tutorialsEnabled) "Show me how to equip" else "Open equipment", "dismiss_label" to "Later")
+                message = "Mining Pistol and Flux Liner for the yard.\nCryo-Inductor and 2 Scrap Metal for the bench.\nOne Ration Pack for the shift.",
+                metadata = mapOf("heading" to "Jed’s kit", "action_label" to "Equip pistol and liner", "dismiss_label" to "Later")
             ),
+            onDismissCallback = { sessionStore.markTutorialSeen(OpeningEquipmentGuide.OFFER) },
             primaryAction = {
                 promptManager.dismissCurrent(OpeningEquipmentGuide.OFFER)
-                openMenuOverlay(if (_uiState.value.settings.modernFieldMenu) MenuTab.STATS else MenuTab.INVENTORY, showTutorial = false)
+                equipWeapon("nova", "mining_pistol")
+                equipArmor("nova", "nova_flux_liner")
             },
             afterRewards = true
         ))

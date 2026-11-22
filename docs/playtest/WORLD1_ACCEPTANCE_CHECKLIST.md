@@ -13,7 +13,8 @@ Use a fresh production route through the World 2 crash site, with no debug grant
 
 - [ ] Play the full intro once; review text speed, fades, portraits and the opening reveal.
 - [ ] Find bunk light, door panel, movement and Jed without guessing every object.
-- [ ] Accept equipment teaching and manually equip both slots. On a separate start, defer and verify the offer does not nag during travel.
+- [ ] Accept Jed’s kit and verify both slots equip immediately. On a separate start choose Later, relaunch, and check the kit is still in inventory with both slots empty.
+- [ ] On a first playthrough, ask the player to find Jed’s shutter using his directions. After the cutter test, have them find Hank. Record any missed turns or occasions when they needed help.
 - [ ] Try both loader orders: inspect then fight, and fight before reading its strip. Mira appears after victory; no duplicate Flux Liner is granted.
 - [ ] Craft the Cryo-Inductor, patch the suit, confirm governor bypass and run the cutter test. Confirm the journal clearly orders these steps.
 - [ ] Let Hank reject the badge; complete Zeke's override. Check the badge reward once and onward routing.
@@ -26,6 +27,8 @@ Use a fresh production route through the World 2 crash site, with no debug grant
 
 ## Completionist and systems
 
+- [ ] Before giving directions, ask which places in Homestead the player wants to visit and why. Record whether they noticed the market steps and Pam’s grille, what they expected to find, and whether either detour felt compulsory.
+- [ ] After the vent repair, return to Pam’s counter. After the cache turn-in, cross Jed’s yard. Check what the player notices has changed.
 - [ ] Finish Scavenger's Stash, System Flush, Heavy Lifting, Protocol Override and Lost Shift; revisit turn-ins to check duplicate rewards.
 - [ ] Breach the cart vault, loot it once, and verify the opened route/rewards after reload.
 - [ ] Compare Protocol Override's promised benefit with the actual Circuit Board outcome; log any mismatch.

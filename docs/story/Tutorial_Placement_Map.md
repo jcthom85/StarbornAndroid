@@ -72,7 +72,7 @@ If it is something the player must understand to play well, it goes here.
 | Menu save | Script | W1_MQ01 -> first arrival at Jed's Workshop | Yes | Implemented script: `menu_save`, triggered by `w1_mq01_reach_workshop`. Saving is through the bottom menu, not Nova's bunk. |
 | Rest at bed / recovery point | Script | Astra -> Quarters -> first bed interaction | No for W1 | Nova's Bunk is narrative flavor only. Do not add rest recovery there; the first safe rest should be on the Astra. |
 | Quest start + objective is pinned/tracked | Prompt + Implicit UI | W1_MQ01 -> new game spawn and fallback bunk entry | Yes | Implemented by `new_game_spawn_player_and_fade` and `w1_mq01_start_on_bunk_entry`; both start/track `w1_mq01`. |
-| Objective navigation (locator highlight / "go here next") | Script | W1_MQ01 -> leaving Jed's Bunk after Jed sends Nova to the Workshop | Yes | Implemented script: `scene_market_locator`, triggered by `w1_mq01_route_to_workshop_hint`. |
+| Finding Jed’s workshop | Room prose | W1_MQ01, Lift Shaft after the kit handoff | Yes | Jed names the yellow rail. The shaft points south to the landing and the rail turns west into the yard. |
 | Journal/Quest Log UI | Script | W1_MQ01 -> first transition out of Nova's Bunk after the quest starts | Yes | Implemented script: `scene_market_journal`, triggered by `w1_mq01_leave_sleeping_level`. |
 | Bag/Inventory UI (open/close) | Script + Practice | W1_MQ01 -> first time player receives an item reward | Yes | Script: `bag_basics`. Consider auto-opening the bag once with a "Dismiss" to reduce hunting. |
 | Auto-loot behavior (picked items go to bag) | Dialogue | W1_MQ01 -> first pickup | Yes | One-line reinforcement so player trusts they did not "lose" the item. |
@@ -244,7 +244,7 @@ Rows marked planned/backlog are retained as design targets only and should not b
 | `scene_swipe_movement` | Swipe movement basics (duplicate) | World 1 -> Hub 1.1 -> W1_MQ01 -> Nova's Bunk exit | Planned/backlog only; not currently in `tutorial_scripts.json`. |
 | `npc_talk` | NPC interaction menu + Talk | World 1 -> Hub 1.1 -> Jed's Bunk before first mandatory conversation | Live; triggered by `w1_mq01_find_jed`. |
 | `bag_basics` | Open bag + filters | World 1 -> Hub 1.1 -> first item reward | Also ok as fallback on first "inventory full" warning. |
-| `scene_market_locator` | Objective navigation / locator cue | World 1 -> Hub 1.1 -> leaving Jed's Bunk after Jed sends Nova to the Workshop | Live; triggered by `w1_mq01_route_to_workshop_hint`. |
+| `scene_market_locator` | Objective navigation / locator cue | Legacy market quest | The current Homestead route gives directions in the Lift Shaft and Pit Landing. |
 | `scene_market_journal` | Journal / quest tracking | World 1 -> Hub 1.1 -> first transition out of Nova's Bunk | Live; triggered by `w1_mq01_leave_sleeping_level`. |
 | `scene_tinkering_tutorial` | Tinkering minigame basics | World 1 -> Hub 1.1 -> Jed's Workshop -> Tinkering Table | Use for the "first ever craft" only. |
 | `menu_save` | Menu save | World 1 -> Hub 1.1 -> Jed's Workshop arrival | Live; triggered by `w1_mq01_reach_workshop`. |

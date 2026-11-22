@@ -361,6 +361,59 @@ class LegalRouteCampaignRunnerTest {
     }
 
     @Test
+    fun jedsKitSurvivesRestartAndBothChoicesCanBeatTheLoader() {
+        useProductionCrewRules = true
+        val first = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
+        val atHandoff = try {
+            val agent = LegalCampaignAgent(first)
+            agent.performAction("w1_mq01_turn_on_bunk_light")
+            agent.performAction("w1_mq01_inspect_safety_fault")
+            for ((room, exit) in listOf("pit_L1_landing" to "west", "pit_mess" to "north", "pit_showers" to "east")) {
+                agent.navigateLegalPath(room)
+                assertTrue("Meet Jed before leaving through $room", exit in first.explorationVm.uiState.value.blockedDirections)
+            }
+            agent.navigateLegalPath("pit_jed_bunk")
+            agent.talkToNpc("Jed")
+            val expectedKit = mapOf("mining_pistol" to 1, "nova_flux_liner" to 1, "cryo_inductor" to 1,
+                "scrap_metal" to 2, "ration_pack" to 1)
+            assertEquals(expectedKit, first.inventoryService.snapshot())
+            first.saveSlot(6)
+        } finally { first.close() }
+        for (equip in listOf(false, true)) {
+            val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = atHandoff)
+            try {
+                val agent = LegalCampaignAgent(h)
+                val kit = h.promptManager.state.value.current as com.example.starborn.domain.prompt.TutorialPrompt
+                assertEquals("opening_gear_offer", kit.id)
+                assertTrue(h.promptManager.state.value.queue.none { it is com.example.starborn.domain.prompt.ItemGrantedPrompt })
+                if (equip) requireNotNull(kit.primaryAction).invoke() else h.explorationVm.dismissPrompt(kit.id)
+                h.settle()
+                val chosen = h.saveSlot(6)
+                assertEquals(atHandoff.inventory, chosen.inventory)
+                assertEquals(if (equip) "mining_pistol" else null, chosen.equippedWeapons["nova"])
+                assertEquals(if (equip) "nova_flux_liner" else null, chosen.equippedArmors["nova"])
+                assertTrue(kit.id in chosen.tutorialSeen)
+                val resumed = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = chosen)
+                try {
+                    assertEquals(chosen.inventory, resumed.inventoryService.snapshot())
+                    assertFalse(resumed.promptManager.state.value.current?.id == kit.id)
+                    assertFalse(resumed.promptManager.state.value.queue.any { it.id == kit.id })
+                } finally { resumed.close() }
+                agent.navigateLegalPath("workshop_yard")
+                assertTrue("No early shift clearance", "west" in h.explorationVm.uiState.value.blockedDirections)
+                assertTrue("Loader guards the bench", "north" in h.explorationVm.uiState.value.blockedDirections)
+                agent.navigateLegalPath("trade_entrance")
+                assertTrue("Delivery gate is bolted from inside", "west" in h.explorationVm.uiState.value.blockedDirections)
+                agent.navigateLegalPath("workshop_yard")
+                agent.performAction("w1_mq01_inspect_loader_relay")
+                h.playPublicEncounter("faulted_loader")
+                assertTrue("ms_w1_mq01_loader_cleared" in h.sessionStore.state.value.completedMilestones)
+                assertTrue(assistance.isEmpty())
+            } finally { h.close() }
+        }
+    }
+
+    @Test
     fun productionWorld1ReachesTheWorld2HandoffWithEarnedResourcesAndSaveParity() {
         useProductionCrewRules = true
         val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
@@ -1824,10 +1877,23 @@ class LegalRouteCampaignRunnerTest {
             File(directory, "world1_$id.json").writeText(moshi.adapter(GameSessionState::class.java).indent("  ").toJson(snapshot))
         }
 
+        private fun currentRoomProse(): String? {
+            val ui = harness.explorationVm.uiState.value
+            val state = harness.sessionStore.state.value
+            return com.example.starborn.feature.exploration.presentation.resolveRoomDescription(
+                ui.currentRoom, ui.roomState, state.completedMilestones, false, state.completedEvents)
+        }
+
         fun playWorld1(wardenBeforeJed: Boolean = false, completionist: Boolean = false) {
             playOpening()
             captureWorld1Checkpoint("w1_mq02")
             if (completionist) {
+                navigateLegalPath("workshop_back")
+                travelDirection("east")
+                assertEquals("trade_entrance", harness.sessionStore.state.value.roomId)
+                travelDirection("west")
+                assertEquals("workshop_back", harness.sessionStore.state.value.roomId)
+                travelDirection("east")
                 navigateLegalPath("trade_scrapper")
                 captureWorld1Checkpoint("w1_sq01")
                 talkToNpc("Scrapper")
@@ -1836,6 +1902,13 @@ class LegalRouteCampaignRunnerTest {
                 navigateLegalPath("trade_scrapper")
                 talkToNpc("Scrapper")
                 assertTrue("w1_sq01" in harness.sessionStore.state.value.completedQuests)
+                navigateLegalPath("trade_maint")
+                travelDirection("west")
+                assertEquals("pit_showers", harness.sessionStore.state.value.roomId)
+                navigateLegalPath("pit_mess")
+                assertTrue("return grille" in requireNotNull(currentRoomProse()))
+                travelDirection("north")
+                assertEquals("medbay_hall", harness.sessionStore.state.value.roomId)
                 navigateLegalPath("medbay_exam1")
                 captureWorld1Checkpoint("w1_sq02")
                 talkToNpc("Doc")
@@ -1847,6 +1920,13 @@ class LegalRouteCampaignRunnerTest {
                 navigateLegalPath("medbay_exam1")
                 talkToNpc("Doc")
                 assertTrue("w1_sq02" in harness.sessionStore.state.value.completedQuests)
+                navigateLegalPath("pit_mess")
+                assertTrue("open return grille" in requireNotNull(currentRoomProse()))
+                navigateLegalPath("workshop_yard")
+                assertTrue("Scrapper" in requireNotNull(currentRoomProse()))
+            } else {
+                assertFalse("med_bay" in harness.sessionStore.state.value.visitedNodes)
+                assertFalse("trade_row" in harness.sessionStore.state.value.visitedNodes)
             }
 
             // Navigate to Checkpoint Queue

@@ -8246,7 +8246,7 @@ fun NarrationCard(
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
-            if (actions != null) actions() else if (!prompt.tapToDismiss) TextButton(
+            if (actions != null) actions() else TextButton(
                 onClick = onDismiss,
                 modifier = Modifier
                     .maestroTag("narration-continue")

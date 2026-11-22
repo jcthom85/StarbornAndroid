@@ -1,6 +1,6 @@
 # World 1: Complete Step-by-Step Walkthrough
 
-**Source-reviewed October 21, 2026 against version 1.3.94 (178).**
+**Homestead routes and starter kit updated November 22, 2026. The remaining World 1 guide was source-reviewed October 21 against version 1.3.94 (178).**
 
 Full spoilers. This is a route you can follow from a fresh New Game through the crash into World 2, including all five World 1 side quests, room interactions, collectibles, and optional puzzles. Directions and action names come from current assets; checks describe what should happen, not proof that every interaction has been played on a phone.
 
@@ -56,13 +56,13 @@ At the workshop checkpoint, after certification and before the Fork/Warden, revi
 5. Go **west** to Supply Closet (`pit_storage`). Turn on **emergency breaker** before attempting the **loose floor panel**. Inspect the panel for the first VHS tape; also inspect **filter units**. Return **east** to Pod Row.
 6. Go **south** to Lift Shaft (`pit_shaft`). Inspect **ladder** and **pipe**.
 7. Go **west** to Jed's Bunk (`pit_jed_bunk`). Talk to **Jed** until he has told you to visit the workshop and the conversation ends. Inspect **tool case** for spare supplies and **manuals** for lore.
-8. Review Jed's starter-kit reward cards: Mining Pistol, Nova's Flux Liner, damaged Cryo-Inductor, scrap metal, and a ration. In the updated opening, the weapon and armor stay unequipped. Choose **Show me how to equip** after the cards to open Party, select Nova's **Weapon** slot and equip **Mining Pistol**, then select **Armor** and equip **Flux Liner**. The next slot is highlighted while tutorials are enabled; completion follows the actual equip actions. **Later** leaves the tutorial unfinished and you can return through Menu > Party. With tutorials off, **Open equipment** still offers a shortcut. Older builds/saves may already have the kit equipped; inspect the two slots instead of unequipping working gear. Keep the damaged inductor and at least one scrap for its repair.
-9. Go **east** to Lift Shaft, then **south** to Pit Landing (`pit_L1_landing`). The colony map exit becomes available after Jed's briefing. Inspect **bulkhead**, but do not leave yet.
+8. Jed hands over one kit. **Equip pistol and liner** fits both pieces now. **Later** leaves the gear in your inventory for Menu > Party. Both choices give the same Cryo-Inductor, two Scrap Metal, and Ration Pack.
+9. Go **east** to Lift Shaft, then **south** to Pit Landing. Inspect the **bulkhead**. The yellow rail leads west to Jed’s Scrap Yard. For the completionist route, visit the Mess Hall first.
 10. Go **east** to Mess Hall (`pit_mess`). Inspect **broken Hyperion cabinet** to discover the arcade cabinet; this is discovery, not its later repair/install. Inspect the other listed room interactions for lore.
 11. Go **east** to Ration Sink (`pit_kitchen`). Open **shift ration tin** on the counter for **Starbar Crunch**. Equip it in Nova’s **Snack** slot for +6 Speed. The combat **Snack** action boosts her evasion for two turns and then recharges. Inspect **ingredient hopper** for its one-time supplies and **thermal cooker** for lore. Return **west** to Mess Hall.
 12. Go **south** to Vent Crawl (`pit_vents`). Inspect **maintenance crawl** for the hidden supplies and **grates** for lore.
 13. Go **east** to Shared Showers (`pit_showers`). Inspect **steam valves first**, then **drainage grate**. The valves make the drain loot available. Inspect **tiles**.
-14. Return **west** to Vent Crawl, **north** to Mess Hall, **west** to Pit Landing. Return to the hub map and choose **Jed's Workshop**.
+14. Return **west** to Vent Crawl, **north** to Mess Hall and **west** to Pit Landing. Follow the rail **west** to the Scrap Yard.
 
 **Check before leaving:** Jed's workshop instruction has fired; your kit is present; you still have the damaged Cryo-Inductor and scrap. Side quest introductions from Scrapper and Doc are not available until Wake Up Call is complete, so do not divert to them yet.
 
@@ -81,9 +81,9 @@ Start: Scrap Yard (`workshop_yard`).
 9. Sweep the workshop before leaving: go **north** to Jed's Office (`workshop_office`), inspect **diagnostic bench drawer**, then return **south**.
 10. Go **west** to Parts Loft (`workshop_loft`). Loot **mod bench**; inspect **parts** and **shipwright's slide rule**. Return **east**.
 11. Go **east** to Tool Shed (`workshop_shed`). Loot **toolbox**. Go **south** to Flooded Basement (`workshop_basement`), turn on **workbench power switch**, then loot **components chest**. Return **north**.
-12. Go **east** to Loading Dock (`workshop_dock`), then **east** to Back Alley (`workshop_back`). Loot **salvage dolly**; inspect the remaining lore actions. Return **west**, **west**, **west** to Jed's Shutter, then **south** to Scrap Yard.
+12. Go **east** to Loading Dock (`workshop_dock`), then **east** to Back Alley (`workshop_back`). The delivery gate unbolts on this first approach from inside. Walk east to Trade Row Gate and west to verify the shortcut. Loot **salvage dolly** and inspect the remaining lore actions. Return **west**, **west**, **west** to Jed's Shutter, then **south** to Scrap Yard.
 13. The Loading Dock's **loader / cargo rail** actions are optional Heavy Lifting practice, not the cutter's main quest actions. Do not expect those to certify you before the training quest is active.
-14. Review Nova's skill tree and the 2 AP earned from Wake Up Call. Buy an affordable upgrade if desired and record the choice; core story abilities do not require an AP purchase. Save now. Return to the hub map from Scrap Yard and choose **Trade Row**.
+14. Review Nova’s two earned AP and save if desired. Go **south** from the Scrap Yard to Upper Gantry, **east** to Market Strip and **south** to Trade Row Gate. For the direct route, go **west** from the Scrap Yard to the Shift Queue and skip to section 5.
 
 **Check before leaving:** repaired inductor owned, Cryo Vent available, Wake Up Call completed. The new tinkering interface may show fewer components after crafting because you consumed them; do not craft the repair again to chase a missing dialogue step.
 
@@ -98,8 +98,8 @@ Start: Trade Row Gate (`trade_entrance`).
 5. Return **west** to Market Strip, then **north** to Scrapper. Talk through the turn-in: the quest grants **80 XP + 2 Pulse Grenades**, separate from any container contents. Confirm the quest is Completed.
 6. Return **south** to Market Strip. Go **west** to Upper Gantry (`trade_gantry`), inspect every listed action, then return **east**.
 7. Go **south** to Trade Row Gate, then **east** to Recyc Bar (`trade_bar`). Talk to **Miner Bill** and inspect **jukebox** and the other room interactions.
-8. Go **east** to Card Den (`trade_den`), inspect its interactions, then return **west**. Go **south** to Pump Passage (`trade_maint`), inspect **tuning valve** and any remaining listed actions, then return **north**.
-9. Go **west** to Trade Row Gate. Return to the hub map and choose **Med-Bay**.
+8. Go **east** to Card Den (`trade_den`), inspect its interactions, then return **west**. Go **south** to Pump Passage (`trade_maint`) and inspect **tuning valve** and any remaining listed actions.
+9. From Pump Passage follow the water main **west** into Shared Showers, **west** to Vent Crawl and **north** to the Mess Hall. Notice the wet rag at Pam’s counter. Go **north** into Triage Hall.
 
 **If Scrapper gives ordinary chatter:** check Wake Up Call is complete. If the stash is open but the quest remains active, finish the return conversation rather than reopening the container.
 
@@ -114,9 +114,9 @@ Start: Triage Hall (`medbay_hall`).
 5. Go **east** to Exhaust Mouth (`medbay_exhaust`), inspect **vent pipe** and **grate**, then return **west**.
 6. Go **west** to Triage Hall, then **north** to Doc. Finish the turn-in: **90 XP + Corrosive Rounds mod**. Inspect the mod in Party/Items and equip it in a compatible unlocked slot if desired.
 7. Return **south** to Triage Hall, go **west** to Decon Lock (`medbay_decon`), then **north** to The Morgue (`medbay_morgue`). Loot **bio-containment canister** and read **recycling terminal**; inspect **drawers**.
-8. Return **south**, then **east** to Triage Hall. Inspect **bio-scanner** and other remaining interactions, then return to the hub map.
-9. If you want to heal at Nova's bunk before the next stretch: enter The Pit at Pit Landing, go **north, north, east** to Nova's Bunk, rest, then retrace **west, south, south** to the map exit.
-10. Save. Choose **Transit Checkpoint** on the hub map.
+8. Return **south**, then **east** to Triage Hall. Inspect the **bio-scanner**, then go **south** to Pam’s Mess Hall. Look for the rag drying by the sink.
+9. Walk **west** to Pit Landing. For a rest detour, go **north, north, east** to Nova’s Bunk and return **west, south, south**.
+10. From Pit Landing follow the yellow rail **west** to the Scrap Yard, then **west** into the Shift Queue.
 
 **Check before leaving:** System Flush is Completed. If Doc only reminds you about fumes, inspect the vent, reroute fans, and clear blockage in that order, then talk again.
 
@@ -273,8 +273,8 @@ Use this section to finish every side inspection, cache, and lore interaction. C
 
 #### Pit Landing (`pit_L1_landing`)
 
-- **Exits:** North to Lift Shaft (`pit_shaft`); East to Mess Hall (`pit_mess`).
-- **bulkhead**: Inspect/select this action. In-room feedback: Standard Dominion seal. It won't open until the shift-change siren sounds.
+- **Exits:** North to Lift Shaft (`pit_shaft`); East to Mess Hall (`pit_mess`); West to Scrap Yard (`workshop_yard`).
+- **bulkhead**: Inspect/select this action. In-room feedback: Chipped yellow paint marks the handrail all the way to Jed’s scrap yard.
 
 #### Lift Shaft (`pit_shaft`)
 
@@ -313,7 +313,7 @@ Use this section to finish every side inspection, cache, and lore interaction. C
 
 #### Mess Hall (`pit_mess`)
 
-- **Exits:** West to Pit Landing (`pit_L1_landing`); East to Ration Sink (`pit_kitchen`); South to Vent Crawl (`pit_vents`).
+- **Exits:** West to Pit Landing (`pit_L1_landing`); East to Ration Sink (`pit_kitchen`); South to Vent Crawl (`pit_vents`); North to Triage Hall (`medbay_hall`).
 - **monitor**: Inspect/select this action. In-room feedback: 'YOUR SHIFT IS YOUR CONTRIBUTION.' The screen is spider-webbed with cracks.
 - **broken Hyperion cabinet**: Inspect/select this action. Hides after: `ms_arcade_deep_mine_discovered`. In-room feedback: A dead pre-Dominion arcade cabinet leans beneath a miner's coat. One amber diagnostic blinks behind the cracked glass.
 - **tables**: Scenery. Rest at Nova's bunk; the Mess Hall no longer offers a duplicate rest action.
@@ -336,7 +336,7 @@ Use this section to finish every side inspection, cache, and lore interaction. C
 
 #### Shared Showers (`pit_showers`)
 
-- **Exits:** West to Vent Crawl (`pit_vents`).
+- **Exits:** West to Vent Crawl (`pit_vents`); East to Pump Passage (`trade_maint`).
 - **steam valves**: Inspect/select this action. One-time until: `ms_w1_pit_showers_tuned`. In-room feedback: The steam valves have been adjusted to a safe pressure.
 - **drainage grate**: Inspect/select this action. Requires: `ms_w1_pit_showers_tuned`. One-time until: `ms_w1_pit_showers_looted`. Authored outcomes (when event gates are met): 2 x Scrap Metal. In-room feedback: The drain trap is empty.
 - **tiles**: Inspect/select this action. In-room feedback: Orange rust stains cut across the lime-scaled ceramic tiles.
@@ -346,7 +346,7 @@ Use this section to finish every side inspection, cache, and lore interaction. C
 
 #### Scrap Yard (`workshop_yard`)
 
-- **Exits:** North to Jed's Shutter (`workshop_floor`).
+- **Exits:** North to Jed's Shutter (`workshop_floor`); East to Pit Landing (`pit_L1_landing`); West to Shift Queue (`checkpoint_queue`); South to Upper Gantry (`trade_gantry`).
 - **Authored enemies:** faulted_loader. Moving enemies can make the actual encounter timing differ from the static room list.
 - **North gate:** The loader's wild arm blocks the workshop shutter. Tap the Faulted Loader to engage in combat!
 - **loader diagnostic strip**: Inspect/select this action. In-room feedback: The strip flashes SAFETY GOVERNOR BYPASSED beside the cracked relay.
@@ -396,7 +396,7 @@ Use this section to finish every side inspection, cache, and lore interaction. C
 
 #### Back Alley (`workshop_back`)
 
-- **Exits:** West to Loading Dock (`workshop_dock`).
+- **Exits:** West to Loading Dock (`workshop_dock`); East to Trade Row Gate (`trade_entrance`).
 - **salvage dolly**: Inspect/select this action. One-time until: `ms_w1_workshop_back_looted`. Authored outcomes (when event gates are met): 1 x Armor Plate; 3 x Scrap Metal. In-room feedback: The salvage dolly has been cleared.
 - **scrap plates**: Inspect/select this action. In-room feedback: Heavy reinforced bulkheads salvaged from decommissioned haulers.
 
@@ -405,7 +405,7 @@ Use this section to finish every side inspection, cache, and lore interaction. C
 
 #### Triage Hall (`medbay_hall`)
 
-- **Exits:** North to Doc's Exam Room (`medbay_exam1`); West to Decon Lock (`medbay_decon`); East to Ventilation Hub (`medbay_vents`).
+- **Exits:** North to Doc's Exam Room (`medbay_exam1`); West to Decon Lock (`medbay_decon`); East to Ventilation Hub (`medbay_vents`); South to Mess Hall (`pit_mess`).
 - **lights**: Inspect/select this action. In-room feedback: They buzz and flicker, casting long, sickly shadows across the hall.
 - **bio-scanner**: Inspect/select this action. In-room feedback: An older model, struggling to process the sheer volume of cases.
 
@@ -453,7 +453,7 @@ Use this section to finish every side inspection, cache, and lore interaction. C
 
 #### Trade Row Gate (`trade_entrance`)
 
-- **Exits:** North to Market Strip (`trade_strip`); East to Recyc Bar (`trade_bar`).
+- **Exits:** North to Market Strip (`trade_strip`); East to Recyc Bar (`trade_bar`); West to Back Alley (`workshop_back`).
 - **signs**: Inspect/select this action. In-room feedback: They advertise everything from black-market rations to illegal engine mods.
 - **archway**: Inspect/select this action. In-room feedback: Bolted directly into the canyon wall, it marks the boundary of the 'official' colony.
 
@@ -495,13 +495,13 @@ Use this section to finish every side inspection, cache, and lore interaction. C
 
 #### Upper Gantry (`trade_gantry`)
 
-- **Exits:** East to Market Strip (`trade_strip`).
+- **Exits:** East to Market Strip (`trade_strip`); North to Scrap Yard (`workshop_yard`).
 - **crane crate**: Inspect/select this action. One-time until: `ms_w1_trade_gantry_looted`. Authored outcomes (when event gates are met): 1 x Ballistic Weave; 1 x Battery Pack. In-room feedback: The crane crate has been looted.
 - **railings**: Inspect/select this action. In-room feedback: A panoramic view of Trade Row's sprawling stalls and glowing neon signs.
 
 #### Pump Passage (`trade_maint`)
 
-- **Exits:** North to Recyc Bar (`trade_bar`).
+- **Exits:** North to Recyc Bar (`trade_bar`); West to Shared Showers (`pit_showers`).
 - **tuning valve**: Inspect/select this action. One-time until: `ms_w1_trade_maint_tuned`. Authored outcomes (when event gates are met): 2 x Heavy Gear; 1 x Hydraulic Fluid. In-room feedback: The pump frequency is balanced and running smoothly.
 - **pumps**: Inspect/select this action. In-room feedback: Heavy wastewater pumps cycling graywater through the colony filtration loop.
 
@@ -510,7 +510,7 @@ Use this section to finish every side inspection, cache, and lore interaction. C
 
 #### Shift Queue (`checkpoint_queue`)
 
-- **Exits:** North to Search Bay (`checkpoint_bay`).
+- **Exits:** North to Search Bay (`checkpoint_bay`); East to Scrap Yard (`workshop_yard`).
 - **contraband bin**: Inspect/select this action. One-time until: `ms_w1_checkpoint_queue_looted`. Authored outcomes (when event gates are met): 2 x Ration Pack; 1 x Battery. In-room feedback: The contraband bin is empty.
 - **lights**: Inspect/select this action. In-room feedback: Harsh fluorescent floodlights bleaching color from the corridor.
 
@@ -861,7 +861,7 @@ These are the current authored objective strings. Compare with the route above i
 - [ ] Find Jed in his bunk. (`find_jed`)
 - [ ] Talk to Jed about the shift. (`talk_to_jed`)
 - [ ] Receive your starter gear from Jed. (`equip_starter_gear`)
-- [ ] Reach Jed's place. (`reach_workshop`)
+- [ ] Follow the yellow rail west from Pit Landing to Jed’s Scrap Yard. (`reach_workshop`)
 - [ ] Read the loader diagnostic strip or disable the loader. (`inspect_loader_relay`)
 - [ ] Clear the faulted loader blocking the workshop. (`clear_faulted_loader`)
 - [ ] Tinker the Functional Cryo-Inductor from the menu. (`use_tinkering_table`)
@@ -873,7 +873,7 @@ These are the current authored objective strings. Compare with the route above i
 
 **Stage: `reach_checkpoint`**
 
-- [ ] Choose Transit Checkpoint on the hub map, then head north from the Shift Queue to the Search Bay for clearance. (`approach_admin_gate`)
+- [ ] Walk west across the Scrap Yard to Transit Checkpoint. Hank checks clearance north of the Shift Queue. (`approach_admin_gate`)
 - [ ] Let the scanner reject Nova so Zeke can reach the file. (`request_clearance`)
 
 **Stage: `override_retirement`**

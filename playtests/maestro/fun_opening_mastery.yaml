@@ -1,28 +1,21 @@
 appId: ${APP_ID}
 ---
 - runFlow: opening_equipment.yaml
-- tapOn: "Close field menu"
-- tapOn: "Travel east"
-- extendedWaitUntil:
-    visible: "Lift Shaft"
-    timeout: 15000
-- extendedWaitUntil:
-    visible: "Head out of the Pit toward Jed.*"
-    timeout: 10000
-- tapOn: "CONTINUE"
-- tapOn: "Travel south"
-- extendedWaitUntil:
-    visible: "Pit Landing"
-    timeout: 15000
-- back
-- extendedWaitUntil:
-    visible: "Homestead Quarter"
-    timeout: 15000
-- tapOn: "Enter Jed's Workshop"
-- tapOn: "Enter"
-- extendedWaitUntil:
-    visible: "Scrap Yard"
-    timeout: 15000
+- runFlow:
+    file: world1/_shared/travel.yaml
+    env:
+      DIRECTION: east
+      ROOM: pit_shaft
+- runFlow:
+    file: world1/_shared/travel.yaml
+    env:
+      DIRECTION: south
+      ROOM: pit_L1_landing
+- runFlow:
+    file: world1/_shared/travel.yaml
+    env:
+      DIRECTION: west
+      ROOM: workshop_yard
 - tapOn: "loader diagnostic strip"
 - extendedWaitUntil:
     visible: ".*SAFETY GOVERNOR BYPASSED.*"

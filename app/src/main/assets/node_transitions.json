@@ -1024,5 +1024,113 @@
     "to_node": "source_campfire_node",
     "to_room": "source_campfire",
     "transition_text": "You follow the east path to The Campfire."
+  },
+  {
+    "id": "admin_gate__east__workshop",
+    "from_node": "admin_gate",
+    "from_room": "checkpoint_queue",
+    "direction": "east",
+    "to_node": "workshop",
+    "to_room": "workshop_yard",
+    "transition_text": "Step out of the queue into the yard."
+  },
+  {
+    "id": "med_bay__south__pit",
+    "from_node": "med_bay",
+    "from_room": "medbay_hall",
+    "direction": "south",
+    "to_node": "pit",
+    "to_room": "pit_mess",
+    "transition_text": "Follow the smell of supper back to Pam’s counter."
+  },
+  {
+    "id": "pit__east__trade_row",
+    "from_node": "pit",
+    "from_room": "pit_showers",
+    "direction": "east",
+    "to_node": "trade_row",
+    "to_room": "trade_maint",
+    "transition_text": "Follow the water main to the market pumps."
+  },
+  {
+    "id": "pit__north__med_bay",
+    "from_node": "pit",
+    "from_room": "pit_mess",
+    "direction": "north",
+    "to_node": "med_bay",
+    "to_room": "medbay_hall",
+    "transition_text": "Slip past the serving counter into Triage Hall."
+  },
+  {
+    "id": "pit__west__workshop",
+    "from_node": "pit",
+    "from_room": "pit_L1_landing",
+    "direction": "west",
+    "to_node": "workshop",
+    "to_room": "workshop_yard",
+    "transition_text": "Follow the yellow rail into Jed’s scrap yard."
+  },
+  {
+    "id": "trade_row__north__workshop",
+    "from_node": "trade_row",
+    "from_room": "trade_gantry",
+    "direction": "north",
+    "to_node": "workshop",
+    "to_room": "workshop_yard",
+    "transition_text": "Climb the iron steps to Jed’s yard."
+  },
+  {
+    "id": "trade_row__west__pit",
+    "from_node": "trade_row",
+    "from_room": "trade_maint",
+    "direction": "west",
+    "to_node": "pit",
+    "to_room": "pit_showers",
+    "transition_text": "Follow the hot pipes back to the showers."
+  },
+  {
+    "id": "trade_row__west__workshop",
+    "from_node": "trade_row",
+    "from_room": "trade_entrance",
+    "direction": "west",
+    "to_node": "workshop",
+    "to_room": "workshop_back",
+    "transition_text": "Take the delivery gate back to Jed’s shop."
+  },
+  {
+    "id": "workshop__east__pit",
+    "from_node": "workshop",
+    "from_room": "workshop_yard",
+    "direction": "east",
+    "to_node": "pit",
+    "to_room": "pit_L1_landing",
+    "transition_text": "Follow the rail back to Pit Landing."
+  },
+  {
+    "id": "workshop__east__trade_row",
+    "from_node": "workshop",
+    "from_room": "workshop_back",
+    "direction": "east",
+    "to_node": "trade_row",
+    "to_room": "trade_entrance",
+    "transition_text": "Pass through the delivery gate into Trade Row."
+  },
+  {
+    "id": "workshop__south__trade_row",
+    "from_node": "workshop",
+    "from_room": "workshop_yard",
+    "direction": "south",
+    "to_node": "trade_row",
+    "to_room": "trade_gantry",
+    "transition_text": "Take the iron steps down to the market gantry."
+  },
+  {
+    "id": "workshop__west__admin_gate",
+    "from_node": "workshop",
+    "from_room": "workshop_yard",
+    "direction": "west",
+    "to_node": "admin_gate",
+    "to_room": "checkpoint_queue",
+    "transition_text": "Join the shift queue."
   }
 ]

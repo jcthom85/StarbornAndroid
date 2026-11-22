@@ -5,17 +5,11 @@ appId: ${APP_ID}
     env:
       DIRECTION: south
       ROOM: workshop_yard
-- back
 - runFlow:
-    file: _shared/drain.yaml
-- tapOn: Enter Transit Checkpoint
-- tapOn: Enter
-- runFlow:
-    file: _shared/drain.yaml
-- extendedWaitUntil:
-    visible:
-      id: room-checkpoint_queue
-    timeout: 20000
+    file: _shared/travel.yaml
+    env:
+      DIRECTION: west
+      ROOM: checkpoint_queue
 - runFlow:
     file: _shared/travel.yaml
     env:

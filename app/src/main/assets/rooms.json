@@ -5,13 +5,19 @@
     "weather": "dust",
     "title": "Pit Landing",
     "background_image": "images/rooms/world_1/pit_L1_landing_v5.webp",
-    "description": "A cramped landing bolts the Pit to the rest of the colony. The bulkhead seal vents with each pressure shift, and amber lights make the scuffed metal shine like old lunch trays.",
+    "description": "A yellow rail runs west through the bulkhead to Jed’s yard. From the Mess Hall to the east comes the clatter of pans and a sharp smell of disinfectant.",
     "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_sq02_vent_patched"
+        ],
+        "description": "The yellow rail runs west through the bulkhead to Jed’s yard. Supper smells like onions again. The Mess Hall doorstop is back inside."
+      },
       {
         "requires_milestones": [
           "ms_w1_mq01_cutter_surge"
         ],
-        "description": "A cramped landing bolts the Pit to the rest of the colony. The amber lights run at half power now, and the bulkhead seal cycles twice before it catches. Someone chalked SECTOR BREAKER - DO NOT RESET on the frame."
+        "description": "The bulkhead cycles twice before it catches. Jed’s yard is west along the yellow rail. East, the Mess Hall door is propped open to air the place out."
       }
     ],
     "npcs": [],
@@ -19,7 +25,8 @@
     "enemies": [],
     "connections": {
       "north": "pit_shaft",
-      "east": "pit_mess"
+      "east": "pit_mess",
+      "west": "workshop_yard"
     },
     "pos": [
       0,
@@ -30,22 +37,41 @@
       {
         "name": "bulkhead",
         "type": "generic",
-        "condition_unmet_message": "Standard Dominion seal. It won't open until the shift-change siren sounds."
+        "condition_unmet_message": "Chipped yellow paint marks the handrail all the way to Jed’s scrap yard."
       }
-    ]
+    ],
+    "blocked_directions": {
+      "west": {
+        "type": "state",
+        "requires": [
+          {
+            "room_id": "pit_L1_landing",
+            "state_key": "ready_for_shift",
+            "value": true
+          }
+        ],
+        "message_locked": "Jed is waiting in his bunk off the Lift Shaft. Pick up the kit before heading out."
+      }
+    }
   },
   {
     "id": "pit_mess",
     "env": "mine",
     "title": "Mess Hall",
     "background_image": "images/rooms/world_1/pit_mess_v5.webp",
-    "description": "Bolted tables and crooked amber lights turn dinner into another shift. [npc:Pam] works the serving counter, making sure nobody leaves hungry. A ceramic rooster watches over the tables beside a vintage mystery monitor, while a broken Hyperion cabinet gathers miners' coats.",
+    "description": "[npc:Pam] wedges a wet rag into the return grille behind her counter. Disinfectant still cuts through the smell of supper. The ward doors are just north. Coats hang off the broken Hyperion cabinet; a ceramic rooster perches on the vintage mystery monitor.",
     "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_sq02_vent_patched"
+        ],
+        "description": "[npc:Pam] has hung the rag over the sink. Steam from her onions curls into the open return grille. Through the ward doors to the north, someone asks for seconds. The ceramic rooster faces the vintage mystery monitor; coats still cover the broken Hyperion cabinet."
+      },
       {
         "requires_milestones": [
           "ms_w1_mq01_cutter_surge"
         ],
-        "description": "The monitor is dead and the tables have gone loud without it. Miners argue about whose shift lost the grid, crowding past the dark broken Hyperion cabinet while the ceramic rooster and vintage mystery monitor sit over the counter."
+        "description": "Under the dead vintage mystery monitor, [npc:Pam] wrings out the rag from the return grille. Another cough comes through from Med-Bay to the north. Miners pile coats on the broken Hyperion cabinet beside the ceramic rooster."
       }
     ],
     "npcs": [
@@ -56,7 +82,8 @@
     "connections": {
       "west": "pit_L1_landing",
       "east": "pit_kitchen",
-      "south": "pit_vents"
+      "south": "pit_vents",
+      "north": "medbay_hall"
     },
     "pos": [
       1,
@@ -96,7 +123,20 @@
       {
         "npc": "miner_orlo"
       }
-    ]
+    ],
+    "blocked_directions": {
+      "north": {
+        "type": "state",
+        "requires": [
+          {
+            "room_id": "pit_L1_landing",
+            "state_key": "ready_for_shift",
+            "value": true
+          }
+        ],
+        "message_locked": "Jed is waiting in his bunk off the Lift Shaft. Pick up the kit before heading out."
+      }
+    }
   },
   {
     "id": "pit_kitchen",
@@ -179,6 +219,12 @@
           "ms_w1_mq01_cutter_surge"
         ],
         "description": "Emergency strips light the ladder in red instead of amber. The sweating pipe has stopped venting entirely, no pressure behind it since the breaker went, and the hazard stripes are dry for the first time Nova can remember."
+      },
+      {
+        "requires_milestones": [
+          "ms_w1_mq01_jed_talked"
+        ],
+        "description": "Steam beads on the ladder where it passes the hot pipe. A yellow handrail leads south to Pit Landing. Someone has stenciled JED’S YARD and a left arrow on the rail at the bottom."
       }
     ],
     "npcs": [],
@@ -442,7 +488,7 @@
           "light_on": true,
           "conduit_isolated": true
         },
-        "description": "The bunk light has settled back to a cheap yellow buzz over the narrow sleeping shelf. Cargo netting and a rusty locker crowd the wall. The damaged circuit is isolated and the door stands open to the west. The closed maintenance ticket remains where Dominion left it."
+        "description": "The bunk light has settled back to a cheap yellow buzz over the narrow sleeping shelf. Cargo netting and a rusty locker crowd the wall. The door control panel is cold now. The door stands open to the west. The closed maintenance ticket remains where Dominion left it."
       },
       {
         "requires_state": {
@@ -654,12 +700,13 @@
     "weather": "steam",
     "title": "Shared Showers",
     "background_image": "images/rooms/world_1/pit_showers_v5.webp",
-    "description": "Cracked tiles and dense steam fill the communal showers. Three rusted steam valves shudder loudly above a vibrating drainage grate.",
+    "description": "Cracked tiles and dense steam fill the communal showers. Three rusted steam valves shudder loudly above a vibrating drainage grate. Behind the last stall a pipe walk runs east to the market pumps.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "west": "pit_vents"
+      "west": "pit_vents",
+      "east": "trade_maint"
     },
     "pos": [
       2,
@@ -688,7 +735,20 @@
         "type": "generic",
         "condition_unmet_message": "Orange rust stains cut across the lime-scaled ceramic tiles."
       }
-    ]
+    ],
+    "blocked_directions": {
+      "east": {
+        "type": "state",
+        "requires": [
+          {
+            "room_id": "pit_L1_landing",
+            "state_key": "ready_for_shift",
+            "value": true
+          }
+        ],
+        "message_locked": "Jed is waiting in his bunk off the Lift Shaft. Pick up the kit before heading out."
+      }
+    }
   },
   {
     "id": "workshop_yard",
@@ -696,13 +756,31 @@
     "weather": "dust",
     "title": "Scrap Yard",
     "background_image": "images/rooms/world_1/workshop_yard_v3.webp",
-    "description": "Rusted scrap and retired drone shells pile up around Jed's shutter. A faulted loader jerks across the only clear route inside. A loader diagnostic strip strobes beside its cracked relay.",
+    "description": "A faulted loader swings across Jed’s shutter to the north. The loader diagnostic strip strobes beside its relay. The yellow rail leads east to the Pit. South, iron steps overlook Trade Row.",
     "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_sq01_complete"
+        ],
+        "description": "Across the scrap from Jed’s shutter, Scrapper has rolled up the blind on his stall. He lifts two fingers to Nova. The shift queue runs west past the loader diagnostic strip."
+      },
+      {
+        "requires_milestones": [
+          "ms_w1_sq01_started"
+        ],
+        "description": "The shift queue runs west past Jed’s shutter and the loader diagnostic strip. South, Scrapper watches the steps from his stall below the scrap heap."
+      },
+      {
+        "requires_milestones": [
+          "ms_w1_mq01_cutter_surge"
+        ],
+        "description": "The shift rail is up. Miners file west past Jed’s shutter. Below the scrap heap, a trader calls up the south steps, “Hey, cutter! Scrapper’s paying for a pair of steady hands.” The loader diagnostic strip hangs from the cold relay."
+      },
       {
         "requires_state": {
           "loader_cleared": true
         },
-        "description": "The faulted loader rests cold beside the shutter, its relay dark. The loader diagnostic strip remains fixed beside the cracked relay. A clean route now cuts through the scrap to Jed's bench."
+        "description": "The loader rests on the scrap beside the shutter, its loader diagnostic strip dark. Jed’s bench is through the shutter to the north. Voices carry up the market steps to the south."
       }
     ],
     "npcs": [],
@@ -719,7 +797,10 @@
       }
     ],
     "connections": {
-      "north": "workshop_floor"
+      "north": "workshop_floor",
+      "east": "pit_L1_landing",
+      "west": "checkpoint_queue",
+      "south": "trade_gantry"
     },
     "pos": [
       0,
@@ -734,6 +815,17 @@
         "enemy_id": "faulted_loader",
         "message_locked": "The loader's wild arm blocks the workshop shutter. Engage the Faulted Loader to enter combat!",
         "message_unlock": "The loader folds into the scrap, leaving the workshop route open."
+      },
+      "west": {
+        "type": "state",
+        "requires": [
+          {
+            "room_id": "workshop_floor",
+            "state_key": "cutter_surge_complete",
+            "value": true
+          }
+        ],
+        "message_locked": "The shift rail is down. The checkpoint opens at the shift call; Jed is waiting on the cutter."
       }
     },
     "actions": [
@@ -777,7 +869,7 @@
         "requires_milestones": [
           "ms_w1_mq01_cutter_surge"
         ],
-        "description": "Scorched slag marks the test clamp where the cutter surged. The mining cutter and grounded Flux Liner rest beside Jed's bench under the steady hum of the repaired cold loop."
+        "description": "The live cutter test left a black crescent on the clamp. The mining cutter and grounded Flux Liner rest beside Jed's bench under the steady hum of the repaired cold loop."
       },
       {
         "requires_state": {
@@ -1074,20 +1166,21 @@
     "env": "mine",
     "title": "Back Alley",
     "background_image": "images/rooms/world_1/workshop_back_v3.webp",
-    "description": "A narrow service dock runs from Jed's shop toward the lower tunnels. Grease, scrap plates, and a motorized salvage dolly crowd the wall.",
+    "description": "A delivery gate opens east onto Trade Row. Its bolt is on this side. A salvage dolly lists under a stack of scrap plates.",
     "description_variants": [
       {
         "requires_milestones": [
           "ms_w1_workshop_back_looted"
         ],
-        "description": "A narrow service dock runs from Jed's shop toward the lower tunnels. Stacked scrap plates lean beside the cleared salvage dolly."
+        "description": "A delivery gate leads east to Trade Row. Stacked scrap plates lean against the cleared salvage dolly."
       }
     ],
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "west": "workshop_dock"
+      "west": "workshop_dock",
+      "east": "trade_entrance"
     },
     "pos": [
       3,
@@ -1114,14 +1207,15 @@
     "env": "mine",
     "title": "Triage Hall",
     "background_image": "images/rooms/world_1/medbay_hall_v3.webp",
-    "description": "Grimy benches line the hall under flickering clinical lights. A tired bio-scanner blinks near Doc's door while a chemical haze seeps from the vent access to the east.",
+    "description": "Grimy benches line the hall under flickering clinical lights. A tired bio-scanner blinks near Doc's door while a chemical haze seeps from the vent access to the east. The Mess Hall is through the south doors.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "north": "medbay_exam1",
       "west": "medbay_decon",
-      "east": "medbay_vents"
+      "east": "medbay_vents",
+      "south": "pit_mess"
     },
     "pos": [
       0,
@@ -1138,6 +1232,14 @@
         "name": "bio-scanner",
         "type": "generic",
         "condition_unmet_message": "An older model, struggling to process the sheer volume of cases."
+      }
+    ],
+    "description_variants": [
+      {
+        "requires_milestones": [
+          "ms_w1_sq02_vent_patched"
+        ],
+        "description": "Clean air lifts a corner of the chart under the lights by the bio-scanner. Through the south doors, Pam is cooking onions. Doc has turned off the fan by the benches."
       }
     ]
   },
@@ -1409,13 +1511,13 @@
     "env": "market",
     "title": "Trade Row Gate",
     "background_image": "images/rooms/world_1/trade_entrance_v3.webp",
-    "description": "A crooked archway and a stack of flickering signs mark the start of Trade Row, buzzing bright against the carved rock. Beyond them, voices, power cells, and sizzling food all compete to sell you something.",
+    "description": "A crooked archway and a stack of flickering signs mark the start of Trade Row, buzzing bright against the carved rock. Beyond them, voices, power cells, and sizzling food all compete to sell you something. A delivery gate to Jed’s Back Alley cuts through the west wall.",
     "description_variants": [
       {
         "requires_milestones": [
           "ms_w1_mq01_cutter_surge"
         ],
-        "description": "Half the signs above the archway have gone dark, and the stalls beyond run off rattling backup cells. Trade Row is louder than usual. An outage is good business for anyone selling light."
+        "description": "Half the signs above the archway have gone dark, and the stalls beyond run off rattling backup cells. Trade Row is louder than usual. An outage is good business for anyone selling light. The west delivery gate leads to Jed’s."
       }
     ],
     "npcs": [],
@@ -1423,7 +1525,8 @@
     "enemies": [],
     "connections": {
       "north": "trade_strip",
-      "east": "trade_bar"
+      "east": "trade_bar",
+      "west": "workshop_back"
     },
     "pos": [
       0,
@@ -1441,7 +1544,20 @@
         "type": "generic",
         "condition_unmet_message": "Bolted directly into the canyon wall, it marks the boundary of the 'official' colony."
       }
-    ]
+    ],
+    "blocked_directions": {
+      "west": {
+        "type": "state",
+        "requires": [
+          {
+            "room_id": "workshop_back",
+            "state_key": "market_gate_open",
+            "value": true
+          }
+        ],
+        "message_locked": "The delivery gate is bolted from Jed’s side. The public steps are on the Upper Gantry."
+      }
+    }
   },
   {
     "id": "trade_strip",
@@ -1657,12 +1773,13 @@
     "env": "market",
     "title": "Upper Gantry",
     "background_image": "images/rooms/world_1/trade_gantry_v3.webp",
-    "description": "The gantry overlooks Trade Row from rusted railings slick with mist. A neglected crane crate sits lashed to the iron framework above the market.",
+    "description": "The gantry overlooks Trade Row from rusted railings slick with mist. A neglected crane crate sits lashed to the iron framework above the market. Iron steps climb north to Jed’s yard. Below, the Market Strip runs east.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "east": "trade_strip"
+      "east": "trade_strip",
+      "north": "workshop_yard"
     },
     "pos": [
       -1,
@@ -1689,12 +1806,13 @@
     "env": "market",
     "title": "Pump Passage",
     "background_image": "images/rooms/world_1/trade_maint_v3.webp",
-    "description": "Past the market noise, industrial pumps thump in a heavy rhythm. A bronze tuning valve sits on the intake pipe, shuddering with high-pressure vibration.",
+    "description": "Past the market noise, industrial pumps thump in a heavy rhythm. A bronze tuning valve sits on the intake pipe, shuddering with high-pressure vibration. The pipe walk follows the hot main west to the Pit showers.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "north": "trade_bar"
+      "north": "trade_bar",
+      "west": "pit_showers"
     },
     "pos": [
       1,
@@ -1734,7 +1852,8 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "north": "checkpoint_bay"
+      "north": "checkpoint_bay",
+      "east": "workshop_yard"
     },
     "pos": [
       0,

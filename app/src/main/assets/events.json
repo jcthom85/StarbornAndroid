@@ -843,37 +843,6 @@
     ]
   },
   {
-    "id": "w1_mq01_route_to_workshop_hint",
-    "description": "Shows the route locator after Jed points Nova toward his place.",
-    "trigger": {
-      "type": "enter_room",
-      "room": "pit_shaft"
-    },
-    "conditions": [
-      {
-        "type": "quest_active",
-        "quest_id": "w1_mq01"
-      },
-      {
-        "type": "quest_task_done",
-        "quest_id": "w1_mq01",
-        "task_id": "talk_to_jed"
-      },
-      {
-        "type": "quest_task_not_done",
-        "quest_id": "w1_mq01",
-        "task_id": "reach_workshop"
-      }
-    ],
-    "actions": [
-      {
-        "type": "system_tutorial",
-        "scene_id": "scene_market_locator",
-        "context": "Jed's Place"
-      }
-    ]
-  },
-  {
     "id": "w1_mq01_cryo_inductor_repaired",
     "description": "Records the repaired cold loop but keeps Wake Up Call active until the live cutter test finishes.",
     "trigger": {
@@ -13158,6 +13127,9 @@
       },
       {
         "type": "give_reward",
+        "reward": {
+          "presentation": "opening_kit"
+        },
         "items": [
           {
             "item_id": "mining_pistol",
@@ -13180,6 +13152,12 @@
             "quantity": 1
           }
         ]
+      },
+      {
+        "type": "set_room_state",
+        "room_id": "pit_L1_landing",
+        "state_key": "ready_for_shift",
+        "value": true
       }
     ]
   },
@@ -14112,6 +14090,28 @@
       {
         "type": "show_message",
         "message": "Nova clears the dust tarp from Jed's loft bench, uncovering a calibrated targeting sight and workshop scrap."
+      }
+    ]
+  },
+  {
+    "id": "w1_open_workshop_delivery_gate",
+    "description": "Unbolt the market gate on reaching the inside of the delivery dock.",
+    "trigger": {
+      "type": "enter_room",
+      "room": "workshop_back"
+    },
+    "conditions": [
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w1_mq01_loader_cleared"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_room_state",
+        "room_id": "workshop_back",
+        "state_key": "market_gate_open",
+        "value": true
       }
     ]
   },

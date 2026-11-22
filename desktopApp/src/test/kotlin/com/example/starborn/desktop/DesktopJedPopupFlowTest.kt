@@ -87,7 +87,8 @@ class DesktopJedPopupFlowTest {
             assertEquals(1, s.inventoryService.snapshot()["cryo_inductor"])
             assertEquals(2, s.inventoryService.snapshot()["scrap_metal"])
             compose.waitUntil(5000) { runtime.uiState.value.prompt != null }
-            assertTrue("Rewards should precede the equipment offer", runtime.uiState.value.prompt is ItemGrantedPrompt)
+            assertEquals("opening_gear_offer", runtime.uiState.value.prompt?.id)
+            assertFalse(s.promptManager.state.value.queue.any { it is ItemGrantedPrompt })
             capture("starter-kit-notices")
             notices()
             s.sessionStore.setMilestone("ms_w1_mq01_loader_cleared")
@@ -99,24 +100,31 @@ class DesktopJedPopupFlowTest {
             compose.runOnIdle { runtime.openMenuOverlay(MenuTab.FIELD_KIT, showTutorial = false) }
             compose.waitUntil(5000) { runtime.uiState.value.isMenuOverlayVisible }
             assertNull(runtime.uiState.value.activeDialogue)
-            // The crafting UI owns recipe execution; this is its real result callback.
-            s.inventoryService.addItem("functional_cryo_inductor", 1)
-            compose.runOnIdle { runtime.onTinkeringCrafted("functional_cryo_inductor") }
+            val repair = s.craftingService.craftTinkering("repair_cryo_inductor")
+            assertEquals(repair.message, "functional_cryo_inductor", repair.itemId)
+            compose.runOnIdle { runtime.onTinkeringCrafted(repair.itemId) }
             compose.waitUntil(5000) { !runtime.uiState.value.isMenuOverlayVisible }
             dialogue("jed_w1_mq01_repair_done_1")
             assertTrue("ms_w1_mq01_test_briefed" in s.sessionStore.state.value.completedMilestones)
             notices()
             fun action(event: String) {
-                compose.runOnIdle { runtime.onActionSelected(GenericAction(event, "generic", actionEvent = event)) }
+                compose.runOnIdle {
+                    val action = runtime.uiState.value.actions.filterIsInstance<GenericAction>().single { it.actionEvent == event }
+                    runtime.onActionSelected(action)
+                }
                 compose.waitForIdle()
             }
             action("w1_mq01_patch_flux_liner"); notices()
             action("w1_mq01_confirm_governor"); notices()
+            // Hold the illustrated scene on screen while checking foreground ownership.
+            compose.mainClock.autoAdvance = false
             action("w1_mq01_cutter_surge")
             compose.waitUntil(5000) { runtime.uiState.value.cinematic != null }
+            compose.mainClock.advanceTimeByFrame()
             assertEquals(ExplorationNotice.NONE, explorationNotice(runtime.uiState.value))
             capture("cutter-surge")
             compose.runOnIdle { runtime.skipCinematic() }
+            compose.mainClock.autoAdvance = true
             dialogue("jed_w1_mq02_handoff_1")
             assertTrue("w1_mq01" in s.sessionStore.state.value.completedQuests)
             assertTrue("w1_mq02" in s.sessionStore.state.value.activeQuests)

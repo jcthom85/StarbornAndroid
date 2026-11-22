@@ -5,6 +5,18 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class OpeningNarrativeMigrationTest {
+    @Test fun returningMinersCanLeaveThePitWithoutReceivingJedsKitAgain() {
+        val beforeJed = GameSessionState(roomId = "pit_L1_landing", activeQuests = setOf("w1_mq01"))
+        assertFalse(beforeJed.migrateOpeningNarrativeState().roomStates["pit_L1_landing"]?.get("ready_for_shift") == true)
+        for (old in listOf(beforeJed.copy(completedMilestones = setOf("ms_w1_mq01_jed_talked")),
+            beforeJed.copy(activeQuests = setOf("w1_mq02"), completedQuests = setOf("w1_mq01")))) {
+            val restored = old.migrateOpeningNarrativeState()
+            assertTrue(restored.roomStates["pit_L1_landing"]?.get("ready_for_shift") == true)
+            assertTrue(restored.inventory == old.inventory)
+            assertTrue(restored == restored.migrateOpeningNarrativeState())
+        }
+    }
+
     @Test fun sourceNavigationMigrationUsesReceiptsAndLegacyLocationsWithoutInventingProgress() {
         val base = GameSessionState(worldId="world_6",hubId="hub_11_event_horizon",roomId="source_campfire",
             activeQuests=setOf("w6_mq28"), playerXp=71, playerAp=9, playerCredits=123, inventory=mapOf("key_relic" to 1))

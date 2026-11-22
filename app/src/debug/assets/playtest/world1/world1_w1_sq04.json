@@ -94,8 +94,18 @@
   ],
   "unlockedAreas": [],
   "unlockedExits": [
+    "pit_l1_landing::west",
+    "workshop_yard::east",
+    "pit_mess::north",
+    "medbay_hall::south",
+    "pit_showers::east",
+    "trade_maint::west",
     "workshop_yard::north",
     "workshop_floor::south",
+    "workshop_yard::west",
+    "checkpoint_queue::east",
+    "trade_entrance::west",
+    "workshop_back::east",
     "checkpoint_door::north",
     "checkpoint_tunnel::south"
   ],
@@ -123,12 +133,11 @@
   "tutorialSeen": [
     "movement",
     "swipe_move",
-    "opening_gear_offer",
     "gear_equip_basics",
-    "scene_market_locator",
     "tut_nova_first_ap_v1",
+    "mod_slots_basics",
     "menu_save",
-    "mod_slots_basics"
+    "combat_momentum"
   ],
   "tutorialCompleted": [
     "swipe_move",
@@ -142,10 +151,18 @@
     "pit_L1_landing",
     "workshop_yard",
     "workshop_floor",
+    "workshop_shed",
+    "workshop_dock",
+    "workshop_back",
     "trade_entrance",
     "trade_strip",
     "trade_scrapper",
     "trade_stash",
+    "trade_bar",
+    "trade_maint",
+    "pit_showers",
+    "pit_vents",
+    "pit_mess",
     "medbay_hall",
     "medbay_exam1",
     "medbay_vents",
@@ -215,7 +232,6 @@
     "w1_mq01_leave_sleeping_level",
     "w1_mq01_find_jed",
     "w1_mq01_receive_starter_kit",
-    "w1_mq01_route_to_workshop_hint",
     "w1_mq01_inspect_loader_relay",
     "w1_mq01_faulted_loader_victory",
     "w1_mq01_reach_workshop",
@@ -223,7 +239,7 @@
     "w1_mq01_patch_flux_liner",
     "w1_mq01_confirm_governor",
     "w1_mq01_cutter_surge",
-    "w1_mq02_save_prompt_after_workshop",
+    "w1_open_workshop_delivery_gate",
     "w1_sq01_find_stash",
     "w1_sq01_open_rebel_cache",
     "w1_sq02_enter_vents",
@@ -231,11 +247,13 @@
     "w1_sq02_reroute_airflow",
     "w1_sq02_clear_toxic_blockage",
     "w1_mod_acquired_tutorial",
+    "w1_mq02_save_prompt_after_workshop",
     "w1_mq02_approach_checkpoint",
     "w1_mq02_mod_slots_tutorial",
     "w1_mq02_reach_booth",
     "w1_mq03_logistics_commitment_warning",
-    "w1_mq03_enter_logistics_sector"
+    "w1_mq03_enter_logistics_sector",
+    "w1_mq02_momentum_tiers_tutorial"
   ],
   "pendingEventCinematics": [],
   "pendingBattleJson": "",
@@ -261,20 +279,46 @@
       "discovered": true
     },
     "pit_L1_landing": {
+      "ready_for_shift": true,
       "visited": true,
       "discovered": true
     },
     "workshop_yard": {
-      "visited": true,
       "discovered": true,
+      "visited": true,
       "encounter_cleared:faulted_loader": true,
       "loader_cleared": true
+    },
+    "medbay_hall": {
+      "discovered": true,
+      "visited": true
+    },
+    "trade_maint": {
+      "discovered": true,
+      "visited": true
     },
     "workshop_floor": {
       "discovered": true,
       "visited": true,
       "cryo_inductor_installed": true,
       "cutter_surge_complete": true
+    },
+    "checkpoint_queue": {
+      "discovered": true,
+      "visited": true
+    },
+    "workshop_shed": {
+      "visited": true,
+      "discovered": true
+    },
+    "workshop_dock": {
+      "visited": true,
+      "discovered": true
+    },
+    "workshop_back": {
+      "visited": true,
+      "discovered": true,
+      "market_gate_open": true
     },
     "trade_entrance": {
       "visited": true,
@@ -293,7 +337,19 @@
       "discovered": true,
       "rebel_cache_opened": true
     },
-    "medbay_hall": {
+    "trade_bar": {
+      "visited": true,
+      "discovered": true
+    },
+    "pit_showers": {
+      "visited": true,
+      "discovered": true
+    },
+    "pit_vents": {
+      "visited": true,
+      "discovered": true
+    },
+    "pit_mess": {
       "visited": true,
       "discovered": true
     },
@@ -308,10 +364,6 @@
       "vent_inspected": true,
       "airflow_rerouted": true,
       "toxic_blockage_cleared": true
-    },
-    "checkpoint_queue": {
-      "visited": true,
-      "discovered": true
     },
     "checkpoint_bay": {
       "visited": true,
@@ -400,15 +452,135 @@
       "roomId": "spire_landing_pad_scale_03",
       "routeIndex": 1,
       "routeDirection": 1,
-      "moveRemainingMs": 22000,
+      "moveRemainingMs": 16000,
       "retreatGraceRemainingMs": 0,
       "defeated": false
     },
-    "w1_deep_mine_pressure_patrol": {
-      "roomId": "mine_conveyor",
+    "w3_exec_security_patrol": {
+      "roomId": "spire_exec_lounge_scale_04",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 15000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w3_sewer_sluice_pack": {
+      "roomId": "spire_sewers_scale_02",
       "routeIndex": 0,
       "routeDirection": 1,
-      "moveRemainingMs": 25000,
+      "moveRemainingMs": 30000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w3_fuel_bridge_drones": {
+      "roomId": "spire_landing_pad_scale_01",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 30000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w4_waste_intake_patrol": {
+      "roomId": "foundry_waste_intake_scale_02",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 15000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w4_conditioning_phantom_patrol": {
+      "roomId": "foundry_conditioning_scale_04",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 14000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w4_reject_bay_phantom": {
+      "roomId": "foundry_reject_bay",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 30000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w4_engine_ring_trooper": {
+      "roomId": "foundry_engine_service_ring",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 30000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w5_security_precinct_patrol": {
+      "roomId": "orbital_security_hub_scale_03",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 15000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w5_solarium_drone_patrol": {
+      "roomId": "orbital_solarium_scale_03",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 14000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w5_mirror_walk_surveyor": {
+      "roomId": "orbital_mirror_walk",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 30000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w5_firewall_beta_sentries": {
+      "roomId": "deep_firewall_beta",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 30000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w6_echo_mines_shadow_patrol": {
+      "roomId": "source_echo_mines_node_scale_04",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 15000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w6_memory_stair_sentinel_patrol": {
+      "roomId": "source_memory_stair_node_scale_04",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 14000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w6_echo_patrol_shadow": {
+      "roomId": "source_echo_patrol",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 30000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w6_spire_thought_guard": {
+      "roomId": "source_spire_thought_node_scale_03",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 30000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w1_mine_alpha_borers": {
+      "roomId": "mine_alpha",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 30000,
       "retreatGraceRemainingMs": 0,
       "defeated": false
     }

@@ -83,6 +83,10 @@ fun GameSessionState.migrateOpeningNarrativeState(): GameSessionState {
         }
     }
 
+    if ("ms_w1_mq01_jed_talked" in migratedMilestones || "w1_mq01" in completedQuests) {
+        roomState("pit_L1_landing", "ready_for_shift")
+    }
+
     if ("w1_mq01" in completedQuests) {
         backfillMilestone("ms_w1_mq01_cryo_repaired")
         backfillMilestone("ms_w1_mq01_cutter_surge")

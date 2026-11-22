@@ -270,7 +270,7 @@
   {
     "id": "jed_w1_mq01_intro_6",
     "speaker": "Jed",
-    "text": "Mind the scrap loader in the yard. Its sensor's gone bad. Give it room to turn.",
+    "text": "Take the yellow rail west from Pit Landing. Mind the loader at my shutter. Its sensor’s gone bad.",
     "trigger": "set_quest_task_done:w1_mq01:find_jed,set_quest_task_done:w1_mq01:talk_to_jed,player_action:w1_mq01_receive_starter_kit,set_quest_task_done:w1_mq01:equip_starter_gear,set_milestone:ms_w1_mq01_jed_talked"
   },
   {
@@ -343,13 +343,13 @@
   {
     "id": "jed_w1_mq02_handoff_3",
     "speaker": "Jed",
-    "text": "Try Hank at Transit Checkpoint on the hub map. If he turns you away, head east from the Search Bay to Zeke's Booth. He can buy you time. I’ll head for the service lift.",
+    "text": "Go west across my yard. Hank’s taking names at the checkpoint. If he turns you away, Zeke's Booth is east of the Search Bay. He can buy you time. I’ll take the service lift.",
     "trigger": "set_milestone:ms_w1_mq02_jed_advised"
   },
   {
     "id": "jed_w1_mq02_reminder",
     "speaker": "Jed",
-    "text": "Transit Checkpoint is on the hub map. Past the Shift Queue, turn east from the Search Bay to Zeke's Booth if Hank rejects you.",
+    "text": "Cross my yard to the west. Hank’s in the Search Bay. If he turns you away, head east to Zeke's Booth.",
     "condition": "quest_active:w1_mq02,milestone:ms_w1_mq02_jed_advised,milestone_not_set:ms_w1_mq02_hank_denied"
   },
   {
@@ -607,7 +607,7 @@
   {
     "id": "scrapper_w1_sq01_intro_1",
     "speaker": "Scrapper",
-    "text": "Cutter. You want something the company didn't ration? There's an old resistance cache behind the strip. I know where. You look like you can get it open.",
+    "text": "You shut down that loader? Good. There’s an old resistance cache behind the strip. I need somebody who knows a live relay when they see one.",
     "condition": "quest_completed:w1_mq01,quest_not_started:w1_sq01",
     "next": "scrapper_w1_sq01_intro_2"
   },
@@ -628,6 +628,12 @@
     "speaker": "Scrapper",
     "text": "Keep the grenades dry. Cheap detonators are how you lose fingers and repeat customers.",
     "condition": "quest_completed:w1_sq01"
+  },
+  {
+    "id": "scrapper_w1_before_cutter",
+    "speaker": "Scrapper",
+    "text": "Jed’s got a cutter up those steps. When it’s working, bring it down here. I’ll pay.",
+    "condition": "quest_active:w1_mq01"
   },
   {
     "id": "scrapper_default_talk",
@@ -682,6 +688,12 @@
     "speaker": "Doc",
     "text": "The little one by the window finally slept. Leave the door quiet if you're passing through.",
     "condition": "quest_completed:w1_sq02"
+  },
+  {
+    "id": "doc_w1_before_cutter",
+    "speaker": "Doc",
+    "text": "Smell that? Mine air. I’ve got a request in for a cutter. Come back when yours is running. I can put it to work.",
+    "condition": "quest_active:w1_mq01"
   },
   {
     "id": "doc_default_talk",

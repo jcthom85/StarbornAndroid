@@ -647,7 +647,7 @@ class EventManager(
         val credits = action.credits ?: base.credits
         val ap = action.ap ?: base.ap
         val items = action.rewardItems ?: base.items
-        return EventReward(xp = xp, credits = credits, ap = ap, items = items)
+        return base.copy(xp = xp, credits = credits, ap = ap, items = items)
     }
 }
 

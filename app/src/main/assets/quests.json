@@ -46,7 +46,7 @@
           },
           {
             "id": "reach_workshop",
-            "text": "Reach Jed's place."
+            "text": "Reach Jed’s bench beyond the Scrap Yard. Take the yellow rail west from Pit Landing."
           },
           {
             "id": "inspect_loader_relay",
@@ -112,7 +112,7 @@
         "tasks": [
           {
             "id": "approach_admin_gate",
-            "text": "Choose Transit Checkpoint on the hub map, then head north from the Shift Queue to the Search Bay for clearance."
+            "text": "Walk west across the Scrap Yard to Transit Checkpoint. Hank checks clearance north of the Shift Queue."
           },
           {
             "id": "request_clearance",

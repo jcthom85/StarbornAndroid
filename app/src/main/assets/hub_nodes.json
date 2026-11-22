@@ -58,7 +58,7 @@
     ],
     "discovered": true,
     "initial_visibility": "unlocked",
-    "entry_policy": "hub",
+    "entry_policy": "transition",
     "return_policy": "entry"
   },
   {
@@ -87,7 +87,7 @@
     ],
     "discovered": true,
     "initial_visibility": "unlocked",
-    "entry_policy": "hub",
+    "entry_policy": "transition",
     "return_policy": "entry"
   },
   {
@@ -118,7 +118,7 @@
     ],
     "discovered": true,
     "initial_visibility": "unlocked",
-    "entry_policy": "hub",
+    "entry_policy": "transition",
     "return_policy": "entry"
   },
   {
@@ -146,7 +146,7 @@
     ],
     "discovered": true,
     "initial_visibility": "revealed",
-    "entry_policy": "hub",
+    "entry_policy": "transition",
     "return_policy": "entry",
     "locked_message": "Dominion checkpoint lights sweep across the upper causeway. A bored guard leans near the scanner booth, watching every worker who gets too close.\n\nYou need a reason to cross, or someone willing to vouch for you.",
     "unlock_conditions": [
