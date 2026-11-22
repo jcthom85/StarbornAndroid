@@ -1225,13 +1225,14 @@ class CombatActionProcessor(
         state: CombatState,
         targetIds: List<String>
     ): Double {
-        val targetStatuses = targetIds
-            .mapNotNull(state.combatants::get)
+        val targets = targetIds.mapNotNull(state.combatants::get)
+        val targetStatuses = targets
             .flatMap { it.statusEffects }
             .map { it.id.lowercase() }
             .toSet()
+        val anyBroken = targets.any { it.breakTurns > 0 }
         return when {
-            "bonus_if_target_staggered" in skill.conditions.orEmpty() && "stagger" in targetStatuses -> 1.65
+            "bonus_if_target_staggered" in skill.conditions.orEmpty() && ("stagger" in targetStatuses || anyBroken) -> 1.65
             "bonus_if_target_stunned" in skill.conditions.orEmpty() && targetStatuses.any { it == "stun" || it == "stagger" } -> 1.65
             else -> 1.0
         }

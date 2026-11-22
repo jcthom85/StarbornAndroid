@@ -25,15 +25,15 @@ object NovaBuildPrototype {
 
     val tree = SkillTreeDefinition("nova", linkedMapOf(
         "Saboteur" to listOf(
-            node(GROUNDED, "Grounded Wire", 1, null, "Arc Tether deals 20% more stability damage. HP damage and Shock are unchanged."),
-            node(VENT, "Controlled Vent", 2, GROUNDED, "Cryo Vent power rises from 55 to 65. It applies Brittle for 2 turns, without freezing the target."),
-            node(BREAKER, "Breaker Bolt", 3, VENT, "Physical shot at one enemy: 100 power, Agility scaling, cooldown 3. Deals 50% more stability damage; applies no status.", SkillNodeEffect(type = "active", subtype = BREAKER_SKILL)),
-            node(SEAM, "Exposed Seam", 4, BREAKER, "Direct hits deal 15% more HP damage against Weak or Brittle targets. Having both does not double the bonus.")),
+            node(GROUNDED, "Grounded Wire", 1, null, "Arc Tether deals +20% Stability damage."),
+            node(VENT, "Controlled Vent", 2, GROUNDED, "Cryo Vent power rises from 55 to 65 and reliably applies Brittle for 2 turns."),
+            node(BREAKER, "Breaker Bolt", 3, VENT, "Unlock Breaker Bolt: Focused physical shot (100 power, Agility scaling) dealing +50% Stability damage. (3-turn cooldown)", SkillNodeEffect(type = "active", subtype = BREAKER_SKILL)),
+            node(SEAM, "Exposed Seam", 4, BREAKER, "Nova's direct hits deal +15% HP damage against targets afflicted with Discord or Brittle.")),
         "Improviser" to listOf(
             node(STEPS, "Quiet Steps", 1, null, "Permanent +1 Speed.", SkillNodeEffect(type = "buff", buffType = "speed", value = 1)),
-            node(SCATTER, "Scatter Charge", 2, STEPS, "Physical damage to all enemies: 60 power, Agility scaling, cooldown 2. Applies no status.", SkillNodeEffect(type = "active", subtype = SCATTER_SKILL)),
-            node(START, "Hot Start", 3, SCATTER, "Direct hits deal 15% more HP damage against targets above 75% HP."),
-            node(MOVING, "Keep Moving", 4, START, "A direct-action kill grants Nova Shield for 1 personal turn. Once per action, at most twice per battle."))),
+            node(SCATTER, "Scatter Charge", 2, STEPS, "Unlock Scatter Charge: Agility-scaled physical blast (60 power) hitting all enemies. (2-turn cooldown)", SkillNodeEffect(type = "active", subtype = SCATTER_SKILL)),
+            node(START, "Hot Start", 3, SCATTER, "Nova's direct hits deal +15% HP damage against enemies above 75% HP."),
+            node(MOVING, "Keep Moving", 4, START, "Scoring a direct KO grants Nova Shield for 1 turn (up to twice per battle)."))),
         useTierRequirements = false)
 
     val nodes = tree.branches.values.flatten().associateBy { it.id }

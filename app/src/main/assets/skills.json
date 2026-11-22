@@ -651,7 +651,7 @@
     "name": "Rend Round",
     "character": "nova",
     "type": "active",
-    "description": "A barbed flechette round calibrated to bite deep into armor seams. Deals massive bonus damage and Bleed against staggered targets.",
+    "description": "A barbed flechette round calibrated to bite deep into armor seams. Deals +65% bonus damage and Bleed against Broken or Staggered targets.",
     "combat_tags": [
       "dmg"
     ],
@@ -724,7 +724,7 @@
     "combat_tags": [
       "aoe"
     ],
-    "base_power": 190,
+    "base_power": 130,
     "scaling": "strength",
     "cooldown": 3,
     "status_applications": [
