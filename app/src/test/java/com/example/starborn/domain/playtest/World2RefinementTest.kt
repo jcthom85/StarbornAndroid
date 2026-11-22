@@ -203,7 +203,7 @@ class World2RefinementTest {
         assertFalse("bridge_relic" in h.state.inventory)
         val resumed = Harness(roundTrip(h.state).migrateOpeningNarrativeState())
         val talk = requireNotNull(resumed.dialogue.startDialogue("Orion"))
-        repeat(7) { talk.advance() }
+        while (!talk.isFinished()) { talk.advance() }
         assertTrue("orion" in resumed.state.partyMembers)
         assertFalse("w2_mq03" in resumed.state.completedQuests)
         resumed.action("w2_mq03_recover_bridge")

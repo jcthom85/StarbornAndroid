@@ -1677,9 +1677,9 @@
   },
   {
     "id": "ms_w2_beast_defeated",
-    "name": "Source Beast Repelled",
-    "description": "Nova broke the Source Beast's resonance surge.",
-    "toast": "Source Beast repelled."
+    "name": "Source Beast Defeated",
+    "description": "Nova, Zeke, and Orion brought down the Source Beast that breached Sector 9 twenty years ago.",
+    "toast": "Source Beast defeated."
   },
   {
     "id": "ms_w2_conduits_collected",

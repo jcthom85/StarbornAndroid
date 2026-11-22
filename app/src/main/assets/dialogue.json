@@ -3678,14 +3678,35 @@
   {
     "id": "orion_w2_awakening_2",
     "speaker": "Orion",
-    "text": "Twenty years. I sealed the pod to keep the signal alive. I thought I would hear the evening tide again.",
-    "next": "orion_w2_awakening_zeke",
+    "text": "Twenty years. Everyone on the night watch—the whole First Division... twenty years gone behind three inches of frost while I thought I’d wake to the evening tide.",
+    "next": "orion_w2_awakening_time_zeke",
     "emote": "sad"
+  },
+  {
+    "id": "orion_w2_awakening_time_zeke",
+    "speaker": "Zeke",
+    "text": "The Dominion scrubbed Sector 9 off the flight charts and sealed the canopy under the Planetary Shield almost two decades ago. Nobody’s walked down here since. What drove you into that pod?",
+    "next": "orion_w2_awakening_breach",
+    "emote": "worried"
+  },
+  {
+    "id": "orion_w2_awakening_breach",
+    "speaker": "Orion",
+    "text": "A containment breach. The Dominion outpost dragged a canopy predator out of the swamp after the dynamo leaks warped it—it hunted anything tuned to Source resonance. When their cage failed, it tore straight through our lower doors. I fired the brass Chime down the conduit to get it away from them... and muted the room so it couldn’t hear me breathing.",
+    "next": "orion_w2_awakening_nova_chime",
+    "emote": "worried"
+  },
+  {
+    "id": "orion_w2_awakening_nova_chime",
+    "speaker": "Nova",
+    "text": "The brass Chime? That’s what led us here from the Mining Colony. Your signal has been calling through the dark for twenty years.",
+    "next": "orion_w2_awakening_zeke",
+    "emote": "surprised"
   },
   {
     "id": "orion_w2_awakening_3",
     "speaker": "Orion",
-    "text": "I can still hear each voice on its own. You kept the bands apart. Thank you, Nova.",
+    "text": "I can still hear each voice on its own—not blurred together. You kept the bands apart. Thank you, Nova. For answering.",
     "next": "orion_w2_awakening_depart",
     "emote": "happy"
   },
@@ -3880,14 +3901,14 @@
   {
     "id": "orion_w2_awakening_nova",
     "speaker": "Nova",
-    "text": "We just got here. I’m Nova. That clock says twenty years. Is there someone we should look for?",
+    "text": "We just got here. I’m Nova—that’s Zeke. The stasis clock on your pod says twenty years, four months. Is there someone we should look for?",
     "next": "orion_w2_identity",
     "emote": "worried"
   },
   {
     "id": "orion_w2_awakening_zeke",
     "speaker": "Zeke",
-    "text": "We can check the records when you’re ready. Here. Sit a minute.",
+    "text": "Easy, Orion. Sit a minute and catch your breath. Twenty years is a hell of a long time to wake up to all at once—we can check the records when you’re ready.",
     "next": "orion_w2_awakening_3",
     "emote": "worried"
   },
@@ -3922,7 +3943,7 @@
   {
     "id": "orion_w2_identity",
     "speaker": "Orion",
-    "text": "Orion. My name is Orion. You opened the pod?",
+    "text": "Orion. My name is Orion. Twenty years... no, the calibration must be drifting. I only sealed the hatch after the far bulkhead gave way.",
     "next": "orion_w2_awakening_2",
     "trigger": "set_milestone:ms_w2_orion_identified",
     "emote": "puzzled"
@@ -3938,6 +3959,13 @@
     "id": "ghost_confrontation_warning",
     "speaker": "Gh0st",
     "text": "Wait. Something is moving behind you. Get clear of the roots.",
+    "next": "ghost_confrontation_orion_beast",
+    "emote": "surprised"
+  },
+  {
+    "id": "ghost_confrontation_orion_beast",
+    "speaker": "Orion",
+    "text": "That low hum—it’s the same creature that broke through the Sanctuary doors twenty years ago! It tracked the Chime straight up the ridge. Stand your ground!",
     "trigger": "music_restore,player_action:w2_mq04_confront_finished",
     "emote": "surprised"
   },

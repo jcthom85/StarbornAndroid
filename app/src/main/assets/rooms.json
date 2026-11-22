@@ -13510,7 +13510,7 @@
       {
         "name": "terminal",
         "type": "generic",
-        "condition_unmet_message": "Hacking the security database reports status: LOCKDOWN."
+        "condition_unmet_message": "DOMINION INCIDENT LOG // -20 YRS: Resonance-warped canopy predator escaped Containment Bay B during dynamo surge. Subject tracks acoustic Source signatures at long range. Stasis Deck bulkheads compromised; facility status LOCKDOWN."
       }
     ]
   },
@@ -13812,6 +13812,11 @@
         "requires_milestone_not_set": "ms_w2_crystal_north_seated",
         "condition_unmet_message": "A gold crystal rests inside the test rack.",
         "unavailable_message": "A gold crystal rests inside the test rack. Speak with Orion about the stasis murals before aligning it."
+      },
+      {
+        "name": "logging sensors",
+        "type": "generic",
+        "condition_unmet_message": "Dominion acoustic logs trace a single massive resonance echo circling Sector 9 for twenty years—drawn toward the muted stasis pod, unable to locate its prey until the chamber opened."
       }
     ],
     "enemy_instances": [

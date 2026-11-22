@@ -53,7 +53,7 @@ object AstraCatalog {
         SimulationProgramDefinition("Ruin-Guardian Defense Matrix", "TRAINING PROTOCOLS", listOf("ruin_guardian"), "Heavy armor barrier penetration and stability shattering.", 0xFF00E5FFL),
 
         SimulationProgramDefinition("Apex I: The Iron Warden", "APEX BOSS ARCHIVES", listOf("the_iron_warden"), "World 1 heavy enforcer benchmark. Ground slams & seismic pulse.", 0xFFFFB703L),
-        SimulationProgramDefinition("Apex II: The Mire Beast", "APEX BOSS ARCHIVES", listOf("the_beast"), "World 2 jungle apex bio-construct. High vitality and acid spit.", 0xFFFFB703L),
+        SimulationProgramDefinition("Apex II: The Source Beast", "APEX BOSS ARCHIVES", listOf("the_beast"), "World 2 apex predator warped by Sector 9 Source leaks. Hunts by acoustic resonance; high vitality and frenzy lunges.", 0xFFFFB703L),
         SimulationProgramDefinition("Apex III: Dominion Administrator", "APEX BOSS ARCHIVES", listOf("administrator_boss"), "World 3 corporate mastermind with defensive subroutines.", 0xFFFFB703L),
         SimulationProgramDefinition("Apex IV: Titan Walker Siegemaster", "APEX BOSS ARCHIVES", listOf("titan_walker_boss"), "World 4 foundry dreadnought with explosive artillery.", 0xFFFFB703L),
         SimulationProgramDefinition("Apex V: Compliance Avatar", "APEX BOSS ARCHIVES", listOf("compliance_avatar"), "World 5 digital construct of executive control.", 0xFFFFB703L),
