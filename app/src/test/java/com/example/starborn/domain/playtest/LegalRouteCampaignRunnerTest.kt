@@ -769,6 +769,130 @@ class LegalRouteCampaignRunnerTest {
     }
 
     @Test
+    fun foundryAirlockAndBypassFollowTheDoorInEitherCrateOrder() {
+        useProductionCrewRules = true
+        val checkpoint = GameSessionState(
+            worldId = "world_4",
+            hubId = "hub_7_slag_pits",
+            roomId = "foundry_service_airlock",
+            activeQuests = setOf("w4_mq16", "w4_sq16"),
+            trackedQuestId = "w4_mq16",
+            questStageById = mapOf("w4_mq16" to "open_airlock"),
+            questTasksCompleted = mapOf(
+                "w4_mq16" to setOf("land_shelf", "cross_slag_river"),
+                "w4_sq16" to setOf("crate_alpha", "crate_beta")
+            )
+        )
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope, initialState = checkpoint)
+        try {
+            val agent = LegalCampaignAgent(h)
+            agent.navigateLegalPath("foundry_service_airlock")
+            h.saveSlot(6)
+
+            fun checkDescription(door: String, crateDestroyed: Boolean) {
+                val ui = h.explorationVm.uiState.value
+                val state = h.sessionStore.state.value
+                val description = requireNotNull(com.example.starborn.feature.exploration.presentation.resolveRoomDescription(
+                    ui.currentRoom, ui.roomState, state.completedMilestones, false, state.completedEvents))
+                assertTrue(description, door in description)
+                assertEquals(description, crateDestroyed, "scorched brackets" in description)
+            }
+
+            fun checkBlocked(direction: String, room: String) {
+                assertTrue(direction in h.explorationVm.uiState.value.blockedDirections)
+                h.explorationVm.travel(direction)
+                h.settle()
+                assertEquals(room, h.sessionStore.state.value.roomId)
+                h.explorationVm.dismissBlockedPrompt()
+            }
+
+            for (crateFirst in listOf(true, false)) {
+                h.loadSlot(6)
+                checkDescription("sealed against the heat", false)
+                if (crateFirst) agent.performAction("w4_sq16_destroy_crate_gamma")
+                checkDescription("sealed against the heat", crateFirst)
+                checkBlocked("east", "foundry_service_airlock")
+                listOf("north", "north", "north", "north", "east").forEach(agent::travelDirection)
+                checkBlocked("south", "foundry_service_airlock_scale_final")
+
+                listOf("west", "south", "south", "south", "south", "west").forEach(agent::travelDirection)
+                assertEquals("foundry_waste_intake", h.sessionStore.state.value.roomId)
+                agent.performAction("w4_mq16_hack_cooling_vents")
+                agent.travelDirection("east")
+                checkDescription("cooled enough to cycle", crateFirst)
+                checkBlocked("east", "foundry_service_airlock")
+                agent.performAction("w4_mq16_enter_airlock")
+                assertTrue("w4_mq17" in h.sessionStore.state.value.activeQuests)
+                checkDescription("stands open east", crateFirst)
+                if (!crateFirst) agent.performAction("w4_sq16_destroy_crate_gamma")
+                checkDescription("stands open east", true)
+                assertEquals(1, h.inventoryService.snapshot()["heat_liner"])
+                assertEquals(1, h.inventoryService.snapshot()["explosive_tip"])
+                h.saveSlot(7)
+                h.loadSlot(7)
+                agent.travelDirection("east")
+                assertEquals("foundry_decon_chamber", h.sessionStore.state.value.roomId)
+                agent.travelDirection("north")
+                agent.travelDirection("south")
+                assertEquals("foundry_decon_chamber", h.sessionStore.state.value.roomId)
+            }
+        } finally { h.close() }
+    }
+
+    @Test
+    fun eitherStreamBankEncounterRevealsTheTempleGate() {
+        useProductionCrewRules = true
+        val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
+        try {
+            val agent = LegalCampaignAgent(h)
+            agent.playWorld1()
+            agent.talkToNpc("Zeke")
+            agent.performAction("w2_mq01_examine_pod")
+            agent.navigateLegalPath("sector9_pod_interior")
+            agent.performAction("w2_mq01_stabilize_zeke")
+            agent.navigateLegalPath("sector9_landing_stream")
+            assertEquals("w2_mq02", h.sessionStore.state.value.trackedQuestId)
+            h.explorationVm.onNpcInteraction("Zeke")
+            h.settle()
+            val hint = requireNotNull(h.explorationVm.uiState.value.activeDialogue?.line)
+            assertEquals("zeke_w2_mq02_intro_1", hint.id)
+            assertTrue("south" in hint.text && "wreck" in hint.text)
+            agent.finishDialogue("correct")
+            h.saveSlot(6)
+
+            for (viaWetlands in listOf(false, true)) {
+                h.loadSlot(6)
+                if (viaWetlands) {
+                    listOf("east", "east", "north", "north").forEach(agent::travelDirection)
+                    assertEquals("sector9_stream_cave_depths", h.sessionStore.state.value.roomId)
+                    h.playPublicEncounter("moss_borer")
+                } else {
+                    agent.travelDirection("west")
+                    assertEquals("sector9_crash_site", h.sessionStore.state.value.roomId)
+                    agent.travelDirection("south")
+                    assertEquals("sector9_canopy", h.sessionStore.state.value.roomId)
+                    h.playPublicEncounter("stalker_vine")
+                }
+                assertTrue("clear_canopy_path" in h.sessionStore.state.value.questTasksCompleted["w2_mq02"].orEmpty())
+                assertTrue("temple_gate" in h.sessionStore.state.value.revealedNodes)
+                if (viaWetlands) {
+                    agent.navigateLegalPath("sector9_landing_stream")
+                    h.explorationVm.onNpcInteraction("Zeke")
+                    h.settle()
+                    assertEquals("zeke_w2_mq02_ridge_hint", h.explorationVm.uiState.value.activeDialogue?.line?.id)
+                    agent.finishDialogue("correct")
+                }
+                agent.navigateLegalPath("sector9_temple_gate")
+                agent.performAction("w2_mq02_use_chime")
+                assertTrue("w2_mq02" in h.sessionStore.state.value.completedQuests)
+                agent.travelDirection("east")
+                assertEquals("sector9_foyer_grand_hall", h.sessionStore.state.value.roomId)
+            }
+            assertTrue(assistance.isEmpty())
+        } finally { h.close() }
+    }
+
+    @Test
     fun productionWorld2ReachesItsDepartureWithEarnedCrewAndSaveParity() {
         useProductionCrewRules = true
         val h = ProductionCampaignHarness(saveDir, testDispatcher, testScope)
@@ -2994,11 +3118,14 @@ class LegalRouteCampaignRunnerTest {
             navigateLegalPath("orbital_server_farm")
             performAction("w5_mq23_navigate_maze")
             navigateLegalPath("deep_firewall_alpha")
-            performAction("w5_mq23_firewall_alpha")
+            performAction("w5_mq23_firewall_alpha_console")
+            finishDialogue("correct")
             navigateLegalPath("deep_firewall_beta")
-            performAction("w5_mq23_firewall_beta")
+            performAction("w5_mq23_firewall_beta_console")
+            finishDialogue("correct")
             navigateLegalPath("deep_firewall_gamma")
-            performAction("w5_mq23_firewall_gamma")
+            performAction("w5_mq23_firewall_gamma_console")
+            finishDialogue("correct")
             assertTrue("Firewall controls alone must not complete the quest", "w5_mq23" in harness.sessionStore.state.value.activeQuests)
             navigateLegalPath("orbital_server_farm")
             harness.explorationVm.travel("east"); harness.settle()

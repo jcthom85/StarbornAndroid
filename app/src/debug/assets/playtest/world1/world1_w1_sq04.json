@@ -14,7 +14,7 @@
     "nova": 3
   },
   "partyMemberHp": {
-    "nova": 90
+    "nova": 135
   },
   "trackedQuestId": "w1_sq03",
   "activeQuests": [
@@ -116,10 +116,11 @@
     "mining_pistol": 1,
     "nova_flux_liner": 1,
     "scrap_metal": 2,
-    "ration_pack": 7,
+    "ration_pack": 5,
     "functional_cryo_inductor": 1,
     "medkit_i": 3,
     "pulse_grenade": 3,
+    "vial_of_venom": 1,
     "mod_corrosive_rounds": 1,
     "mine_access_badge": 1
   },

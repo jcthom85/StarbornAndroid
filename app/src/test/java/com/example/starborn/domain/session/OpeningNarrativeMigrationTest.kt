@@ -5,6 +5,23 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class OpeningNarrativeMigrationTest {
+    @Test fun finishedFoundryAirlockRestoresBothEntrancesWithoutPayingAgain() {
+        val base = GameSessionState(roomId = "foundry_service_airlock", activeQuests = setOf("w4_mq16"))
+        val stored = base.copy(completedMilestones = setOf("ms_w4_cooling_vents_hacked", "ms_w4_crate_gamma_destroyed"))
+        assertFalse(stored.migrateOpeningNarrativeState().roomStates[base.roomId]?.get("airlock_open") == true)
+
+        for (old in listOf(base.copy(completedQuests = setOf("w4_mq16"), activeQuests = setOf("w4_mq17")),
+            base.copy(completedMilestones = setOf("ms_w4_mq16_complete")),
+            base.copy(completedEvents = setOf("w4_mq16_enter_airlock")))) {
+            val restored = old.migrateOpeningNarrativeState()
+            assertTrue(restored.roomStates[base.roomId]?.get("airlock_open") == true)
+            assertTrue("ms_w4_mq16_complete" in restored.completedMilestones)
+            assertTrue(restored.inventory == old.inventory && restored.playerXp == old.playerXp)
+            assertTrue(restored.completedQuests == old.completedQuests && restored.activeQuests == old.activeQuests)
+            assertTrue(restored == restored.migrateOpeningNarrativeState())
+        }
+    }
+
     @Test fun returningMinersCanLeaveThePitWithoutReceivingJedsKitAgain() {
         val beforeJed = GameSessionState(roomId = "pit_L1_landing", activeQuests = setOf("w1_mq01"))
         assertFalse(beforeJed.migrateOpeningNarrativeState().roomStates["pit_L1_landing"]?.get("ready_for_shift") == true)

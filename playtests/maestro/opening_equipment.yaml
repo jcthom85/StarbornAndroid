@@ -9,17 +9,15 @@ appId: ${APP_ID}
 - scrollUntilVisible:
     element: "Weapon"
     direction: DOWN
+- assertVisible: "No weapon equipped"
 - tapOn: "Weapon"
-- assertVisible: "Equipped: Empty"
-- tapOn: "Mining Pistol"
 - tapOn: "Equip Mining Pistol"
 - assertVisible: "Mining Pistol"
 - scrollUntilVisible:
     element: "Armor"
     direction: DOWN
+- assertVisible: "No armor equipped"
 - tapOn: "Armor"
-- assertVisible: "Equipped: Empty"
-- tapOn: "Flux Liner"
 - tapOn: "Equip Flux Liner"
 - assertVisible: "Flux Liner"
 - takeScreenshot: opening-equipment-complete

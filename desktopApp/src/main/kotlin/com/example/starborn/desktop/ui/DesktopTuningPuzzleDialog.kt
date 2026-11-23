@@ -120,6 +120,38 @@ fun DesktopTuningPuzzleDialog(
         return
     }
 
+    if (puzzle.presentation == "chrono_trace") {
+        var submitted by remember(puzzle.id) { mutableStateOf(false) }
+        Dialog(onDismissRequest = onDismiss) {
+            Surface(Modifier.width(560.dp).heightIn(max = 760.dp),
+                shape = RoundedCornerShape(16.dp), color = TerminalDark) {
+                Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text(puzzle.title, style = MaterialTheme.typography.headlineSmall)
+                    com.example.starborn.shared.puzzle.ChronoCoilPanel(
+                        dials = puzzle.sliders.map {
+                            com.example.starborn.shared.puzzle.SignalDial(
+                                it.id, sliderValues[it.id] ?: it.initial, it.min, it.max, it.target, it.tolerance)
+                        },
+                        onChange = { id, value -> sliderValues[id] = value },
+                        onLock = {
+                            if (isTuned && !submitted) {
+                                submitted = true
+                                puzzle.audioCue?.let { cue ->
+                                    services.audioDriver.execute(AudioCommand.Play(AudioCueType.UI, cue, loop = false))
+                                }
+                                onValues(sliderValues.toMap())
+                                onSuccess()
+                            }
+                        },
+                        modifier = Modifier.weight(1f, fill = false).fillMaxWidth()
+                    )
+                    TextButton(onClick = onDismiss) { Text("Cancel") }
+                }
+            }
+        }
+        return
+    }
+
     if (puzzle.presentation == "counter_tune") {
         var submitted by remember(puzzle.id) { mutableStateOf(false) }
         Dialog(onDismissRequest = onDismiss) {

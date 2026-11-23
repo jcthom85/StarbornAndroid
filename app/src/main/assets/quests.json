@@ -670,7 +670,7 @@
     "id": "w2_mq01",
     "title": "A Strange Coast",
     "summary": "The pod has crashed in Sector 9. Check on Zeke and find a way to leave the wreck safely.",
-    "description": "Secure the crash site, check the damaged pod and follow the stream toward shelter.",
+    "description": "Check on Zeke and recover the Chime, then get a view of Sector 9 from Stream Bank.",
     "flavor": "The air smells of ozone and crushed green ferns. The metal hull is cold.",
     "giver": "Zeke",
     "hub_id": "hub_3_sector9",
@@ -694,7 +694,7 @@
           },
           {
             "id": "follow_stream",
-            "text": "Follow the glow-water stream into the ruins."
+            "text": "Go east from the Crash Site to Stream Bank."
           }
         ]
       }
@@ -726,11 +726,11 @@
         "tasks": [
           {
             "id": "clear_canopy_path",
-            "text": "Clear the hostile paths through the canopy."
+            "text": "Clear a nest to hear the beacon. Try Resonant Canopy south of the Crash Site or Glow-Moss Cavern off the eastern wetlands."
           },
           {
             "id": "locate_temple_gate",
-            "text": "Locate the massive Temple Gate."
+            "text": "Find the Temple Gate beyond Canopy Ridge."
           },
           {
             "id": "insert_chime",
@@ -1354,7 +1354,7 @@
         "tasks": [
           {
             "id": "blend_in",
-            "text": "At the Skypark guest registry, maintain the scheduled air-filter inspection cover and acquire guest access."
+            "text": "Use the copied work order to get past the Skypark guest registry."
           },
           {
             "id": "disable_sensors",

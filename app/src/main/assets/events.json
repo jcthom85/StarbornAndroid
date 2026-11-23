@@ -3698,7 +3698,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: A Strange Coast\n\nWith Zeke's suit sealed and the Chime recovered, the wreck stops being shelter and starts being a signal flare. The glow-water carries a clean pulse east, deep into Sector 9."
+        "message": "Quest Complete: A Strange Coast\n\nZeke\u2019s suit is sealed. From the bank, Nova feels the Chime pull south toward the vines beyond the wreck. East, the glow-water runs into the mist."
       },
       {
         "type": "give_reward",
@@ -3752,7 +3752,7 @@
       },
       {
         "type": "show_message",
-        "message": "The hostile canopy falls quiet. Zeke catches the distress pulse again; it is coming from a stone gate beyond the ridge."
+        "message": "When the fighting stops, Zeke picks up the distress pulse again. It\u2019s coming from a stone gate beyond Canopy Ridge."
       }
     ]
   },
@@ -6818,6 +6818,12 @@
         "milestone": "ms_w4_mq16_complete"
       },
       {
+        "type": "set_room_state",
+        "room_id": "foundry_service_airlock",
+        "state_key": "airlock_open",
+        "value": true
+      },
+      {
         "type": "start_quest",
         "quest_id": "w4_mq17"
       },
@@ -8643,7 +8649,7 @@
       },
       {
         "type": "show_message",
-        "message": "Zeke maps the repeating aisles by coolant pulse instead of rack number. Thorne's old architecture is under Vale's edits, and the three firewall nodes resolve out of the server route like wounds reopening."
+        "message": "Zeke maps the repeating aisles by coolant pulse instead of rack number. Thorne's old bus links all three firewall nodes to Elara's tank: Line 1 feeds Alpha and Elara's relay in parallel; Beta loops overflow between Alpha and Gamma; Gamma draws projector power off Beta's return rail. Cut main power and Elara's relay dies\u2014shunt Alpha onto Elara's cold rail first, trap the bleed in Beta, then isolate Gamma on its own drained capacitor."
       }
     ]
   },
@@ -8688,7 +8694,7 @@
       },
       {
         "type": "show_message",
-        "message": "Firewall Alpha drops. One layer of the Anchor lock goes dark, and Elara's signal stops sounding like static for half a second."
+        "message": "Firewall Alpha drops! Its diverted coolant steadies Elara's relay while Alpha's stripped cipher floods east into Beta's recursion buffer."
       }
     ]
   },
@@ -8733,7 +8739,7 @@
       },
       {
         "type": "show_message",
-        "message": "Firewall Beta folds into its own recursion and burns out. The Server Farm stutters, then repeats Gh0st's old unit number in Elara's voice."
+        "message": "Firewall Beta folds Alpha's overflow into a dead sink and cuts its return rail! Downstream, Gamma's hard-light projector drops to emergency capacitor power while Elara's voice comes through clean."
       }
     ]
   },
@@ -8783,7 +8789,7 @@
       },
       {
         "type": "show_message",
-        "message": "Firewall Gamma fails. The system stops pretending this is security and compiles its last defense into a hard-light body."
+        "message": "Firewall Gamma isolates on its own drained capacitor with Elara's cold rail locked green! Starved of bus power, the security layer compiles its final reserve into a hard-light Construct."
       }
     ]
   },
@@ -18619,6 +18625,182 @@
       {
         "type": "show_message",
         "message": "The First Choir lowers its tide and bows in silent chord. From the opened reliquary, Orion receives the Chorus of the First Tide\u2014an unchained Aethel prism entrusted to the living."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq23_firewall_alpha_console",
+    "description": "Open Firewall Alpha routing console.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq23_firewall_alpha_console"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq23"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq23",
+        "task_id": "navigate_maze"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq23",
+        "task_id": "firewall_alpha"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:w5_firewall_alpha_prompt"
+      }
+    ]
+  },
+  {
+    "id": "w5_mq23_firewall_beta_early",
+    "description": "Explain why Beta cannot be isolated while Alpha still feeds the bus.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq23_firewall_beta_console"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq23"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq23",
+        "task_id": "navigate_maze"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq23",
+        "task_id": "firewall_alpha"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "Beta's recursion windows are pinned open by live Line 1 pressure from Alpha. Shunt Firewall Alpha onto Elara's cold rail first so its cipher bleeds into Beta's buffer."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq23_firewall_beta_console",
+    "description": "Open Firewall Beta routing console once Alpha is bleeding into Beta.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq23_firewall_beta_console"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq23"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq23",
+        "task_id": "firewall_alpha"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq23",
+        "task_id": "firewall_beta"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:w5_firewall_beta_prompt"
+      }
+    ]
+  },
+  {
+    "id": "w5_mq23_firewall_gamma_early",
+    "description": "Explain why Gamma cannot be isolated while Beta still powers its projector.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq23_firewall_gamma_console"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq23"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq23",
+        "task_id": "navigate_maze"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq23",
+        "task_id": "firewall_beta"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "Gamma's hard-light projector is still drawing full bus power from Beta's return rail. Isolating Gamma now would back-surge Elara's relay\u2014trap Beta's overflow and cut its return feed first."
+      }
+    ]
+  },
+  {
+    "id": "w5_mq23_firewall_gamma_console",
+    "description": "Open Firewall Gamma routing console once Beta has starved Gamma.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_mq23_firewall_gamma_console"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "quest_active",
+        "quest_id": "w5_mq23"
+      },
+      {
+        "type": "quest_task_done",
+        "quest_id": "w5_mq23",
+        "task_id": "firewall_beta"
+      },
+      {
+        "type": "quest_task_not_done",
+        "quest_id": "w5_mq23",
+        "task_id": "firewall_gamma"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:w5_firewall_gamma_prompt"
+      }
+    ]
+  },
+  {
+    "id": "w4_magma_regulator_inspect",
+    "description": "Open the short environmental pressure valve interaction at the Cooling Springs magma regulator.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_magma_regulator_inspect"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_relic_w4_magma_solved"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:w4_magma_regulator_prompt"
       }
     ]
   }

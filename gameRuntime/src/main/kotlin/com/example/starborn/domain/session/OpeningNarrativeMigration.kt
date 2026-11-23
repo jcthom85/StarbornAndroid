@@ -158,6 +158,12 @@ fun GameSessionState.migrateOpeningNarrativeState(): GameSessionState {
         listOf("w4_mq18", "w4_mq19", "w4_mq20").any { it in activeQuests || it in completedQuests }
     if (assemblyRouteCleared) roomState("foundry_pipe_gallery", "assembly_route_open")
 
+    if ("ms_w4_mq16_complete" in migratedMilestones || "w4_mq16" in completedQuests ||
+        "w4_mq16_enter_airlock" in completedEvents || assemblyRouteCleared) {
+        backfillMilestone("ms_w4_mq16_complete")
+        roomState("foundry_service_airlock", "airlock_open")
+    }
+
     // Honor completed Firewall progress and old saves that already reached the chamber.
     // This opens the physical return route; it does not award or complete the boss quest.
     val beyondAnchorEntrance = listOf("deep_anchor_chamber", "deep_throne_room", "deep_tear").any { prefix ->

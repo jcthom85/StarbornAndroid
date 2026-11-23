@@ -6718,10 +6718,12 @@
       },
       {
         "name": "magma regulator",
-        "type": "tuning_puzzle",
-        "puzzle_id": "w4_magma_conduit_tune",
+        "type": "generic",
+        "action_event": "w4_magma_regulator_inspect",
         "requires_milestone_not_set": "ms_relic_w4_magma_solved",
-        "condition_unmet_message": "Superheated magma pulses through heavy adamantine valves."
+        "inspect_after_completion": true,
+        "inspection_completion_milestone": "ms_relic_w4_magma_solved",
+        "condition_unmet_message": "The magma regulator sits cool and seated\u2014its Thermal Aegis plate has already been recovered."
       }
     ]
   },
@@ -6975,7 +6977,7 @@
     "env": "foundry",
     "title": "Service Airlock",
     "background_image": "images/rooms/world_4/foundry_service_airlock.webp",
-    "description": "A pressurized airlock door separates volcanic ash from sterile factory corridors. Decon lights sweep the pumps in white bands. An ammo crate gamma sits beneath a soot-marked wall. An engineer safe-route valve is mounted on the coolant line.",
+    "description": "The airlock door is sealed against the heat. Decon lights sweep the pumps in white bands. An ammo crate gamma sits beneath a soot-marked wall. An engineer safe-route valve is mounted on the coolant line.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -6993,24 +6995,51 @@
     "state": {},
     "description_variants": [
       {
-        "description": "The service airlock stands open, and the ammo crate gamma is nothing but scorched brackets beside the decon pumps. The Foundry exterior has fewer teeth now. The airlock door looms beside the pumps. An engineer safe-route valve is mounted on the coolant line.",
+        "description": "The airlock door stands open east into the Decon Chamber. Only scorched brackets remain where ammo crate gamma sat. An engineer safe-route valve is mounted on the coolant line.",
         "requires_milestones": [
+          "ms_w4_mq16_complete",
           "ms_w4_crate_gamma_destroyed"
         ]
       },
       {
-        "description": "The airlock door has cooled enough to cycle, unlocking one reluctant bolt at a time. Decon lights sweep the pumps. An ammo crate gamma sits beneath a soot-marked wall. An engineer safe-route valve is mounted on the coolant line.",
+        "description": "The airlock door stands open east into the Decon Chamber. An ammo crate gamma sits beneath a soot-marked wall. An engineer safe-route valve is mounted on the coolant line beside the pumps.",
+        "requires_milestones": [
+          "ms_w4_mq16_complete"
+        ]
+      },
+      {
+        "description": "The airlock door has cooled enough to cycle. Only scorched brackets remain where ammo crate gamma sat. An engineer safe-route valve is mounted on the coolant line.",
+        "requires_milestones": [
+          "ms_w4_cooling_vents_hacked",
+          "ms_w4_crate_gamma_destroyed"
+        ]
+      },
+      {
+        "description": "The airlock door has cooled enough to cycle. Decon lights sweep the pumps. An ammo crate gamma sits beneath a soot-marked wall. An engineer safe-route valve is mounted on the coolant line.",
         "requires_milestones": [
           "ms_w4_cooling_vents_hacked"
         ]
       },
       {
-        "description": "The airlock door stands open between ash and factory sterility. The Foundry feels angry, no longer unreachable. An ammo crate gamma sits beneath a soot-marked wall. An engineer safe-route valve is mounted on the coolant line beside the pumps.",
+        "description": "The airlock door is sealed against the heat. Only scorched brackets remain where ammo crate gamma sat. An engineer safe-route valve is mounted on the coolant line.",
         "requires_milestones": [
-          "ms_w4_mq16_complete"
+          "ms_w4_crate_gamma_destroyed"
         ]
       }
     ],
+    "blocked_directions": {
+      "east": {
+        "type": "state",
+        "requires": [
+          {
+            "room_id": "foundry_service_airlock",
+            "state_key": "airlock_open",
+            "value": true
+          }
+        ],
+        "message_locked": "Cycle the airlock door here before heading east into the Decon Chamber."
+      }
+    },
     "actions": [
       {
         "name": "airlock door",
@@ -7018,7 +7047,8 @@
         "inspection_completion_milestone": "ms_w4_mq16_complete",
         "type": "generic",
         "action_event": "w4_mq16_enter_airlock",
-        "condition_unmet_message": "The airlock will not cycle until the cooling vents are under control."
+        "condition_unmet_message": "The airlock is too hot to cycle. Set the cooling vent controls at Waste Intake to maintenance mode.",
+        "completed_inspection_message": "The airlock door is open. The Decon Chamber is east."
       },
       {
         "name": "ammo crate gamma",
@@ -9004,10 +9034,10 @@
     "state": {},
     "description_variants": [
       {
-        "description": "Firewall node alpha is dark. Its hard-light cage has collapsed into harmless blue dust across the server aisle.",
         "requires_milestones": [
           "ms_w5_firewall_alpha_down"
-        ]
+        ],
+        "description": "Firewall node alpha sits dark inside its cage. Its diverted feed runs cold along Elara's parallel relay rail while its stripped cipher bleeds east into Beta's recursion loop."
       }
     ],
     "actions": [
@@ -9016,7 +9046,7 @@
         "inspect_after_completion": true,
         "inspection_completion_milestone": "ms_w5_firewall_alpha_down",
         "type": "generic",
-        "action_event": "w5_mq23_firewall_alpha",
+        "action_event": "w5_mq23_firewall_alpha_console",
         "condition_unmet_message": "The first firewall node shifts its cipher every few seconds."
       }
     ],
@@ -9066,10 +9096,16 @@
     "state": {},
     "description_variants": [
       {
-        "description": "Firewall node beta has folded into itself and gone still. The recursion windows show only the cold aisle ahead.",
         "requires_milestones": [
           "ms_w5_firewall_beta_down"
-        ]
+        ],
+        "description": "Firewall node beta is locked into a closed recursion sink. Alpha's overflow burns harmlessly in circles inside the cabinet, starving the return rail east toward Gamma while Elara's cold line holds steady."
+      },
+      {
+        "requires_milestones": [
+          "ms_w5_firewall_alpha_down"
+        ],
+        "description": "Firewall node beta hums under double load\u2014Alpha's bled cipher floods every recursion window, straining the return rail east toward Gamma while Elara's parallel cold rail stays green."
       }
     ],
     "actions": [
@@ -9078,7 +9114,7 @@
         "inspect_after_completion": true,
         "inspection_completion_milestone": "ms_w5_firewall_beta_down",
         "type": "generic",
-        "action_event": "w5_mq23_firewall_beta",
+        "action_event": "w5_mq23_firewall_beta_console",
         "condition_unmet_message": "The second node is protected by a recursive Dominion lock."
       }
     ],
@@ -9137,16 +9173,16 @@
     "state": {},
     "description_variants": [
       {
-        "description": "Firewall node gamma is gone. The hard-light body has shattered into dead glyphs, and the Anchor Chamber answers from beyond the final aisle. The aisle returns west through Beta and Alpha to Mainframe Nave. From there, go south to Server Farm and east to the Anchor entrance. An Anchor access lift waits behind the Construct\u2019s security field. Once cleared, it runs down to the chamber and back up to this aisle.",
-        "requires_milestones": [
-          "ms_w5_mq23_complete"
-        ]
-      },
-      {
-        "description": "Firewall node gamma has failed into violence. The hard-light body is complete now, blocking the Anchor Chamber with a blank execution face. The aisle returns west through Beta and Alpha to Mainframe Nave. From there, go south to Server Farm and east to the Anchor entrance. An Anchor access lift waits behind the Construct\u2019s security field. Once cleared, it runs down to the chamber and back up to this aisle.",
         "requires_milestones": [
           "ms_w5_firewall_gamma_down"
-        ]
+        ],
+        "description": "Firewall node gamma stands isolated on a drained capacitor while Elara's cold rail stays bright and green. The aisle returns west through Beta and Alpha to Mainframe Nave. From there, go south to Server Farm and east to the Anchor entrance. An Anchor access lift waits behind the Construct\u2019s security field. Once cleared, it runs down to the chamber and back up to this aisle."
+      },
+      {
+        "requires_milestones": [
+          "ms_w5_firewall_beta_down"
+        ],
+        "description": "Firewall node gamma flickers violently on emergency capacitor charge alone\u2014Beta's severed return rail has starved its projector, leaving only the Anchor bus beside Elara's cold rail keeping the frame upright. The aisle returns west through Beta and Alpha to Mainframe Nave. From there, go south to Server Farm and east to the Anchor entrance. An Anchor access lift waits behind the Construct\u2019s security field. Once cleared, it runs down to the chamber and back up to this aisle."
       }
     ],
     "actions": [
@@ -9155,7 +9191,7 @@
         "inspect_after_completion": true,
         "inspection_completion_milestone": "ms_w5_firewall_gamma_down",
         "type": "generic",
-        "action_event": "w5_mq23_firewall_gamma",
+        "action_event": "w5_mq23_firewall_gamma_console",
         "condition_unmet_message": "The final node projects a hard-light guardian into the aisle."
       }
     ],
@@ -11350,7 +11386,7 @@
     "weather": "fog",
     "title": "Stream Bank",
     "background_image": "images/rooms/world_2/landing_stream.webp",
-    "description": "A clear stream of warm water flows east toward the coast, its glow-water current rippling softly. Smooth pebbles line the banks under hanging ferns, where a half-submerged river silt cache is lodged among the roots.",
+    "description": "The glow-water current widens east into misty pools. West, the pod wreck is still visible between the ferns. Smooth pebbles line the bank, where a half-submerged river silt cache is lodged among the roots.",
     "npcs": [],
     "npc_presence": [
       {
@@ -23151,7 +23187,7 @@
     "env": "foundry",
     "title": "Foundry Seal Backroom",
     "background_image": "images/rooms/world_4/foundry_service_airlock_scale_final.webp",
-    "description": "A seal backroom stores pressure masks beside handwritten cycling rules. The pressure masks and cycling rules make the airlock feel maintained by people who expect the official procedure to fail. A stamped technician locker remains locked against the heat. A south bypass door opens straight into the Decon Chamber, and an inspection hatch drops back to the service airlock.",
+    "description": "Pressure masks hang beside handwritten cycling rules and a stamped technician locker. The south bypass door into the Decon Chamber shares the Service Airlock\u2019s interlock. An inspection hatch drops back to the Service Airlock.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -23164,6 +23200,19 @@
       5
     ],
     "state": {},
+    "blocked_directions": {
+      "south": {
+        "type": "state",
+        "requires": [
+          {
+            "room_id": "foundry_service_airlock",
+            "state_key": "airlock_open",
+            "value": true
+          }
+        ],
+        "message_locked": "Decon is still sealed. Take the inspection hatch back and cycle the door at the Service Airlock."
+      }
+    },
     "actions": [
       {
         "name": "pressure masks",

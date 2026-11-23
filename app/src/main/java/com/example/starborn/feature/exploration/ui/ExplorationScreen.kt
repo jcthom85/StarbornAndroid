@@ -3583,6 +3583,15 @@ private fun TuningPuzzleDialog(
                     }, onChange = onSliderChange, onCapture = onSubmit,
                     modifier = Modifier.fillMaxWidth()
                 )
+            } else if (puzzle.presentation == "chrono_trace") {
+                com.example.starborn.shared.puzzle.ChronoCoilPanel(
+                    dials = puzzle.sliders.map {
+                        com.example.starborn.shared.puzzle.SignalDial(it.id, it.value, it.min, it.max, it.target, it.tolerance)
+                    },
+                    onChange = onSliderChange,
+                    onLock = onSubmit,
+                    modifier = Modifier.fillMaxWidth()
+                )
             } else {
                 Column(
                     modifier = Modifier.verticalScroll(rememberScrollState()),
@@ -3661,7 +3670,7 @@ private fun TuningPuzzleDialog(
             }
         },
         confirmButton = {
-            if (puzzle.presentation !in setOf("counter_tune", "prism_optics")) {
+            if (puzzle.presentation !in setOf("counter_tune", "prism_optics", "chrono_trace")) {
                 Button(onClick = onSubmit, enabled = choicePanel == null || puzzle.sliders.all { it.value >= 0f }) {
                     Text(choicePanel?.submitLabel ?: "Engage Handshake")
                 }

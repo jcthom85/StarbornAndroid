@@ -8,39 +8,39 @@
   "limitations": "Earned completionist route, fixed seed 17 and fixed combat policy; authored puzzle answers and accelerated presentation. Not UI or balance acceptance.",
   "sources": {
     "audio_bindings.json": "f90bbfcccb90b63d114172beb4523fdaad97dc87f6ba25edc4aa864061877efe",
-    "audio_catalog.json": "0cfc478a4c7609466cfb06be19ade04c568008a4d7d700c866e64b0bc79d18d2",
+    "audio_catalog.json": "15d76a55f34122af6932fc33292e1bfbce01f490cdc602661a5310959236df88",
     "autosave.json": "4ff62b24a5fcad6db4c8ca88f50caae5165141e926937d8db608e217a2c20959",
     "characters.json": "f0eb93eeb29b032bd141df33ab930156d4eecdf79ea4ce5cd75860cef25f00f7",
     "cinematics.json": "486ffa14ec18bd074157dc37c1787a3fed9a2469e8e35c4da3bac75c683c1cbc",
-    "dialogue.json": "298600932ca56898ad3ffd73dcc968c59cb44929fe29e8efd6f3c7950cb53812",
+    "dialogue.json": "7f36e1780ab5809c1442abe9d4164ddefa698d99ffad069dec63af67d02de986",
     "dialogue_voice_profiles.json": "233a76c1aec9bc1a7f0450e7737f3daddd8ea17585b9908a42d99b31935b48df",
-    "enemies.json": "a5a454dc39c15912315c92953bcb978d0b7bebcc8ae9985333dcb6dc975f922a",
-    "enemy_movement.json": "6205518ae5cb15283331070822f7ede9452aee3ccb423fb2283980df4a372eb1",
+    "enemies.json": "18cbe2753051f5f8224831b06c3f51b34733068d2b256eea734d6f6dee149a64",
+    "enemy_movement.json": "22a973f191fcccde4c32db38e26c7e27a9cc0e2a3722bdec62aaf9401acb4c11",
     "environmental_effects.json": "ca7f0251f9bb4859fcb9c8d81a1243c8510903896839c9c4692ca9ceaf82684c",
-    "events.json": "33ccb638fc9f4ca4a0653a469a45e94242c2ea5466840aeb5106bcba2a52962b",
+    "events.json": "5ab5b55aae8729c8c4f5ee1976d98ca6c0d8945c9277bba1f34e6d0c689d20cf",
     "hub_node_descriptions.json": "6738faab04f4d41df8509f5d61c6ba4ca77cc3d6a4db94d6713fff2ed1102050",
     "hub_node_locked_previews.json": "215436cfd45066539a62ea9aab14774d3e4938afbf1e9c4c77890f7c2507c4e6",
     "hub_nodes.json": "ed822a16932dee69b9680e97b270ccfdd22363e9f8c4c34f64fa5535d5da0c50",
     "hubs.json": "334ceda4a513e903bf877f402c136ea7a1843754a00e6980d9b478cdd9f11569",
-    "items.json": "987afbd81ad78bd9f3ab47e5282c93ef215c59326c3ee879327e355c64ecf83b",
+    "items.json": "70d1d2c566f259deb30a38bedb741bd1d3ba429461d9a3a6a179c7cfd1111778",
     "leveling_data.json": "e597e423c9ebb03c3a61f65e4d333cb01c8e9d7638833ac31837419e77f0cc43",
-    "milestones.json": "e218e33ed5233e69f4b0583a07b6c1466d3b3993a98342cc4e857e08b97e9ec0",
-    "node_transitions.json": "2b1746759a2bfeb642bb9581e89e41aefdd07e4ce892e0e17ea11c1f170a042d",
+    "milestones.json": "a8fa335168e911378844e5814ed5657f20889a501ef000dde18cc4111a3b52de",
+    "node_transitions.json": "4febeabcf8ee4663c2af903935d00e817c060bf948735382647e550182d4f6f6",
     "npcs.json": "648cfb991470d536ae0128676898dcf15b7de4d79d0efd3fc95d9ab288a5fa36",
     "progression.json": "3e28a9a09fb3f9d0788eceb6825dcb4f51187ed0f1fc3346b02d05c1b04cc59b",
-    "quests.json": "492027112bbc9976ccf298b4189d48e0be37a00977e5501a362aafc74c0e24bd",
+    "quests.json": "7cbfc172d7ae12021d06541258c315d83e7b6ada1a2397fa15747018714c8983",
     "quests_base.json": "c0ce82a40dbf9b4b2f209cdf59a7773877ea79a81ac63d342a87d673ee56eb81",
     "recipes_cooking.json": "4618a8ebd9de1b87a79ccc4334e3b5ed1ef4409e2b76e2e6475620cb1c4452ba",
     "recipes_fishing.json": "a375140380862af105f8df0ee885a80ac77e4e0245077209356ae3cadb173e65",
-    "recipes_tinkering.json": "ff2bbd7196247e962e1e24358db8d2df82ddab6c3b1a2eb63856c6fab8cb2a35",
-    "rooms.json": "f15611343a2f76215d498e56dfb6000eb2370320d248985394f0ec1868980567",
+    "recipes_tinkering.json": "dfc4f67a6d32f278eefaf0be6e8225ec32e241508c59839971808551780d7237",
+    "rooms.json": "3a545f599ae93fa330e528fc7a0c12b08e2e609d992b7c1d7b553bfea7d7f59e",
     "save1.json": "624357fa23165a92327567932acd397cf3c9ee7bad72699a95030564021cc3a3",
     "save2.json": "36b96e8740be355a8d3dc9429073863822de076637c98bc822c4bd5df5fa370c",
     "save3.json": "905eca9107f36c6ea9881d79c0fe62774adad927c428fcc5d23da6c627668e72",
     "sfx.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
     "sfx_meta.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
     "shops.json": "d6c58795bd6493615db20deb784b61cfaa133f87d70270113f468fe10164bce7",
-    "skills.json": "4e7933fe15ed513b36ebb5690bd12d310a20879f4fcbba04f99e7055c77390a9",
+    "skills.json": "f64d6e92510a62866babd24f876e0fe43e211c66972b3d7dbade08d99ccda3e6",
     "statuses.json": "b394878c8b6b63a2dad3e4ed0a072b9cab9cb49e8cb1f050e9d47f5d1e74f66e",
     "theme_styles.json": "2c72dedc17096ecb69faeeae1898bc6b3d8a789589efe28665393d2a7e372e30",
     "themes.json": "3791656ced44b01c235844e22639803019c52fde9f82b85809dc921a835e18e6",
@@ -52,52 +52,52 @@
     "w1_mq02": {
       "file": "world1_w1_mq02.json",
       "roomId": "workshop_floor",
-      "sha256": "cce99940c05fbbdc50d153e3fd37d130f7947a14f32b673d99f5b6867afc3373"
+      "sha256": "b97ec96effe8c2e16e9ba7e0a3c8168c97bd77f1b4661bde62ab3b7eef438b13"
     },
     "w1_mq03": {
       "file": "world1_w1_mq03.json",
       "roomId": "checkpoint_booth",
-      "sha256": "1f7b82687983b5712a493cb1ca97cc3f1f9aaaf7a7cf39944f2036ccb84f71ab"
+      "sha256": "3ea429d8d244fb07a699a192f34c2ff9c58e76b41d246c29fc74716ff5c2d1ee"
     },
     "w1_mq04": {
       "file": "world1_w1_mq04.json",
       "roomId": "echo_heart",
-      "sha256": "d175281b6edc3354c997b4beb7f410053fa090d92bf43f67a3f1e8ce595817dc"
+      "sha256": "c2be2d1ef4f900a8d63ccd0fdc049529896fd90e6a350e316d6baf64a3152076"
     },
     "w1_mq05": {
       "file": "world1_w1_mq05.json",
       "roomId": "launch_lift",
-      "sha256": "2b2d2657ec540863eb01917b82cc501edb82971d8381e92bd08c34e15f26587e"
+      "sha256": "08f08ca8ecf73649e0673857762f9ccbaa486e91e9d478c25777026f7c9c4b88"
     },
     "w1_sq01": {
       "file": "world1_w1_sq01.json",
       "roomId": "trade_scrapper",
-      "sha256": "9ea4d243e3976050654bbf531c5223931e624761479506340a23605d53d86722"
+      "sha256": "5d8869cc0904d407eb8e99c1734ebfe3878871c2bfba02a26af33d32e27e584e"
     },
     "w1_sq02": {
       "file": "world1_w1_sq02.json",
       "roomId": "medbay_exam1",
-      "sha256": "c9dde476398a933abd118eb715118b2456808d3f11ace68cb7967c9beff42ed0"
+      "sha256": "946805de009c7424f5d674ee993ee1178424d6d5c6e37bafb5425d4a7a72f5ef"
     },
     "w1_sq03": {
       "file": "world1_w1_sq03.json",
       "roomId": "admin_lobby",
-      "sha256": "5e209809e5e81ef8b3425c7a3918d1974561f16b1ce416587c6742ef220218a5"
+      "sha256": "0b3dd1efa8cbe6787bc28e7219ef84ab0bb0a7100291f059f63d566d2f1f2a06"
     },
     "w1_sq04": {
       "file": "world1_w1_sq04.json",
       "roomId": "server_hub",
-      "sha256": "f79f9e4fc46e67d62be5eb8d3d8bf25071f7a90bf6def9bb65659af01cd7628f"
+      "sha256": "79ac18379e4c134feec21d18d3f608c0a09ee7b1d689e8e70b77d3121a0d7c6c"
     },
     "w1_sq05": {
       "file": "world1_w1_sq05.json",
       "roomId": "mine_shunt",
-      "sha256": "f63f2bec32666fce444f7923af147545e0aef0b8d578362f3ac375a029b659cc"
+      "sha256": "9913773ef63de1a40e613258c05a105c51a087c29fb432897ce1a7ff75fe3f69"
     },
     "w1_minecart_puzzle": {
       "file": "world1_w1_minecart_puzzle.json",
       "roomId": "mine_junction",
-      "sha256": "21fac07a778b255117a07c987f640476399352f95466fe571e677bbd8cea9cbf"
+      "sha256": "b7d4bc0e16fc8df804acbfbafec12eac088d2a7a5ebe16aca9a2a0c9820f5b95"
     }
   }
 }

@@ -76,6 +76,14 @@
     "Museum Curator": "male",
     "Hacked Lab Terminal": "none",
     "Prism Controls": "none",
-    "Dock Interlock": "none"
+    "Dock Interlock": "none",
+    "Evidence Notes": "none",
+    "Stasis Diagram": "none",
+    "Pressure Map": "none",
+    "Firewall Node Alpha": "none",
+    "Firewall Node Beta": "none",
+    "Firewall Node Gamma": "none",
+    "Coolant-Pulse Map": "none",
+    "Magma Regulator": "none"
   }
 }
