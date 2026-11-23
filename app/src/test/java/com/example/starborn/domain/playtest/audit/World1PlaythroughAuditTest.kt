@@ -183,7 +183,11 @@ class World1PlaythroughAuditTest {
                     }
                     "item" -> (state.inventory[value] ?: 0) > 0
                     "item_not" -> (state.inventory[value] ?: 0) <= 0
-                    else -> true
+                    "event_completed" -> value in state.completedEvents
+                    "event_not_completed" -> value.isNotBlank() && value !in state.completedEvents
+                    "tutorial_completed" -> value in state.tutorialCompleted
+                    "tutorial_not_completed" -> value.isNotBlank() && value !in state.tutorialCompleted
+                    else -> false
                 }
             }
         }

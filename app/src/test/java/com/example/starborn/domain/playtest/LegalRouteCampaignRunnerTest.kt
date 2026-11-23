@@ -374,6 +374,7 @@ class LegalRouteCampaignRunnerTest {
             }
             agent.navigateLegalPath("pit_jed_bunk")
             agent.talkToNpc("Jed")
+            assertEquals(5, first.promptManager.state.value.queue.count { it is com.example.starborn.domain.prompt.ItemGrantedPrompt })
             val expectedKit = mapOf("mining_pistol" to 1, "nova_flux_liner" to 1, "cryo_inductor" to 1,
                 "scrap_metal" to 2, "ration_pack" to 1)
             assertEquals(expectedKit, first.inventoryService.snapshot())
@@ -385,8 +386,16 @@ class LegalRouteCampaignRunnerTest {
                 val agent = LegalCampaignAgent(h)
                 val kit = h.promptManager.state.value.current as com.example.starborn.domain.prompt.TutorialPrompt
                 assertEquals("opening_gear_offer", kit.id)
-                assertTrue(h.promptManager.state.value.queue.none { it is com.example.starborn.domain.prompt.ItemGrantedPrompt })
-                if (equip) requireNotNull(kit.primaryAction).invoke() else h.explorationVm.dismissPrompt(kit.id)
+                if (equip) {
+                    requireNotNull(kit.primaryAction).invoke()
+                    h.settle()
+                    assertTrue(h.explorationVm.uiState.value.isMenuOverlayVisible)
+                    h.explorationVm.equipWeapon("nova", "mining_pistol")
+                    h.explorationVm.equipArmor("nova", "nova_flux_liner")
+                    h.explorationVm.closeMenuOverlay()
+                } else {
+                    h.explorationVm.dismissPrompt(kit.id)
+                }
                 h.settle()
                 val chosen = h.saveSlot(6)
                 assertEquals(atHandoff.inventory, chosen.inventory)

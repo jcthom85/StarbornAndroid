@@ -205,9 +205,14 @@ class World6PlaythroughAuditTest {
                         val p = value.split(':', limit = 2)
                         p.size == 2 && !state.questTasksCompleted[p[0]].orEmpty().contains(p[1])
                     }
+                    "room" -> value.isNotBlank() && value == state.roomId
                     "item" -> (state.inventory[value] ?: 0) > 0
                     "item_not" -> (state.inventory[value] ?: 0) <= 0
-                    else -> true
+                    "event_completed" -> value in state.completedEvents
+                    "event_not_completed" -> value.isNotBlank() && value !in state.completedEvents
+                    "tutorial_completed" -> value in state.tutorialCompleted
+                    "tutorial_not_completed" -> value.isNotBlank() && value !in state.tutorialCompleted
+                    else -> false
                 }
             }
         }
@@ -279,18 +284,18 @@ class World6PlaythroughAuditTest {
         navigate("source_campfire")
 
         // Nightmare 1: Zeke
-        navigate("source_zeke_nightmare")
-        combat(listOf("manager_projection"), "source_zeke_nightmare") // triggers w6_mq26_rescue_zeke
+        navigate("source_zeke_review_loop")
+        combat(listOf("manager_projection"), "source_zeke_review_loop") // triggers w6_mq26_rescue_zeke
         talk("Zeke") // Speaks zeke_w6_nightmare_release
 
         // Nightmare 2: Gh0st
-        navigate("source_gh0st_nightmare")
-        combat(listOf("endless_war_echo"), "source_gh0st_nightmare") // triggers w6_mq26_rescue_gh0st
+        navigate("source_gh0st_kill_suite")
+        combat(listOf("endless_war_echo"), "source_gh0st_kill_suite") // triggers w6_mq26_rescue_gh0st
         talk("Gh0st") // Speaks gh0st_w6_nightmare_release
 
         // Nightmare 3: Orion
-        navigate("source_orion_nightmare")
-        combat(listOf("silent_shore_wraith"), "source_orion_nightmare") // triggers w6_mq26_rescue_orion
+        navigate("source_orion_tide_well")
+        combat(listOf("silent_shore_wraith"), "source_orion_tide_well") // triggers w6_mq26_rescue_orion
         talk("Orion") // Speaks orion_w6_nightmare_release
 
         // Reassembly at Campfire
@@ -337,7 +342,9 @@ class World6PlaythroughAuditTest {
         doAction("w6_mq29_refuse_astra_revision")
         doAction("w6_mq29_refuse_foundry_revision")
         doAction("w6_mq29_climb_stair")
-        combat(listOf("source_shadow", "distorted_sentinel", "glitch_hound"), "source_memory_stair") // triggers w6_mq29_shadow_wave
+        navigate("source_memory_fragments")
+        combat(listOf("source_shadow", "distorted_sentinel", "glitch_hound"), "source_memory_fragments") // triggers w6_mq29_shadow_wave
+        navigate("source_spire_arena")
         combat(listOf("memory_leak", "nightmare_guard"), "source_spire_arena") // triggers w6_mq29_memory_guard
         navigate("source_center") // triggers w6_mq29_reach_center -> completes MQ29, starts MQ30
 

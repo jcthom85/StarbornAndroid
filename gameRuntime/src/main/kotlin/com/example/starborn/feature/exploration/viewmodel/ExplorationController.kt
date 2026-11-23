@@ -1670,7 +1670,7 @@ class ExplorationController(
             emitEvent(ExplorationEvent.ItemGranted(name, qty))
             Triple(itemId, name, qty)
         }
-        if (grantedItems.isNotEmpty() && reward.presentation != "opening_kit") {
+        if (grantedItems.isNotEmpty()) {
             val sequenceId = "reward_${UUID.randomUUID()}"
             grantedItems.forEachIndexed { index, (itemId, _, qty) ->
                 promptManager.enqueue(
@@ -1684,7 +1684,7 @@ class ExplorationController(
                 )
             }
         }
-        if (parts.isNotEmpty() && reward.presentation != "opening_kit") {
+        if (parts.isNotEmpty()) {
             postStatus("Reward: ${parts.joinToString(", ")}")
         }
         refreshCurrentRoomBlockedDirections()
@@ -4355,14 +4355,14 @@ class ExplorationController(
             entry = TutorialEntry(
                 key = OpeningEquipmentGuide.OFFER,
                 context = "Equipment",
-                message = "Mining Pistol and Flux Liner for the yard.\nCryo-Inductor and 2 Scrap Metal for the bench.\nOne Ration Pack for the shift.",
-                metadata = mapOf("heading" to "Jed’s kit", "action_label" to "Equip pistol and liner", "dismiss_label" to "Later")
+                message = "Jed gave you a Mining Pistol and Flux Liner. They are ready to equip in Party before you face the loader.",
+                metadata = mapOf("title" to "New equipment", "action_label" to
+                    if (tutorialsEnabled) "Show me how to equip" else "Open equipment", "dismiss_label" to "Later")
             ),
             onDismissCallback = { sessionStore.markTutorialSeen(OpeningEquipmentGuide.OFFER) },
             primaryAction = {
                 promptManager.dismissCurrent(OpeningEquipmentGuide.OFFER)
-                equipWeapon("nova", "mining_pistol")
-                equipArmor("nova", "nova_flux_liner")
+                openMenuOverlay(if (_uiState.value.settings.modernFieldMenu) MenuTab.STATS else MenuTab.INVENTORY, showTutorial = false)
             },
             afterRewards = true
         ))

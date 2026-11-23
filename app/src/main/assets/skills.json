@@ -2758,10 +2758,11 @@
     "type": "enemy",
     "description": "Drives forward behind a locked barrier to slam a single target.",
     "combat_tags": [
-      "dmg"
+      "dmg",
+      "physical"
     ],
     "base_power": 80,
-    "scaling": "focus",
+    "scaling": "atk",
     "cooldown": 0,
     "targeting": "enemy"
   },
@@ -2772,7 +2773,8 @@
     "type": "enemy",
     "description": "Sweeps an attunement beam across a single target.",
     "combat_tags": [
-      "dmg"
+      "dmg",
+      "source"
     ],
     "base_power": 80,
     "scaling": "focus",

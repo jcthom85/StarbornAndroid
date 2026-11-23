@@ -87,8 +87,7 @@ class DesktopJedPopupFlowTest {
             assertEquals(1, s.inventoryService.snapshot()["cryo_inductor"])
             assertEquals(2, s.inventoryService.snapshot()["scrap_metal"])
             compose.waitUntil(5000) { runtime.uiState.value.prompt != null }
-            assertEquals("opening_gear_offer", runtime.uiState.value.prompt?.id)
-            assertFalse(s.promptManager.state.value.queue.any { it is ItemGrantedPrompt })
+            assertTrue("Rewards should precede the equipment offer", runtime.uiState.value.prompt is ItemGrantedPrompt)
             capture("starter-kit-notices")
             notices()
             s.sessionStore.setMilestone("ms_w1_mq01_loader_cleared")

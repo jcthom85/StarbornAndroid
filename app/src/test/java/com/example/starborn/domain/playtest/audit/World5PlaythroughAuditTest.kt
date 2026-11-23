@@ -201,9 +201,14 @@ class World5PlaythroughAuditTest {
                         val p = value.split(':', limit = 2)
                         p.size == 2 && !state.questTasksCompleted[p[0]].orEmpty().contains(p[1])
                     }
+                    "room" -> value.isNotBlank() && value == state.roomId
                     "item" -> (state.inventory[value] ?: 0) > 0
                     "item_not" -> (state.inventory[value] ?: 0) <= 0
-                    else -> true
+                    "event_completed" -> value in state.completedEvents
+                    "event_not_completed" -> value.isNotBlank() && value !in state.completedEvents
+                    "tutorial_completed" -> value in state.tutorialCompleted
+                    "tutorial_not_completed" -> value.isNotBlank() && value !in state.tutorialCompleted
+                    else -> false
                 }
             }
         }
@@ -306,7 +311,8 @@ class World5PlaythroughAuditTest {
         doAction("w5_mq23_firewall_alpha")
         doAction("w5_mq23_firewall_beta")
         doAction("w5_mq23_firewall_gamma")
-        combat(listOf("firewall_construct"), "orbital_server_farm") // triggers w5_mq23_defeat_construct
+        navigate("deep_firewall_gamma")
+        combat(listOf("firewall_construct"), "deep_firewall_gamma") // triggers w5_mq23_defeat_construct
 
         assertTrue("w5_mq23 completed", store.state.value.completedQuests.contains("w5_mq23"))
         assertTrue("w5_mq24 active", store.state.value.activeQuests.contains("w5_mq24"))
@@ -330,8 +336,8 @@ class World5PlaythroughAuditTest {
         // 5. MQ25: Critical Mass (Throne Room, Vale's Soloist Coup, Avatar Boss, Reality Breach)
         navigate("deep_throne_room") // triggers w5_mq25_reach_throne
         talk("Vale") // Triggers w5_mq25_soloist
-        combat(listOf("compliance_avatar"), "deep_throne_room") // triggers w5_mq25_defeat_avatar
         navigate("deep_tear")
+        combat(listOf("compliance_avatar"), "deep_tear") // triggers w5_mq25_defeat_avatar
         doAction("w5_mq25_enter_tear")
 
         assertTrue("w5_mq25 completed", store.state.value.completedQuests.contains("w5_mq25"))

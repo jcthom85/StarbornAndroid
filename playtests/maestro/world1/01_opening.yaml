@@ -1,6 +1,7 @@
 appId: ${APP_ID}
 ---
 - runFlow: ../opening_equipment.yaml
+- tapOn: Close field menu
 - runFlow:
     file: _shared/travel.yaml
     env:

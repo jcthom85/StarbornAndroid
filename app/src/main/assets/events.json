@@ -13127,9 +13127,6 @@
       },
       {
         "type": "give_reward",
-        "reward": {
-          "presentation": "opening_kit"
-        },
         "items": [
           {
             "item_id": "mining_pistol",

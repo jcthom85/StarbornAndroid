@@ -40,12 +40,12 @@ class FunAuditReportTest {
         File(reports, "skill-decisions.json").writeText(skill.toString(2))
         File(reports, "skill-decisions.md").writeText(skillMarkdown(skill))
 
-        assertEquals(125, skills.size)
+        assertEquals(213, skills.size)
         assertTrue(skills.any { it.id == "gathering_silence" })
         assertTrue(skills.any { it.id == "field_weld" })
         assertTrue(skills.any { it.id == "slag_cooldown" })
         assertTrue(skills.any { it.id == "nova_link" })
-        assertEquals(25, combat.getJSONArray("encounters").length())
+        assertEquals(26, combat.getJSONArray("encounters").length())
         assertEquals(0, combat.getJSONArray("unresolved").length())
 
         // Synthetic parties cannot establish acceptable player win rates or
@@ -361,7 +361,7 @@ class FunAuditReportTest {
             })
     }
 
-    private fun signature(skill: Skill) = listOf(skill.basePower, skill.cooldown, skill.combatTags.orEmpty().sorted(), skill.statusApplications.orEmpty().sorted(), skill.scaling, skill.usesPerBattle, skill.conditions.orEmpty().sorted()).joinToString("|")
+    private fun signature(skill: Skill) = listOf(skill.basePower, skill.cooldown, skill.targeting, skill.combatTags.orEmpty().sorted(), skill.statusApplications.orEmpty().sorted(), skill.scaling, skill.usesPerBattle, skill.conditions.orEmpty().sorted()).joinToString("|")
     private fun role(skill: Skill) = if (skill.basePower > 0) "damage:${element(skill)}" else "support:${skill.combatTags.orEmpty().sorted()}"
     private fun dominates(a: Skill, b: Skill): Boolean {
         val limitOk = a.usesPerBattle == null || (b.usesPerBattle != null && requireNotNull(a.usesPerBattle) >= requireNotNull(b.usesPerBattle))

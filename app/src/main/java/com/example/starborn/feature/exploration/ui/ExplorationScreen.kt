@@ -7883,6 +7883,19 @@ fun ItemGrantedBanner(
                         )
                     }
                 }
+                if (hasSequence) {
+                    Box(
+                        modifier = Modifier
+                            .background(Color.White.copy(alpha = 0.10f), RoundedCornerShape(999.dp))
+                            .padding(horizontal = 8.dp, vertical = 3.dp)
+                    ) {
+                        Text(
+                            text = "${prompt.sequenceIndex} / ${prompt.sequenceTotal}",
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
+                            color = Color.White.copy(alpha = 0.78f)
+                        )
+                    }
+                }
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),

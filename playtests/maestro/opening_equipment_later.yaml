@@ -1,15 +1,12 @@
 appId: ${APP_ID}
 ---
 - runFlow: _shared/receive_starter_kit.yaml
-- tapOn:
-    id: tutorial-dismiss
-- assertNotVisible:
-    id: tutorial-action
+- tapOn: "Later"
+- assertNotVisible: "Show me how to equip"
 - assertVisible: "Jed's Bunk"
 - tapOn: "Travel east"
 - assertVisible: "Lift Shaft"
 - assertVisible:
     id: travel-south
-- assertNotVisible:
-    id: tutorial-action
+- assertNotVisible: "Show me how to equip"
 - takeScreenshot: opening-equipment-deferred

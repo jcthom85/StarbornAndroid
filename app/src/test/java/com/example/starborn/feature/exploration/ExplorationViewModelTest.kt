@@ -287,22 +287,34 @@ class ExplorationViewModelTest {
         dispatcher.scheduler.advanceUntilIdle()
     }
 
-    @Test fun openingKitEquipsBothSlotsWithoutLeavingJedsBunk() {
+    @Test fun openingEquipmentOfferOpensPartyAndRequiresBothActualEquipActions() {
         val vm = createViewModel()
         prepareManualStarterKit(vm)
         val prompts = getPrivateField<UIPromptManager>(vm, "promptManager")
         val store = getPrivateField<GameSessionStore>(vm, "sessionStore")
         val offer = prompts.state.value.current as TutorialPrompt
-        assertEquals("Equip pistol and liner", offer.entry.metadata["action_label"])
+        assertEquals("opening_gear_offer", offer.entry.key)
+        assertEquals("Show me how to equip", offer.entry.metadata["action_label"])
         assertFalse("An unanswered offer survives a restart", offer.id in store.state.value.tutorialSeen)
+        assertTrue(vm.uiState.value.isGearTutorialActive)
         requireNotNull(offer.primaryAction).invoke()
         dispatcher.scheduler.advanceUntilIdle()
-        assertFalse(vm.uiState.value.isMenuOverlayVisible)
+        assertTrue(vm.uiState.value.isMenuOverlayVisible)
+        assertEquals(MenuTab.STATS, vm.uiState.value.menuTab)
+        assertTrue(offer.id in store.state.value.tutorialSeen)
+        assertFalse("gear_equip_basics" in store.state.value.tutorialCompleted)
+        vm.equipWeapon("nova", "not_owned")
+        assertFalse("gear_equip_basics" in store.state.value.tutorialCompleted)
+        vm.equipWeapon("nova", "mining_pistol")
+        dispatcher.scheduler.advanceUntilIdle()
         assertEquals("mining_pistol", store.state.value.equippedWeapons["nova"])
+        assertTrue(vm.uiState.value.isGearTutorialActive)
+        assertFalse("gear_equip_basics" in store.state.value.tutorialCompleted)
+        vm.equipArmor("nova", "nova_flux_liner")
+        dispatcher.scheduler.advanceUntilIdle()
         assertEquals("nova_flux_liner", store.state.value.equippedArmors["nova"])
         assertTrue("gear_equip_basics" in store.state.value.tutorialCompleted)
-        assertTrue(offer.id in store.state.value.tutorialSeen)
-        assertNull(prompts.state.value.current)
+        assertFalse(vm.uiState.value.isGearTutorialActive)
     }
 
     @Test fun laterDefersEquipmentTeachingWithoutCompletingOrRepeatingTheOffer() {
@@ -335,10 +347,10 @@ class ExplorationViewModelTest {
         prepareManualStarterKit(vm)
         val prompts = getPrivateField<UIPromptManager>(vm, "promptManager")
         val offer = prompts.state.value.current as TutorialPrompt
-        assertEquals("Equip pistol and liner", offer.entry.metadata["action_label"])
+        assertEquals("Open equipment", offer.entry.metadata["action_label"])
         requireNotNull(offer.primaryAction).invoke()
         dispatcher.scheduler.advanceUntilIdle()
-        assertFalse(vm.uiState.value.isMenuOverlayVisible)
+        assertTrue(vm.uiState.value.isMenuOverlayVisible)
         assertFalse(vm.uiState.value.isGearTutorialActive)
         assertNull(prompts.state.value.current)
     }
