@@ -3480,7 +3480,7 @@
   {
     "id": "brutus_start_round3_go",
     "speaker": "Pitmaster Brutus",
-    "text": "Sound the sirens! The Champion enters the ring! Show me what starborn steel is made of!",
+    "text": "Sound the sirens! The Champion enters the ring! Show me what off-world steel is made of!",
     "trigger": "player_action:w4_crucible_start_round_3"
   },
   {
@@ -3510,7 +3510,7 @@
   {
     "id": "brutus_dialogue_initial",
     "speaker": "Pitmaster Brutus",
-    "text": "Well, look what crawled out of the slag chutes. A fresh crew with genuine starborn chrome. You looking to bet on the scrap bouts, or did you come to bleed in the Crucible?",
+    "text": "Well, look what crawled out of the slag chutes. A fresh crew with genuine off-world chrome. You looking to bet on the scrap bouts, or did you come to bleed in the Crucible?",
     "options": [
       {
         "id": "opt_brutus_rules",

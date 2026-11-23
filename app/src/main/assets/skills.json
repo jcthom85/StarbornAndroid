@@ -1484,7 +1484,7 @@
     "name": "Tune World",
     "character": "nova",
     "type": "source_art",
-    "description": "Link the crew's four relics into the Starborn Choir circuit, channeling collective resonance without drawing on Nova's burned-out Source nerve.",
+    "description": "Link the crew's four relics into the Choir circuit, channeling collective resonance without drawing on Nova's burned-out Source nerve.",
     "combat_tags": [
       "source",
       "aoe",
@@ -1653,7 +1653,7 @@
     "name": "Shadow Chorus",
     "character": "enemy",
     "type": "enemy",
-    "description": "Summons hostile impressions of the Starborn circuit.",
+    "description": "Summons hostile impressions of the crew's Choir circuit.",
     "combat_tags": [
       "aoe",
       "debuff"

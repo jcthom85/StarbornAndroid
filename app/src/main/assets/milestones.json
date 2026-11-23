@@ -1059,7 +1059,7 @@
   },
   {
     "id": "ms_w6_mq26_complete",
-    "name": "Starborn Reassembled",
+    "name": "Crew Reassembled",
     "description": "You freed Zeke, Gh0st, and Orion from their nightmares and claimed the Key.",
     "toast": "Fractured Minds is complete."
   },
@@ -1132,13 +1132,13 @@
   {
     "id": "ms_w6_mq29_complete",
     "name": "Center Reached",
-    "description": "The Starborn crossed the memory spiral and broke the last nightmare defenses.",
+    "description": "The crew crossed the memory spiral and broke the last nightmare defenses.",
     "toast": "The Spire of Thought is complete."
   },
   {
     "id": "ms_w6_mq30_complete",
     "name": "Final Note",
-    "description": "The Starborn circuit defeated Vale and closed the Tear.",
+    "description": "The Choir circuit defeated Vale and closed the Tear.",
     "toast": "The Final Note is complete."
   },
   {
