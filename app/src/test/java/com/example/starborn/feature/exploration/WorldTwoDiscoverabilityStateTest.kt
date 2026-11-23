@@ -86,8 +86,9 @@ class WorldTwoDiscoverabilityStateTest {
         assertTrue(requireNotNull(resolveRoomDescription(room, emptyMap(), partial.completedMilestones, false))
             .contains("Confront stalker", true))
         val store = GameSessionStore().apply { restore(partial) }
+        val beforeConfront = store.state.value
         dispatch(store, "w2_mq04_confront")
-        assertEquals(partial, store.state.value) // No active quest: visible does not mean usable.
+        assertEquals(beforeConfront, store.state.value) // No active quest: visible does not mean usable.
         store.startQuest("w2_mq04")
         dispatch(store, "w2_mq04_confront")
         assertFalse("Starting the conversation is not completion", "ms_w2_stalker_confronted" in store.state.value.completedMilestones)
@@ -120,8 +121,9 @@ class WorldTwoDiscoverabilityStateTest {
                 assertEquals(milestones, state.completedMilestones)
                 assertEquals(!hasRetired, narrativeActionVisible(action, emptyMap(), emptyMap(), milestones))
                 val store = GameSessionStore().apply { restore(state) }
+                val beforeDispatch = store.state.value
                 dispatch(store, action["action_event"] as String)
-                if (hasSource) assertEquals(state, store.state.value)
+                if (hasSource) assertEquals(beforeDispatch, store.state.value)
                 else assertTrue(store.state.value.completedMilestones.containsAll(setOf(source, retired)))
             }
         }
@@ -145,8 +147,9 @@ class WorldTwoDiscoverabilityStateTest {
         assertFalse(requireNotNull(resolveRoomDescription(room, emptyMap(), state.completedMilestones, false))
             .contains("dark console", true))
         store.restore(state)
+        val beforeInspect = store.state.value
         dispatch(store, "w2_mq05_inspect_astra")
-        assertEquals(state, store.state.value)
+        assertEquals(beforeInspect, store.state.value)
     }
 
     private fun dispatch(store: GameSessionStore, action: String) {

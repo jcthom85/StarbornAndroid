@@ -657,7 +657,14 @@
         "enter_room": "Rooftop patrol drones snap onto the crew across the fuel bridge.",
         "leave_room": "The drones return to their holding pattern over the fuel lines.",
         "adjacent": "Turbine whine cuts through the rooftop rain ahead."
-      }
+      },
+      "extra_drops": [
+        {
+          "id": "wiring_bundle",
+          "chance": 1,
+          "quantity": 1
+        }
+      ]
     },
     {
       "id": "w4_waste_intake_patrol",

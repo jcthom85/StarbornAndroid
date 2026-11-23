@@ -36,7 +36,7 @@ class Hub8CriticalFlowTest {
         harness.events.handleTrigger("player_action", EventPayload.Action("w5_mq23_firewall_gamma"))
         assertEquals("construct", harness.store.state.value.questStageById["w5_mq23"])
 
-        harness.winEncounter("firewall_construct")
+        harness.winEncounter("firewall_construct", roomId = "deep_firewall_gamma")
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w5_mq23"))
         assertTrue(state.activeQuests.contains("w5_mq24"))
@@ -54,7 +54,7 @@ class Hub8CriticalFlowTest {
         harness.events.handleTrigger("player_action", EventPayload.Action("w5_mq25_soloist"))
         assertEquals("critical_escape", harness.store.state.value.questStageById["w5_mq25"])
 
-        harness.winEncounter("compliance_avatar")
+        harness.winEncounter("compliance_avatar", roomId = "deep_tear")
         harness.events.handleTrigger("player_action", EventPayload.Action("w5_mq25_enter_tear"))
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w5_mq25"))
@@ -133,12 +133,13 @@ class Hub8CriticalFlowTest {
             )
         }
 
-        fun winEncounter(vararg enemyIds: String) {
+        fun winEncounter(vararg enemyIds: String, roomId: String? = null) {
             events.handleTrigger(
                 "encounter_victory",
                 EventPayload.EncounterOutcome(
                     enemyIds = enemyIds.toList(),
-                    outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+                    outcome = EventPayload.EncounterOutcome.Outcome.VICTORY,
+                    roomId = roomId
                 )
             )
         }

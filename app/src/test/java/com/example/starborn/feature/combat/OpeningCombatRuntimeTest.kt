@@ -460,7 +460,7 @@ class OpeningCombatRuntimeTest {
                     inventory = state.inventory + weapons.values.associateWith { (state.inventory[it] ?: 0) + 1 },
                     equippedWeapons = state.equippedWeapons + weapons,
                     unlockedWeapons = state.unlockedWeapons + weapons.values))
-                assertEquals(340, session.state.value.playerCredits)
+                assertEquals(state.playerCredits - cost, session.state.value.playerCredits)
             }
             val result = measureSpending(true, seed, session, enemyId, skillAware = true,
                 defensive = true, expanded = true, ownedSupplies = true, avatarPolicy = shopWeapons)

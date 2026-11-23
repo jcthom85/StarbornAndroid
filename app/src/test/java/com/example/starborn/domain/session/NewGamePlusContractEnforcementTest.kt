@@ -77,31 +77,11 @@ class NewGamePlusContractEnforcementTest {
      * Executes the New Game Plus seed generation matching AppServices.startNewGamePlus() contract.
      */
     private fun executeNewGamePlusTransition(previousSession: GameSessionState): GameSessionState {
-        val startingRoomId = "pit_nova_bunk"
-        val seedState = GameSessionState(
-            worldId = "world_1",
-            hubId = "hub_1_homestead",
-            roomId = startingRoomId,
-            playerId = previousSession.playerId ?: "nova",
-            playerLevel = previousSession.playerLevel.coerceAtLeast(1),
-            playerXp = previousSession.playerXp,
-            playerCredits = previousSession.playerCredits.coerceAtLeast(5000),
-            unlockedWeapons = previousSession.unlockedWeapons,
-            unlockedArmors = previousSession.unlockedArmors,
-            partyMembers = previousSession.partyMembers,
-            partyMemberLevels = previousSession.partyMemberLevels,
-            partyMemberXp = previousSession.partyMemberXp,
-            equippedWeapons = previousSession.equippedWeapons,
-            equippedArmors = previousSession.equippedArmors,
-            equippedItems = previousSession.equippedItems,
-            completedMilestones = setOf("ms_master_protocol_active")
-        )
-
+        val seedState = GameBootstrap.newGamePlus(emptyList(), emptyList(), previousSession)
         val store = GameSessionStore()
         store.restore(seedState.migrateOpeningNarrativeState())
         store.resetTutorialProgress()
         store.resetQuestProgress()
-        store.setInventory(previousSession.inventory)
         store.startQuest("w1_mq01", track = true)
         store.setQuestStage("w1_mq01", "wake_in_the_pit")
         return store.state.value

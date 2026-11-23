@@ -36,7 +36,9 @@ class WorldFourCoolingDiscoverabilityTest {
                         if (!milestones.containsAll(required)) return@actionLoop
                         assertTrue("${room.id}: ${action["name"]} $milestones", prose.contains(action["name"] as String, true))
                         val name = action["action_event"] as? String ?: return@actionLoop
-                        val event = events.single { it.trigger.action == name }
+                        val matching = events.filter { it.trigger.action == name }
+                        val event = matching.singleOrNull()
+                            ?: matching.single { it.id == name }
                         val blockedByMilestone = event.conditions.orEmpty().any {
                             it.type == "milestone_not_set" && it.milestone in milestones
                         }

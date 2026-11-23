@@ -34,20 +34,20 @@ class Hub10CriticalFlowTest {
         harness.events.handleTrigger("player_action", EventPayload.Action("w6_mq29_refuse_foundry_revision"))
         harness.events.handleTrigger("player_action", EventPayload.Action("w6_mq29_climb_stair"))
         assertTrue(harness.store.state.value.questTasksCompleted["w6_mq29"].orEmpty().contains("climb_stair"))
-        harness.winEncounter("source_shadow", "distorted_sentinel", "glitch_hound")
+        harness.winEncounter("source_shadow", "distorted_sentinel", "glitch_hound", roomId = "source_memory_fragments")
         assertEquals("spire_arena", harness.store.state.value.questStageById["w6_mq29"])
 
-        harness.winEncounter("memory_leak", "nightmare_guard")
+        harness.winEncounter("memory_leak", "nightmare_guard", roomId = "source_spire_arena")
         harness.events.handleTrigger("enter_room", EventPayload.EnterRoom("source_center"))
         state = harness.store.state.value
         assertTrue(state.completedQuests.contains("w6_mq29"))
         assertTrue(state.activeQuests.contains("w6_mq30"))
 
         harness.events.handleTrigger("player_action", EventPayload.Action("w6_mq30_confront_vale"))
-        harness.winEncounter("ascended_vale")
+        harness.winEncounter("ascended_vale", roomId = "source_center")
         assertEquals("singularity", harness.store.state.value.questStageById["w6_mq30"])
 
-        harness.winEncounter("ascended_god")
+        harness.winEncounter("ascended_god", roomId = "source_center")
         assertEquals("final_note", harness.store.state.value.questStageById["w6_mq30"])
         harness.events.handleTrigger("player_action", EventPayload.Action("w6_mq30_tune_world"))
 
@@ -58,7 +58,7 @@ class Hub10CriticalFlowTest {
         assertTrue(state.completedMilestones.contains("ms_credits_seen"))
         assertTrue(state.unlockedSkills.contains("source_art_tune_world"))
         assertEquals("source_new_world", state.roomId)
-        assertEquals(listOf("scene_w6_final_note", "scene_w6_epilogue_credits"), harness.playedCinematics)
+        assertEquals(listOf("scene_w6_silence_rises", "scene_w6_final_note", "scene_w6_epilogue_credits"), harness.playedCinematics)
     }
 
     @Test
@@ -114,12 +114,13 @@ class Hub10CriticalFlowTest {
             )
         }
 
-        fun winEncounter(vararg enemyIds: String) {
+        fun winEncounter(vararg enemyIds: String, roomId: String? = null) {
             events.handleTrigger(
                 "encounter_victory",
                 EventPayload.EncounterOutcome(
                     enemyIds = enemyIds.toList(),
-                    outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+                    outcome = EventPayload.EncounterOutcome.Outcome.VICTORY,
+                    roomId = roomId
                 )
             )
         }

@@ -3,27 +3,27 @@
   "hubId": "hub_11_event_horizon",
   "roomId": "source_campfire",
   "playerId": "nova",
-  "playerLevel": 11,
-  "playerXp": 20100,
+  "playerLevel": 10,
+  "playerXp": 21160,
   "playerAp": 44,
-  "playerCredits": 165,
+  "playerCredits": 2933,
   "partyMemberXp": {
-    "nova": 20100,
-    "zeke": 20100,
-    "orion": 20100,
-    "gh0st": 20100
+    "nova": 21160,
+    "zeke": 21160,
+    "orion": 21160,
+    "gh0st": 21160
   },
   "partyMemberLevels": {
-    "nova": 11,
-    "zeke": 11,
-    "orion": 11,
-    "gh0st": 11
+    "nova": 10,
+    "zeke": 10,
+    "orion": 10,
+    "gh0st": 10
   },
   "partyMemberHp": {
-    "nova": 108,
-    "zeke": 150,
-    "orion": 135,
-    "gh0st": 69
+    "nova": 137,
+    "zeke": 218,
+    "orion": 166,
+    "gh0st": 153
   },
   "trackedQuestId": "w6_mq26",
   "activeQuests": [
@@ -66,10 +66,14 @@
     "ms_w1_mq01_jed_talked",
     "ms_w1_mq01_loader_inspected",
     "ms_w1_mq01_loader_cleared",
+    "ms_w1_mq01_workshop_briefed",
+    "tut_tinker_open_menu_shown",
     "ms_w1_mq01_cryo_repaired",
+    "ms_w1_mq01_test_briefed",
     "ms_w1_mq01_cutter_surge",
     "ms_w1_mq01_complete",
     "ms_w1_mq02_clearance_ordered",
+    "ms_w1_mq02_jed_advised",
     "ms_w1_mq02_hank_denied",
     "ms_w1_mq02_zeke_override",
     "ms_w1_mq02_complete",
@@ -215,43 +219,52 @@
   "learnedSchematics": [
     "repair_cryo_inductor"
   ],
+  "viewedSchematics": [],
   "unlockedSkills": [
     "nova_arc_tether",
     "nova_cryo_vent",
     "nova_hydraulic_kick",
     "nova_blast_wave",
-    "nova_link",
     "nova_smoke_bomb",
     "zeke_bulwark_stance",
     "orion_nano_repair",
+    "nova_link",
     "gh0st_venom_edge",
     "source_art_scan",
-    "gh0st_phase_counter",
-    "source_art_construct",
     "nova_plasma_burst",
     "zeke_overload_fists",
     "orion_disruption_pulse",
     "gh0st_system_crash",
+    "gh0st_phase_counter",
+    "source_art_construct",
     "source_art_stasis",
     "orion_stasis_stitch"
   ],
   "unlockedWeapons": [
+    "mining_pistol",
     "zeke_shock_fists",
     "orion_prism_focus",
-    "gh0st_whisperblade",
-    "mining_pistol"
+    "gh0st_whisperblade"
   ],
   "unlockedArmors": [
+    "nova_flux_liner",
     "zeke_surge_harness",
     "orion_channeler_mantle",
     "gh0st_phaseweave_jacket",
-    "nova_flux_liner",
     "heat_liner"
   ],
   "unlockedAreas": [],
   "unlockedExits": [
+    "pit_l1_landing::west",
+    "workshop_yard::east",
+    "pit_mess::north",
+    "medbay_hall::south",
+    "pit_showers::east",
+    "trade_maint::west",
     "workshop_yard::north",
     "workshop_floor::south",
+    "workshop_yard::west",
+    "checkpoint_queue::east",
     "checkpoint_door::north",
     "checkpoint_tunnel::south",
     "admin_elevator::north",
@@ -264,10 +277,22 @@
     "launch_bay::south",
     "launch_bay::north",
     "launch_pod::south",
+    "sector9_stream_cave_depths::east",
+    "sector9_stream_sunken_passage::west",
     "sector9_temple_gate::east",
     "sector9_foyer_grand_hall::west",
     "sector9_source_gate::east",
-    "sector9_hangar_bay::west"
+    "sector9_hangar_bay::west",
+    "foundry_slag_river::east",
+    "foundry_waste_intake::west",
+    "foundry_pipe_gallery::east",
+    "foundry_reject_bay::west",
+    "foundry_titan_dock::north",
+    "foundry_escape_catwalk::south",
+    "deep_anchor_chamber::west",
+    "orbital_server_farm::east",
+    "deep_anchor_chamber::up",
+    "deep_firewall_gamma::down"
   ],
   "partyMembers": [
     "nova",
@@ -277,23 +302,36 @@
   ],
   "inventory": {
     "cryo_inductor": 1,
-    "scrap_metal": 6,
+    "scrap_metal": 5,
     "mining_pistol": 1,
     "nova_flux_liner": 1,
-    "ration_pack": 2,
+    "ration_pack": 13,
+    "medkit_i": 7,
     "mine_access_badge": 1,
     "armor_plate": 1,
+    "wiring_bundle": 7,
     "hydraulic_fluid": 1,
     "heavy_gear": 1,
     "beast_meat": 4,
     "tuning_fork": 1,
-    "wiring_bundle": 3,
-    "battery": 1,
+    "stability_gyro": 1,
+    "battery": 2,
+    "medkit": 1,
     "warden_keycard": 1,
+    "nova_laser_blaster": 1,
+    "zeke_shock_fists": 1,
+    "zeke_surge_harness": 1,
     "ghost_signal_cell": 1,
     "wooden_rod": 1,
     "basic_lure": 1,
+    "lucky_talisman": 1,
+    "orion_prism_focus": 1,
+    "orion_channeler_mantle": 1,
     "source_resin": 1,
+    "schematic_source_resin": 1,
+    "gh0st_whisperblade": 1,
+    "gh0st_phaseweave_jacket": 1,
+    "vital_signet": 1,
     "the_lens": 1,
     "pure_iron": 4,
     "heat_liner": 1,
@@ -301,31 +339,33 @@
     "the_anvil": 1,
     "deep_core_engine": 1,
     "phase_cutter_arrays": 1,
+    "medkit_plus": 13,
+    "zeke_quake_knuckles": 1,
     "anchor_relic": 1,
-    "medkit_plus": 7,
     "orbital_glimmer_tonic": 3
   },
   "equippedItems": {},
   "equippedWeapons": {
+    "nova": "mining_pistol",
     "zeke": "zeke_shock_fists",
     "orion": "orion_prism_focus",
-    "gh0st": "gh0st_whisperblade",
-    "nova": "mining_pistol"
+    "gh0st": "gh0st_whisperblade"
   },
   "equippedArmors": {
+    "nova": "nova_flux_liner",
     "zeke": "zeke_surge_harness",
     "orion": "heat_liner",
-    "gh0st": "gh0st_phaseweave_jacket",
-    "nova": "nova_flux_liner"
+    "gh0st": "gh0st_phaseweave_jacket"
   },
   "tutorialSeen": [
     "movement",
     "swipe_move",
     "gear_equip_basics",
-    "scene_market_locator",
     "menu_save",
     "mod_slots_basics",
+    "dark_rooms_basics",
     "source_art_unlock",
+    "party_basics",
     "world2_debuffs",
     "link_unlock"
   ],
@@ -430,9 +470,11 @@
     "spire_archive_vault",
     "spire_donor_gallery",
     "spire_glasswalk",
-    "spire_skypark_scale_01",
+    "spire_skypark_scale_03",
     "spire_skypark_scale_02",
+    "spire_skypark_scale_01",
     "spire_service_lift",
+    "spire_uniform_sorting",
     "spire_exec_lounge_bar",
     "spire_drone_test_alcove",
     "spire_landing_pad_roof",
@@ -444,10 +486,13 @@
     "foundry_conveyor_belt",
     "foundry_conditioning_chamber",
     "foundry_forge_anvil",
+    "foundry_belt_service_walk",
     "foundry_conveyor_belt_scale_01",
     "foundry_conveyor_belt_scale_02",
     "foundry_conveyor_belt_scale_03",
     "foundry_conveyor_belt_scale_04",
+    "foundry_conveyor_belt_scale_final",
+    "foundry_reject_bay",
     "foundry_forge_scale_01",
     "foundry_forge_control_alcove",
     "foundry_power_core",
@@ -458,6 +503,8 @@
     "orbital_solarium",
     "orbital_security_hub",
     "orbital_service_shaft",
+    "orbital_zero_g_junction",
+    "deep_sysadmin_nest",
     "orbital_server_farm",
     "deep_mainframe_nave",
     "deep_firewall_alpha",
@@ -681,7 +728,6 @@
     "w1_mq01_leave_sleeping_level",
     "w1_mq01_find_jed",
     "w1_mq01_receive_starter_kit",
-    "w1_mq01_route_to_workshop_hint",
     "w1_mq01_inspect_loader_relay",
     "w1_mq01_faulted_loader_victory",
     "w1_mq01_reach_workshop",
@@ -699,6 +745,7 @@
     "w1_sq03_main_path_return_to_boggs",
     "w1_sq03_record_drill_admin_security",
     "w1_mq03_bogs_dialogue_complete",
+    "w1_mq03_dark_rooms_tutorial",
     "w1_mq03_enter_deep_mine",
     "w1_mq03_clear_rock_borer",
     "w1_mq03_reach_threshold",
@@ -735,6 +782,7 @@
     "w2_camp_ridge_plateau",
     "w2_mq04_reach_canopy",
     "w2_mq04_confront_finished",
+    "w1_mod_acquired_tutorial",
     "w2_mq04_victory",
     "w2_mq04_anchor_drill",
     "w2_mq05_reach_gate",
@@ -749,6 +797,7 @@
     "w2_mq05_confirm_departure",
     "w3_mq11_clear_landing",
     "w3_mq11_reach_vent",
+    "w3_mq11_jax_shelter",
     "w3_mq11_find_apartment",
     "w3_mq11_establish_shield",
     "w3_mq12_talk_jax",
@@ -767,7 +816,6 @@
     "w3_mq14_read_prism_shutters",
     "w3_mq14_trace_command_tethers",
     "w3_mq14_solve_light_puzzle",
-    "w1_mod_acquired_tutorial",
     "w3_mq14_take_lens",
     "w3_camp_skypark",
     "w3_mq15_reach_landing_pad",
@@ -846,14 +894,21 @@
       "discovered": true
     },
     "pit_L1_landing": {
+      "ready_for_shift": true,
       "visited": true,
       "discovered": true
     },
     "workshop_yard": {
-      "visited": true,
       "discovered": true,
+      "visited": true,
       "encounter_cleared:faulted_loader": true,
       "loader_cleared": true
+    },
+    "medbay_hall": {
+      "discovered": true
+    },
+    "trade_maint": {
+      "discovered": true
     },
     "workshop_floor": {
       "discovered": true,
@@ -862,8 +917,8 @@
       "cutter_surge_complete": true
     },
     "checkpoint_queue": {
-      "visited": true,
-      "discovered": true
+      "discovered": true,
+      "visited": true
     },
     "checkpoint_bay": {
       "visited": true,
@@ -907,8 +962,7 @@
     },
     "mine_alpha": {
       "visited": true,
-      "discovered": true,
-      "encounter_cleared:echo_borer|echo_borer": true
+      "discovered": true
     },
     "mine_junction": {
       "visited": true,
@@ -1041,7 +1095,10 @@
     "sector9_stream_cave_depths": {
       "visited": true,
       "discovered": true,
-      "encounter_cleared:echo_borer|echo_borer": true
+      "encounter_cleared:moss_borer|moss_borer": true
+    },
+    "sector9_stream_sunken_passage": {
+      "discovered": true
     },
     "sector9_wilds_thickets": {
       "visited": true,
@@ -1166,7 +1223,8 @@
     },
     "sector9_landing_drop": {
       "visited": true,
-      "discovered": true
+      "discovered": true,
+      "route_confirmed_w2_mq05_return_to_hangar": true
     },
     "astra_cargo_bay": {
       "visited": true,
@@ -1265,7 +1323,7 @@
       "visited": true,
       "discovered": true
     },
-    "spire_skypark_scale_01": {
+    "spire_skypark_scale_03": {
       "visited": true,
       "discovered": true
     },
@@ -1273,7 +1331,15 @@
       "visited": true,
       "discovered": true
     },
+    "spire_skypark_scale_01": {
+      "visited": true,
+      "discovered": true
+    },
     "spire_service_lift": {
+      "visited": true,
+      "discovered": true
+    },
+    "spire_uniform_sorting": {
       "visited": true,
       "discovered": true
     },
@@ -1297,11 +1363,12 @@
     },
     "foundry_slag_river": {
       "visited": true,
-      "discovered": true
+      "discovered": true,
+      "encounter_cleared:magma_drone": true
     },
     "foundry_waste_intake": {
-      "visited": true,
-      "discovered": true
+      "discovered": true,
+      "visited": true
     },
     "foundry_service_airlock": {
       "visited": true,
@@ -1310,6 +1377,13 @@
     "foundry_cooling_springs": {
       "visited": true,
       "discovered": true
+    },
+    "foundry_pipe_gallery": {
+      "assembly_route_open": true
+    },
+    "foundry_reject_bay": {
+      "discovered": true,
+      "visited": true
     },
     "foundry_conveyor_belt": {
       "visited": true,
@@ -1323,6 +1397,10 @@
       "visited": true,
       "discovered": true,
       "anvil_cradle_open": true
+    },
+    "foundry_belt_service_walk": {
+      "visited": true,
+      "discovered": true
     },
     "foundry_conveyor_belt_scale_01": {
       "visited": true,
@@ -1343,6 +1421,10 @@
       "discovered": true,
       "paddle_thrown": true
     },
+    "foundry_conveyor_belt_scale_final": {
+      "visited": true,
+      "discovered": true
+    },
     "foundry_forge_scale_01": {
       "visited": true,
       "discovered": true,
@@ -1361,6 +1443,9 @@
       "discovered": true,
       "encounter_cleared:titan_walker_boss": true
     },
+    "foundry_escape_catwalk": {
+      "discovered": true
+    },
     "orbital_executive_dock": {
       "visited": true,
       "discovered": true,
@@ -1369,7 +1454,7 @@
     "orbital_grand_concourse": {
       "visited": true,
       "discovered": true,
-      "encounter_cleared:compliance_officer": true
+      "encounter_cleared:customs_screener": true
     },
     "orbital_customs_lounge": {
       "visited": true,
@@ -1381,9 +1466,18 @@
     },
     "orbital_security_hub": {
       "visited": true,
-      "discovered": true
+      "discovered": true,
+      "encounter_cleared:compliance_officer|null_g_drone": true
     },
     "orbital_service_shaft": {
+      "visited": true,
+      "discovered": true
+    },
+    "orbital_zero_g_junction": {
+      "visited": true,
+      "discovered": true
+    },
+    "deep_sysadmin_nest": {
       "visited": true,
       "discovered": true
     },
@@ -1406,9 +1500,10 @@
     "deep_firewall_gamma": {
       "visited": true,
       "discovered": true,
-      "encounter_cleared:firewall_construct": true
+      "encounter_cleared:firewall_construct|prism_surveyor": true
     },
     "deep_anchor_chamber": {
+      "firewall_access_open": true,
       "visited": true,
       "discovered": true
     },
@@ -1478,11 +1573,211 @@
       "retreatGraceRemainingMs": 0,
       "defeated": false
     },
+    "spire_rooftop_assassin": {
+      "roomId": "spire_landing_pad_scale_03",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 16000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w3_exec_security_patrol": {
+      "roomId": "spire_exec_lounge_scale_04",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 15000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w3_sewer_sluice_pack": {
+      "roomId": "spire_sewers_scale_02",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 30000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w3_fuel_bridge_drones": {
+      "roomId": "spire_landing_pad_scale_01",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 30000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w4_waste_intake_patrol": {
+      "roomId": "foundry_waste_intake_scale_02",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 15000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w4_conditioning_phantom_patrol": {
+      "roomId": "foundry_conditioning_scale_04",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 14000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w4_reject_bay_phantom": {
+      "roomId": "foundry_reject_bay",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 30000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w4_engine_ring_trooper": {
+      "roomId": "foundry_engine_service_ring",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 30000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w5_security_precinct_patrol": {
+      "roomId": "orbital_security_hub_scale_03",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 15000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w5_solarium_drone_patrol": {
+      "roomId": "orbital_solarium_scale_03",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 14000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w5_mirror_walk_surveyor": {
+      "roomId": "orbital_mirror_walk",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 30000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w5_firewall_beta_sentries": {
+      "roomId": "deep_firewall_beta",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 30000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w6_echo_mines_shadow_patrol": {
+      "roomId": "source_echo_mines_node_scale_04",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 15000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w6_memory_stair_sentinel_patrol": {
+      "roomId": "source_memory_stair_node_scale_04",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 14000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w6_echo_patrol_shadow": {
+      "roomId": "source_echo_patrol",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 30000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w6_spire_thought_guard": {
+      "roomId": "source_spire_thought_node_scale_03",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 30000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w1_mine_alpha_borers": {
+      "roomId": "mine_alpha",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 30000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": true
+    },
     "w1_deep_mine_pressure_patrol": {
       "roomId": "mine_conveyor",
       "routeIndex": 0,
       "routeDirection": 1,
-      "moveRemainingMs": 25000,
+      "moveRemainingMs": 15000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w1_launch_access_sweep": {
+      "roomId": "launch_access",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 30000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w2_wilds_hound_patrol": {
+      "roomId": "sector9_wilds_archway",
+      "routeIndex": 2,
+      "routeDirection": 1,
+      "moveRemainingMs": 16000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w2_facility_sentinel_patrol": {
+      "roomId": "sector9_foyer_vault_door",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 15000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w2_hall_acoustics_ambush": {
+      "roomId": "sector9_hall_acoustics_lab",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 30000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w2_conduit_junction_drone": {
+      "roomId": "sector9_conduit_junction",
+      "routeIndex": 0,
+      "routeDirection": 1,
+      "moveRemainingMs": 30000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w3_archive_lockdown_patrol": {
+      "roomId": "spire_archive_scale_02",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 14000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w4_titan_dock_meltdown_patrol": {
+      "roomId": "foundry_titan_dock_scale_04",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 14000,
+      "retreatGraceRemainingMs": 0,
+      "defeated": false
+    },
+    "w5_throne_lockdown_patrol": {
+      "roomId": "deep_throne_room_scale_03",
+      "routeIndex": 1,
+      "routeDirection": 1,
+      "moveRemainingMs": 14000,
       "retreatGraceRemainingMs": 0,
       "defeated": false
     }
@@ -1637,9 +1932,6 @@
     "faulted_loader": [
       "shock"
     ],
-    "resonance_buoy": [
-      "shock"
-    ],
     "the_iron_warden": [
       "shock"
     ]
@@ -1652,6 +1944,7 @@
   "mealChefId": "nova",
   "fishingCleanCatchProgress": 0,
   "progressionPrototypeVersion": 1,
+  "physicalGearInventory": true,
   "purchasedSkillNodes": {},
   "progressionAwardClaims": [
     "w1_mq01",
@@ -1670,5 +1963,14 @@
     "w5_mq24",
     "recruit:orion",
     "recruit:gh0st"
-  ]
+  ],
+  "heardRestBanter": [
+    "place:launch_lift",
+    "place:sector9_ridge_plateau",
+    "place:spire_skypark_scale_02",
+    "w3:badge",
+    "place:foundry_forge_control_alcove",
+    "place:orbital_customs_lounge"
+  ],
+  "lastRestBanterId": "place:orbital_customs_lounge"
 }

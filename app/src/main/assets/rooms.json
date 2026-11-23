@@ -4849,7 +4849,8 @@
           "antidote_flask"
         ],
         "popup_title": "Triage Supply Tray",
-        "already_open_message": "The triage supply tray is empty."
+        "already_open_message": "The triage supply tray is empty.",
+        "discovery_message": "You slide open the stainless tray and pocket the clinic medkit and stabilizer ampoule."
       }
     ]
   },
@@ -7494,7 +7495,7 @@
         ]
       },
       {
-        "description": "The locking plates have withdrawn. The [action:anvil relic|Anvil relic] hangs within reach above the open cradle, casting Nova's shadow up the hammer wall. A fabrication matrix panel overlooks the hammer lane beside a test chamber terminal.",
+        "description": "The locking plates have withdrawn. The [action:anvil relic|Anvil relic] hangs within reach above the open anvil cradle, casting Nova's shadow up the hammer wall. A fabrication matrix panel overlooks the hammer lane beside a test chamber terminal.",
         "requires_milestones": [
           "ms_w4_conveyor_puzzle_solved"
         ]
@@ -15740,7 +15741,8 @@
           "medkit_i"
         ],
         "popup_title": "Maintenance Pouch",
-        "already_open_message": "The utility pouch is empty."
+        "already_open_message": "The utility pouch is empty.",
+        "discovery_message": "You undo the rusted buckle and gather the dry rations and patch strips inside."
       }
     ]
   },
@@ -16004,7 +16006,8 @@
           "herb"
         ],
         "popup_title": "Spice Crate",
-        "already_open_message": "The spice crate is empty."
+        "already_open_message": "The spice crate is empty.",
+        "discovery_message": "You pry back the slat lid and claim the sealed noodles and pepper jars tucked beneath the burlap."
       }
     ]
   },
@@ -16198,7 +16201,9 @@
     "description": "The ad bay projects a smiling loop of citizens thanking Dominion for clean air. The smiling loop glitches whenever a real worker walks past, and the dead speaker clicks through missing applause. The kiosk is north; the passage continues south into Ticket Shadow.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "sentinel_mki"
+    ],
     "connections": {
       "north": "spire_security_kiosk",
       "south": "spire_transit_plaza_scale_02"
@@ -16259,7 +16264,8 @@
           "battery"
         ],
         "popup_title": "Lost Luggage Locker",
-        "already_open_message": "The lost luggage locker is empty."
+        "already_open_message": "The lost luggage locker is empty.",
+        "discovery_message": "You pop the jammed transit latch and pull out unclaimed travel rations and a live battery."
       }
     ]
   },
@@ -16341,7 +16347,9 @@
     "description": "The steam rack turns executive uniforms ghost-white. Badge thread glints inside the cuffs, and the hiss of pressurized water makes the room safe for whispered planning.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "riot_guard"
+    ],
     "connections": {
       "east": "spire_laundry_service",
       "north": "spire_laundry_scale_02"
@@ -16402,7 +16410,8 @@
           "herbal_poultice"
         ],
         "popup_title": "Housekeeping Cart",
-        "already_open_message": "The housekeeping cart has been cleared out."
+        "already_open_message": "The housekeeping cart has been cleared out.",
+        "discovery_message": "You lift the starched linen tray and recover a field medkit and a spare wiring bundle."
       }
     ]
   },
@@ -16603,7 +16612,10 @@
     "description": "The catalog atrium cycles through file numbers across a tall index array. Each entry points to a life Dominion turned into property. An index terminal flashes amber in the dark. The vault is north; the maintenance wing continues south to Prism Service Bay.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "aero_drone",
+      "concierge_relay"
+    ],
     "connections": {
       "north": "spire_archive_vault",
       "south": "spire_archive_scale_02"
@@ -18955,7 +18967,7 @@
     "env": "void",
     "title": "Collar Pressure Gallery",
     "background_image": "images/rooms/world_5/orbital_executive_dock_scale_02.webp",
-    "description": "A pressure gallery runs behind the polished walls. Its warning strip flashes whenever exterior vacuum loads the hospitality seals.",
+    "description": "A pressure gallery runs behind the polished walls. Its warning strip flashes whenever exterior vacuum loads the hospitality seals. An emergency bulkhead kit hangs beside the pressure warning strip.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -18978,6 +18990,18 @@
         "name": "warning strip",
         "type": "generic",
         "condition_unmet_message": "The label belongs to the station's emergency layer, not the guest map."
+      },
+      {
+        "name": "emergency bulkhead kit",
+        "type": "container",
+        "state_key": "orbital_executive_dock_scale_02_kit_opened",
+        "items": [
+          "medkit_plus",
+          "power_cell"
+        ],
+        "popup_title": "Bulkhead Emergency Kit",
+        "already_open_message": "The emergency bulkhead kit is empty.",
+        "discovery_message": "You unlatch the magnetized cover and pull out a heavy medkit and a charged power cell."
       }
     ],
     "enemy_parties": [],
@@ -19123,7 +19147,9 @@
     "description": "The collar intercom repeats an abandoned freight request. Between the formal announcements, a loader keeps asking whether anyone has cleared the workers to board.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "null_g_drone"
+    ],
     "connections": {
       "west": "orbital_executive_dock_scale_05",
       "south": "orbital_executive_dock_scale_final"
@@ -19242,7 +19268,7 @@
     "env": "void",
     "title": "Chandelier Frame",
     "background_image": "images/rooms/world_5/orbital_grand_concourse_scale_03.webp",
-    "description": "A gap above a ceiling panel reveals the concourse chandelier from behind. Its glitter rests on a welded frame with fresh repair marks.",
+    "description": "A gap above a ceiling panel reveals the concourse chandelier from behind. Its glitter rests on a welded frame with fresh repair marks. A welded service case sits bolted inside the ceiling frame.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -19265,6 +19291,18 @@
         "name": "welded frame",
         "type": "generic",
         "condition_unmet_message": "Fresh repairs brace the chandelier. The station’s weightless elegance still rests on somebody’s welds."
+      },
+      {
+        "name": "welded service case",
+        "type": "container",
+        "state_key": "orbital_grand_concourse_scale_03_case_opened",
+        "items": [
+          "orbital_glimmer_tonic",
+          "circuit_board"
+        ],
+        "popup_title": "Maintenance Service Case",
+        "already_open_message": "The welded service case is empty.",
+        "discovery_message": "You crack the technician latch and recover glimmer tonic and an intact circuit board."
       }
     ]
   },
@@ -19352,7 +19390,9 @@
     "description": "A hospitality announcement echoes through an uncarpeted passage. Here, without the public speakers smoothing it, the pause before \"valued guest\" sounds painfully long.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "customs_screener"
+    ],
     "connections": {
       "east": "orbital_grand_concourse_scale_05",
       "south": "orbital_grand_concourse_scale_final"
@@ -19416,7 +19456,9 @@
     "description": "A condensation channel runs along the outer glass. Beyond it is black space. Mirror mounts on the inner frame show how carefully the garden daylight must be aimed.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "prism_surveyor"
+    ],
     "connections": {
       "east": "orbital_solarium_scale_01",
       "west": "orbital_solarium_scale_03"
@@ -19578,7 +19620,7 @@
     "env": "void",
     "title": "Cooling Irrigation Walk",
     "background_image": "images/rooms/world_5/orbital_solarium_scale_06.webp",
-    "description": "An irrigation pipe ticks as it cools. The sound moves along the beds, a small physical rhythm beneath the station's recorded birdsong.",
+    "description": "An irrigation pipe ticks as it cools. The sound moves along the beds, a small physical rhythm beneath the station's recorded birdsong. An irrigation supply pouch hangs strapped beneath the damp pipe.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -19601,6 +19643,18 @@
         "name": "recorded birdsong",
         "type": "generic",
         "condition_unmet_message": "The birds repeat without answering the pipe or one another. The irrigation is the living garden’s more reliable sound."
+      },
+      {
+        "name": "irrigation supply pouch",
+        "type": "container",
+        "state_key": "orbital_solarium_scale_06_pouch_opened",
+        "items": [
+          "herbal_poultice",
+          "medkit_plus"
+        ],
+        "popup_title": "Solarium Supply Pouch",
+        "already_open_message": "The irrigation supply pouch is empty.",
+        "discovery_message": "You unzip the waterproof pouch and claim fresh herbal poultices and a medkit."
       }
     ],
     "enemy_parties": [],
@@ -19642,7 +19696,7 @@
     "env": "void",
     "title": "Hull Inspection Gallery",
     "background_image": "images/rooms/world_5/orbital_security_hub_scale_02.webp",
-    "description": "A reinforced gallery separates the security office from the outer hull. Its pressure strip has a manual inspection date newer than the staff roster.",
+    "description": "A reinforced gallery separates the security office from the outer hull. Its pressure strip has a manual inspection date newer than the staff roster. A narrow duty roster locker stands beside the staff clipboard.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -19665,6 +19719,18 @@
         "name": "staff roster",
         "type": "generic",
         "condition_unmet_message": "The roster is older than the safety inspection beside it. Its list of workers no longer explains who kept the passage running."
+      },
+      {
+        "name": "duty roster locker",
+        "type": "container",
+        "state_key": "orbital_security_hub_scale_02_locker_opened",
+        "items": [
+          "pulse_grenade",
+          "painkillers"
+        ],
+        "popup_title": "Security Roster Locker",
+        "already_open_message": "The duty roster locker is empty.",
+        "discovery_message": "You pry the thin cabinet door open and claim a pulse grenade and neural stabilizers."
       }
     ],
     "enemy_parties": [],
@@ -19810,7 +19876,9 @@
     "description": "A diagnostic speaker repeats an incomplete incident number. The next field is always a silence where an operator should have answered.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "void_turret"
+    ],
     "connections": {
       "south": "orbital_security_hub_scale_05",
       "east": "orbital_security_hub_scale_final"
@@ -19951,7 +20019,7 @@
     "env": "void",
     "title": "Worklight Lockout",
     "background_image": "images/rooms/world_5/orbital_service_shaft_scale_04.webp",
-    "description": "A local work-light switch sits beside a signed lockout tag. The circuit powers this recess; the main station feed runs in a sealed conduit beyond it.",
+    "description": "A local work-light switch sits beside a signed lockout tag. The circuit powers this recess; the main station feed runs in a sealed conduit beyond it. A tethered lockout tool pouch drifts beside the work-light switch.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -19974,6 +20042,18 @@
         "name": "lockout tag",
         "type": "generic",
         "condition_unmet_message": "A technician signed the tag before isolating the local lights. The main station feed remains sealed away."
+      },
+      {
+        "name": "lockout tool pouch",
+        "type": "container",
+        "state_key": "orbital_service_shaft_scale_04_pouch_opened",
+        "items": [
+          "composite_plate",
+          "wiring_bundle"
+        ],
+        "popup_title": "Zero-G Lockout Pouch",
+        "already_open_message": "The lockout tool pouch is empty.",
+        "discovery_message": "You unclip the tethered canvas pouch and pull out a composite plate and spare wiring."
       }
     ],
     "enemy_parties": [],
@@ -20293,7 +20373,7 @@
     "weather": "resonance",
     "title": "Isolation Tank",
     "background_image": "images/rooms/world_5/deep_anchor_chamber_scale_02.webp",
-    "description": "An isolation tank masks Elara’s neural telemetry behind synthetic traffic, trying to smooth her into infrastructure. Breath meters rise beside the glass whenever the system logs her as an asset instead of a person.",
+    "description": "An isolation tank masks Elara’s neural telemetry behind synthetic traffic, trying to smooth her into infrastructure. Breath meters rise beside the glass whenever the system logs her as an asset instead of a person. An isolation emergency locker glows dimly beneath the breath meters.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -20316,6 +20396,18 @@
         "name": "breath meters",
         "type": "generic",
         "condition_unmet_message": "The meters spike when Nova gets close, like Elara is fighting the Ring with the only rhythm still hers."
+      },
+      {
+        "name": "isolation emergency locker",
+        "type": "container",
+        "state_key": "deep_anchor_chamber_scale_02_locker_opened",
+        "items": [
+          "medkit_plus",
+          "painkillers"
+        ],
+        "popup_title": "Isolation Emergency Locker",
+        "already_open_message": "The isolation emergency locker is empty.",
+        "discovery_message": "You break the medical seal and gather a heavy medkit and neural stabilizers."
       }
     ],
     "enemy_parties": [],
@@ -20429,7 +20521,10 @@
     "description": "The Living Cable threshold crosses the floor like a vein between Elara and the Ring. Command noise crawls along it, but beneath the static a human signal keeps refusing to flatten.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "hk_droid",
+      "prism_surveyor"
+    ],
     "connections": {
       "south": "deep_anchor_chamber_scale_04",
       "north": "deep_anchor_chamber_scale_06"
@@ -20653,7 +20748,7 @@
     "weather": "resonance",
     "title": "Thorne Cell",
     "background_image": "images/rooms/world_5/deep_throne_room_scale_02.webp",
-    "description": "Thorne's cell hangs beside the dais. She keeps one hand against the field; the containment seam brightens when she pushes. The controls outside still carry her seal.",
+    "description": "Thorne's cell hangs beside the dais. She keeps one hand against the field; the containment seam brightens when she pushes. The controls outside still carry her seal. A confiscated executive brief rests outside the containment seam.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -20676,6 +20771,18 @@
         "name": "containment seam",
         "type": "generic",
         "condition_unmet_message": "The seam is keyed to Vale’s command cipher. Thorne’s credential flashes red beside it."
+      },
+      {
+        "name": "confiscated executive brief",
+        "type": "container",
+        "state_key": "deep_throne_room_scale_02_brief_opened",
+        "items": [
+          "adrenaline",
+          "nano_filament"
+        ],
+        "popup_title": "Confiscated Executive Brief",
+        "already_open_message": "The confiscated executive brief is empty.",
+        "discovery_message": "You snap open the carbon clasp and pocket an adrenaline ampoule and nano-filament spool."
       }
     ],
     "enemy_parties": [],
@@ -20785,7 +20892,9 @@
     "description": "A coup balcony overlooks the Ring security crown as Vale rewrites command ownership in real time. The security crown changes color with each permission Thorne loses.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "boardroom_bailiff"
+    ],
     "connections": {
       "south": "deep_throne_room_scale_04",
       "north": "deep_throne_room_scale_06"
@@ -21083,7 +21192,9 @@
     "description": "The event lip burns blue at the edge of the Tear while Vale's coup collapses behind the crew. The blue horizon shows the Campfire before anyone jumps.",
     "npcs": [],
     "items": [],
-    "enemies": [],
+    "enemies": [
+      "threshold_remnant"
+    ],
     "connections": {
       "west": "deep_tear_scale_03",
       "south": "deep_tear_scale_05"
@@ -21119,7 +21230,7 @@
     "weather": "resonance",
     "title": "Last Bulkhead",
     "background_image": "images/rooms/world_5/deep_tear_scale_05.webp",
-    "description": "The last bulkhead holds one manual wheel between the Ring and the impossible. The manual wheel is hot from people trying to close what cannot close.",
+    "description": "The last bulkhead holds one manual wheel between the Ring and the impossible. The manual wheel is hot from people trying to close what cannot close. A hull survival satchel hangs lashed to the manual wheel.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -21142,6 +21253,18 @@
         "name": "manual wheel",
         "type": "generic",
         "condition_unmet_message": "Someone tried the old kind of control here and learned the universe had moved on."
+      },
+      {
+        "name": "hull survival satchel",
+        "type": "container",
+        "state_key": "deep_tear_scale_05_satchel_opened",
+        "items": [
+          "source_astral_feast",
+          "medkit_plus"
+        ],
+        "popup_title": "Hull Breach Survival Satchel",
+        "already_open_message": "The hull survival satchel is empty.",
+        "discovery_message": "You unhook the reinforced satchel and recover high-grade provisions and a medkit."
       }
     ],
     "enemy_parties": [],

@@ -41,6 +41,6 @@ class EnemyNameWidthAuditTest {
             name + "," + sizes.joinToString(",")
         }
         File(out.parentFile, "approved-names.csv").writeText("Name,13sp width,12sp width,11sp width\n" + proposed.joinToString("\n") + "\n")
-        assertEquals(48, rows.size)
+        assertEquals(69, rows.size)
     }
 }

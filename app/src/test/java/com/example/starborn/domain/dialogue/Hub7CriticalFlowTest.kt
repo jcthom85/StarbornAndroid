@@ -59,7 +59,8 @@ class Hub7CriticalFlowTest {
             "encounter_victory",
             EventPayload.EncounterOutcome(
                 enemyIds = listOf("compliance_officer", "null_g_drone"),
-                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+                outcome = EventPayload.EncounterOutcome.Outcome.VICTORY,
+                roomId = "orbital_security_hub"
             )
         )
         assertEquals("zero_g_descent", harness.store.state.value.questStageById["w5_mq22"])

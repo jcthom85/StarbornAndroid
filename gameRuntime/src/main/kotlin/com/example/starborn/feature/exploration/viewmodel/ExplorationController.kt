@@ -1671,6 +1671,7 @@ class ExplorationController(
             Triple(itemId, name, qty)
         }
         if (grantedItems.isNotEmpty()) {
+            sessionStore.setInventory(inventoryService.snapshot())
             val sequenceId = "reward_${UUID.randomUUID()}"
             grantedItems.forEachIndexed { index, (itemId, _, qty) ->
                 promptManager.enqueue(
@@ -2885,6 +2886,7 @@ class ExplorationController(
             value && key.startsWith("encounter_cleared:") && "sentinel_mki" in key.removePrefix("encounter_cleared:").split('|') }) {
             sessionStore.setMilestone("ms_w3_neon_core_recovered")
             inventoryService.addItem("neon_sign_core",1)
+            sessionStore.setInventory(inventoryService.snapshot())
         }
     }
 
@@ -5118,6 +5120,11 @@ class ExplorationController(
             playUiCue("error")
             return
         }
+        if (inventoryService.hasItem(resolvedWeaponId) &&
+            (sessionStore.state.value.inventory[resolvedWeaponId] ?: 0) <= 0
+        ) {
+            sessionStore.setInventory(inventoryService.snapshot())
+        }
         if (!sessionStore.setEquippedWeapon(normalizedCharacter, resolvedWeaponId)) {
             playUiCue("error")
             postStatus("No available copy of ${item.name}. Unequip it from another character to move it.")
@@ -5144,6 +5151,11 @@ class ExplorationController(
         if (!GearRules.matchesSlot(item.equipment, "armor", normalizedCharacter, item.type)) {
             playUiCue("error")
             return
+        }
+        if (inventoryService.hasItem(resolvedArmorId) &&
+            (sessionStore.state.value.inventory[resolvedArmorId] ?: 0) <= 0
+        ) {
+            sessionStore.setInventory(inventoryService.snapshot())
         }
         if (!sessionStore.setEquippedArmor(normalizedCharacter, resolvedArmorId)) {
             playUiCue("error")
@@ -5218,6 +5230,7 @@ class ExplorationController(
         val quantity = items[itemId] ?: return
         playUiCue("item_pickup")
         inventoryService.addItem(itemId, quantity)
+        sessionStore.setInventory(inventoryService.snapshot())
         val displayName = inventoryService.itemDisplayName(itemId)
         items.remove(itemId)
         if (items.isEmpty()) {
@@ -5242,6 +5255,9 @@ class ExplorationController(
             val displayName = inventoryService.itemDisplayName(itemId)
             collectedItems += if (quantity > 1) "$quantity x $displayName" else displayName
             emitEvent(ExplorationEvent.ItemGranted(displayName, quantity))
+        }
+        if (collectedItems.isNotEmpty()) {
+            sessionStore.setInventory(inventoryService.snapshot())
         }
         items.clear()
         roomGroundItems.remove(roomId)

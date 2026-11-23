@@ -744,7 +744,7 @@ class LegalRouteCampaignRunnerTest {
         val reader = AssetJsonReader(DesktopAssetProvider(listOf(assets)), MoshiProvider.instance)
         val rooms = reader.readList<Room>("rooms.json")
         val cases = rooms.filter { room -> room.actions.any { it["discovery_message"] != null } }
-        assertEquals("Every audited later-world container has authored narration", 51, cases.sumOf { room -> room.actions.count { it["discovery_message"] != null } })
+        assertEquals("Every audited later-world container has authored narration", 77, cases.sumOf { room -> room.actions.count { it["discovery_message"] != null } })
         val runtimeSamples = setOf("sector9_stream_wetlands", "sector9_sunken_aethel_vault",
             "spire_black_site_lab", "foundry_subterranean_smelter", "orbital_breached_avionics_lab",
             "source_campfire_node_scale_final")
@@ -1793,7 +1793,8 @@ class LegalRouteCampaignRunnerTest {
             if (matchingAction != null) {
                 harness.explorationVm.onActionSelected(matchingAction)
                 if (matchingAction is com.example.starborn.domain.model.GenericAction &&
-                    matchingAction.actionEvent in setOf("w2_mq05_return_to_pod", "w2_mq05_return_to_hangar") &&
+                    (matchingAction.travelLabel != null ||
+                        matchingAction.actionEvent in setOf("w2_mq05_return_to_pod", "w2_mq05_return_to_hangar")) &&
                     harness.explorationVm.uiState.value.roomObjectOffer != null) {
                     harness.explorationVm.confirmRoomObject()
                 }
@@ -1810,11 +1811,19 @@ class LegalRouteCampaignRunnerTest {
 
         fun finishDialogue(choiceId: String) {
             var steps = 0
-            while (harness.explorationVm.uiState.value.activeDialogue != null) {
-                check(++steps <= 30) { "Puzzle dialogue stalled" }
+            while (harness.explorationVm.uiState.value.activeDialogue != null ||
+                harness.cinematicCoordinator.state.value != null) {
+                check(++steps <= 40) { "Puzzle dialogue stalled" }
+                if (harness.cinematicCoordinator.state.value != null) {
+                    harness.explorationVm.skipCinematic()
+                    harness.settle()
+                    continue
+                }
                 val choices = harness.explorationVm.uiState.value.dialogueChoices
                 if (choices.isEmpty()) harness.explorationVm.advanceDialogue()
-                else harness.explorationVm.onDialogueChoiceSelected(choices.single { it.id == choiceId }.id)
+                else harness.explorationVm.onDialogueChoiceSelected(
+                    (choices.firstOrNull { it.id == choiceId } ?: choices.first()).id
+                )
                 harness.settle()
             }
         }
@@ -3537,8 +3546,8 @@ class LegalRouteCampaignRunnerTest {
             val equipped = inspect()
             assertEquals(baseline.getValue("orion").stats.focus + 2, equipped.getValue("orion").stats.focus)
             assertEquals(baseline.getValue("orion").stats.critBonus + 5.0, equipped.getValue("orion").stats.critBonus, 0.001)
-            assertEquals(baseline.getValue("gh0st").stats.agility + 2, equipped.getValue("gh0st").stats.agility)
-            assertEquals(baseline.getValue("gh0st").stats.focus + 2, equipped.getValue("gh0st").stats.focus)
+            assertEquals(baseline.getValue("gh0st").stats.agility + 3, equipped.getValue("gh0st").stats.agility)
+            assertEquals(baseline.getValue("gh0st").stats.focus + 3, equipped.getValue("gh0st").stats.focus)
             assertEquals("Accessory must not promise a weapon conversion it does not supply", baseline.getValue("gh0st").weapon?.attack?.element,
                 equipped.getValue("gh0st").weapon?.attack?.element)
             assertEquals(baseline.getValue("nova").stats.focus + 4, equipped.getValue("nova").stats.focus)

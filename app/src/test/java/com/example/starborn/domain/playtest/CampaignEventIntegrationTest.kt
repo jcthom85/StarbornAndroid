@@ -66,7 +66,7 @@ class CampaignEventIntegrationTest {
             // 4,525 main-quest XP + 100 training XP; retired relay rewards contributed an invalid 480.
             assertEquals(4625 + rewards.sumOf { it.xp }, checkpoint.playerXp)
             assertEquals(rewards.sumOf { it.ap }, checkpoint.playerAp)
-            assertEquals(rewards.sumOf { it.credits }, checkpoint.playerCredits)
+            assertEquals(1250 + rewards.sumOf { it.credits }, checkpoint.playerCredits)
             assertEquals(1, checkpoint.inventory["nova_flux_liner"])
             assertTrue("Battle rewards must contribute to progression", rewards.sumOf { it.xp } > 0)
             println("BATTLE_EARNED_CHECKPOINT xp=${checkpoint.playerXp} level=${checkpoint.playerLevel} ap=${checkpoint.playerAp} credits=${checkpoint.playerCredits} inventory=${checkpoint.inventory.toSortedMap()}")
@@ -82,7 +82,7 @@ class CampaignEventIntegrationTest {
             val bossCheckpoint = requireNotNull(beforeTitan)
             assertEquals(9970, bossCheckpoint.playerXp)
             assertEquals(8, bossCheckpoint.playerLevel)
-            assertTrue("Level-nine offense must not be invented", "zeke_overload_fists" !in bossCheckpoint.unlockedSkills)
+            assertTrue("Level-twelve offense must not be invented", "zeke_quake_slam" !in bossCheckpoint.unlockedSkills)
             assertTrue(bossCheckpoint.activeQuests.contains("w4_mq20"))
             assertTrue(!bossCheckpoint.completedQuests.contains("w4_mq20"))
             assertEquals("Titan AP must not be paid before the fight", checkpoint.playerAp, bossCheckpoint.playerAp)
@@ -295,7 +295,7 @@ class CampaignEventIntegrationTest {
             // with the level-nine, 1,070-credit constructed combat checkpoint.
             assertEquals(4625, earned.playerXp)
             assertEquals(6, earned.playerLevel)
-            assertEquals(0, earned.playerCredits)
+            assertEquals(1250, earned.playerCredits)
             assertEquals(0, earned.playerAp)
             val equipped = earned.copy(equippedArmors = earned.equippedArmors + ("nova" to "nova_flux_liner"))
             val restored = harness.roundTripSave(equipped)
@@ -557,7 +557,7 @@ class CampaignEventIntegrationTest {
         agent.executeAction("w5_mq21_force_dock")
         agent.executeAction("w5_mq21_hack_airlock")
         agent.executeAction("w5_mq22_cross_solarium")
-        agent.winEncounter(listOf("compliance_officer", "null_g_drone"), "orbital_grand_concourse")
+        agent.winEncounter(listOf("compliance_officer", "null_g_drone"), "orbital_security_hub")
         listOf("traverse_shaft", "access_mainframe", "find_thorne")
             .forEach { agent.executeAction("w5_mq22_$it") }
         assertTrue(harness.store.state.value.activeQuests.contains("w5_mq23"))
@@ -583,7 +583,7 @@ class CampaignEventIntegrationTest {
 
         agent.navigateTo("deep_throne_room")
         agent.executeAction("w5_mq25_soloist")
-        agent.winEncounter(listOf("compliance_avatar"), "deep_throne_room")
+        agent.winEncounter(listOf("compliance_avatar"), "deep_tear")
         agent.executeAction("w5_mq25_enter_tear")
 
         state = harness.store.state.value
@@ -610,8 +610,8 @@ class CampaignEventIntegrationTest {
         agent.executeAction("w6_mq29_refuse_astra_revision")
         agent.executeAction("w6_mq29_refuse_foundry_revision")
         agent.executeAction("w6_mq29_climb_stair")
-        agent.winEncounter(listOf("source_shadow", "distorted_sentinel", "glitch_hound"), "source_memory_stair")
-        agent.winEncounter(listOf("memory_leak", "nightmare_guard"), "source_memory_stair")
+        agent.winEncounter(listOf("source_shadow", "distorted_sentinel", "glitch_hound"), "source_memory_fragments")
+        agent.winEncounter(listOf("memory_leak", "nightmare_guard"), "source_spire_arena")
 
         agent.navigateTo("source_center")
         var state = harness.store.state.value

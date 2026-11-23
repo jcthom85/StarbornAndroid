@@ -26,9 +26,9 @@ class Hub9CriticalFlowTest {
         assertEquals("source_campfire", state.roomId)
         assertTrue(state.activeQuests.contains("w6_mq26"))
 
-        harness.winEncounter("manager_projection")
-        harness.winEncounter("endless_war_echo")
-        harness.winEncounter("silent_shore_wraith")
+        harness.winEncounter("manager_projection", "source_zeke_review_loop")
+        harness.winEncounter("endless_war_echo", "source_gh0st_kill_suite")
+        harness.winEncounter("silent_shore_wraith", "source_orion_tide_well")
         state = harness.store.state.value
         assertTrue(state.questTasksCompleted["w6_mq26"].orEmpty().containsAll(listOf("rescue_zeke", "rescue_gh0st", "rescue_orion")))
 
@@ -120,12 +120,13 @@ class Hub9CriticalFlowTest {
             )
         }
 
-        fun winEncounter(enemyId: String) {
+        fun winEncounter(enemyId: String, roomId: String? = null) {
             events.handleTrigger(
                 "encounter_victory",
                 EventPayload.EncounterOutcome(
                     enemyIds = listOf(enemyId),
-                    outcome = EventPayload.EncounterOutcome.Outcome.VICTORY
+                    outcome = EventPayload.EncounterOutcome.Outcome.VICTORY,
+                    roomId = roomId
                 )
             )
         }

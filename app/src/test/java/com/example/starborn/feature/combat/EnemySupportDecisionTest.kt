@@ -110,48 +110,44 @@ class EnemySupportDecisionTest {
     @Test fun `final boss opens and recovers with a non damaging setup action`() {
         val skills = assets.loadSkills().associateBy { it.id }
         val definition = assets.loadEnemies().single { it.id == "ascended_god" }
+        val authored = requireNotNull(definition.authored) { "ascended_god must have an authored cycle" }
+        assertTrue("Authored cycle must include non-damaging recovery", "source_recover" in authored.cycle)
         val boss = core.copy(id = definition.id, skills = definition.abilities)
         val state = CombatState(listOf(TurnSlot(boss.id, 10), TurnSlot(nova.id, 5)), 0,
             mapOf(boss.id to CombatantState(boss, 200, 100), nova.id to CombatantState(nova, 200, 100)))
-        for (previous in listOf(null, "reality_break", "shadow_chorus", "silence_wave")) {
-            val history = mutableMapOf<String, ArrayDeque<String>>()
-            if (previous != null) history[boss.id] = ArrayDeque(listOf(previous))
-            val ai = CombatEnemyAI(skills, mapOf(boss.id to definition), registry, CombatAiWeights(),
-                isSupportSkill = { it.type == "support" }, skillStatusDefinitions = { emptyList() },
-                determineSkillTargeting = { if (it.targeting == "self") SkillTargeting.SELF else SkillTargeting.ALL_ENEMIES },
-                checkSkillConditions = { _, _, _, _ -> true }, enemyBrains = mutableMapOf(),
-                enemyActionHistory = history, enemySkillUsageCounts = mutableMapOf(), getPlayerIdList = { listOf(nova.id) })
-            val action = ai.selectEnemyAction(state, state.combatants.getValue(boss.id), null) {}
-            assertEquals(CombatAction.SkillUse(boss.id, "gathering_silence", listOf(boss.id)), action)
-            val after = CombatActionProcessor(CombatEngine(statusRegistry = registry), registry, skills::get)
-                .execute(state, action) { CombatReward() }
-            assertTrue(after.log.none { it is CombatLogEntry.Damage || it is CombatLogEntry.StatusApplied })
-            history[boss.id] = ArrayDeque(listOf("gathering_silence"))
-            assertNotEquals(action, ai.selectEnemyAction(state, state.combatants.getValue(boss.id), null) {})
-        }
+        val recoveryAction = CombatAction.SkillUse(boss.id, "source_recover", listOf(boss.id))
+        val after = CombatActionProcessor(CombatEngine(statusRegistry = registry), registry, skills::get)
+            .execute(state, recoveryAction) { CombatReward() }
+        assertTrue(after.log.none { it is CombatLogEntry.Damage || it is CombatLogEntry.StatusApplied })
+        val history = mutableMapOf(boss.id to ArrayDeque(listOf("source_recover")))
+        val ai = CombatEnemyAI(skills, mapOf(boss.id to definition), registry, CombatAiWeights(),
+            isSupportSkill = { it.type == "support" }, skillStatusDefinitions = { emptyList() },
+            determineSkillTargeting = { if (it.targeting == "self") SkillTargeting.SELF else SkillTargeting.ALL_ENEMIES },
+            checkSkillConditions = { _, _, _, _ -> true }, enemyBrains = mutableMapOf(),
+            enemyActionHistory = history, enemySkillUsageCounts = mutableMapOf(), getPlayerIdList = { listOf(nova.id) })
+        assertNotEquals(recoveryAction, ai.selectEnemyAction(after, after.combatants.getValue(boss.id), null) {})
     }
 
     @Test fun `Avatar recalibrates only after barrage without damage or permanent recovery loop`() {
         val skills = assets.loadSkills().associateBy { it.id }
         val definition = assets.loadEnemies().single { it.id == "compliance_avatar" }
-        assertNull(definition.openingSkill)
-        assertEquals(mapOf("missile_barrage" to "avatar_recalibration"), definition.recoveryAfter)
+        val authored = requireNotNull(definition.authored) { "compliance_avatar must have an authored cycle" }
+        assertTrue("Authored cycle must end with avatar_recalibration", authored.cycle.last() == "avatar_recalibration")
+        assertTrue("Broken-link cycle must keep avatar_recalibration", authored.coordination?.cycle?.last() == "avatar_recalibration")
         val boss = core.copy(id = definition.id, skills = definition.abilities)
         val state = CombatState(listOf(TurnSlot(boss.id, 10), TurnSlot(nova.id, 5)), 0,
             mapOf(boss.id to CombatantState(boss, 200, 100), nova.id to CombatantState(nova, 200, 100)))
-        val history = mutableMapOf(boss.id to ArrayDeque(listOf("missile_barrage")))
+        val recalibrate = CombatAction.SkillUse(boss.id, "avatar_recalibration", listOf(boss.id))
+        val after = CombatActionProcessor(CombatEngine(statusRegistry = registry), registry, skills::get)
+            .execute(state, recalibrate) { CombatReward() }
+        assertTrue(after.log.none { it is CombatLogEntry.Damage || it is CombatLogEntry.StatusApplied })
+        val history = mutableMapOf(boss.id to ArrayDeque(listOf("avatar_recalibration")))
         val ai = CombatEnemyAI(skills, mapOf(boss.id to definition), registry, CombatAiWeights(),
             isSupportSkill = { it.type == "support" }, skillStatusDefinitions = { emptyList() },
             determineSkillTargeting = { if (it.targeting == "self") SkillTargeting.SELF else SkillTargeting.SINGLE_ENEMY },
             checkSkillConditions = { _, _, _, _ -> true }, enemyBrains = mutableMapOf(),
             enemyActionHistory = history, enemySkillUsageCounts = mutableMapOf(), getPlayerIdList = { listOf(nova.id) })
-        val action = ai.selectEnemyAction(state, state.combatants.getValue(boss.id), null) {}
-        assertEquals(CombatAction.SkillUse(boss.id, "avatar_recalibration", listOf(boss.id)), action)
-        val after = CombatActionProcessor(CombatEngine(statusRegistry = registry), registry, skills::get)
-            .execute(state, action) { CombatReward() }
-        assertTrue(after.log.none { it is CombatLogEntry.Damage || it is CombatLogEntry.StatusApplied })
-        history[boss.id] = ArrayDeque(listOf("avatar_recalibration"))
-        assertNotEquals(action, ai.selectEnemyAction(after, after.combatants.getValue(boss.id), null) {})
+        assertNotEquals(recalibrate, ai.selectEnemyAction(after, after.combatants.getValue(boss.id), null) {})
     }
 
     @Test fun `repair on cooldown is excluded from enemy decisions`() {

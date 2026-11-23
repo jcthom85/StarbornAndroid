@@ -892,7 +892,7 @@
   {
     "id": "zeke_w1_mq05_pod_core_3",
     "speaker": "Zeke",
-    "emote": "happy",
+    "emote": "worried",
     "text": "It took the Chime. Power’s holding. I can get us off the rail. After that, I can’t promise where we’ll land.",
     "next": "zeke_w1_mq05_pod_core_4"
   },
@@ -4939,6 +4939,6 @@
     "speaker": "Nova",
     "text": "[Nova shortens her stride.] I can do slowly.",
     "scripted_only": true,
-    "emote": "happy"
+    "emote": "confident"
   }
 ]
