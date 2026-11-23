@@ -53,7 +53,7 @@ class HarmonicPulseEngine(
 ) {
     companion object {
         const val STEP = 1f / 60f
-        const val DEFAULT_BPM = 120f
+        const val DEFAULT_BPM = 124f
         const val STRIKE_LINE_Y = 0.86f
         const val NOTE_FALL_DURATION = 1.4f // seconds from top to strike line
         const val LANES = 4
