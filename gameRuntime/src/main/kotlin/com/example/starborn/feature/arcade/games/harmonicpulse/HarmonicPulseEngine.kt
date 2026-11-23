@@ -47,9 +47,13 @@ data class HarmonicPulseSnapshot(
     val audioEvent: PulseAudioEvent = PulseAudioEvent.NONE
 )
 
-class HarmonicPulseEngine(private val seed: Long = 0x534F5552L) {
+class HarmonicPulseEngine(
+    private val seed: Long = 0x534F5552L,
+    private val bpm: Float = DEFAULT_BPM
+) {
     companion object {
         const val STEP = 1f / 60f
+        const val DEFAULT_BPM = 120f
         const val STRIKE_LINE_Y = 0.86f
         const val NOTE_FALL_DURATION = 1.4f // seconds from top to strike line
         const val LANES = 4
@@ -109,19 +113,42 @@ class HarmonicPulseEngine(private val seed: Long = 0x534F5552L) {
 
     private fun generateInitialTrack() {
         notes.clear()
-        var t = 1.0f
-        val interval = (0.55f - (round - 1) * 0.04f).coerceAtLeast(0.24f)
-        while (t < TRACK_DURATION) {
-            val lane = (randomFloat() * 4).toInt().coerceIn(0, 3)
-            notes.add(RhythmNote(nextNoteId++, lane, t))
+        val beatSeconds = 60f / bpm.coerceIn(60f, 220f)
+        val eighthStep = beatSeconds * 0.5f
+        val totalEighths = ((TRACK_DURATION - beatSeconds * 2f) / eighthStep).toInt()
+        val eighthChance = when (round) {
+            1 -> 0.16f
+            2 -> 0.34f
+            3 -> 0.52f
+            else -> 0.68f
+        }
+        val chordChance = when (round) {
+            1 -> 0f
+            2 -> 0.22f
+            else -> 0.32f
+        }
+        var lastLane = 0
+        // Start cleanly on beat 2 (1.0s at 120 BPM) so every note lands on the locked beat grid.
+        var stepIndex = 4
+        while (stepIndex <= totalEighths) {
+            val onDownbeat = stepIndex % 2 == 0
+            val shouldSpawn = onDownbeat || randomFloat() < eighthChance
+            if (shouldSpawn) {
+                val t = stepIndex * eighthStep
+                val lane = if (randomFloat() < 0.35f) {
+                    (lastLane + if (randomFloat() < 0.5f) 1 else LANES - 1) % LANES
+                } else {
+                    (randomFloat() * LANES).toInt().coerceIn(0, LANES - 1)
+                }
+                lastLane = lane
+                notes.add(RhythmNote(nextNoteId++, lane, t))
 
-            // Occasional simultaneous chord note
-            if (randomFloat() < 0.22f && round >= 2) {
-                val secondLane = (lane + 1 + (randomFloat() * 2).toInt()) % 4
-                notes.add(RhythmNote(nextNoteId++, secondLane, t))
+                if (onDownbeat && chordChance > 0f && randomFloat() < chordChance) {
+                    val secondLane = (lane + 1 + (randomFloat() * 2).toInt()) % LANES
+                    notes.add(RhythmNote(nextNoteId++, secondLane, t))
+                }
             }
-
-            t += interval + (if (randomFloat() < 0.3f) interval / 2f else 0f)
+            stepIndex++
         }
     }
 

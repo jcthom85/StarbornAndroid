@@ -630,8 +630,14 @@ internal fun CampaignNavigationHost(
             if (cabinetId in setOf(ArcadeIds.DEEP_MINE, ArcadeIds.CANOPY_HOPPER,
                     ArcadeIds.SPIRE_INFILTRATOR, ArcadeIds.SLAG_CATCHER,
                     ArcadeIds.ORBITAL_DEFENSE, ArcadeIds.HARMONIC_PULSE)) {
-                DisposableEffect(Unit) {
-                    val music = services.audioRouter.temporaryMusic("music_arcade_cabinet")
+                DisposableEffect(cabinetId) {
+                    val preferredCue = ArcadeIds.musicCueFor(cabinetId)
+                    val resolvedCue = if (context.resources.getIdentifier(preferredCue, "raw", context.packageName) != 0) {
+                        preferredCue
+                    } else {
+                        ArcadeIds.DEFAULT_MUSIC_CUE
+                    }
+                    val music = services.audioRouter.temporaryMusic(resolvedCue)
                     services.audioCuePlayer.execute(music.enter)
                     onDispose { services.audioCuePlayer.execute(music.restore()) }
                 }

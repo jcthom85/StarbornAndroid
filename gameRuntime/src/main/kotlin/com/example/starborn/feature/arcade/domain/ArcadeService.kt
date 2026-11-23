@@ -35,6 +35,18 @@ object ArcadeIds {
     const val REPAIRED_HARMONIC_CORE = "harmonic_pulse_cabinet_core"
     const val HARMONIC_LOGIC_BOARD = "prismatic_tuning_fork"
     const val TOKEN_ITEM_ID = "item_arcade_token"
+
+    const val DEFAULT_MUSIC_CUE = "music_arcade_cabinet"
+
+    fun musicCueFor(cabinetId: String?): String = when (cabinetId) {
+        DEEP_MINE -> "music_arcade_deep_mine"
+        CANOPY_HOPPER -> "music_arcade_canopy_hopper"
+        SPIRE_INFILTRATOR -> "music_arcade_spire_infiltrator"
+        SLAG_CATCHER -> "music_arcade_slag_catcher"
+        ORBITAL_DEFENSE -> DEFAULT_MUSIC_CUE
+        HARMONIC_PULSE -> "music_arcade_harmonic_pulse"
+        else -> DEFAULT_MUSIC_CUE
+    }
 }
 
 enum class ArcadeRewardTier(val threshold: Int) {

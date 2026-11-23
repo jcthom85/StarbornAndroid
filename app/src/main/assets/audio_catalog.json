@@ -1143,6 +1143,76 @@
       ]
     },
     {
+      "id": "music_arcade_deep_mine",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 600,
+      "fade_out_ms": 600,
+      "gain": 0.88,
+      "tags": [
+        "arcade",
+        "chiptune",
+        "retro",
+        "deep_mine"
+      ]
+    },
+    {
+      "id": "music_arcade_canopy_hopper",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 600,
+      "fade_out_ms": 600,
+      "gain": 0.88,
+      "tags": [
+        "arcade",
+        "chiptune",
+        "retro",
+        "canopy_hopper"
+      ]
+    },
+    {
+      "id": "music_arcade_spire_infiltrator",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 600,
+      "fade_out_ms": 600,
+      "gain": 0.88,
+      "tags": [
+        "arcade",
+        "chiptune",
+        "synthwave",
+        "spire_infiltrator"
+      ]
+    },
+    {
+      "id": "music_arcade_slag_catcher",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 600,
+      "fade_out_ms": 600,
+      "gain": 0.88,
+      "tags": [
+        "arcade",
+        "fm_synth",
+        "retro",
+        "slag_catcher"
+      ]
+    },
+    {
+      "id": "music_arcade_harmonic_pulse",
+      "type": "music",
+      "loop": true,
+      "fade_in_ms": 200,
+      "fade_out_ms": 600,
+      "gain": 0.90,
+      "tags": [
+        "arcade",
+        "rhythm",
+        "chiptune",
+        "harmonic_pulse"
+      ]
+    },
+    {
       "id": "music_tinkering_focus",
       "type": "music",
       "loop": true,
