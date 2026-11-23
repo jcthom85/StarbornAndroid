@@ -4289,12 +4289,13 @@
     "env": "neon",
     "title": "Maintenance Sluice",
     "background_image": "images/rooms/world_3/spire_maintenance_sluice.webp",
-    "description": "The maintenance sluice runs above the main tunnel, narrow and hot with valve heat. A maintenance panel blinks beside a pipe map nobody has updated in years.",
+    "description": "The maintenance sluice runs hot with valve steam. A maintenance panel blinks beside an outdated pipe map, and a dry ratline hatch opens north toward Ratline Nook.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "spire_runoff_lock"
+      "south": "spire_runoff_lock",
+      "north": "spire_sewers_scale_03"
     },
     "pos": [
       1,
@@ -4623,12 +4624,13 @@
     "weather": "rain",
     "title": "Safehouse Roof",
     "background_image": "images/rooms/world_3/spire_safehouse_roof.webp",
-    "description": "The safehouse roof is barely larger than the apartment below it. A skyline of corporate towers rises beyond laundry lines full of patched coats and disguise materials, and the shield shimmer turns the clouds into a visible cage.",
+    "description": "The safehouse roof barely clears the apartment below. Corporate towers cut the skyline beyond laundry lines strung with patched coats, and a rain-slick catwalk crosses west to Rain Grate Overlook.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "spire_zekes_apartment"
+      "south": "spire_zekes_apartment",
+      "west": "spire_vent_output_scale_03"
     },
     "pos": [
       2,
@@ -4775,13 +4777,14 @@
     "weather": "rain",
     "title": "Lantern Bridge",
     "background_image": "images/rooms/world_3/spire_lantern_bridge.webp",
-    "description": "A narrow lantern bridge crosses above the market drain. Paper charms flutter from the rail, each one carrying a name, a debt, or a prayer. An executive power siphon runs along a bright cable toward a billboard. Steps at the north end climb onto Lantern Roof; the market is back to the south.",
+    "description": "A narrow lantern bridge crosses above the market drain. Paper charms flutter from the rail, each one carrying a name, a debt, or a prayer. An executive power siphon runs along a bright cable toward a billboard. Steps at the north end climb onto Lantern Roof; the market is back to the south. A fire-escape footbridge crosses west to Tenant Shrine.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "south": "spire_night_market",
-      "north": "spire_night_market_scale_01"
+      "north": "spire_night_market_scale_01",
+      "west": "spire_the_static_scale_03"
     },
     "pos": [
       3,
@@ -4813,12 +4816,13 @@
     "env": "neon",
     "title": "Backstreet Clinic",
     "background_image": "images/rooms/world_3/spire_backstreet_clinic.webp",
-    "description": "The backstreet clinic is one room behind a noodle stall, lit by battery lamps and stubborn mercy. A triage curtain gives patients more dignity than privacy.",
+    "description": "The backstreet clinic hides behind a noodle stall under battery lamps. A triage curtain shields a stocked triage supply tray, and an iron floor hatch drops west into the Underrail Map Room.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "north": "spire_night_market"
+      "north": "spire_night_market",
+      "west": "spire_transit_plaza_scale_03"
     },
     "pos": [
       3,
@@ -4835,6 +4839,17 @@
         "name": "battery lamps",
         "type": "generic",
         "condition_unmet_message": "The battery lamps are dim, warm, and worth more than anything sterile in the Upper City."
+      },
+      {
+        "name": "triage supply tray",
+        "type": "container",
+        "state_key": "spire_clinic_tray_opened",
+        "items": [
+          "medkit",
+          "antidote_flask"
+        ],
+        "popup_title": "Triage Supply Tray",
+        "already_open_message": "The triage supply tray is empty."
       }
     ]
   },
@@ -4992,12 +5007,13 @@
     "weather": "rain",
     "title": "Elevator Service Gate",
     "background_image": "images/rooms/world_3/spire_elevator_service_gate.webp",
-    "description": "A side service gate hides in the shadow of the Great Elevator. Freight crews pass through with eyes down, freight badges out, and no interest in heroics.",
+    "description": "A side service gate hides in the shadow of the Great Elevator. Freight crews hurry past with freight badges out, ignoring the low smuggler arch cutting east toward Rain Cache.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "spire_checkpoint_queue"
+      "south": "spire_checkpoint_queue",
+      "east": "spire_night_market_scale_03"
     },
     "pos": [
       4,
@@ -5156,14 +5172,15 @@
     "env": "neon",
     "title": "Service Lift",
     "background_image": "images/rooms/world_3/spire_service_lift.webp",
-    "description": "A service lift rises through the bones of the Upper City. A worker network uplink can publish the ledger, while a private dead drop can turn it into a precise weapon against one executive. The lift panel offers a return to Lower City’s Transit Plaza beside a rattling inspection hatch. Beyond the inspection hatch, a separate inspection lift travels down to Archive Vault and returns to this landing. The lift panel still controls the cleared route to Lower City. A ledger receipts screen records replies beside the uplink.",
+    "description": "A service lift rises through the bones of the Upper City. A worker network uplink can publish the ledger, while a private dead drop can turn it into a precise weapon against one executive. The lift panel offers a return to Lower City’s Transit Plaza beside a rattling inspection hatch. Beyond the inspection hatch, a separate inspection lift travels down to Archive Vault and returns to this landing. The lift panel still controls the cleared route to Lower City. A ledger receipts screen records replies beside the uplink. A staff passage opens east toward the Service Dumbwaiter.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "west": "spire_uniform_sorting",
       "north": "spire_skypark_dome",
-      "down": "spire_archive_vault"
+      "down": "spire_archive_vault",
+      "east": "spire_exec_lounge_scale_05"
     },
     "pos": [
       1,
@@ -5389,13 +5406,14 @@
     "env": "neon",
     "title": "Glasswalk",
     "background_image": "images/rooms/world_3/spire_glasswalk.webp",
-    "description": "The glasswalk curves along the dome edge with the whole Lower City visible far below. A camera seam runs under the handrail like a vein. The Archive approach continues east through Donor Gallery, then south down the stairs.",
+    "description": "The glasswalk curves above Lower City with a camera seam wired under the handrail. Donor Gallery waits east, and a glazed promenade opens north onto the Glass Lawn.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "west": "spire_skypark_dome",
-      "east": "spire_donor_gallery"
+      "east": "spire_donor_gallery",
+      "north": "spire_skypark_scale_03"
     },
     "pos": [
       2,
@@ -5670,13 +5688,14 @@
     "env": "neon",
     "title": "Prism Gallery",
     "background_image": "images/rooms/world_3/spire_prism_gallery.webp",
-    "description": "Prism shutters divide the containment circuit into red feed, blue return, and gold authorization. The control loom sits at the center: its three handles can release the Lens if pressure and audit continuity are preserved.",
+    "description": "Prism shutters divide the containment circuit into red feed, blue return, and gold authorization. The control loom sits at the center: its three handles can release the Lens if pressure and audit continuity are preserved. A maintenance door leads south into the Alarm Spine.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "west": "spire_laundry_service",
-      "east": "spire_archive_vault"
+      "east": "spire_archive_vault",
+      "south": "spire_archive_scale_03"
     },
     "pos": [
       1,
@@ -5729,13 +5748,14 @@
     "env": "neon",
     "title": "Drone Test Alcove",
     "background_image": "images/rooms/world_3/spire_drone_test_alcove.webp",
-    "description": "Scratched glass and warning tape seal the alcove. A prototype rack waits beside sleeping security drones, their dormant sensor paths revealed by the Lens. A flight telemetry log flashes on the rack screen. A prototype targeting audit waits on the calibration screen. A trial replay screen waits beside the rack.",
+    "description": "Scratched glass and warning tape seal the alcove. A prototype rack waits beside sleeping security drones, their dormant sensor paths revealed by the Lens. A flight telemetry log flashes on the rack screen. A prototype targeting audit waits on the calibration screen. A trial replay screen waits beside the rack. An exterior roof catwalk climbs north onto the Boarding Causeway.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "west": "spire_archive_vault",
-      "east": "spire_landing_pad_roof"
+      "east": "spire_landing_pad_roof",
+      "north": "spire_landing_pad_scale_04"
     },
     "pos": [
       3,
@@ -5941,12 +5961,13 @@
     "weather": "dust",
     "title": "Obsidian Overlook",
     "background_image": "images/rooms/world_4/foundry_obsidian_overlook.webp",
-    "description": "A cracked overlook juts above the Foundry basin. The whole sector glows below: slag rivers, intake pistons, and the factory spine Vale designed to supply Thorne’s Harmony project. Shield window telemetry flickers on the crew's flight display. A weather-sealed [action:foundry requisition terminal|Foundry supply terminal] blinks beside the landing beacon.",
+    "description": "A cracked overlook juts above the Foundry basin. The whole sector glows below: slag rivers, intake pistons, and the factory spine Vale designed to supply Thorne’s Harmony project. Shield window telemetry flickers on the crew's flight display. A weather-sealed [action:foundry requisition terminal|Foundry supply terminal] blinks beside the landing beacon. A narrow glass ridge climbs north toward the outer beacon shelf.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "foundry_slag_landing"
+      "south": "foundry_slag_landing",
+      "north": "foundry_obsidian_shelf_scale_final"
     },
     "pos": [
       0,
@@ -6466,13 +6487,14 @@
     "weather": "dust",
     "title": "Stepping Stones",
     "background_image": "images/rooms/world_4/foundry_slag_stepping_stones.webp",
-    "description": "Basalt stones rise from the lava channel in a readable flare rhythm. A roaring slag cataract blocks the northern crossing beside a cryogenic manifold valve.",
+    "description": "Basalt stones rise from the lava channel in a readable flare rhythm. A roaring slag cataract blocks the northern crossing beside a cryogenic manifold valve. A bolted sluice rail runs east to the river control booth.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "south": "foundry_slag_river",
-      "north": "foundry_subterranean_smelter"
+      "north": "foundry_subterranean_smelter",
+      "east": "foundry_slag_river_scale_final"
     },
     "blocked_directions": {
       "north": {
@@ -6727,14 +6749,15 @@
     "weather": "steam",
     "title": "Lava Tube Bypass",
     "background_image": "images/rooms/world_4/foundry_lava_tube_bypass.webp",
-    "description": "A service crawlspace cuts under the cooling springs. Mineral fans beat hot air into steam, and old worker tags hang from pipe valves like small prayers. Rylan tends a glowing welder bench beside the conduits.",
+    "description": "A service crawlspace cuts under the cooling springs. Mineral fans beat hot air into steam, and old worker tags hang from pipe valves like small prayers. Rylan tends a glowing welder bench beside the conduits. A cool steam crawlway runs west toward the patched pipe pocket.",
     "npcs": [
       "forge_hand_rylan"
     ],
     "items": [],
     "enemies": [],
     "connections": {
-      "north": "foundry_cooling_springs"
+      "north": "foundry_cooling_springs",
+      "west": "foundry_cooling_springs_scale_final"
     },
     "pos": [
       1,
@@ -6919,13 +6942,14 @@
     "weather": "gas",
     "title": "Intake Overlook",
     "background_image": "images/rooms/world_4/foundry_intake_overlook.webp",
-    "description": "A grated balcony watches the intake pistons chew ruined machines into feedstock. Every impact shakes loose sparks, serial plates, and pieces of stories Dominion filed as material. The safety railing is pitted by hot slag.",
+    "description": "A grated balcony watches the intake pistons chew ruined machines into feedstock. Every impact shakes loose sparks, serial plates, and pieces of stories Dominion filed as material. The safety railing is pitted by hot slag. A side catwalk descends west into the sorter spine.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "south": "foundry_waste_intake",
-      "north": "foundry_crucible_arena"
+      "north": "foundry_crucible_arena",
+      "west": "foundry_waste_intake_scale_final"
     },
     "pos": [
       2,
@@ -7070,13 +7094,14 @@
     "weather": "steam",
     "title": "Decon Chamber",
     "background_image": "images/rooms/world_4/foundry_decon_chamber.webp",
-    "description": "Chemical mist hangs in a narrow decon chamber. The decon cycle waits behind a sealed panel; the walls are too clean, the drains too large, and the emergency shower is bolted shut from the wrong side.",
+    "description": "Chemical mist hangs in a narrow decon chamber. The decon cycle waits behind a sealed panel; the walls are too clean, the drains too large, and the emergency shower is bolted shut from the wrong side. A maintenance bypass door leads north into the seal backroom.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "west": "foundry_service_airlock",
-      "east": "foundry_pipe_gallery"
+      "east": "foundry_pipe_gallery",
+      "north": "foundry_service_airlock_scale_final"
     },
     "pos": [
       4,
@@ -7270,13 +7295,14 @@
     "weather": "sparks",
     "title": "Reject Bay",
     "background_image": "images/rooms/world_4/foundry_reject_bay.webp",
-    "description": "Defective units are dumped into a low bay before the furnace eats them. A rejected droid still twitches when the conveyor shudders, hands opening and closing around nothing. A scorched smelter console rests against the bay wall. The western maintenance shutter leads back to the Pipe Gallery and the Slag Pits. The conveyor floor is east.",
+    "description": "Defective units are dumped into a low bay before the furnace eats them. A rejected droid still twitches when the conveyor shudders, hands opening and closing around nothing. A scorched smelter console rests against the bay wall. The western maintenance shutter leads back to the Pipe Gallery and the Slag Pits. The conveyor floor is east. A catwalk ladder climbs north toward the belt nerve junction.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "east": "foundry_conveyor_belt",
-      "west": "foundry_pipe_gallery"
+      "west": "foundry_pipe_gallery",
+      "north": "foundry_conveyor_belt_scale_final"
     },
     "pos": [
       -1,
@@ -7410,12 +7436,13 @@
     "env": "foundry",
     "title": "Observation Booth",
     "background_image": "images/rooms/world_4/foundry_conditioning_observation.webp",
-    "description": "Tinted glass looks down on the restraint chairs. The operator console grades fear response, compliance, and identity degradation in neat green columns.",
+    "description": "Tinted glass looks down on the restraint chairs. The operator console grades fear response, compliance, and identity degradation in neat green columns. A cracked glass hatch leads east into the defect rack.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "foundry_conditioning_chamber"
+      "south": "foundry_conditioning_chamber",
+      "east": "foundry_conditioning_scale_final"
     },
     "pos": [
       1,
@@ -7542,12 +7569,13 @@
     "weather": "sparks",
     "title": "Control Alcove",
     "background_image": "images/rooms/world_4/foundry_forge_control_alcove.webp",
-    "description": "A shielded alcove controls the Forge's moving belt plates. The panel is burned around the edges where previous operators tried to override the hammer cadence by hand. A hazard cycle map fills one display; another holds the overclock profile readout.",
+    "description": "A shielded alcove controls the Forge's moving belt plates. The panel is burned around the edges where previous operators tried to override the hammer cadence by hand. A hazard cycle map fills one display; another holds the overclock profile readout. A cooled vent gallery climbs north toward the Anvil's upper flue.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "east": "foundry_forge_anvil"
+      "east": "foundry_forge_anvil",
+      "north": "foundry_forge_scale_final"
     },
     "pos": [
       0,
@@ -7729,7 +7757,7 @@
     "weather": "sparks",
     "title": "Engine Service Ring",
     "background_image": "images/rooms/world_4/foundry_engine_service_ring.webp",
-    "description": "A maintenance ring circles the Deep-Core Engine at arm's length from impossible heat. Every clamp is labeled with launch-grade tolerances the Astra does not currently meet. Thermal clamps surround the core beside an array rack.",
+    "description": "A maintenance ring circles the Deep-Core Engine at arm's length from impossible heat. Every clamp is labeled with launch-grade tolerances the Astra does not currently meet. Thermal clamps surround the core beside an array rack. Service gantries branch west toward the reactor clamps and east toward the Titan gantry.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -7749,7 +7777,9 @@
       "flame_trooper": "The trooper carries two sealed Ration Packs for recovery or Ration Soup preparation."
     },
     "connections": {
-      "south": "foundry_power_core"
+      "south": "foundry_power_core",
+      "east": "foundry_titan_dock_scale_final",
+      "west": "foundry_power_core_scale_final"
     },
     "pos": [
       2,
@@ -8067,12 +8097,13 @@
     "env": "void",
     "title": "Airlock Gallery",
     "background_image": "images/rooms/world_5/orbital_airlock_gallery.webp",
-    "description": "A glass gallery curves above the docking collar. The planet turns below in perfect silence while the stolen Deep-Core Engine shakes heat through the Astra's spine. An airlock manifest hangs beside a speaker playing the Compliance greeting.",
+    "description": "A glass gallery curves above the docking collar. The planet turns below in perfect silence while the stolen Deep-Core Engine shakes heat through the Astra's spine. An airlock manifest hangs beside a speaker playing the Compliance greeting. A crew passage branches west toward the dock memorial.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "orbital_executive_dock"
+      "south": "orbital_executive_dock",
+      "west": "orbital_executive_dock_scale_final"
     },
     "pos": [
       0,
@@ -8193,14 +8224,15 @@
     "env": "void",
     "title": "Customs Lounge",
     "background_image": "images/rooms/world_5/orbital_customs_lounge.webp",
-    "description": "A silent lounge waits behind velvet queue ropes and biometric gates. An automated commissary terminal hums on the wall beside an executive galley recycler and lounge seating. A customs observation console rests in the waiting niche beside an [action:encrypted slate|analyst's glowing slate].",
+    "description": "A silent lounge waits behind velvet queue ropes and biometric gates. An automated commissary terminal hums on the wall beside an executive galley recycler and lounge seating. A customs observation console rests in the waiting niche beside an [action:encrypted slate|analyst's glowing slate]. A velvet-lined side corridor leads east to the courtesy theater.",
     "npcs": [
       "analyst_charles"
     ],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "orbital_grand_concourse"
+      "south": "orbital_grand_concourse",
+      "east": "orbital_grand_concourse_scale_final"
     },
     "pos": [
       1,
@@ -8383,12 +8415,13 @@
     "env": "void",
     "title": "Mirror Walk",
     "background_image": "images/rooms/world_5/orbital_mirror_walk.webp",
-    "description": "Polished mirror panels line a humid maintenance walk behind the Solarium. Each panel reflects a different angle of the same fake sun. The false sun path converges on a solar reflector hub.",
+    "description": "Polished mirror panels line a humid maintenance walk behind the Solarium. Each panel reflects a different angle of the same fake sun. The false sun path converges on a solar reflector hub. A humid maintenance door opens west onto the false tide beach.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "north": "orbital_solarium"
+      "north": "orbital_solarium",
+      "west": "orbital_solarium_scale_final"
     },
     "pos": [
       1,
@@ -8526,7 +8559,7 @@
     "env": "void",
     "title": "Surveillance Pit",
     "background_image": "images/rooms/world_5/orbital_surveillance_pit.webp",
-    "description": "A sunken room of red lenses tracks every corridor on the executive deck. The panopticon archive preserves screens that flag posture, pulse, hesitation, and anything else a frightened system calls intent.",
+    "description": "A sunken room of red lenses tracks every corridor on the executive deck. The panopticon archive preserves screens that flag posture, pulse, hesitation, and anything else a frightened system calls intent. Bulkhead doors lead west to the threat cathedral and east toward the service shaft drift chapel.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -8534,7 +8567,9 @@
       "void_turret"
     ],
     "connections": {
-      "south": "orbital_security_hub"
+      "south": "orbital_security_hub",
+      "east": "orbital_service_shaft_scale_final",
+      "west": "orbital_security_hub_scale_final"
     },
     "pos": [
       2,
@@ -9213,13 +9248,14 @@
     "weather": "snow",
     "title": "SysAdmin Nest",
     "background_image": "images/rooms/world_5/deep_sysadmin_nest.webp",
-    "description": "A cramped admin station floats behind coolant pipes, abandoned halfway through an evacuation. A dead sysadmin still clutches a warning printout nobody above listened to. The northern maintenance tube returns to Zero-G Junction; the Server Farm is east.",
+    "description": "A cramped admin station floats behind coolant pipes, abandoned halfway through an evacuation. A dead sysadmin still clutches a warning printout nobody above listened to. The northern maintenance tube returns to Zero-G Junction; the Server Farm is east. A hidden cable duct drops south into the control pocket.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "east": "orbital_server_farm",
-      "north": "orbital_zero_g_junction"
+      "north": "orbital_zero_g_junction",
+      "south": "deep_server_farm_scale_04"
     },
     "pos": [
       2,
@@ -9375,7 +9411,7 @@
     "weather": "resonance",
     "title": "Throne Room",
     "background_image": "images/rooms/world_5/deep_throne_room.webp",
-    "description": "A glass observation deck looks down on the planet and its failing Shield. Thorne's containment field faces a command dais where Vale waits without blinking. The director's desk stands beside the executive armory.",
+    "description": "A glass observation deck looks down on the planet and its failing Shield. Thorne's containment field faces a command dais where Vale waits without blinking. The director's desk stands beside the executive armory. A recessed service breach drops south toward the anchor release plinth.",
     "npcs": [],
     "npc_presence": [
       {
@@ -9394,7 +9430,8 @@
     "connections": {
       "west": "deep_anchor_chamber",
       "east": "deep_tear",
-      "north": "deep_throne_room_scale_01"
+      "north": "deep_throne_room_scale_01",
+      "south": "deep_anchor_chamber_scale_08"
     },
     "pos": [
       5,
@@ -9478,7 +9515,7 @@
     "weather": "resonance",
     "title": "The Tear",
     "background_image": "images/rooms/world_5/deep_tear.webp",
-    "description": "The Ring breaks into slow impossible angles around a reality breach. Spatial shear folds its edges inward. Music exists here without air, speakers, or permission.",
+    "description": "The Ring breaks into slow impossible angles around a reality breach. Spatial shear folds its edges inward. Music exists here without air, speakers, or permission. A bent hull walkway curves east toward the Source drop.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -9491,7 +9528,8 @@
     ],
     "connections": {
       "west": "deep_throne_room",
-      "north": "deep_tear_scale_01"
+      "north": "deep_tear_scale_01",
+      "east": "deep_tear_scale_06"
     },
     "pos": [
       6,
@@ -9802,12 +9840,13 @@
     "env": "source",
     "title": "Break Room Exit",
     "background_image": "images/rooms/world_6/source_zeke_break_room.webp",
-    "description": "A vending machine dispenses resignation letters instead of snacks. Zeke can take the unauthorized exit and leave the system behind, or use the worker broadcast to revoke every record like his.",
+    "description": "A vending machine dispenses resignation letters instead of snacks. Zeke can take the unauthorized exit and leave the system behind, or use the worker broadcast to revoke every record like his. A bright hallway leads east toward the resignation window.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "north": "source_zeke_review_loop"
+      "north": "source_zeke_review_loop",
+      "east": "source_zeke_nightmare_node_scale_03"
     },
     "pos": [
       -2,
@@ -9943,12 +9982,13 @@
     "env": "source",
     "title": "Clean Signal Alcove",
     "background_image": "images/rooms/world_6/source_gh0st_elara_signal.webp",
-    "description": "One blue waveform survives beneath the kill-suite noise, preserved in a pure audio log. It is small, human, and stubborn enough to make the whole war hesitate.",
+    "description": "One blue waveform survives beneath the kill-suite noise, preserved in a pure audio log. It is small, human, and stubborn enough to make the whole war hesitate. A steady waveform traces north toward the sister signal alcove.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "west": "source_gh0st_kill_suite"
+      "west": "source_gh0st_kill_suite",
+      "north": "source_gh0st_nightmare_node_scale_03"
     },
     "pos": [
       2,
@@ -10063,12 +10103,13 @@
     "weather": "starfall",
     "title": "Answering Chorus",
     "background_image": "images/rooms/world_6/source_orion_chorus.webp",
-    "description": "Lights under the water answer one by one, illuminating crooked tool marks. They do not erase the dead; they prove the dead were never just absence.",
+    "description": "Lights under the water answer one by one, illuminating crooked tool marks. They do not erase the dead; they prove the dead were never just absence. Lit stepping-stones lead north toward the Chorus door.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "west": "source_orion_tide_well"
+      "west": "source_orion_tide_well",
+      "north": "source_orion_nightmare_node_scale_03"
     },
     "pos": [
       3,
@@ -10167,13 +10208,14 @@
     "weather": "dust",
     "title": "Manager Patrol Route",
     "background_image": "images/rooms/world_6/source_echo_patrol.webp",
-    "description": "A manager patrol of projections marches through overlapping shifts, checking Nova against every rule that ever tried to make her small. An open shift gate waits beyond their route.",
+    "description": "A manager patrol of projections marches through overlapping shifts, checking Nova against every rule that ever tried to make her small. An open shift gate waits beyond their route. An unlatched service door opens south into the first fear corridor.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "west": "source_echo_workbench",
-      "east": "source_echo_elevator"
+      "east": "source_echo_elevator",
+      "south": "source_echo_mines_node_scale_final"
     },
     "pos": [
       1,
@@ -10214,13 +10256,14 @@
     "env": "source",
     "title": "The Elevator",
     "background_image": "images/rooms/world_6/source_echo_elevator.webp",
-    "description": "The mine elevator doors open onto white noise instead of a shaft. Its floor remembers every departure Nova could not stop.",
+    "description": "The mine elevator doors open onto white noise instead of a shaft. Its floor remembers every departure Nova could not stop. A glowing memory gangway rises north toward the crew span.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "west": "source_echo_patrol",
-      "east": "source_memory_bridge"
+      "east": "source_memory_bridge",
+      "north": "source_memory_bridge_node_scale_final"
     },
     "pos": [
       3,
@@ -10463,14 +10506,15 @@
     "weather": "resonance",
     "title": "Memory Stair",
     "background_image": "images/rooms/world_6/source_memory_stair.webp",
-    "description": "Jed's door, [action:Astra wreckage|cargo pod wreckage], and a Foundry catwalk surround the memory stair. An Aethel grave stands among them. Refuse all three revisions before climbing east; west returns to the shared span.",
+    "description": "Jed's door, [action:Astra wreckage|cargo pod wreckage], and a Foundry catwalk surround the memory stair. An Aethel grave stands among them. Refuse all three revisions before climbing east; west returns to the shared span. A scarred landing steps south toward the unpolished edge.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "west": "source_memory_threshold",
       "east": "source_memory_fragments",
-      "north": "source_memory_stair_node_scale_01"
+      "north": "source_memory_stair_node_scale_01",
+      "south": "source_memory_stair_node_scale_final"
     },
     "pos": [
       2,
@@ -10674,13 +10718,14 @@
     "weather": "resonance",
     "title": "Impossible Archive",
     "background_image": "images/rooms/world_6/source_spire_archive.webp",
-    "description": "Shelves of futures turn their pages without wind. A scorched future Astra hull juts from a timeline the crew is still trying to avoid.",
+    "description": "Shelves of futures turn their pages without wind. A scorched future Astra hull juts from a timeline the crew is still trying to avoid. A spiral gallery climbs north toward the unthroned absence.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "west": "source_spire_thought",
-      "east": "source_spire_arena"
+      "east": "source_spire_arena",
+      "north": "source_spire_thought_node_scale_04"
     },
     "pos": [
       4,
@@ -10800,7 +10845,7 @@
     "weather": "resonance",
     "title": "The Center",
     "background_image": "images/rooms/world_6/source_center.webp",
-    "description": "A single platform rests on an infinite white ocean. Vale waits where every voice in the Source can hear him choose silence for them, and the Key trembles at a shared tuning focus before a choice it cannot make alone.",
+    "description": "A single platform rests on an infinite white ocean. Vale waits where every voice in the Source can hear him choose silence for them, and the Key trembles at a shared tuning focus before a choice it cannot make alone. A resonant bridge leads south to the voice orbit.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -10818,7 +10863,8 @@
     "connections": {
       "west": "source_spire_arena",
       "east": "source_new_world",
-      "north": "source_center_node_scale_01"
+      "north": "source_center_node_scale_01",
+      "south": "source_center_node_scale_final"
     },
     "pos": [
       4,
@@ -10885,13 +10931,14 @@
     "env": "source",
     "title": "New World",
     "background_image": "images/rooms/world_6/source_new_world.webp",
-    "description": "The regional corridor is open above the Colony. At Zeke’s diner, Nova rests her trembling hand beside a beach photograph from the crew’s return to Tideglass. West reopens the remembered Center; north follows the street.",
+    "description": "The regional corridor is open above the Colony. At Zeke’s diner, Nova rests her trembling hand beside a beach photograph from the crew’s return to Tideglass. West reopens the remembered Center; north follows the street. A sunlit corner lane loops south around the morning street.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "west": "source_center",
-      "north": "source_new_world_node_scale_01"
+      "north": "source_new_world_node_scale_01",
+      "south": "source_new_world_node_scale_final"
     },
     "pos": [
       5,
@@ -15660,7 +15707,7 @@
     "env": "neon",
     "title": "Maintenance Crawl",
     "background_image": "images/rooms/world_3/spire_vent_output_scale_02.webp",
-    "description": "A maintenance crawl squeezes between coolant pipes and old warning paint. The old stencil says unauthorized workers become infrastructure, and the pipe gap is just wide enough for a desperate crew.",
+    "description": "A maintenance crawl squeezes between coolant pipes and old warning paint. The old stencil says unauthorized workers become infrastructure, and the pipe gap is just wide enough for a desperate crew. A forgotten technician utility pouch hangs from a conduit bracket.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -15683,6 +15730,17 @@
         "name": "old stencil",
         "type": "generic",
         "condition_unmet_message": "The stencil has been painted over three times and still bleeds through."
+      },
+      {
+        "name": "utility pouch",
+        "type": "container",
+        "state_key": "spire_vent_crawl_pouch_opened",
+        "items": [
+          "wiring_bundle",
+          "medkit_i"
+        ],
+        "popup_title": "Maintenance Pouch",
+        "already_open_message": "The utility pouch is empty."
       }
     ]
   },
@@ -15692,12 +15750,13 @@
     "weather": "rain",
     "title": "Rain Grate Overlook",
     "background_image": "images/rooms/world_3/spire_vent_output_scale_03.webp",
-    "description": "A rain grate opens above the lower street where upper runoff falls clean before hitting rust. The upper runoff and patrol reflection make the route feel watched from both directions. Tucked behind the grating sits a hidden smuggler stash. An optional return chute leads directly back to the entrance. The room corridor also remains open for walking back.",
+    "description": "A rain grate opens where clean upper runoff drops onto rust. Behind the grate hides a smuggler stash. A fast drop chute leads back to Vent Output, while a rain-slick catwalk runs east onto Safehouse Roof.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "spire_vent_output_scale_02"
+      "south": "spire_vent_output_scale_02",
+      "east": "spire_safehouse_roof"
     },
     "pos": [
       1,
@@ -15804,12 +15863,13 @@
     "env": "neon",
     "title": "Tenant Shrine",
     "background_image": "images/rooms/world_3/spire_the_static_scale_03.webp",
-    "description": "A tenant shrine of folded notices, dead neon, and cheap candles turns eviction paperwork into a memorial wall. The dead neon still flickers when transit drones pass overhead. A discarded courier satchel lies forgotten in the corner. An optional return fire escape leads directly back to the entrance. The room corridor also remains open for walking back.",
+    "description": "A tenant shrine of folded notices and dead neon turns eviction slips into a memorial wall. A courier satchel rests in the corner. The fire escape drops back to The Static, and a footbridge crosses east to Lantern Bridge.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "spire_the_static_scale_02"
+      "south": "spire_the_static_scale_02",
+      "east": "spire_lantern_bridge"
     },
     "pos": [
       3,
@@ -15905,7 +15965,7 @@
     "env": "neon",
     "title": "Spice Alley",
     "background_image": "images/rooms/world_3/spire_night_market_scale_02.webp",
-    "description": "Spice alley smells like heat, fried protein, and ozone. Vendor codes are scratched under every awning, telling locals which stalls sell food, data, or silence. A vendor ledger sits weighted down by an iron hex nut.",
+    "description": "Spice alley smells like heat, fried protein, and ozone. Vendor codes are scratched under every awning, telling locals which stalls sell food, data, or silence. A vendor ledger sits weighted down by an iron hex nut. A weathered spice crate sits stacked beneath the awning.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -15933,6 +15993,18 @@
         "name": "vendor ledger",
         "type": "generic",
         "condition_unmet_message": "A waterlogged notebook listing black-market prices for contraband batteries and synthesized spices."
+      },
+      {
+        "name": "spice crate",
+        "type": "container",
+        "state_key": "spire_spice_alley_crate_opened",
+        "items": [
+          "fiery_pepper",
+          "noodles",
+          "herb"
+        ],
+        "popup_title": "Spice Crate",
+        "already_open_message": "The spice crate is empty."
       }
     ]
   },
@@ -15941,12 +16013,13 @@
     "env": "neon",
     "title": "Rain Cache",
     "background_image": "images/rooms/world_3/spire_night_market_scale_03.webp",
-    "description": "A rain cache beneath a torn canopy keeps wrapped tools dry beside counterfeit guest pins. The guest pins are cheap, but the route printed on the underside is current. A heavy black market safe rests under a tarp. An optional return slide leads directly back to the entrance. The room corridor also remains open for walking back.",
+    "description": "A rain cache under torn canvas keeps wrapped tools dry beside a heavy black market safe. A slick slide drops back to Night Market, while a low smuggler arch slips west toward the Elevator Service Gate.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "spire_night_market_scale_02"
+      "south": "spire_night_market_scale_02",
+      "west": "spire_elevator_service_gate"
     },
     "pos": [
       3,
@@ -16036,7 +16109,7 @@
     "enemies": [],
     "connections": {
       "south": "spire_sewers_scale_01",
-      "north": "spire_sewers_scale_03"
+      "east": "spire_sewers_scale_03"
     },
     "pos": [
       0,
@@ -16072,16 +16145,17 @@
     "env": "neon",
     "title": "Ratline Nook",
     "background_image": "images/rooms/world_3/spire_sewers_scale_03.webp",
-    "description": "A dry ratline nook branches away from the main sewer. Chalk arrows mark which exits are watched this week, and the dry ledge smells faintly of smoke and noodle broth. A rusted maintenance locker clings to the wet brickwork. An optional return ladder leads directly back to the entrance. The room corridor also remains open for walking back.",
+    "description": "A dry ratline nook smells of smoke and noodle broth beneath chalk arrows marking patrol shifts. A rusted maintenance locker clings to the brick. A ladder returns to Sewer Landing; a service hatch drops south into Maintenance Sluice.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "spire_sewers_scale_02"
+      "west": "spire_sewers_scale_02",
+      "south": "spire_maintenance_sluice"
     },
     "pos": [
-      0,
-      5
+      1,
+      4
     ],
     "state": {},
     "actions": [
@@ -16152,7 +16226,7 @@
     "env": "neon",
     "title": "Ticket Shadow",
     "background_image": "images/rooms/world_3/spire_transit_plaza_scale_02.webp",
-    "description": "A ticket shadow behind the fare kiosk keeps commuters out of scanner sight for three blessed seconds. The fare kiosk accepts payment faster than guilt, but its blind spot is real.",
+    "description": "A ticket shadow behind the fare kiosk keeps commuters out of scanner sight for three blessed seconds. The fare kiosk accepts payment faster than guilt, but its blind spot is real. An unclaimed lost luggage locker stands ajar behind the ticket booth.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -16175,6 +16249,17 @@
         "name": "fare kiosk",
         "type": "generic",
         "condition_unmet_message": "The kiosk is more interested in charging people than protecting Dominion. Useful."
+      },
+      {
+        "name": "lost luggage locker",
+        "type": "container",
+        "state_key": "spire_ticket_shadow_locker_opened",
+        "items": [
+          "ration_pack",
+          "battery"
+        ],
+        "popup_title": "Lost Luggage Locker",
+        "already_open_message": "The lost luggage locker is empty."
       }
     ]
   },
@@ -16183,12 +16268,13 @@
     "env": "neon",
     "title": "Underrail Map Room",
     "background_image": "images/rooms/world_3/spire_transit_plaza_scale_03.webp",
-    "description": "The underrail map room stores obsolete route boards and a service legend that still matches the staff tunnels. A taped transfer notice explains why Dominion forgot to update the old map. An abandoned transit lockbox sits beneath a broken arrivals board. An optional return turnstile leads directly back to the entrance. The room corridor also remains open for walking back.",
+    "description": "The underrail map and old service legend still match the staff tunnels. An abandoned transit lockbox sits beneath the board. A return turnstile leads back to Transit Plaza, while service stairs climb east to Backstreet Clinic.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "north": "spire_transit_plaza_scale_02"
+      "north": "spire_transit_plaza_scale_02",
+      "east": "spire_backstreet_clinic"
     },
     "pos": [
       2,
@@ -16283,7 +16369,7 @@
     "env": "neon",
     "title": "Press Line",
     "background_image": "images/rooms/world_3/spire_laundry_scale_02.webp",
-    "description": "The press line stamps every guest crease to the same perfect angle. A guest crease becomes a social password here, and the heat plate can make cheap cloth look expensive from scanner distance.",
+    "description": "The press line stamps every guest crease to the same perfect angle. A guest crease becomes a social password here, and the heat plate can make cheap cloth look expensive from scanner distance. A parked housekeeping cart holds spare medical supplies beside the presses.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -16306,6 +16392,17 @@
         "name": "guest crease",
         "type": "generic",
         "condition_unmet_message": "The crease is a social password. The rich just call it taste."
+      },
+      {
+        "name": "housekeeping cart",
+        "type": "container",
+        "state_key": "spire_press_line_cart_opened",
+        "items": [
+          "medkit",
+          "herbal_poultice"
+        ],
+        "popup_title": "Housekeeping Cart",
+        "already_open_message": "The housekeeping cart has been cleared out."
       }
     ]
   },
@@ -16314,12 +16411,13 @@
     "env": "neon",
     "title": "Service Bin",
     "background_image": "images/rooms/world_3/spire_laundry_scale_03.webp",
-    "description": "A service bin overflows with ruined napkins, broken jewelry, and a discarded pass snapped in half. The discarded pass is dead, but its route stamp is still readable. A tailored uniform case has been hidden inside an air intake. An optional return chute leads directly back to the entrance. The room corridor also remains open for walking back.",
+    "description": "A service bin overflows with ruined linens and a snapped discarded pass. A tailored uniform case hides inside the intake. A return chute drops back to Laundry Service, while a staff linen hatch slips east into Orchid Walk.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "spire_laundry_scale_02"
+      "south": "spire_laundry_scale_02",
+      "east": "spire_skypark_scale_01"
     },
     "pos": [
       -1,
@@ -16363,13 +16461,14 @@
     "env": "neon",
     "title": "Orchid Walk",
     "background_image": "images/rooms/world_3/spire_skypark_scale_01.webp",
-    "description": "The orchid walk blooms under artificial rain. A donor plaque thanks families who bought their way above the smog, while root sensors drink more clean water than Trade Row sees in a week. A hydroponic mist nozzle hisses fine vapor into the humid breeze.",
+    "description": "The orchid walk blooms beneath a hissing hydroponic mist nozzle and a brass donor plaque. Behind the hedges, a discreet staff linen hatch opens west into the Laundry Service Bin.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "south": "spire_skypark_dome",
-      "north": "spire_skypark_scale_02"
+      "north": "spire_skypark_scale_02",
+      "west": "spire_laundry_scale_03"
     },
     "pos": [
       1,
@@ -16405,7 +16504,7 @@
     "enemies": [],
     "connections": {
       "south": "spire_skypark_scale_01",
-      "north": "spire_skypark_scale_03"
+      "east": "spire_skypark_scale_03"
     },
     "pos": [
       1,
@@ -16451,16 +16550,17 @@
     "env": "neon",
     "title": "Glass Lawn",
     "background_image": "images/rooms/world_3/spire_skypark_scale_03.webp",
-    "description": "The glass lawn is transparent all the way down to the city it refuses to see. Scanner mist drifts between ornamental trees, checking posture, fabric, and fear. A locked botanical vault is embedded in the synthetic root bed. An optional return spiral leads directly back to the entrance. The room corridor also remains open for walking back.",
+    "description": "The glass lawn hangs clear over the city while scanner mist drifts past a locked botanical vault in the roots. A service spiral drops back to Skypark Dome, and a glass walkway curves south onto the Glasswalk.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "spire_skypark_scale_02"
+      "west": "spire_skypark_scale_02",
+      "south": "spire_glasswalk"
     },
     "pos": [
-      1,
-      3
+      2,
+      2
     ],
     "state": {},
     "actions": [
@@ -16542,7 +16642,7 @@
     "enemies": [],
     "connections": {
       "north": "spire_archive_scale_01",
-      "south": "spire_archive_scale_03"
+      "west": "spire_archive_scale_03"
     },
     "pos": [
       2,
@@ -16572,16 +16672,17 @@
     "env": "neon",
     "title": "Alarm Spine",
     "background_image": "images/rooms/world_3/spire_archive_scale_03.webp",
-    "description": "The alarm spine runs behind the vault in red conduits. Every conduit is labeled with a consequence instead of a destination, and the red conduits pulse faster when Nova gets close. An encrypted datacache hums softly inside a book press. An optional return lift leads directly back to the entrance. The room corridor also remains open for walking back.",
+    "description": "The alarm spine pulses with red conduits beside an encrypted datacache hidden in a book press. A service lift returns straight to Archive Vault, and a maintenance door opens north into the Prism Gallery.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "north": "spire_archive_scale_02"
+      "east": "spire_archive_scale_02",
+      "north": "spire_prism_gallery"
     },
     "pos": [
-      2,
-      -2
+      1,
+      -1
     ],
     "state": {},
     "actions": [
@@ -16762,7 +16863,7 @@
     "env": "neon",
     "title": "Service Dumbwaiter",
     "background_image": "images/rooms/world_3/spire_exec_lounge_scale_05.webp",
-    "description": "A Service Dumbwaiter drops toward the kitchen levels with a silver tray still balanced inside. The silver tray reflects the patrol outside better than the room's polished cameras. A discreet executive safe gleams behind the mirrored mahogany. An optional return elevator leads directly back to the entrance. The room corridor also remains open for walking back.",
+    "description": "A Service Dumbwaiter drops toward the kitchens with a silver tray mirroring the hall and an executive safe behind the paneling. A return elevator runs back to Exec Lounge, while a staff passage opens west onto the Service Lift.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -16800,7 +16901,8 @@
       "riot_guard": "A confiscated Splitter Edge hangs in a locked sheath on the guard's belt."
     },
     "connections": {
-      "south": "spire_exec_lounge_scale_04"
+      "south": "spire_exec_lounge_scale_04",
+      "west": "spire_service_lift"
     },
     "pos": [
       2,
@@ -16948,7 +17050,7 @@
     },
     "connections": {
       "south": "spire_landing_pad_scale_02",
-      "north": "spire_landing_pad_scale_04"
+      "west": "spire_landing_pad_scale_04"
     },
     "pos": [
       3,
@@ -16975,16 +17077,17 @@
     "weather": "storm",
     "title": "Boarding Causeway",
     "background_image": "images/rooms/world_3/spire_landing_pad_scale_04.webp",
-    "description": "The boarding causeway stretches toward the Astra hatch under lockdown strobes. The Astra hatch light blinks like a heartbeat through rain and warning static. A forgotten avionics crate sits strapped against the wind break. An optional return ladder leads directly back to the entrance. The room corridor also remains open for walking back.",
+    "description": "The boarding causeway faces the blinking Astra hatch past an avionics crate strapped to the rail. A ladder drops straight to Landing Pad Roof, while an exterior catwalk runs south into the Drone Test Alcove.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "spire_landing_pad_scale_03"
+      "east": "spire_landing_pad_scale_03",
+      "south": "spire_drone_test_alcove"
     },
     "pos": [
-      3,
-      5
+      2,
+      4
     ],
     "state": {},
     "actions": [
@@ -17141,13 +17244,13 @@
     "weather": "dust",
     "title": "Survey Cache",
     "background_image": "images/rooms/world_4/foundry_obsidian_shelf_scale_04.webp",
-    "description": "A survey cache contains a cracked scope and old hazard notes from crews who stopped reporting. The cracked scope still reads heat pockets through the smoke.",
+    "description": "A survey cache contains a cracked scope and old hazard notes from crews who stopped reporting. The cracked scope still reads heat pockets through the smoke. A heat-shielded kit sits wedged beneath the survey table.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "south": "foundry_obsidian_shelf_scale_03",
-      "north": "foundry_obsidian_shelf_scale_final"
+      "east": "foundry_obsidian_shelf_scale_final"
     },
     "pos": [
       -1,
@@ -17164,6 +17267,18 @@
         "name": "cracked scope",
         "type": "generic",
         "condition_unmet_message": "The scope still reads heat pockets through the smoke."
+      },
+      {
+        "name": "heat-shielded kit",
+        "type": "container",
+        "state_key": "foundry_obsidian_shelf_scale_04_kit_opened",
+        "items": [
+          "burn_salve",
+          "pure_iron"
+        ],
+        "popup_title": "Heat-Shielded Survey Kit",
+        "already_open_message": "The heat-shielded kit has already been stripped.",
+        "discovery_message": "You pry open the scorched latches and pull out fresh salve and slag-refined iron."
       }
     ]
   },
@@ -17268,7 +17383,7 @@
     ],
     "connections": {
       "south": "foundry_slag_river_scale_02",
-      "north": "foundry_slag_river_scale_04"
+      "east": "foundry_slag_river_scale_04"
     },
     "pos": [
       2,
@@ -17332,12 +17447,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "foundry_slag_river_scale_03",
+      "west": "foundry_slag_river_scale_03",
       "north": "foundry_slag_river_scale_final"
     },
     "pos": [
-      2,
-      1
+      3,
+      0
     ],
     "state": {},
     "actions": [
@@ -17384,7 +17499,7 @@
     "enemies": [],
     "connections": {
       "east": "foundry_cooling_springs",
-      "north": "foundry_cooling_springs_scale_02"
+      "west": "foundry_cooling_springs_scale_02"
     },
     "pos": [
       0,
@@ -17434,12 +17549,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "foundry_cooling_springs_scale_01",
-      "north": "foundry_cooling_springs_scale_03"
+      "east": "foundry_cooling_springs_scale_01",
+      "west": "foundry_cooling_springs_scale_03"
     },
     "pos": [
-      0,
-      3
+      -1,
+      2
     ],
     "state": {},
     "actions": [
@@ -17481,17 +17596,17 @@
     "weather": "steam",
     "title": "Spring Valve Nest",
     "background_image": "images/rooms/world_4/foundry_cooling_springs_scale_03.webp",
-    "description": "A spring valve nest knots pipes around a pressure wheel painted with old handprints. The pressure wheel can lower the heat if it still turns.",
+    "description": "A spring valve nest knots pipes around a pressure wheel painted with old handprints. The pressure wheel can lower the heat if it still turns. A worker's coolant pouch hangs from the valve wheel.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "foundry_cooling_springs_scale_02",
-      "north": "foundry_cooling_springs_scale_04"
+      "east": "foundry_cooling_springs_scale_02",
+      "south": "foundry_cooling_springs_scale_04"
     },
     "pos": [
-      0,
-      4
+      -2,
+      2
     ],
     "state": {},
     "actions": [
@@ -17504,6 +17619,18 @@
         "name": "pressure wheel",
         "type": "generic",
         "condition_unmet_message": "The handprints are layered by shift and desperation."
+      },
+      {
+        "name": "coolant pouch",
+        "type": "container",
+        "state_key": "foundry_cooling_springs_scale_03_pouch_opened",
+        "items": [
+          "medkit_plus",
+          "cryo_inductor"
+        ],
+        "popup_title": "Worker Coolant Pouch",
+        "already_open_message": "The coolant pouch is empty.",
+        "discovery_message": "You unbuckle the damp canvas pouch and recover an intact medkit and a spare cryo-inductor."
       }
     ]
   },
@@ -17537,12 +17664,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "foundry_cooling_springs_scale_03",
-      "north": "foundry_cooling_springs_scale_final"
+      "north": "foundry_cooling_springs_scale_03",
+      "east": "foundry_cooling_springs_scale_final"
     },
     "pos": [
-      0,
-      5
+      -2,
+      1
     ],
     "state": {},
     "actions": [
@@ -17607,7 +17734,7 @@
     "enemies": [],
     "connections": {
       "north": "foundry_waste_intake_scale_01",
-      "south": "foundry_waste_intake_scale_03"
+      "west": "foundry_waste_intake_scale_03"
     },
     "pos": [
       2,
@@ -17642,12 +17769,12 @@
       "magnet_sifter"
     ],
     "connections": {
-      "north": "foundry_waste_intake_scale_02",
-      "south": "foundry_waste_intake_scale_04"
+      "east": "foundry_waste_intake_scale_02",
+      "north": "foundry_waste_intake_scale_04"
     },
     "pos": [
-      2,
-      -2
+      1,
+      -1
     ],
     "state": {},
     "actions": [
@@ -17707,12 +17834,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "north": "foundry_waste_intake_scale_03",
-      "south": "foundry_waste_intake_scale_final"
+      "south": "foundry_waste_intake_scale_03",
+      "north": "foundry_waste_intake_scale_final"
     },
     "pos": [
-      2,
-      -3
+      1,
+      0
     ],
     "state": {},
     "actions": [
@@ -17866,13 +17993,13 @@
     "env": "foundry",
     "title": "Maintenance Shelf",
     "background_image": "images/rooms/world_4/foundry_service_airlock_scale_04.webp",
-    "description": "A maintenance shelf holds spare gasket rings, burnt gloves, and a note reading DO NOT CYCLE TWICE. The spare gasket is warped but usable.",
+    "description": "A maintenance shelf holds spare gasket rings, burnt gloves, and a note reading DO NOT CYCLE TWICE. The spare gasket is warped but usable. A sealed ration tin sits tucked behind the spare gaskets.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "south": "foundry_service_airlock_scale_03",
-      "north": "foundry_service_airlock_scale_final"
+      "east": "foundry_service_airlock_scale_final"
     },
     "pos": [
       3,
@@ -17889,6 +18016,18 @@
         "name": "spare gasket",
         "type": "generic",
         "condition_unmet_message": "The gasket is warped but usable."
+      },
+      {
+        "name": "sealed ration tin",
+        "type": "container",
+        "state_key": "foundry_service_airlock_scale_04_tin_opened",
+        "items": [
+          "foundry_smoked_brisket",
+          "battery_pack"
+        ],
+        "popup_title": "Airlock Shift Tin",
+        "already_open_message": "The sealed ration tin is empty.",
+        "discovery_message": "You crack the pressure tab on the tin and find smoked brisket and a fresh battery pack."
       }
     ]
   },
@@ -18099,7 +18238,7 @@
     "enemies": [],
     "connections": {
       "south": "foundry_conveyor_belt_scale_03",
-      "north": "foundry_conveyor_belt_scale_final"
+      "west": "foundry_conveyor_belt_scale_final"
     },
     "pos": [
       0,
@@ -18249,7 +18388,7 @@
     "enemies": [],
     "connections": {
       "south": "foundry_conditioning_scale_02",
-      "north": "foundry_conditioning_scale_04"
+      "east": "foundry_conditioning_scale_04"
     },
     "pos": [
       2,
@@ -18279,12 +18418,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "foundry_conditioning_scale_03",
+      "west": "foundry_conditioning_scale_03",
       "north": "foundry_conditioning_scale_final"
     },
     "pos": [
-      2,
-      1
+      3,
+      0
     ],
     "state": {},
     "actions": [
@@ -18421,13 +18560,13 @@
     "weather": "sparks",
     "title": "Slag Chapel",
     "background_image": "images/rooms/world_4/foundry_forge_scale_04.webp",
-    "description": "A slag chapel of welded braces and prayer bolts watches over the Forge core. The prayer bolts carry names etched too small for supervisors to notice.",
+    "description": "A slag chapel of welded braces and prayer bolts watches over the Forge core. The prayer bolts carry names etched too small for supervisors to notice. A soot-streaked smith's tin rests behind the welded braces.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "south": "foundry_forge_scale_03",
-      "north": "foundry_forge_scale_final"
+      "west": "foundry_forge_scale_final"
     },
     "pos": [
       2,
@@ -18444,6 +18583,18 @@
         "name": "prayer bolts",
         "type": "generic",
         "condition_unmet_message": "The bolts carry names etched too small for supervisors to notice."
+      },
+      {
+        "name": "smith's tin",
+        "type": "container",
+        "state_key": "foundry_forge_scale_04_tin_opened",
+        "items": [
+          "armor_plate",
+          "fire_grenade"
+        ],
+        "popup_title": "Smelter Smith's Tin",
+        "already_open_message": "The smith's tin has already been emptied.",
+        "discovery_message": "You lift the soot-streaked lid and claim a tempered armor plate and a fire grenade."
       }
     ]
   },
@@ -18496,7 +18647,7 @@
     "enemies": [],
     "connections": {
       "north": "foundry_power_core_scale_01",
-      "south": "foundry_power_core_scale_03"
+      "west": "foundry_power_core_scale_03"
     },
     "pos": [
       2,
@@ -18528,12 +18679,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "north": "foundry_power_core_scale_02",
-      "south": "foundry_power_core_scale_04"
+      "east": "foundry_power_core_scale_02",
+      "north": "foundry_power_core_scale_04"
     },
     "pos": [
-      2,
-      -2
+      1,
+      -1
     ],
     "state": {},
     "actions": [
@@ -18560,12 +18711,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "north": "foundry_power_core_scale_03",
-      "south": "foundry_power_core_scale_final"
+      "south": "foundry_power_core_scale_03",
+      "north": "foundry_power_core_scale_final"
     },
     "pos": [
-      2,
-      -3
+      1,
+      0
     ],
     "state": {},
     "actions": [
@@ -18697,7 +18848,7 @@
     "weather": "sparks",
     "title": "Escape Rail",
     "background_image": "images/rooms/world_4/foundry_titan_dock_scale_03.webp",
-    "description": "An escape rail points toward the Astra route, but a cut coupler hangs loose under the track. The cut coupler can be forced if the core surge covers the noise.",
+    "description": "An escape rail points toward the Astra route, but a cut coupler hangs loose under the track. The cut coupler can be forced if the core surge covers the noise. An emergency med-pouch hangs clipped to the escape rail.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -18720,6 +18871,18 @@
         "name": "cut coupler",
         "type": "generic",
         "condition_unmet_message": "The coupler can be forced if the core surge covers the noise."
+      },
+      {
+        "name": "emergency med-pouch",
+        "type": "container",
+        "state_key": "foundry_titan_dock_scale_03_pouch_opened",
+        "items": [
+          "medkit_plus",
+          "adrenaline"
+        ],
+        "popup_title": "Gantry Emergency Med-Pouch",
+        "already_open_message": "The emergency med-pouch is empty.",
+        "discovery_message": "You rip the velcro strip open and pocket a heavy medkit and an adrenaline ampoule."
       }
     ],
     "enemy_parties": []
@@ -18767,7 +18930,7 @@
     "enemies": [],
     "connections": {
       "east": "orbital_executive_dock",
-      "north": "orbital_executive_dock_scale_02"
+      "west": "orbital_executive_dock_scale_02"
     },
     "pos": [
       -1,
@@ -18797,12 +18960,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "orbital_executive_dock_scale_01",
-      "north": "orbital_executive_dock_scale_03"
+      "east": "orbital_executive_dock_scale_01",
+      "west": "orbital_executive_dock_scale_03"
     },
     "pos": [
-      -1,
-      2
+      -2,
+      1
     ],
     "state": {},
     "actions": [
@@ -18830,12 +18993,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "orbital_executive_dock_scale_02",
+      "east": "orbital_executive_dock_scale_02",
       "north": "orbital_executive_dock_scale_04"
     },
     "pos": [
-      -1,
-      3
+      -3,
+      1
     ],
     "state": {},
     "actions": [
@@ -18868,8 +19031,8 @@
       "north": "orbital_executive_dock_scale_05"
     },
     "pos": [
-      -1,
-      4
+      -3,
+      2
     ],
     "state": {},
     "actions": [
@@ -18914,17 +19077,17 @@
     "env": "void",
     "title": "Sealant Store",
     "background_image": "images/rooms/world_5/orbital_executive_dock_scale_05.webp",
-    "description": "A shelf holds dried sealant cartridges, each split open to prove it empty. Someone has crossed out the next delivery date three times.",
+    "description": "A shelf holds dried sealant cartridges, each split open to prove it empty. Someone has crossed out the next delivery date three times. A sealed vacuum crate sits strapped under the sealant shelf.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "south": "orbital_executive_dock_scale_04",
-      "north": "orbital_executive_dock_scale_06"
+      "east": "orbital_executive_dock_scale_06"
     },
     "pos": [
-      -1,
-      5
+      -3,
+      3
     ],
     "state": {},
     "actions": [
@@ -18937,6 +19100,18 @@
         "name": "delivery date",
         "type": "generic",
         "condition_unmet_message": "Three crossed-out dates crowd the ledger. The next delivery has no date at all."
+      },
+      {
+        "name": "sealed vacuum crate",
+        "type": "container",
+        "state_key": "orbital_executive_dock_scale_05_crate_opened",
+        "items": [
+          "orbital_glimmer_tonic",
+          "nano_filament"
+        ],
+        "popup_title": "Dock Maintenance Crate",
+        "already_open_message": "The sealed vacuum crate is empty.",
+        "discovery_message": "You break the wax transit seal and pull out a bottle of glimmer tonic and spooled nano-filament."
       }
     ]
   },
@@ -18950,12 +19125,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "orbital_executive_dock_scale_05",
-      "north": "orbital_executive_dock_scale_final"
+      "west": "orbital_executive_dock_scale_05",
+      "south": "orbital_executive_dock_scale_final"
     },
     "pos": [
       -1,
-      6
+      3
     ],
     "state": {},
     "actions": [
@@ -19018,7 +19193,7 @@
     ],
     "connections": {
       "west": "orbital_grand_concourse_scale_01",
-      "north": "orbital_grand_concourse_scale_03"
+      "east": "orbital_grand_concourse_scale_03"
     },
     "pos": [
       2,
@@ -19072,12 +19247,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "orbital_grand_concourse_scale_02",
+      "west": "orbital_grand_concourse_scale_02",
       "north": "orbital_grand_concourse_scale_04"
     },
     "pos": [
-      2,
-      0
+      3,
+      -1
     ],
     "state": {},
     "actions": [
@@ -19107,8 +19282,8 @@
       "north": "orbital_grand_concourse_scale_05"
     },
     "pos": [
-      2,
-      1
+      3,
+      0
     ],
     "state": {},
     "actions": [
@@ -19131,16 +19306,16 @@
     "env": "void",
     "title": "Shift Rota Cupboard",
     "background_image": "images/rooms/world_5/orbital_grand_concourse_scale_05.webp",
-    "description": "An old cleaning cart is parked in a cupboard too shallow for its handle. A folded shift rota uses job titles where names should be.",
+    "description": "An old cleaning cart is parked in a cupboard too shallow for its handle. A folded shift rota uses job titles where names should be. A narrow porter's locker stands wedged behind the cleaning cart.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "south": "orbital_grand_concourse_scale_04",
-      "north": "orbital_grand_concourse_scale_06"
+      "west": "orbital_grand_concourse_scale_06"
     },
     "pos": [
-      2,
+      3,
       2
     ],
     "state": {},
@@ -19154,6 +19329,18 @@
         "name": "shift rota",
         "type": "generic",
         "condition_unmet_message": "The rota records jobs without names. A person could disappear from this sheet without leaving a blank line."
+      },
+      {
+        "name": "porter's locker",
+        "type": "container",
+        "state_key": "orbital_grand_concourse_scale_05_locker_opened",
+        "items": [
+          "medkit_plus",
+          "pulse_grenade"
+        ],
+        "popup_title": "Staff Porter Locker",
+        "already_open_message": "The porter's locker has already been emptied.",
+        "discovery_message": "You jimmy the thin staff lock and find an untouched medkit and a pulse grenade."
       }
     ]
   },
@@ -19167,12 +19354,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "orbital_grand_concourse_scale_05",
-      "north": "orbital_grand_concourse_scale_final"
+      "east": "orbital_grand_concourse_scale_05",
+      "south": "orbital_grand_concourse_scale_final"
     },
     "pos": [
       2,
-      3
+      2
     ],
     "state": {},
     "actions": [
@@ -19201,7 +19388,7 @@
     "enemies": [],
     "connections": {
       "east": "orbital_solarium",
-      "north": "orbital_solarium_scale_02"
+      "west": "orbital_solarium_scale_02"
     },
     "pos": [
       0,
@@ -19231,12 +19418,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "orbital_solarium_scale_01",
-      "north": "orbital_solarium_scale_03"
+      "east": "orbital_solarium_scale_01",
+      "west": "orbital_solarium_scale_03"
     },
     "pos": [
-      0,
-      3
+      -1,
+      2
     ],
     "state": {},
     "actions": [
@@ -19264,12 +19451,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "orbital_solarium_scale_02",
-      "north": "orbital_solarium_scale_04"
+      "east": "orbital_solarium_scale_02",
+      "south": "orbital_solarium_scale_04"
     },
     "pos": [
-      0,
-      4
+      -2,
+      2
     ],
     "state": {},
     "actions": [
@@ -19298,12 +19485,12 @@
       "null_g_drone"
     ],
     "connections": {
-      "south": "orbital_solarium_scale_03",
-      "north": "orbital_solarium_scale_05"
+      "north": "orbital_solarium_scale_03",
+      "south": "orbital_solarium_scale_05"
     },
     "pos": [
-      0,
-      5
+      -2,
+      1
     ],
     "state": {},
     "actions": [
@@ -19348,17 +19535,17 @@
     "env": "void",
     "title": "Seed Ledger Store",
     "background_image": "images/rooms/world_5/orbital_solarium_scale_05.webp",
-    "description": "Seed packets lie flattened between pages of an old planting ledger. Each failed crop has a date beside it; later entries stop using the word ornamental.",
+    "description": "Seed packets lie flattened between pages of an old planting ledger. Each failed crop has a date beside it; later entries stop using the word ornamental. A dented gardener's tin rests beside the planting ledger.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "orbital_solarium_scale_04",
-      "north": "orbital_solarium_scale_06"
+      "north": "orbital_solarium_scale_04",
+      "east": "orbital_solarium_scale_06"
     },
     "pos": [
-      0,
-      6
+      -2,
+      0
     ],
     "state": {},
     "actions": [
@@ -19371,6 +19558,18 @@
         "name": "planting ledger",
         "type": "generic",
         "condition_unmet_message": "Later entries stop calling the crops ornamental. Somebody had begun writing about the beds as food."
+      },
+      {
+        "name": "gardener's tin",
+        "type": "container",
+        "state_key": "orbital_solarium_scale_05_tin_opened",
+        "items": [
+          "herbal_poultice",
+          "antidote_flask"
+        ],
+        "popup_title": "Solarium Gardener's Tin",
+        "already_open_message": "The gardener's tin is empty.",
+        "discovery_message": "You open the enameled tin and recover fresh poultices and an antidote flask."
       }
     ]
   },
@@ -19384,12 +19583,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "orbital_solarium_scale_05",
+      "west": "orbital_solarium_scale_05",
       "north": "orbital_solarium_scale_final"
     },
     "pos": [
       0,
-      7
+      0
     ],
     "state": {},
     "actions": [
@@ -19449,7 +19648,7 @@
     "enemies": [],
     "connections": {
       "north": "orbital_security_hub_scale_01",
-      "south": "orbital_security_hub_scale_03"
+      "west": "orbital_security_hub_scale_03"
     },
     "pos": [
       2,
@@ -19481,12 +19680,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "north": "orbital_security_hub_scale_02",
-      "south": "orbital_security_hub_scale_04"
+      "east": "orbital_security_hub_scale_02",
+      "west": "orbital_security_hub_scale_04"
     },
     "pos": [
-      2,
-      -2
+      1,
+      -1
     ],
     "state": {},
     "actions": [
@@ -19515,12 +19714,12 @@
       "prism_surveyor"
     ],
     "connections": {
-      "north": "orbital_security_hub_scale_03",
-      "south": "orbital_security_hub_scale_05"
+      "east": "orbital_security_hub_scale_03",
+      "north": "orbital_security_hub_scale_05"
     },
     "pos": [
-      2,
-      -3
+      0,
+      -1
     ],
     "state": {},
     "actions": [
@@ -19565,17 +19764,17 @@
     "env": "void",
     "title": "Badge Evidence Store",
     "background_image": "images/rooms/world_5/orbital_security_hub_scale_05.webp",
-    "description": "An evidence carton contains discarded blank badges and a ruined label roll. Even the staff who moved evidence needed permission to touch an empty box.",
+    "description": "An evidence carton contains discarded blank badges and a ruined label roll. Even the staff who moved evidence needed permission to touch an empty box. A small confiscated locker sits tagged beside the evidence carton.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "north": "orbital_security_hub_scale_04",
-      "south": "orbital_security_hub_scale_06"
+      "south": "orbital_security_hub_scale_04",
+      "north": "orbital_security_hub_scale_06"
     },
     "pos": [
-      2,
-      -4
+      0,
+      1
     ],
     "state": {},
     "actions": [
@@ -19588,6 +19787,18 @@
         "name": "blank badges",
         "type": "generic",
         "condition_unmet_message": "The badges were never assigned. Even moving an empty evidence box apparently required an identity someone could revoke."
+      },
+      {
+        "name": "confiscated locker",
+        "type": "container",
+        "state_key": "orbital_security_hub_scale_05_locker_opened",
+        "items": [
+          "ballistic_weave",
+          "painkillers"
+        ],
+        "popup_title": "Evidence Confiscation Locker",
+        "already_open_message": "The confiscated locker is empty.",
+        "discovery_message": "You pop the evidence latch and claim ballistic weave and neural stabilizers."
       }
     ]
   },
@@ -19601,12 +19812,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "north": "orbital_security_hub_scale_05",
-      "south": "orbital_security_hub_scale_final"
+      "south": "orbital_security_hub_scale_05",
+      "east": "orbital_security_hub_scale_final"
     },
     "pos": [
-      2,
-      -5
+      0,
+      2
     ],
     "state": {},
     "actions": [
@@ -19960,7 +20171,7 @@
     "enemies": [],
     "connections": {
       "north": "deep_server_farm_scale_02",
-      "south": "deep_server_farm_scale_04"
+      "west": "deep_server_farm_scale_04"
     },
     "pos": [
       3,
@@ -19986,16 +20197,17 @@
     "weather": "snow",
     "title": "Root Access Pocket",
     "background_image": "images/rooms/world_5/deep_server_farm_scale_04.webp",
-    "description": "A control pocket hides a manual toggle behind a panel dressed as decor. Someone left one practical way to make the automated system hesitate. An active admin crypt terminal blinks behind a sub-floor hatch. An optional return slide leads directly back to the entrance. The room corridors also remain open for walking back.",
+    "description": "A control pocket hides a manual toggle behind a panel dressed as decor. Someone left one practical way to make the automated system hesitate. An active admin crypt terminal blinks behind a sub-floor hatch. A north cable duct climbs straight into the Sysadmin Nest, and a service slide drops back to the Server Farm.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "north": "deep_server_farm_scale_03"
+      "east": "deep_server_farm_scale_03",
+      "north": "deep_sysadmin_nest"
     },
     "pos": [
-      3,
-      -3
+      2,
+      -2
     ],
     "state": {},
     "actions": [
@@ -20294,13 +20506,13 @@
     "weather": "resonance",
     "title": "Mercy Lie Wall",
     "background_image": "images/rooms/world_5/deep_anchor_chamber_scale_07.webp",
-    "description": "A Mercy Lie wall scrolls Vale's promise in calm white text: no pain, no separation, no self. The line edits itself whenever Nova looks away, trying to make extinction sound like relief.",
+    "description": "A Mercy Lie wall scrolls Vale's promise in calm white text: no pain, no separation, no self. The line edits itself whenever Nova looks away, trying to make extinction sound like relief. A wall-mounted maintenance med-case glows beneath the scrolling text.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "south": "deep_anchor_chamber_scale_06",
-      "north": "deep_anchor_chamber_scale_08"
+      "west": "deep_anchor_chamber_scale_08"
     },
     "pos": [
       4,
@@ -20317,6 +20529,18 @@
         "name": "calm white text",
         "type": "generic",
         "condition_unmet_message": "The typography is immaculate. That makes the argument worse."
+      },
+      {
+        "name": "maintenance med-case",
+        "type": "container",
+        "state_key": "deep_anchor_chamber_scale_07_medcase_opened",
+        "items": [
+          "medkit_plus",
+          "adrenaline"
+        ],
+        "popup_title": "Deep Ring Med-Case",
+        "already_open_message": "The maintenance med-case is empty.",
+        "discovery_message": "You snap open the white emergency case and take the medkit and adrenaline ampoule inside."
       }
     ]
   },
@@ -20333,16 +20557,17 @@
     "weather": "resonance",
     "title": "Manual Release Plinth",
     "background_image": "images/rooms/world_5/deep_anchor_chamber_scale_08.webp",
-    "description": "A manual release plinth hides under ceremonial glass near the last tank cable. The manual key is labeled EMERGENCY, because even monsters leave themselves a maintenance route. A sealed resonance anchor safe sits wired into the containment frame. An optional return anchor cable leads directly back to the entrance. The room corridors also remain open for walking back.",
+    "description": "A manual release plinth hides under ceremonial glass near the last tank cable. The manual key is labeled EMERGENCY, because even monsters leave themselves a maintenance route. A sealed resonance anchor safe sits wired into the containment frame. A north service breach opens onto the south edge of the Throne Room, while an anchor cable runs straight back to the Anchor Chamber.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "deep_anchor_chamber_scale_07"
+      "east": "deep_anchor_chamber_scale_07",
+      "north": "deep_throne_room"
     },
     "pos": [
-      4,
-      10
+      3,
+      9
     ],
     "state": {},
     "actions": [
@@ -20662,12 +20887,13 @@
     "weather": "resonance",
     "title": "Tear Runway",
     "background_image": "images/rooms/world_5/deep_throne_room_scale_07.webp",
-    "description": "A Tear runway extends from the throne deck into shaking glass and impossible music. Reflections arrive before the crew does, each one a future Vale claims he can make painless. An obsidian command dais locker sits under the shattered viewport. An optional return lift leads directly back to the entrance. The room corridors also remain open for walking back.",
+    "description": "A Tear runway extends from the throne deck into shaking glass and impossible music. Reflections arrive before the crew does, each one a future Vale claims he can make painless. An obsidian command dais locker sits under the shattered viewport. An east glass catwalk crosses directly into the Tear's gravity suture, and a ceremonial lift drops back to the Throne Room.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "deep_throne_room_scale_06"
+      "south": "deep_throne_room_scale_06",
+      "east": "deep_tear_scale_01"
     },
     "pos": [
       5,
@@ -20718,12 +20944,13 @@
     "weather": "resonance",
     "title": "Gravity Suture",
     "background_image": "images/rooms/world_5/deep_tear_scale_01.webp",
-    "description": "A gravity suture stitches the Ring to the wound with black light that bends every rail inward. The black stitch pulls thoughts slightly out of order.",
+    "description": "A gravity suture stitches the Ring to the wound with black light that bends every rail inward. The black stitch pulls thoughts slightly out of order. A fractured glass catwalk links west to the Throne Room runway.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
       "south": "deep_tear",
+      "west": "deep_throne_room_scale_07",
       "north": "deep_tear_scale_02"
     },
     "pos": [
@@ -20765,7 +20992,7 @@
     ],
     "connections": {
       "south": "deep_tear_scale_01",
-      "north": "deep_tear_scale_03"
+      "east": "deep_tear_scale_03"
     },
     "pos": [
       6,
@@ -20819,12 +21046,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "deep_tear_scale_02",
-      "north": "deep_tear_scale_04"
+      "west": "deep_tear_scale_02",
+      "east": "deep_tear_scale_04"
     },
     "pos": [
-      6,
-      5
+      7,
+      4
     ],
     "state": {},
     "actions": [
@@ -20858,12 +21085,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "deep_tear_scale_03",
-      "north": "deep_tear_scale_05"
+      "west": "deep_tear_scale_03",
+      "south": "deep_tear_scale_05"
     },
     "pos": [
-      6,
-      6
+      8,
+      4
     ],
     "state": {},
     "actions": [
@@ -20897,12 +21124,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "deep_tear_scale_04",
-      "north": "deep_tear_scale_06"
+      "north": "deep_tear_scale_04",
+      "south": "deep_tear_scale_06"
     },
     "pos": [
-      6,
-      7
+      8,
+      3
     ],
     "state": {},
     "actions": [
@@ -20933,16 +21160,17 @@
     "weather": "resonance",
     "title": "Source Drop",
     "background_image": "images/rooms/world_5/deep_tear_scale_06.webp",
-    "description": "The Source drop waits beyond the hull, filled with falling voices that do not get farther away. The falling voices include names Nova has not learned yet. A pulsing anomaly fracture has crystallized into physical salvage. An optional return reality slipstream leads directly back to the entrance. The room corridors also remain open for walking back.",
+    "description": "The Source drop waits beyond the hull, filled with falling voices that do not get farther away. The falling voices include names Nova has not learned yet. A pulsing anomaly fracture has crystallized into physical salvage. A west shear fold steps right back onto the Tear's main hull deck, and a reality slipstream also returns to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "deep_tear_scale_05"
+      "north": "deep_tear_scale_05",
+      "west": "deep_tear"
     },
     "pos": [
-      6,
-      8
+      8,
+      2
     ],
     "state": {},
     "actions": [
@@ -21068,7 +21296,7 @@
     "weather": "resonance",
     "title": "Unshared Blanket",
     "background_image": "images/rooms/world_6/source_campfire_node_scale_03.webp",
-    "description": "An unshared blanket lies beside the fire, folded with impossible neatness. The empty corner shows where the Source expects Nova to sit alone and call it strength.",
+    "description": "An unshared blanket lies beside the fire, folded with impossible neatness. The empty corner shows where the Source expects Nova to sit alone and call it strength. A worn traveler's satchel rests beside the folded blanket.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -21091,6 +21319,18 @@
         "name": "empty corner",
         "type": "generic",
         "condition_unmet_message": "Vale's mercy always leaves enough room for isolation."
+      },
+      {
+        "name": "traveler's satchel",
+        "type": "container",
+        "state_key": "source_campfire_node_scale_03_satchel_opened",
+        "items": [
+          "source_astral_feast",
+          "medkit_plus"
+        ],
+        "popup_title": "Campfire Traveler's Satchel",
+        "already_open_message": "The traveler's satchel is empty.",
+        "discovery_message": "You unfasten the warm canvas satchel and gather provisions shaped by shared memories."
       }
     ]
   },
@@ -21146,7 +21386,7 @@
     ],
     "connections": {
       "south": "source_zeke_nightmare",
-      "north": "source_zeke_nightmare_node_scale_02"
+      "east": "source_zeke_nightmare_node_scale_02"
     },
     "pos": [
       -1,
@@ -21198,12 +21438,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "source_zeke_nightmare_node_scale_01",
-      "north": "source_zeke_nightmare_node_scale_03"
+      "west": "source_zeke_nightmare_node_scale_01",
+      "south": "source_zeke_nightmare_node_scale_03"
     },
     "pos": [
-      -1,
-      1
+      0,
+      0
     ],
     "state": {},
     "actions": [
@@ -21224,16 +21464,17 @@
     "env": "source",
     "title": "Resignation Window",
     "background_image": "images/rooms/world_6/source_zeke_nightmare_node_scale_03.webp",
-    "description": "A resignation window looks out on open sky that the office insists is a motivational poster. The open sky does not need Zeke to earn it. A battered freedom filing case sits marked with Zeke's real employee badge. A one-way door leads directly back to the entrance.",
+    "description": "A resignation window looks out on open sky that the office insists is a motivational poster. The open sky does not need Zeke to earn it. A battered freedom filing case sits marked with Zeke's real employee badge. A west hallway opens directly into Zeke's break room, and a service door leads straight back to the cubicles.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "source_zeke_nightmare_node_scale_02"
+      "north": "source_zeke_nightmare_node_scale_02",
+      "west": "source_zeke_break_room"
     },
     "pos": [
-      -1,
-      2
+      0,
+      -2
     ],
     "state": {},
     "actions": [
@@ -21333,7 +21574,7 @@
     "enemies": [],
     "connections": {
       "south": "source_gh0st_nightmare_node_scale_01",
-      "north": "source_gh0st_nightmare_node_scale_03"
+      "east": "source_gh0st_nightmare_node_scale_03"
     },
     "pos": [
       0,
@@ -21358,16 +21599,17 @@
     "env": "source",
     "title": "Sister Signal",
     "background_image": "images/rooms/world_6/source_gh0st_nightmare_node_scale_03.webp",
-    "description": "A sister signal glows behind the war noise with a soft waveform no command layer can counterfeit. The soft waveform remembers Elara before the Ring turned her into infrastructure. A pristine sister memory core pulses free of military encryption. A one-way clean signal leads directly back to the entrance.",
+    "description": "A sister signal glows behind the war noise with a soft waveform no command layer can counterfeit. The soft waveform remembers Elara before the Ring turned her into infrastructure. A pristine sister memory core pulses free of military encryption. A south signal path drops straight to Elara's audio log, while a clean signal pulls back to the nightmare entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "source_gh0st_nightmare_node_scale_02"
+      "west": "source_gh0st_nightmare_node_scale_02",
+      "south": "source_gh0st_elara_signal"
     },
     "pos": [
-      0,
-      2
+      2,
+      1
     ],
     "state": {},
     "actions": [
@@ -21407,7 +21649,7 @@
     "weather": "starfall",
     "title": "Black Tide Shelf",
     "background_image": "images/rooms/world_6/source_orion_nightmare_node_scale_01.webp",
-    "description": "A black tide shelf stretches under salt stars that refuse to reflect in the water. A salt-crusted chronometer rests on the shelf. The salt stars brighten only when Orion stops accepting last survivor as a title.",
+    "description": "A black tide shelf stretches under salt stars that refuse to reflect in the water. A salt-crusted chronometer rests on the shelf. The salt stars brighten only when Orion stops accepting last survivor as a title. Blue ash drifts along the shore west toward the Campfire waterline.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -21415,7 +21657,8 @@
     ],
     "connections": {
       "south": "source_orion_nightmare",
-      "north": "source_orion_nightmare_node_scale_02"
+      "north": "source_orion_nightmare_node_scale_02",
+      "west": "source_campfire_node_scale_final"
     },
     "pos": [
       1,
@@ -21469,7 +21712,7 @@
     "enemies": [],
     "connections": {
       "south": "source_orion_nightmare_node_scale_01",
-      "north": "source_orion_nightmare_node_scale_03"
+      "east": "source_orion_nightmare_node_scale_03"
     },
     "pos": [
       1,
@@ -21495,16 +21738,17 @@
     "weather": "starfall",
     "title": "Chorus Door",
     "background_image": "images/rooms/world_6/source_orion_nightmare_node_scale_03.webp",
-    "description": "A Chorus door stands half-submerged where a deep tidal current rises from below the shore, carrying names Orion thought the universe had erased. A luminous tide glass shell rests on the threshold. A one-way tidal wave leads directly back to the entrance.",
+    "description": "A Chorus door stands half-submerged where a deep tidal current rises from below the shore, carrying names Orion thought the universe had erased. A luminous tide glass shell rests on the threshold. The illuminated current flows south directly to the Chorus shore, and a tidal wave returns to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "source_orion_nightmare_node_scale_02"
+      "west": "source_orion_nightmare_node_scale_02",
+      "south": "source_orion_chorus"
     },
     "pos": [
-      1,
-      2
+      3,
+      1
     ],
     "state": {},
     "actions": [
@@ -21685,7 +21929,7 @@
     "enemies": [],
     "connections": {
       "south": "source_echo_mines_node_scale_03",
-      "north": "source_echo_mines_node_scale_final"
+      "west": "source_echo_mines_node_scale_final"
     },
     "pos": [
       2,
@@ -21796,7 +22040,7 @@
     "weather": "rain",
     "title": "Spire Rain Line",
     "background_image": "images/rooms/world_6/source_memory_bridge_node_scale_03.webp",
-    "description": "A Spire rain line hangs in the air, every drop reflecting a different stolen route. Zeke laughs once when the route refuses to obey signage.",
+    "description": "A Spire rain line hangs in the air, every drop reflecting a different stolen route. Zeke laughs once when the route refuses to obey signage. A tied crew supply bundle rests dry beneath the suspended rain line.",
     "npcs": [],
     "items": [],
     "enemies": [],
@@ -21819,6 +22063,18 @@
         "name": "stolen route",
         "type": "generic",
         "condition_unmet_message": "The city was never as sealed as it pretended."
+      },
+      {
+        "name": "crew supply bundle",
+        "type": "container",
+        "state_key": "source_memory_bridge_node_scale_03_bundle_opened",
+        "items": [
+          "tideglass_delight",
+          "painkillers"
+        ],
+        "popup_title": "Remembered Crew Bundle",
+        "already_open_message": "The crew supply bundle is empty.",
+        "discovery_message": "You untie the twine and claim a Tideglass meal and neural stabilizers."
       }
     ]
   },
@@ -21841,7 +22097,7 @@
     "enemies": [],
     "connections": {
       "south": "source_memory_bridge_node_scale_03",
-      "north": "source_memory_bridge_node_scale_final"
+      "west": "source_memory_bridge_node_scale_final"
     },
     "pos": [
       1,
@@ -21873,7 +22129,7 @@
     "enemies": [],
     "connections": {
       "south": "source_memory_stair",
-      "north": "source_memory_stair_node_scale_02"
+      "west": "source_memory_stair_node_scale_02"
     },
     "pos": [
       2,
@@ -21920,12 +22176,12 @@
       "distorted_sentinel"
     ],
     "connections": {
-      "south": "source_memory_stair_node_scale_01",
-      "north": "source_memory_stair_node_scale_03"
+      "east": "source_memory_stair_node_scale_01",
+      "south": "source_memory_stair_node_scale_03"
     },
     "pos": [
-      2,
-      3
+      1,
+      2
     ],
     "state": {},
     "actions": [
@@ -21952,12 +22208,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "source_memory_stair_node_scale_02",
-      "north": "source_memory_stair_node_scale_04"
+      "north": "source_memory_stair_node_scale_02",
+      "south": "source_memory_stair_node_scale_04"
     },
     "pos": [
-      2,
-      4
+      1,
+      1
     ],
     "state": {},
     "actions": [
@@ -21986,17 +22242,17 @@
     "weather": "resonance",
     "title": "Ring Silence Step",
     "background_image": "images/rooms/world_6/source_memory_stair_node_scale_04.webp",
-    "description": "A Ring silence step absorbs every footstep until Elara’s signal cuts cleanly through the damping field, proving the Ring’s quiet was only a better-insulated cage.",
+    "description": "A Ring silence step absorbs every footstep until Elara’s signal cuts cleanly through the damping field, proving the Ring’s quiet was only a better-insulated cage. An echoed supply pack leans against the silent step.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "source_memory_stair_node_scale_03",
-      "north": "source_memory_stair_node_scale_final"
+      "north": "source_memory_stair_node_scale_03",
+      "east": "source_memory_stair_node_scale_final"
     },
     "pos": [
-      2,
-      5
+      1,
+      0
     ],
     "state": {},
     "actions": [
@@ -22009,6 +22265,18 @@
         "name": "Elara’s signal",
         "type": "generic",
         "condition_unmet_message": "Elara is not a symbol here. She is a person still pushing back."
+      },
+      {
+        "name": "echoed supply pack",
+        "type": "container",
+        "state_key": "source_memory_stair_node_scale_04_pack_opened",
+        "items": [
+          "medkit_plus",
+          "adrenaline"
+        ],
+        "popup_title": "Echoed Supply Pack",
+        "already_open_message": "The echoed supply pack is empty.",
+        "discovery_message": "You unzip the pack and lift out a fresh medkit and adrenaline ampoule."
       }
     ]
   },
@@ -22118,7 +22386,7 @@
     "enemies": [],
     "connections": {
       "south": "source_spire_thought_node_scale_02",
-      "north": "source_spire_thought_node_scale_04"
+      "east": "source_spire_thought_node_scale_04"
     },
     "pos": [
       3,
@@ -22151,16 +22419,17 @@
     "weather": "resonance",
     "title": "No Throne",
     "background_image": "images/rooms/world_6/source_spire_thought_node_scale_04.webp",
-    "description": "A throne-shaped absence waits at the top of the thought spiral. The absence brightens when Nova refuses to sit, leaving room for a circuit instead of a ruler. An unthroned ledger rests where a ruler was meant to sit. An open return circuit leads back to the Spire of Thought.",
+    "description": "A throne-shaped absence waits at the top of the thought spiral. The absence brightens when Nova refuses to sit, leaving room for a circuit instead of a ruler. An unthroned ledger rests where a ruler was meant to sit. A south archive gallery drops directly into the Spire Archive, while an open return circuit also leads back to the Spire of Thought.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "source_spire_thought_node_scale_03"
+      "west": "source_spire_thought_node_scale_03",
+      "south": "source_spire_archive"
     },
     "pos": [
-      3,
-      5
+      4,
+      4
     ],
     "state": {},
     "actions": [
@@ -22214,7 +22483,7 @@
     "enemies": [],
     "connections": {
       "south": "source_center",
-      "north": "source_center_node_scale_02"
+      "west": "source_center_node_scale_02"
     },
     "pos": [
       4,
@@ -22259,12 +22528,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "source_center_node_scale_01",
-      "north": "source_center_node_scale_03"
+      "east": "source_center_node_scale_01",
+      "south": "source_center_node_scale_03"
     },
     "pos": [
-      4,
-      3
+      3,
+      2
     ],
     "state": {},
     "actions": [
@@ -22298,12 +22567,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "source_center_node_scale_02",
-      "north": "source_center_node_scale_final"
+      "north": "source_center_node_scale_02",
+      "east": "source_center_node_scale_final"
     },
     "pos": [
-      4,
-      4
+      3,
+      0
     ],
     "state": {},
     "actions": [
@@ -22344,7 +22613,7 @@
     "enemies": [],
     "connections": {
       "south": "source_new_world",
-      "north": "source_new_world_node_scale_02"
+      "east": "source_new_world_node_scale_02"
     },
     "pos": [
       5,
@@ -22381,12 +22650,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "source_new_world_node_scale_01",
-      "north": "source_new_world_node_scale_03"
+      "west": "source_new_world_node_scale_01",
+      "south": "source_new_world_node_scale_03"
     },
     "pos": [
-      5,
-      3
+      6,
+      2
     ],
     "state": {},
     "actions": [
@@ -22412,12 +22681,12 @@
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "source_new_world_node_scale_02",
-      "north": "source_new_world_node_scale_final"
+      "north": "source_new_world_node_scale_02",
+      "west": "source_new_world_node_scale_final"
     },
     "pos": [
-      5,
-      4
+      6,
+      0
     ],
     "state": {},
     "actions": [
@@ -22446,16 +22715,17 @@
     "weather": "dust",
     "title": "Foundry Emergency Marker",
     "background_image": "images/rooms/world_4/foundry_obsidian_shelf_scale_final.webp",
-    "description": "An emergency marker blinks above the black glass, its cracked beacon still guiding crews through heat that management calls acceptable. The cracked beacon and shift tally make the landing shelf feel like part of a working disaster. A heat-sealed container rests half-buried in volcanic slag. An optional return slide leads directly back to the entrance. You can also walk back through the room corridors.",
+    "description": "An emergency marker blinks above the black glass, its cracked beacon still guiding crews through heat that management calls acceptable. The cracked beacon and shift tally make the landing shelf feel like part of a working disaster. A heat-sealed container rests half-buried in volcanic slag. A south volcanic ledge drops directly to Obsidian Overlook, and an emergency slide shoots straight back to the landing shelf.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "foundry_obsidian_shelf_scale_04"
+      "west": "foundry_obsidian_shelf_scale_04",
+      "south": "foundry_obsidian_overlook"
     },
     "pos": [
-      -1,
-      5
+      0,
+      4
     ],
     "state": {},
     "actions": [
@@ -22495,18 +22765,19 @@
     "weather": "dust",
     "title": "Foundry River Control",
     "background_image": "images/rooms/world_4/foundry_slag_river_scale_final.webp",
-    "description": "A river control booth watches slag levels with a burned console and a rescue hook nobody officially issued. The burned console and rescue hook explain how workers survive routes the map calls closed. A heavy smelter toolbox sits bolted beside the sluice valve. An optional return catwalk leads directly back to the entrance. You can also walk back through the room corridors.",
+    "description": "A river control booth watches slag levels with a burned console and a rescue hook nobody officially issued. The burned console and rescue hook explain how workers survive routes the map calls closed. A heavy smelter toolbox sits bolted beside the sluice valve. A west sluice rail runs onto the Slag Stepping Stones, while a maintenance catwalk shortcuts back to the river entrance.",
     "npcs": [],
     "items": [],
     "enemies": [
       "magma_drone"
     ],
     "connections": {
-      "south": "foundry_slag_river_scale_04"
+      "south": "foundry_slag_river_scale_04",
+      "west": "foundry_slag_stepping_stones"
     },
     "pos": [
-      2,
-      2
+      3,
+      1
     ],
     "state": {},
     "actions": [
@@ -22598,16 +22869,17 @@
     "weather": "steam",
     "title": "Foundry Blue Steam Pocket",
     "background_image": "images/rooms/world_4/foundry_cooling_springs_scale_final.webp",
-    "description": "A blue steam pocket gathers under patched pipes, turning heat into a temporary hiding place. The patched pipes and cool residue show the Foundry being fought by its own workers. An insulated coolant reserve hums with frosty condensation. An optional return drain leads directly back to the entrance. You can also walk back through the room corridors.",
+    "description": "A blue steam pocket gathers under patched pipes, turning heat into a temporary hiding place. The patched pipes and cool residue show the Foundry being fought by its own workers. An insulated coolant reserve hums with frosty condensation. An east service crawlway opens into Lava Tube Bypass, and an overflow drain drops straight back to the springs entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "foundry_cooling_springs_scale_04"
+      "west": "foundry_cooling_springs_scale_04",
+      "east": "foundry_lava_tube_bypass"
     },
     "pos": [
       0,
-      6
+      1
     ],
     "state": {},
     "actions": [
@@ -22647,7 +22919,7 @@
     "weather": "gas",
     "title": "Foundry Sorter Spine",
     "background_image": "images/rooms/world_4/foundry_waste_intake_scale_final.webp",
-    "description": "A sorter spine rattles behind the intake with rejected parts climbing toward another chance at violence. The sorter spine and reject ledger make the waste system feel alive and complicit. A reinforced salvage bin caught against the intake teeth holds uncrushed gear. An optional return ladder leads directly back to the entrance. You can also walk back through the room corridors.",
+    "description": "A sorter spine rattles behind the intake with rejected parts climbing toward another chance at violence. The sorter spine and reject ledger make the waste system feel alive and complicit. A reinforced salvage bin caught against the intake teeth holds uncrushed gear. An east catwalk climbs up to Intake Overlook, and a service ladder drops back to the waste intake entrance.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -22655,11 +22927,12 @@
       "magnet_sifter"
     ],
     "connections": {
-      "north": "foundry_waste_intake_scale_04"
+      "south": "foundry_waste_intake_scale_04",
+      "east": "foundry_intake_overlook"
     },
     "pos": [
-      2,
-      -4
+      1,
+      2
     ],
     "state": {},
     "actions": [
@@ -22739,16 +23012,17 @@
     "env": "foundry",
     "title": "Foundry Seal Backroom",
     "background_image": "images/rooms/world_4/foundry_service_airlock_scale_final.webp",
-    "description": "A seal backroom stores pressure masks beside handwritten cycling rules. The pressure masks and cycling rules make the airlock feel maintained by people who expect the official procedure to fail. A stamped technician locker remains locked against the heat. An optional return hatch leads directly back to the entrance. You can also walk back through the room corridors.",
+    "description": "A seal backroom stores pressure masks beside handwritten cycling rules. The pressure masks and cycling rules make the airlock feel maintained by people who expect the official procedure to fail. A stamped technician locker remains locked against the heat. A south bypass door opens straight into the Decon Chamber, and an inspection hatch drops back to the service airlock.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "foundry_service_airlock_scale_04"
+      "west": "foundry_service_airlock_scale_04",
+      "south": "foundry_decon_chamber"
     },
     "pos": [
-      3,
-      6
+      4,
+      5
     ],
     "state": {},
     "actions": [
@@ -22789,18 +23063,19 @@
     "weather": "sparks",
     "title": "Foundry Belt Nerve",
     "background_image": "images/rooms/world_4/foundry_conveyor_belt_scale_final.webp",
-    "description": "A belt nerve junction pulses beneath the conveyor, matching every crush cycle to a production target. The nerve junction and target counter turn traversal into readable machinery. An assembly cache has been knocked onto an inspection shelf. An optional return slide leads directly back to the entrance. You can also walk back through the room corridors.",
+    "description": "A belt nerve junction pulses beneath the conveyor, matching every crush cycle to a production target. The nerve junction and target counter turn traversal into readable machinery. An assembly cache has been knocked onto an inspection shelf. A south reject chute drops directly into Reject Bay, while a service slide returns to the conveyor floor.",
     "npcs": [],
     "items": [],
     "enemies": [
       "conveyor_crusher"
     ],
     "connections": {
-      "south": "foundry_conveyor_belt_scale_04"
+      "east": "foundry_conveyor_belt_scale_04",
+      "south": "foundry_reject_bay"
     },
     "pos": [
-      0,
-      7
+      -1,
+      6
     ],
     "state": {},
     "actions": [
@@ -22839,7 +23114,7 @@
     "env": "foundry",
     "title": "Foundry Defect Rack",
     "background_image": "images/rooms/world_4/foundry_conditioning_scale_final.webp",
-    "description": "A defect rack of rejected units clicks behind a cracked glass seam, half-awake and waiting for a command that may never come. A hardened stress-test locker survived the pressure cycles. An optional return valve leads directly back to the entrance. You can also walk back through the room corridors.",
+    "description": "A defect rack of rejected units clicks behind a cracked glass seam, half-awake and waiting for a command that may never come. A hardened stress-test locker survived the pressure cycles. A west observation hatch opens into the Conditioning Observation deck, and a pressure valve crawlspace returns to the main chamber.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -22847,11 +23122,12 @@
       "welder_bot"
     ],
     "connections": {
-      "south": "foundry_conditioning_scale_04"
+      "south": "foundry_conditioning_scale_04",
+      "west": "foundry_conditioning_observation"
     },
     "pos": [
-      2,
-      2
+      3,
+      1
     ],
     "state": {},
     "actions": [
@@ -22929,16 +23205,17 @@
     "weather": "sparks",
     "title": "Foundry Relic Draft",
     "background_image": "images/rooms/world_4/foundry_forge_scale_final.webp",
-    "description": "A relic draft moves through the Forge before the fire does, tugging ash toward the Anvil's old imprint. The relic draft and ash trail make the Forge feel older than Dominion's machinery. A heat-blackened master smith crate sits beside the flue.",
+    "description": "A relic draft moves through the Forge before the fire does, tugging ash toward the Anvil's old imprint. The relic draft and ash trail make the Forge feel older than Dominion's machinery. A heat-blackened master smith crate sits beside the flue. A south vent gallery drops directly into the Forge Control Alcove, while the flue shortcut drops back to the Forge entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "foundry_forge_scale_04"
+      "east": "foundry_forge_scale_04",
+      "south": "foundry_forge_control_alcove"
     },
     "pos": [
-      2,
-      4
+      0,
+      3
     ],
     "state": {},
     "actions": [
@@ -22978,7 +23255,7 @@
     "weather": "sparks",
     "title": "Foundry Core Shadow",
     "background_image": "images/rooms/world_4/foundry_power_core_scale_final.webp",
-    "description": "A core shadow falls across the engine clamps in a shape too sharp for the room's lighting. The core shadow and clamp gauge foreshadow the theft that will make the Astra climb. A lead-lined shielded core case is clipped to the reactor frame. An optional return lift leads directly back to the entrance. You can also walk back through the room corridors.",
+    "description": "A core shadow falls across the engine clamps in a shape too sharp for the room's lighting. The core shadow and clamp gauge foreshadow the theft that will make the Astra climb. A lead-lined shielded core case is clipped to the reactor frame. An east service gantry circles straight into the Engine Service Ring, and an auxiliary lift returns to the Power Core.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -22986,11 +23263,12 @@
       "welder_bot"
     ],
     "connections": {
-      "north": "foundry_power_core_scale_04"
+      "south": "foundry_power_core_scale_04",
+      "east": "foundry_engine_service_ring"
     },
     "pos": [
-      2,
-      -4
+      1,
+      2
     ],
     "state": {},
     "actions": [
@@ -23071,12 +23349,13 @@
     "weather": "sparks",
     "title": "Foundry Last Gantry",
     "background_image": "images/rooms/world_4/foundry_titan_dock_scale_final.webp",
-    "description": "A last gantry shakes over the Titan dock, pointed directly at the escape route. The last gantry and release bolt turn the boss arena into a place built for a desperate exit. A magnetic titan maintenance pod is tethered beneath the crane. An optional return scaffolding leads directly back to the entrance. You can also walk back through the room corridors.",
+    "description": "A last gantry shakes over the Titan dock, pointed directly at the escape route. The last gantry and release bolt turn the boss arena into a place built for a desperate exit. A magnetic titan maintenance pod is tethered beneath the crane. A west maintenance beam spans back to the Engine Service Ring, while lower scaffolding drops straight to the Titan dock.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "foundry_titan_dock_scale_04"
+      "south": "foundry_titan_dock_scale_04",
+      "west": "foundry_engine_service_ring"
     },
     "pos": [
       4,
@@ -23119,16 +23398,17 @@
     "env": "void",
     "title": "Ring Dock Memorial",
     "background_image": "images/rooms/world_5/orbital_executive_dock_scale_final.webp",
-    "description": "A dock memorial projects names over the forced-docking scar, then redacts the staff names first. The dock memorial and redaction pulse show the Ring preserving class even during collapse. An airtight diplomatic courier case floats secured by velcro. An optional return chute leads directly back to the entrance. The room corridors also remain open for walking back.",
+    "description": "A dock memorial projects names over the forced-docking scar, then redacts the staff names first. The dock memorial and redaction pulse show the Ring preserving class even during collapse. An airtight diplomatic courier case floats secured by velcro. An east maintenance passage curves into the Airlock Gallery, while a return chute drops directly to the Executive Dock.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "orbital_executive_dock_scale_06"
+      "north": "orbital_executive_dock_scale_06",
+      "east": "orbital_airlock_gallery"
     },
     "pos": [
       -1,
-      7
+      2
     ],
     "state": {},
     "actions": [
@@ -23167,7 +23447,7 @@
     "env": "void",
     "title": "Ring Courtesy Theater",
     "background_image": "images/rooms/world_5/orbital_grand_concourse_scale_final.webp",
-    "description": "A courtesy theater keeps playing welcome footage to empty chairs while blast shutters grind nearby. The welcome footage and empty chairs make Harmony's politeness feel obscene. A shattered luxury display locker holds untouched luxury goods. An optional return express escalator leads directly back to the entrance. The room corridors also remain open for walking back.",
+    "description": "A courtesy theater keeps playing welcome footage to empty chairs while blast shutters grind nearby. The welcome footage and empty chairs make Harmony's politeness feel obscene. A shattered luxury display locker holds untouched luxury goods. A west VIP corridor opens into the Customs Lounge, and an express escalator drops straight back to the Grand Concourse.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -23175,11 +23455,12 @@
       "prism_surveyor"
     ],
     "connections": {
-      "south": "orbital_grand_concourse_scale_06"
+      "north": "orbital_grand_concourse_scale_06",
+      "west": "orbital_customs_lounge"
     },
     "pos": [
       2,
-      4
+      1
     ],
     "state": {},
     "actions": [
@@ -23242,16 +23523,17 @@
     "env": "void",
     "title": "Ring False Tide",
     "background_image": "images/rooms/world_5/orbital_solarium_scale_final.webp",
-    "description": "A false tide laps against the Solarium beach with water pumped through hidden climate veins. The false tide and climate veins make paradise visibly mechanical. A pressurized hydroponic canister sits among dead decorative moss. An optional return stairwell leads directly back to the entrance. The room corridors also remain open for walking back.",
+    "description": "A false tide laps against the Solarium beach with water pumped through hidden climate veins. The false tide and climate veins make paradise visibly mechanical. A pressurized hydroponic canister sits among dead decorative moss. An east service door leads onto the Mirror Walk, and a recessed stairwell drops straight back to the Solarium.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "orbital_solarium_scale_06"
+      "south": "orbital_solarium_scale_06",
+      "east": "orbital_mirror_walk"
     },
     "pos": [
       0,
-      8
+      1
     ],
     "state": {},
     "actions": [
@@ -23290,7 +23572,7 @@
     "env": "void",
     "title": "Ring Threat Cathedral",
     "background_image": "images/rooms/world_5/orbital_security_hub_scale_final.webp",
-    "description": "A threat cathedral stacks surveillance feeds into stained-glass panes of suspicion. The surveillance panes and priority docket turn security into worship. A heavy tactical enforcer armory is recessed into the bulkhead. An optional return hatch leads directly back to the entrance. The room corridors also remain open for walking back.",
+    "description": "A threat cathedral stacks surveillance feeds into stained-glass panes of suspicion. The surveillance panes and priority docket turn security into worship. A heavy tactical enforcer armory is recessed into the bulkhead. An east bulkhead door enters the Surveillance Pit, while a deck hatch drops straight back to the Security Hub.",
     "npcs": [],
     "items": [],
     "enemies": [
@@ -23299,11 +23581,12 @@
       "null_g_drone"
     ],
     "connections": {
-      "north": "orbital_security_hub_scale_06"
+      "west": "orbital_security_hub_scale_06",
+      "east": "orbital_surveillance_pit"
     },
     "pos": [
-      2,
-      -6
+      1,
+      2
     ],
     "state": {},
     "actions": [
@@ -23374,12 +23657,13 @@
     "env": "void",
     "title": "Ring Drift Chapel",
     "background_image": "images/rooms/world_5/orbital_service_shaft_scale_final.webp",
-    "description": "A drift chapel of tether hooks and emergency blankets floats beside the service shaft. The tether hooks and prayer patch show the workers who made zero-g survivable. An orange EVA engineer pack is clamped to the structural truss. An optional return guide leads directly back to the entrance. The room corridors also remain open for walking back.",
+    "description": "A drift chapel of tether hooks and emergency blankets floats beside the service shaft. The tether hooks and prayer patch show the workers who made zero-g survivable. An orange EVA engineer pack is clamped to the structural truss. A west zero-g airlock connects directly to the Surveillance Pit, and a tether guide pulls straight back to the Service Shaft.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "orbital_service_shaft_scale_06"
+      "south": "orbital_service_shaft_scale_06",
+      "west": "orbital_surveillance_pit"
     },
     "pos": [
       3,
@@ -23430,12 +23714,13 @@
     "weather": "resonance",
     "title": "Source Memory Shore",
     "background_image": "images/rooms/world_6/source_campfire_node_scale_final.webp",
-    "description": "A memory shore curves around the Campfire, where tide marks from six worlds meet in drifts of blue ash. A warm hearth memory chest glows softly beside the waterline. A one-way trail leads directly back to the entrance.",
+    "description": "A memory shore curves around the Campfire, where tide marks from six worlds meet in drifts of blue ash. A warm hearth memory chest glows softly beside the waterline. The waterline curves east onto Orion's black tide shelf, while a quiet trail leads straight back to the Campfire.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "source_campfire_node_scale_04"
+      "south": "source_campfire_node_scale_04",
+      "east": "source_orion_nightmare_node_scale_01"
     },
     "pos": [
       1,
@@ -23479,16 +23764,17 @@
     "weather": "dust",
     "title": "Source First Fear",
     "background_image": "images/rooms/world_6/source_echo_mines_node_scale_final.webp",
-    "description": "A first fear corridor repeats Nova’s earliest exit routes from the Pit, but every door now has an inside latch waiting for her hand. An unburned first shift locker holds tools Nova thought were lost forever. A one-way return rift leads directly back to the entrance.",
+    "description": "A first fear corridor repeats Nova’s earliest exit routes from the Pit, but every door now has an inside latch waiting for her hand. An unburned first shift locker holds tools Nova thought were lost forever. A north side door opens directly onto the patrol corridor, while a return rift pulls straight back to the mine entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "source_echo_mines_node_scale_04"
+      "east": "source_echo_mines_node_scale_04",
+      "north": "source_echo_patrol"
     },
     "pos": [
-      2,
-      2
+      1,
+      0
     ],
     "state": {},
     "actions": [
@@ -23535,16 +23821,17 @@
     "weather": "resonance",
     "title": "Source Crew Span",
     "background_image": "images/rooms/world_6/source_memory_bridge_node_scale_final.webp",
-    "description": "A crew span arches across the void, brightening only where more than one figure casts a shared shadow across its glass. A radiant covenant beacon marks where the crew chose each other. A one-way light beam leads directly back to the entrance.",
+    "description": "A crew span arches across the void, brightening only where more than one figure casts a shared shadow across its glass. A radiant covenant beacon marks where the crew chose each other. A south memory gangway drops directly to the Echo Elevator, and a light beam returns straight to the unfinished bridge.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "source_memory_bridge_node_scale_04"
+      "east": "source_memory_bridge_node_scale_04",
+      "south": "source_echo_elevator"
     },
     "pos": [
-      1,
-      6
+      0,
+      5
     ],
     "state": {},
     "actions": [
@@ -23591,16 +23878,17 @@
     "weather": "resonance",
     "title": "Source Scar Step",
     "background_image": "images/rooms/world_6/source_memory_stair_node_scale_final.webp",
-    "description": "A scar step holds dents from every world, its unpolished edge refusing Vale’s offer to smooth the damage away. A scarred survivor reliquary holds fragments of every battle survived. A one-way slide leads directly back to the entrance.",
+    "description": "A scar step holds dents from every world, its unpolished edge refusing Vale’s offer to smooth the damage away. A scarred survivor reliquary holds fragments of every battle survived. A north stone landing loops directly back to the Memory Stair, and a quick slide also drops to the base.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "source_memory_stair_node_scale_04"
+      "west": "source_memory_stair_node_scale_04",
+      "north": "source_memory_stair"
     },
     "pos": [
       2,
-      6
+      0
     ],
     "state": {},
     "actions": [
@@ -23648,16 +23936,17 @@
     "weather": "resonance",
     "title": "Center Orbit",
     "background_image": "images/rooms/world_6/source_center_node_scale_final.webp",
-    "description": "A voice orbit circles the Center with separate tones that hold together without merging into a single command. At its hub, a glowing chorus harmony seed spins in quiet equilibrium. A one-way return rift leads directly back to the entrance.",
+    "description": "A voice orbit circles the Center with separate tones that hold together without merging into a single command. At its hub, a glowing chorus harmony seed spins in quiet equilibrium. A north chord bridge steps directly onto The Center platform, and a return rift also pulls back to the entrance.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "source_center_node_scale_03"
+      "west": "source_center_node_scale_03",
+      "north": "source_center"
     },
     "pos": [
       4,
-      5
+      0
     ],
     "state": {},
     "actions": [
@@ -23696,16 +23985,17 @@
     "env": "source",
     "title": "Source Morning Street",
     "background_image": "images/rooms/world_6/source_new_world_node_scale_final.webp",
-    "description": "A morning street outside the diner carries repair crews, bad jokes, and real weather nobody scheduled. A terminal offers to call Astra shuttle. A morning provision basket sits packed for the journey ahead. The southern street returns past Open Window toward the diner. An ether well ripples beside the street.",
+    "description": "A morning street outside the diner carries repair crews, bad jokes, and real weather nobody scheduled. A terminal offers to call Astra shuttle. A morning provision basket sits packed for the journey ahead. The eastern street returns past Open Window, while a north corner lane loops straight back beside Zeke's diner. An ether well ripples beside the street.",
     "npcs": [],
     "items": [],
     "enemies": [],
     "connections": {
-      "south": "source_new_world_node_scale_03"
+      "east": "source_new_world_node_scale_03",
+      "north": "source_new_world"
     },
     "pos": [
       5,
-      5
+      0
     ],
     "state": {},
     "actions": [

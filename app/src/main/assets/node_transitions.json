@@ -1132,5 +1132,239 @@
     "to_node": "admin_gate",
     "to_room": "checkpoint_queue",
     "transition_text": "Join the shift queue."
+  },
+  {
+    "id": "spire_vent_output__east__spire_the_static_roof",
+    "from_node": "spire_vent_output",
+    "from_room": "spire_vent_output_scale_03",
+    "direction": "east",
+    "to_node": "spire_the_static",
+    "to_room": "spire_safehouse_roof",
+    "transition_text": "Cross the rain-slick catwalk onto Safehouse Roof."
+  },
+  {
+    "id": "spire_the_static__west__spire_vent_output_roof",
+    "from_node": "spire_the_static",
+    "from_room": "spire_safehouse_roof",
+    "direction": "west",
+    "to_node": "spire_vent_output",
+    "to_room": "spire_vent_output_scale_03",
+    "transition_text": "Step back west onto Rain Grate Overlook."
+  },
+  {
+    "id": "spire_the_static__east__spire_night_market_bridge",
+    "from_node": "spire_the_static",
+    "from_room": "spire_the_static_scale_03",
+    "direction": "east",
+    "to_node": "spire_night_market",
+    "to_room": "spire_lantern_bridge",
+    "transition_text": "Cross the fire-escape footbridge onto Lantern Bridge."
+  },
+  {
+    "id": "spire_night_market__west__spire_the_static_shrine",
+    "from_node": "spire_night_market",
+    "from_room": "spire_lantern_bridge",
+    "direction": "west",
+    "to_node": "spire_the_static",
+    "to_room": "spire_the_static_scale_03",
+    "transition_text": "Cross the fire-escape footbridge west to Tenant Shrine."
+  },
+  {
+    "id": "spire_night_market__west__spire_transit_plaza_gate",
+    "from_node": "spire_night_market",
+    "from_room": "spire_night_market_scale_03",
+    "direction": "west",
+    "to_node": "spire_transit_plaza",
+    "to_room": "spire_elevator_service_gate",
+    "transition_text": "Slip through the smuggler arch to the Elevator Service Gate."
+  },
+  {
+    "id": "spire_transit_plaza__east__spire_night_market_cache",
+    "from_node": "spire_transit_plaza",
+    "from_room": "spire_elevator_service_gate",
+    "direction": "east",
+    "to_node": "spire_night_market",
+    "to_room": "spire_night_market_scale_03",
+    "transition_text": "Duck east through the smuggler arch into Rain Cache."
+  },
+  {
+    "id": "spire_transit_plaza__east__spire_night_market_clinic",
+    "from_node": "spire_transit_plaza",
+    "from_room": "spire_transit_plaza_scale_03",
+    "direction": "east",
+    "to_node": "spire_night_market",
+    "to_room": "spire_backstreet_clinic",
+    "transition_text": "Climb the old service stairs up into Backstreet Clinic."
+  },
+  {
+    "id": "spire_night_market__west__spire_transit_plaza_map",
+    "from_node": "spire_night_market",
+    "from_room": "spire_backstreet_clinic",
+    "direction": "west",
+    "to_node": "spire_transit_plaza",
+    "to_room": "spire_transit_plaza_scale_03",
+    "transition_text": "Drop west through the clinic hatch into the Underrail Map Room."
+  },
+  {
+    "id": "spire_laundry__east__spire_skypark_orchid",
+    "from_node": "spire_laundry",
+    "from_room": "spire_laundry_scale_03",
+    "direction": "east",
+    "to_node": "spire_skypark",
+    "to_room": "spire_skypark_scale_01",
+    "transition_text": "Slip through the staff linen hatch into Orchid Walk."
+  },
+  {
+    "id": "spire_skypark__west__spire_laundry_bin",
+    "from_node": "spire_skypark",
+    "from_room": "spire_skypark_scale_01",
+    "direction": "west",
+    "to_node": "spire_laundry",
+    "to_room": "spire_laundry_scale_03",
+    "transition_text": "Slip back west through the staff linen hatch into Service Bin."
+  },
+  {
+    "id": "spire_exec_lounge__west__spire_laundry_lift",
+    "from_node": "spire_exec_lounge",
+    "from_room": "spire_exec_lounge_scale_05",
+    "direction": "west",
+    "to_node": "spire_laundry",
+    "to_room": "spire_service_lift",
+    "transition_text": "Follow the staff dumbwaiter passage west to Service Lift."
+  },
+  {
+    "id": "spire_laundry__east__spire_exec_lounge_dumbwaiter",
+    "from_node": "spire_laundry",
+    "from_room": "spire_service_lift",
+    "direction": "east",
+    "to_node": "spire_exec_lounge",
+    "to_room": "spire_exec_lounge_scale_05",
+    "transition_text": "Take the staff passage east to Service Dumbwaiter."
+  },
+  {
+    "id": "spire_landing_pad__south__spire_archive_alcove",
+    "from_node": "spire_landing_pad",
+    "from_room": "spire_landing_pad_scale_04",
+    "direction": "south",
+    "to_node": "spire_archive",
+    "to_room": "spire_drone_test_alcove",
+    "transition_text": "Drop south down the exterior catwalk into Drone Test Alcove."
+  },
+  {
+    "id": "spire_archive__north__spire_landing_pad_causeway",
+    "from_node": "spire_archive",
+    "from_room": "spire_drone_test_alcove",
+    "direction": "north",
+    "to_node": "spire_landing_pad",
+    "to_room": "spire_landing_pad_scale_04",
+    "transition_text": "Climb north onto the exterior Boarding Causeway."
+  },
+  {
+    "id": "foundry_titan_dock__west__foundry_power_core_ring",
+    "from_node": "foundry_titan_dock",
+    "from_room": "foundry_titan_dock_scale_final",
+    "direction": "west",
+    "to_node": "foundry_power_core",
+    "to_room": "foundry_engine_service_ring",
+    "transition_text": "Cross the maintenance beam west to the Engine Service Ring."
+  },
+  {
+    "id": "foundry_power_core__east__foundry_titan_dock_gantry",
+    "from_node": "foundry_power_core",
+    "from_room": "foundry_engine_service_ring",
+    "direction": "east",
+    "to_node": "foundry_titan_dock",
+    "to_room": "foundry_titan_dock_scale_final",
+    "transition_text": "Take the maintenance beam east toward the Titan Dock gantry."
+  },
+  {
+    "id": "orbital_service_shaft__west__orbital_security_hub_pit",
+    "from_node": "orbital_service_shaft",
+    "from_room": "orbital_service_shaft_scale_final",
+    "direction": "west",
+    "to_node": "orbital_security_hub",
+    "to_room": "orbital_surveillance_pit",
+    "transition_text": "Pull through the zero-g airlock west into the Surveillance Pit."
+  },
+  {
+    "id": "orbital_security_hub__east__orbital_service_shaft_chapel",
+    "from_node": "orbital_security_hub",
+    "from_room": "orbital_surveillance_pit",
+    "direction": "east",
+    "to_node": "orbital_service_shaft",
+    "to_room": "orbital_service_shaft_scale_final",
+    "transition_text": "Cycle the side airlock east into the Service Shaft drift chapel."
+  },
+  {
+    "id": "deep_anchor_chamber__north__deep_throne_room_breach",
+    "from_node": "deep_anchor_chamber",
+    "from_room": "deep_anchor_chamber_scale_08",
+    "direction": "north",
+    "to_node": "deep_throne_room",
+    "to_room": "deep_throne_room",
+    "transition_text": "Step north through the maintenance breach into the Throne Room."
+  },
+  {
+    "id": "deep_throne_room__south__deep_anchor_chamber_plinth",
+    "from_node": "deep_throne_room",
+    "from_room": "deep_throne_room",
+    "direction": "south",
+    "to_node": "deep_anchor_chamber",
+    "to_room": "deep_anchor_chamber_scale_08",
+    "transition_text": "Duck south through the maintenance breach to the anchor release plinth."
+  },
+  {
+    "id": "deep_throne_room__east__deep_tear_suture",
+    "from_node": "deep_throne_room",
+    "from_room": "deep_throne_room_scale_07",
+    "direction": "east",
+    "to_node": "deep_tear",
+    "to_room": "deep_tear_scale_01",
+    "transition_text": "Cross the fractured runway east into the gravity suture."
+  },
+  {
+    "id": "deep_tear__west__deep_throne_room_runway",
+    "from_node": "deep_tear",
+    "from_room": "deep_tear_scale_01",
+    "direction": "west",
+    "to_node": "deep_throne_room",
+    "to_room": "deep_throne_room_scale_07",
+    "transition_text": "Follow the fractured catwalk west onto the Throne Room runway."
+  },
+  {
+    "id": "source_campfire__east__source_orion_tide_shelf",
+    "from_node": "source_campfire_node",
+    "from_room": "source_campfire_node_scale_final",
+    "direction": "east",
+    "to_node": "source_orion_nightmare_node",
+    "to_room": "source_orion_nightmare_node_scale_01",
+    "transition_text": "Follow the blue ash waterline east onto Orion's black tide shelf."
+  },
+  {
+    "id": "source_orion__west__source_campfire_shore",
+    "from_node": "source_orion_nightmare_node",
+    "from_room": "source_orion_nightmare_node_scale_01",
+    "direction": "west",
+    "to_node": "source_campfire_node",
+    "to_room": "source_campfire_node_scale_final",
+    "transition_text": "Follow the waterline west back to the Campfire memory shore."
+  },
+  {
+    "id": "source_memory_bridge__south__source_echo_elevator",
+    "from_node": "source_memory_bridge_node",
+    "from_room": "source_memory_bridge_node_scale_final",
+    "direction": "south",
+    "to_node": "source_echo_mines_node",
+    "to_room": "source_echo_elevator",
+    "transition_text": "Follow the glowing gangway south back to the Echo Elevator."
+  },
+  {
+    "id": "source_echo_mines__north__source_memory_bridge_span",
+    "from_node": "source_echo_mines_node",
+    "from_room": "source_echo_elevator",
+    "direction": "north",
+    "to_node": "source_memory_bridge_node",
+    "to_room": "source_memory_bridge_node_scale_final",
+    "transition_text": "Step north onto the memory gangway toward the crew span."
   }
 ]
