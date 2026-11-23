@@ -26,8 +26,10 @@ class World2AuthoredContractTest {
             assertTrue("${now.id} HP must stay >= baseline", now.hp >= before.hp)
             assertTrue("${now.id} strength must stay >= baseline", now.strength >= before.strength)
             assertTrue("${now.id} focus must stay >= baseline", now.focus >= before.focus)
+            assertTrue("${now.id} speed must stay >= baseline", now.speed >= before.speed)
+            assertTrue("${now.id} agility must stay >= baseline", now.agility >= before.agility)
             assertEquals(before.copy(id=now.id,name=now.name,hp=now.hp,strength=now.strength,focus=now.focus,
-                stability=now.stability,abilities=now.abilities,description=now.description,
+                speed=now.speed,agility=now.agility,stability=now.stability,abilities=now.abilities,description=now.description,
                 flavor=now.flavor,authored=now.authored,portrait=now.portrait,sprite=now.sprite),now)
         }
         // Pit identities remain unchanged, including their behavior and rewards.

@@ -229,10 +229,16 @@ class WorldSixDiscoverabilityStateTest {
                             "w6_sq28_elara_song" -> !complete
                             "w6_sq28_break_command" -> keys[3] in milestones && keys[4] !in milestones
                             "w6_sq28_preserve_song" -> keys[4] in milestones && !complete
+                            "w6_claim_elara_refrain" -> true
                             else -> error(name)
                         }
                         var executions = 0
-                        val manager = EventManager(listOf(events.single { it.id == name }), store,
+                        val matchingEvents = if (name == "w6_claim_elara_refrain") {
+                            events.filter { it.trigger.action == name }
+                        } else {
+                            listOf(events.single { it.id == name })
+                        }
+                        val manager = EventManager(matchingEvents, store,
                             EventHooks(onEventCompleted = { executions++ }))
                         manager.handleTrigger("player_action", EventPayload.Action(name))
                         assertEquals("$name $mask $bits", if (expected) 1 else 0, executions)
@@ -241,7 +247,8 @@ class WorldSixDiscoverabilityStateTest {
                             assertTrue(prose.contains(action["name"] as String, true))
                             store.restore(store.state.value.migrateOpeningNarrativeState())
                             manager.handleTrigger("player_action", EventPayload.Action(name))
-                            assertEquals("Replay $name", if (name == "w6_mq30_confront_vale_scene") 2 else 1, executions)
+                            val repeatable = name in setOf("w6_mq30_confront_vale_scene", "w6_claim_elara_refrain")
+                            assertEquals("Replay $name", if (repeatable) 2 else 1, executions)
                         }
                     }
                 }

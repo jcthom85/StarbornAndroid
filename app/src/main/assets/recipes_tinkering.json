@@ -55,7 +55,7 @@
       "wiring_bundle": 1
     },
     "result": "zeke_brawler_rig",
-    "description": "Reinforce the harness for Zeke. The weighted buckles improve his power and critical chance in exchange for the Surge Harness’s speed and evasion.",
+    "description": "Reinforce the harness for Zeke. The weighted buckles improve his power and critical chance in exchange for the Surge Harness\u2019s speed and evasion.",
     "success_message": "You stitch flexible wiring channels into the weave and assemble a Brawler Rig for Zeke.",
     "discovery_hint": "Combine the weave from the Hound Nest supply pack with insulated wiring."
   },
@@ -659,7 +659,7 @@
       "focusing_lens": 1
     },
     "result": "shadow_coil",
-    "description": "Wire an optical ambush coil into dark weave for opening strikes. Passive: Direct hits vs. enemies at ≥75% HP gain +12% Crit chance.",
+    "description": "Wire an optical ambush coil into dark weave for opening strikes. Passive: Direct hits vs. enemies at \u226575% HP gain +12% Crit chance.",
     "success_message": "The Shadow Coil hums silently, primed for lethal opening strikes.",
     "salvage": {
       "circuit_board": 1
@@ -682,8 +682,8 @@
       "scrap_metal": 2
     },
     "result": "reactive_plating",
-    "description": "Charge nano-filament plates with a shock capacitor that discharges on impact. Passive: Taking a hit while Shielded reflects 15% max Stability (18–40) as Shock.",
-    "success_message": "You seal the Reactive Plating—any strike against your Shield will jolt the attacker back.",
+    "description": "Charge nano-filament plates with a shock capacitor that discharges on impact. Passive: Taking a hit while Shielded reflects 15% max Stability (18\u201340) as Shock.",
+    "success_message": "You seal the Reactive Plating\u2014any strike against your Shield will jolt the attacker back.",
     "salvage": {
       "scrap_metal": 1
     },
@@ -711,5 +711,45 @@
       "pure_iron": 1
     },
     "discovery_hint": "Start with pure iron. Try ballistic weave, focusing lens."
+  },
+  {
+    "id": "craft_nova_shift_breaker",
+    "name": "Forge Shift-Breaker",
+    "category": "gear",
+    "method": "assemble",
+    "base": "jeds_bench_regulator",
+    "components": [
+      "crucible_slag_heart",
+      "power_cell"
+    ],
+    "ingredients": {
+      "jeds_bench_regulator": 1,
+      "crucible_slag_heart": 1,
+      "power_cell": 1
+    },
+    "result": "nova_shift_breaker",
+    "description": "Finish Jed's workbench sketch: fit his hand-filed arc regulator into Crucible Champion alloy and wire a live Power Cell to forge Nova's ultimate carbine, Shift-Breaker.",
+    "success_message": "Three crooked file marks sit flush against furnace-forged alloy. Nova chambers a test arc and smiles\u2014Shift-Breaker is alive.",
+    "discovery_hint": "Requires Jed's Hand-Filed Regulator (Jed's Echo, World 6), Crucible Slag Heart (Crucible Champion, World 4), and a Power Cell."
+  },
+  {
+    "id": "craft_zeke_breaker_gauntlets",
+    "name": "Forge Unshackled Breakers",
+    "category": "gear",
+    "method": "assemble",
+    "base": "hk_servo_anchor",
+    "components": [
+      "revoked_collar_seal",
+      "composite_plate"
+    ],
+    "ingredients": {
+      "hk_servo_anchor": 1,
+      "revoked_collar_seal": 1,
+      "composite_plate": 1
+    },
+    "result": "zeke_breaker_gauntlets",
+    "description": "Re-weld a Hunter-Killer droid's strike-servos and Composite Plate around Zeke's revoked Dominion seal to forge his ultimate gauntlets, Unshackled Breakers.",
+    "success_message": "The hydraulic knuckles lock with a furnace roar\u2014Dominion enforcement steel, remade to break chains. Unshackled Breakers forged!",
+    "discovery_hint": "Requires HK-Series Servo Anchor (Hunter-Killer Droid, World 5), Revoked Dominion Seal (The HR Record, World 6), and Composite Plate."
   }
 ]

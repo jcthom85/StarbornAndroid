@@ -22,37 +22,37 @@ object LevelStatGrowth {
         return when (characterId.trim().lowercase()) {
             "nova" -> Growth(
                 hpBonus = gained * 24,
-                strength = secondary,
+                strength = primary,
                 vitality = tertiary,
-                agility = primary,
+                agility = secondary,
                 focus = secondary
             )
             "zeke" -> Growth(
                 hpBonus = gained * 28,
                 strength = primary,
                 vitality = secondary,
-                agility = tertiary,
+                agility = gained / 3,
                 focus = gained / 3
             )
             "orion" -> Growth(
                 hpBonus = gained * 22,
                 strength = gained / 3,
                 vitality = tertiary,
-                agility = secondary,
+                agility = tertiary,
                 focus = primary
             )
             "gh0st" -> Growth(
                 hpBonus = gained * 22,
-                strength = secondary,
+                strength = primary,
                 vitality = tertiary,
-                agility = primary,
+                agility = secondary,
                 focus = secondary
             )
             else -> Growth(
                 hpBonus = gained * DEFAULT_HP_PER_LEVEL,
                 strength = secondary,
                 vitality = tertiary,
-                agility = secondary,
+                agility = tertiary,
                 focus = secondary
             )
         }

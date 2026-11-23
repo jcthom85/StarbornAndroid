@@ -933,7 +933,7 @@
       },
       {
         "type": "show_message",
-        "message": "Ground bus routing: Nova locks the suit-linked Flux Liner's sacrificial copper strap to the shop's bedrock ground lug. The circuit analyzer ticks solid green—power spikes are safely shunted."
+        "message": "Ground bus routing: Nova locks the suit-linked Flux Liner's sacrificial copper strap to the shop's bedrock ground lug. The circuit analyzer ticks solid green\u2014power spikes are safely shunted."
       }
     ]
   },
@@ -967,7 +967,7 @@
       },
       {
         "type": "show_message",
-        "message": "Diagnostic phase tuning: Factory sweep limit (61 kHz) bypassed. Nova manually trims the induction coil potentiometer to 84 kHz—the cutter emitter crackles with a steady, high-frequency blue ionization."
+        "message": "Diagnostic phase tuning: Factory sweep limit (61 kHz) bypassed. Nova manually trims the induction coil potentiometer to 84 kHz\u2014the cutter emitter crackles with a steady, high-frequency blue ionization."
       }
     ]
   },
@@ -1936,7 +1936,7 @@
       },
       {
         "type": "narrate",
-        "message": "Fluorescent strips buzz to life down the shafts—and somewhere deeper along the conveyor line, heavy hydraulic treads grind awake."
+        "message": "Fluorescent strips buzz to life down the shafts\u2014and somewhere deeper along the conveyor line, heavy hydraulic treads grind awake."
       }
     ],
     "repeatable": true
@@ -2415,7 +2415,7 @@
       },
       {
         "type": "narrate",
-        "message": "The Dominion concrete ends in a sheared seam. Beyond it, dark stone rises in smooth, impossible angles—and the hum in Nova's cutter answers through the soles of her boots."
+        "message": "The Dominion concrete ends in a sheared seam. Beyond it, dark stone rises in smooth, impossible angles\u2014and the hum in Nova's cutter answers through the soles of her boots."
       }
     ]
   },
@@ -2610,7 +2610,7 @@
       },
       {
         "type": "narrate",
-        "message": "Nova's knees nearly buckle. The burnt smell of her Flux Liner's spent ground strip hangs in the cold air—and overhead, the colony PA cuts straight through the hum."
+        "message": "Nova's knees nearly buckle. The burnt smell of her Flux Liner's spent ground strip hangs in the cold air\u2014and overhead, the colony PA cuts straight through the hum."
       },
       {
         "type": "show_message",
@@ -2670,7 +2670,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "Red strobes sweep the maintenance route. Heavy boots echo behind the closing bulkheads—the Warden's sweep teams are already sealing the levels behind Nova."
+        "message": "Red strobes sweep the maintenance route. Heavy boots echo behind the closing bulkheads\u2014the Warden's sweep teams are already sealing the levels behind Nova."
       }
     ]
   },
@@ -3996,7 +3996,7 @@
     "actions": [
       {
         "type": "narrate",
-        "message": "A low, sub-audible vibration rolls through the canopy roots, silencing every insect on the slope—and far above in the mist, a pale glint catches the ridge like an optic lens."
+        "message": "A low, sub-audible vibration rolls through the canopy roots, silencing every insect on the slope\u2014and far above in the mist, a pale glint catches the ridge like an optic lens."
       }
     ],
     "repeatable": false
@@ -4503,7 +4503,7 @@
       },
       {
         "type": "show_message",
-        "message": "The cargo ramp rings beneath four pairs of boots. Amber consoles warm to life and the Astra's low engine hum replaces the hangar echoes—Zeke already grinning toward the helm, Gh0st checking the airlock seal, Orion resting a steady hand on the bulkhead. The bridge is through the common room; use its nav console when you are ready to leave."
+        "message": "The cargo ramp rings beneath four pairs of boots. Amber consoles warm to life and the Astra's low engine hum replaces the hangar echoes\u2014Zeke already grinning toward the helm, Gh0st checking the airlock seal, Orion resting a steady hand on the bulkhead. The bridge is through the common room; use its nav console when you are ready to leave."
       }
     ],
     "repeatable": true
@@ -5217,7 +5217,7 @@
       },
       {
         "type": "show_message",
-        "message": "Gh0st copies the staff routes. His finger stops on a deleted transfer. “Elara. That’s my sister.” He copies the case number too."
+        "message": "Gh0st copies the staff routes. His finger stops on a deleted transfer. \u201cElara. That\u2019s my sister.\u201d He copies the case number too."
       },
       {
         "type": "start_dialogue",
@@ -5481,7 +5481,7 @@
       },
       {
         "type": "show_message",
-        "message": "The sign’s power core is burnt out. Jax points you toward the Sentinel in the Upper City Exec Lounge’s private booths. Bring its core back when you have access upstairs."
+        "message": "The sign\u2019s power core is burnt out. Jax points you toward the Sentinel in the Upper City Exec Lounge\u2019s private booths. Bring its core back when you have access upstairs."
       }
     ]
   },
@@ -5669,7 +5669,7 @@
       },
       {
         "type": "show_message",
-        "message": "Zeke combines the schedules, badges, disguises and security records into a service route. He sends the Astra’s autopilot a maintenance clearance to relocate from the sewer dock to the rooftop pad. The crew rides the service lift into Upper City."
+        "message": "Zeke combines the schedules, badges, disguises and security records into a service route. He sends the Astra\u2019s autopilot a maintenance clearance to relocate from the sewer dock to the rooftop pad. The crew rides the service lift into Upper City."
       }
     ]
   },
@@ -5972,7 +5972,7 @@
       },
       {
         "type": "show_message",
-        "message": "Zeke traces the gold tether to the Administrator’s audit bus. Gold controls authorization, not pressure. Copy its local hold signal before disconnecting the audit; cutting it outright would raise an alarm."
+        "message": "Zeke traces the gold tether to the Administrator\u2019s audit bus. Gold controls authorization, not pressure. Copy its local hold signal before disconnecting the audit; cutting it outright would raise an alarm."
       }
     ]
   },
@@ -6234,7 +6234,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "Scan shows the local security curtain cycling above the roof. The planetary Shield is farther overhead; the Administrator’s targeting lattice still crosses every low-altitude launch line."
+        "message": "Scan shows the local security curtain cycling above the roof. The planetary Shield is farther overhead; the Administrator\u2019s targeting lattice still crosses every low-altitude launch line."
       }
     ]
   },
@@ -6269,7 +6269,7 @@
       },
       {
         "type": "show_message",
-        "message": "Scan separates the Spire’s local security curtain from the planetary Shield above it. Orion marks a narrow low-altitude launch window toward the Foundry."
+        "message": "Scan separates the Spire\u2019s local security curtain from the planetary Shield above it. Orion marks a narrow low-altitude launch window toward the Foundry."
       }
     ]
   },
@@ -6369,7 +6369,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Administrator’s command frame collapses. The rooftop guns go dark, and for the first time since the heist began, the Spire falls quiet. Use the shield window to read the opening in the local security curtain, then depart for the Foundry."
+        "message": "The Administrator\u2019s command frame collapses. The rooftop guns go dark, and for the first time since the heist began, the Spire falls quiet. Use the shield window to read the opening in the local security curtain, then depart for the Foundry."
       }
     ],
     "recover_recorded_victory": true
@@ -6610,7 +6610,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova runs the corrected profile against the recorded trial. A maintenance worker silhouette crosses the lane: the targeting bracket opens and lets it pass. An armed drone rises behind it: the bracket closes, and the burst strikes the drone's weapon mount. The replay freezes on the unharmed worker. Then a red line appears—OPERATOR SIGNATURE RECORDED. The Landing Pad Roof relay can scrub it."
+        "message": "Nova runs the corrected profile against the recorded trial. A maintenance worker silhouette crosses the lane: the targeting bracket opens and lets it pass. An armed drone rises behind it: the bracket closes, and the burst strikes the drone's weapon mount. The replay freezes on the unharmed worker. Then a red line appears\u2014OPERATOR SIGNATURE RECORDED. The Landing Pad Roof relay can scrub it."
       }
     ]
   },
@@ -6876,7 +6876,7 @@
       },
       {
         "type": "show_message",
-        "message": "PROJECT PHANTOM: ELARA — NEURAL MAP DERIVATIVE. UNIT 734 — CHIP INSERTION. A handwritten correction crosses out “repeat until compliant.” Beside it: “Allow time for an answer.” Gh0st keeps that page open."
+        "message": "PROJECT PHANTOM: ELARA \u2014 NEURAL MAP DERIVATIVE. UNIT 734 \u2014 CHIP INSERTION. A handwritten correction crosses out \u201crepeat until compliant.\u201d Beside it: \u201cAllow time for an answer.\u201d Gh0st keeps that page open."
       }
     ]
   },
@@ -7723,7 +7723,7 @@
       },
       {
         "type": "show_message",
-        "message": "Gh0st steps in front of the others. “Log this under Gh0st.”"
+        "message": "Gh0st steps in front of the others. \u201cLog this under Gh0st.\u201d"
       }
     ]
   },
@@ -8358,7 +8358,7 @@
       },
       {
         "type": "show_message",
-        "message": "ARCHITECT PROTOCOL: GREAT SILENCE. The recovered log maps living voices to control circuits. Harmony’s directory lists occupied seats with the names withheld; their release requests are marked DENIED. The retention orders carry Mara Thorne’s signature. A newer command assigns every output to Vale."
+        "message": "ARCHITECT PROTOCOL: GREAT SILENCE. The recovered log maps living voices to control circuits. Harmony\u2019s directory lists occupied seats with the names withheld; their release requests are marked DENIED. The retention orders carry Mara Thorne\u2019s signature. A newer command assigns every output to Vale."
       }
     ]
   },
@@ -8422,7 +8422,7 @@
       },
       {
         "type": "show_message",
-        "message": "Zeke saves the occupied-seat list. Thorne’s coolant map resolves into three marked branches: Alpha, Beta and Gamma. The first leads into the firewall."
+        "message": "Zeke saves the occupied-seat list. Thorne\u2019s coolant map resolves into three marked branches: Alpha, Beta and Gamma. The first leads into the firewall."
       }
     ]
   },
@@ -9647,7 +9647,7 @@
       },
       {
         "type": "show_message",
-        "message": "Zeke grips the edge. “The pod wouldn’t turn. Nova told me to hold the frame. I could do that.” A strip of worn launch rail settles under his hand."
+        "message": "Zeke grips the edge. \u201cThe pod wouldn\u2019t turn. Nova told me to hold the frame. I could do that.\u201d A strip of worn launch rail settles under his hand."
       }
     ]
   },
@@ -9675,7 +9675,7 @@
       },
       {
         "type": "show_message",
-        "message": "“The order was still in my head,” Gh0st says. “I lowered the rifle.” Broken roots take shape beneath the next section of bridge."
+        "message": "\u201cThe order was still in my head,\u201d Gh0st says. \u201cI lowered the rifle.\u201d Broken roots take shape beneath the next section of bridge."
       }
     ]
   },
@@ -9703,7 +9703,7 @@
       },
       {
         "type": "show_message",
-        "message": "Orion traces a patch of blue beneath the dust. “I painted that ceiling. Zeke found me a place to sit.” The patch widens into a solid span."
+        "message": "Orion traces a patch of blue beneath the dust. \u201cI painted that ceiling. Zeke found me a place to sit.\u201d The patch widens into a solid span."
       }
     ]
   },
@@ -9789,7 +9789,7 @@
       },
       {
         "type": "show_message",
-        "message": "The launch rail joins the ridge roots, the blue ceiling and Jed’s scorched bench. Spire rain runs between the boards. The crossing holds east to Shared Memory Span, where the crew can pause around the campfire promise."
+        "message": "The launch rail joins the ridge roots, the blue ceiling and Jed\u2019s scorched bench. Spire rain runs between the boards. The crossing holds east to Shared Memory Span, where the crew can pause around the campfire promise."
       }
     ]
   },
@@ -10002,8 +10002,18 @@
         "milestone": "ms_w6_legacy_unlocked"
       },
       {
+        "type": "give_item",
+        "item_id": "jeds_bench_regulator",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "schematic_shift_breaker",
+        "quantity": 1
+      },
+      {
         "type": "show_message",
-        "message": "Nova checks the hinge before leaning on the shift gate. It holds, and she steps through. Legacy unlocked."
+        "message": "Nova checks the hinge before leaning on the shift gate. It holds, and she steps through with Jed's hand-filed regulator and his unfinished carbine sketch. Legacy unlocked\u2014forge Shift-Breaker at the Tinkering Table with Crucible Champion alloy."
       }
     ]
   },
@@ -10229,7 +10239,7 @@
       },
       {
         "type": "show_message",
-        "message": "Gh0st hears her voice without a command hidden inside it. Source Balance unlocked."
+        "message": "Gh0st hears her voice without a command hidden inside it. Source Balance unlocked. Back in the Kill-Suite Loop, a silenced black-site armory locker begins resonating with her melody."
       }
     ]
   },
@@ -10611,7 +10621,7 @@
       },
       {
         "type": "show_message",
-        "message": "Vale’s geometry collapses. The Key answers at the shared tuning focus. Bring the crew’s voices together."
+        "message": "Vale\u2019s geometry collapses. The Key answers at the shared tuning focus. Bring the crew\u2019s voices together."
       }
     ],
     "recover_recorded_victory": true
@@ -10808,7 +10818,7 @@
       },
       {
         "type": "show_message",
-        "message": "Orion reads the names of Aethel victims and survivors held by Architect systems. Their continuity remains their own. Ancestral Grace unlocked."
+        "message": "Orion reads the names of Aethel victims and survivors held by Architect systems. Their continuity remains their own. Ancestral Grace unlocked. Out on the Black Tide Shelf, a sealed Aethel reliquary answers the chorus."
       }
     ]
   },
@@ -13476,8 +13486,18 @@
         "milestone": "ms_w6_workers_unshackled"
       },
       {
+        "type": "give_item",
+        "item_id": "revoked_collar_seal",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "schematic_unshackled_breakers",
+        "quantity": 1
+      },
+      {
         "type": "show_message",
-        "message": "Zeke broadcasts the revocation. Every worker file remains as evidence, and none of them can issue another order. Unshackled unlocked."
+        "message": "Zeke's revocation sweeps through every copy\u2014none of them can issue another order. He pockets the broken Dominion seal and gauntlet schematics. Unshackled unlocked\u2014forge Unshackled Breakers with a Zenith Hunter-Killer's servo anchor."
       }
     ]
   },
@@ -15653,7 +15673,7 @@
       },
       {
         "type": "show_message",
-        "message": "The crime-scene barrier marks Auditor Malick’s booth. Security has ordered four patrons to remain for questioning; the public gallery exit is still open."
+        "message": "The crime-scene barrier marks Auditor Malick\u2019s booth. Security has ordered four patrons to remain for questioning; the public gallery exit is still open."
       }
     ]
   },
@@ -15676,7 +15696,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova checks the dregs of Malick's synth-sparkler. Chemical resonance reveals Cyano-Coolant 9—a lethal high-viscosity refrigerant used in executive comms rigs."
+        "message": "Nova checks the dregs of Malick's synth-sparkler. Chemical resonance reveals Cyano-Coolant 9\u2014a lethal high-viscosity refrigerant used in executive comms rigs."
       }
     ]
   },
@@ -17189,7 +17209,7 @@
       },
       {
         "type": "show_message",
-        "message": "Kaelen: Real greens and roasted beast meat? By the stars, that smells better than anything Dominion ever packed into a ration tube. A deal's a deal. Here—take this Precision Sight from my optic rig. It'll keep your shots centered when the wind whips across the ridge."
+        "message": "Kaelen: Real greens and roasted beast meat? By the stars, that smells better than anything Dominion ever packed into a ration tube. A deal's a deal. Here\u2014take this Precision Sight from my optic rig. It'll keep your shots centered when the wind whips across the ridge."
       }
     ]
   },
@@ -17522,7 +17542,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "Steam drifts across the pool. Gh0st stays on his feet. “Before we sit down, I need to see what’s on that Phantom terminal in Waste Intake.”"
+        "message": "Steam drifts across the pool. Gh0st stays on his feet. \u201cBefore we sit down, I need to see what\u2019s on that Phantom terminal in Waste Intake.\u201d"
       }
     ]
   },
@@ -17936,7 +17956,7 @@
       },
       {
         "type": "show_message",
-        "message": "Vale’s geometry collapses. Return to The Center to use the shared tuning focus."
+        "message": "Vale\u2019s geometry collapses. Return to The Center to use the shared tuning focus."
       }
     ],
     "recover_recorded_victory": true
@@ -18121,7 +18141,7 @@
       },
       {
         "type": "narrate",
-        "message": "Nova wedges a miner's salvage pack out of the seam—and the loose wall behind it caves in as an Echo Borer lunges straight out of the dark!"
+        "message": "Nova wedges a miner's salvage pack out of the seam\u2014and the loose wall behind it caves in as an Echo Borer lunges straight out of the dark!"
       },
       {
         "type": "spawn_encounter",
@@ -18200,7 +18220,7 @@
       },
       {
         "type": "show_message",
-        "message": "Inside the surveyor lockbox sits a scratched tape label—'SURVEY 04: THE SIGNAL IS OLDER THAN THE COLONY'—packed beside a Pulse Grenade and Medkit I."
+        "message": "Inside the surveyor lockbox sits a scratched tape label\u2014'SURVEY 04: THE SIGNAL IS OLDER THAN THE COLONY'\u2014packed beside a Pulse Grenade and Medkit I."
       }
     ],
     "repeatable": false
@@ -18314,7 +18334,7 @@
       },
       {
         "type": "narrate",
-        "message": "Nova pulls a waterproof salvage satchel from the base of the obelisk—just as a Mist Glider drops silently out of the sea-arch spray!"
+        "message": "Nova pulls a waterproof salvage satchel from the base of the obelisk\u2014just as a Mist Glider drops silently out of the sea-arch spray!"
       },
       {
         "type": "spawn_encounter",
@@ -18428,5 +18448,178 @@
       }
     ],
     "repeatable": false
+  },
+  {
+    "id": "w6_elara_refrain_locked_missing_w6",
+    "description": "Hint when inspecting Kill-Suite locker before finishing Elara's Song.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_claim_elara_refrain"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_elara_refrain_claimed"
+      },
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w6_sq28"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "A black-site Dominion weapons locker sealed behind Vale's kill-carrier and a purged Zenith server cipher. Gh0st will need both Elara's clean song (World 6) and the defensive routine recovered below Zenith's server farm (World 5: Ghost in the Shell) to break the lock."
+      }
+    ]
+  },
+  {
+    "id": "w6_elara_refrain_locked_missing_w5",
+    "description": "Hint when inspecting Kill-Suite locker after Elara's Song but before Ghost in the Shell (W5).",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_claim_elara_refrain"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_elara_refrain_claimed"
+      },
+      {
+        "type": "quest_completed",
+        "quest_id": "w6_sq28"
+      },
+      {
+        "type": "quest_not_completed",
+        "quest_id": "w5_sq24"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "Elara's melody disarms the kill-carrier lock, exposing a second Dominion cold-rack cipher underneath. Recover and restore the purged defensive routine below Zenith's server farm (World 5: Ghost in the Shell) to open the locker."
+      }
+    ]
+  },
+  {
+    "id": "w6_elara_refrain_unlock",
+    "description": "Unlock Gh0st's legendary weapon Elara's Refrain by combining W5 Ghost in the Shell and W6 Elara's Song.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_claim_elara_refrain"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_elara_refrain_claimed"
+      },
+      {
+        "type": "quest_completed",
+        "quest_id": "w5_sq24"
+      },
+      {
+        "type": "quest_completed",
+        "quest_id": "w6_sq28"
+      }
+    ],
+    "actions": [
+      {
+        "type": "give_item",
+        "item_id": "gh0st_elara_refrain",
+        "quantity": 1
+      },
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_elara_refrain_claimed"
+      },
+      {
+        "type": "show_message",
+        "message": "Zenith's restored defensive cipher unlocks the cold seal, and Elara's clean melody overwrites Vale's kill-carrier for good. Gh0st lifts a humming mono-harmonic blade from the velvet tray: Elara's Refrain."
+      }
+    ]
+  },
+  {
+    "id": "w6_first_choir_locked",
+    "description": "Hint when inspecting the Sealed Aethel Reliquary before completing The Aethel Grave.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_first_choir_reliquary"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_first_choir_defeated"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_ancestral_grace_unlocked"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "An ancient Aethel harmonic reliquary rests half-submerged in the brine, sealed since 04:17 of the First Tide. Its resonance will only answer once Orion carries the true Aethel chorus from the burial current (The Aethel Grave)."
+      }
+    ]
+  },
+  {
+    "id": "w6_first_choir_spawn",
+    "description": "Awaken optional World 6 superboss The First Choir at the Sealed Aethel Reliquary.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_first_choir_reliquary"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "milestone_set",
+        "milestone": "ms_w6_ancestral_grace_unlocked"
+      },
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_first_choir_defeated"
+      }
+    ],
+    "actions": [
+      {
+        "type": "show_message",
+        "message": "Orion sounds the Aethel chorus across the black tide. The reliquary cracks open in blue fire\u2014the First Choir rises to test whether the living will break Vale's cycle or repeat it!"
+      },
+      {
+        "type": "spawn_encounter",
+        "encounter_id": "aethel_first_choir",
+        "room_id": "source_orion_nightmare_node_scale_01"
+      }
+    ]
+  },
+  {
+    "id": "w6_first_choir_victory",
+    "description": "Record victory over The First Choir and Orion's legendary Chorus of the First Tide.",
+    "trigger": {
+      "type": "encounter_victory",
+      "room": "source_orion_nightmare_node_scale_01",
+      "enemies": [
+        "aethel_first_choir"
+      ]
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_first_choir_defeated"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_first_choir_defeated"
+      },
+      {
+        "type": "show_message",
+        "message": "The First Choir lowers its tide and bows in silent chord. From the opened reliquary, Orion receives the Chorus of the First Tide\u2014an unchained Aethel prism entrusted to the living."
+      }
+    ]
   }
 ]

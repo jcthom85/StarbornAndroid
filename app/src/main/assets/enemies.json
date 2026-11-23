@@ -136,9 +136,9 @@
     "tier": "standard",
     "combat_behavior": "balanced",
     "combat_role": "striker",
-    "hp": 90,
+    "hp": 105,
     "stability": 35,
-    "strength": 5,
+    "strength": 6,
     "vitality": 5,
     "agility": 3,
     "focus": 4,
@@ -185,9 +185,9 @@
     "tier": "elite",
     "combat_behavior": "defensive",
     "combat_role": "tank",
-    "hp": 75,
+    "hp": 95,
     "stability": 25,
-    "strength": 4,
+    "strength": 5,
     "vitality": 4,
     "agility": 1,
     "focus": 4,
@@ -232,9 +232,9 @@
     "tier": "standard",
     "combat_behavior": "avoidant",
     "combat_role": "support",
-    "hp": 35,
+    "hp": 50,
     "stability": 24,
-    "strength": 2,
+    "strength": 3,
     "vitality": 2,
     "agility": 5,
     "focus": 6,
@@ -336,10 +336,10 @@
     "stability": 115,
     "strength": 12,
     "vitality": 6,
-    "agility": 3,
+    "agility": 4,
     "focus": 10,
     "luck": 4,
-    "speed": 10,
+    "speed": 11,
     "element": "physical",
     "resistances": {
       "shock": -100,
@@ -391,7 +391,7 @@
       },
       "phase": {
         "hp_below": 0.4,
-        "name": "Emergency Overclock — shield down",
+        "name": "Emergency Overclock \u2014 shield down",
         "opening_skill": "iron_warden_overclock",
         "cycle": [
           "triple_burst",
@@ -454,7 +454,7 @@
         "sector9_recover"
       ],
       "windups": {
-        "pounce": "Prey marked — pounce"
+        "pounce": "Prey marked \u2014 pounce"
       },
       "duplicate_cycle_offset": 2
     }
@@ -562,7 +562,7 @@
         "sector9_recover"
       ],
       "windups": {
-        "relic_strike": "Stone joints align — relic strike"
+        "relic_strike": "Stone joints align \u2014 relic strike"
       }
     }
   },
@@ -606,7 +606,7 @@
         "sector9_recover"
       ],
       "windups": {
-        "sector9_coil": "Tendril coiling — strike it to interrupt"
+        "sector9_coil": "Tendril coiling \u2014 strike it to interrupt"
       },
       "interrupt_on_damage": [
         "sector9_coil"
@@ -717,7 +717,7 @@
         "sector9_recover"
       ],
       "windups": {
-        "sector9_orb_beam": "Iris opening — discharge"
+        "sector9_orb_beam": "Iris opening \u2014 discharge"
       }
     }
   },
@@ -732,10 +732,10 @@
     "stability": 340,
     "strength": 18,
     "vitality": 12,
-    "agility": 5,
+    "agility": 7,
     "focus": 10,
     "luck": 4,
-    "speed": 10,
+    "speed": 13,
     "element": "physical",
     "resistances": {
       "burn": -100,
@@ -755,7 +755,7 @@
       "beast_frenzy_pounce",
       "beast_frenzy_roar"
     ],
-    "flavor": "An apex Sector 9 predator warped by leaking Source dynamo resonance—the same creature whose containment breach drove Orion into stasis twenty years ago. It hunts by sound, stalking its prey before committing its weight; wounded, it abandons patience for a frantic two-strike rush that leaves its flanks exposed.",
+    "flavor": "An apex Sector 9 predator warped by leaking Source dynamo resonance\u2014the same creature whose containment breach drove Orion into stasis twenty years ago. It hunts by sound, stalking its prey before committing its weight; wounded, it abandons patience for a frantic two-strike rush that leaves its flanks exposed.",
     "xp_reward": 500,
     "credit_reward": 250,
     "drops": [
@@ -772,13 +772,13 @@
         "sector9_exposed_recovery"
       ],
       "windups": {
-        "beast_hunt_claw": "Prey marked — hunting lunge",
-        "beast_frenzy_claw": "Frenzy 1/2 — raking claw",
-        "beast_frenzy_pounce": "Frenzy 2/2 — bounding pounce"
+        "beast_hunt_claw": "Prey marked \u2014 hunting lunge",
+        "beast_frenzy_claw": "Frenzy 1/2 \u2014 raking claw",
+        "beast_frenzy_pounce": "Frenzy 2/2 \u2014 bounding pounce"
       },
       "phase": {
         "hp_below": 0.5,
-        "name": "Frenzy — two strikes, then overextension",
+        "name": "Frenzy \u2014 two strikes, then overextension",
         "opening_skill": "beast_frenzy_roar",
         "cycle": [
           "beast_frenzy_claw",
@@ -805,7 +805,7 @@
     "agility": 12,
     "focus": 9,
     "luck": 5,
-    "speed": 12,
+    "speed": 14,
     "element": "physical",
     "resistances": {
       "physical": 10
@@ -858,7 +858,7 @@
     "agility": 6,
     "focus": 12,
     "luck": 5,
-    "speed": 9,
+    "speed": 11,
     "element": "physical",
     "resistances": {
       "physical": 20,
@@ -912,7 +912,7 @@
     "agility": 10,
     "focus": 22,
     "luck": 8,
-    "speed": 13,
+    "speed": 15,
     "element": "shock",
     "resistances": {
       "shock": 30,
@@ -941,7 +941,7 @@
         "chance": 0.5
       }
     ],
-    "description": "Airborne Dominion patrol drone fitted with a riot barrier and quarantine pulse emitters. Carries the Neon Sign Core for Jax’s repair and may yield a Battery for Pulse Grenades.",
+    "description": "Airborne Dominion patrol drone fitted with a riot barrier and quarantine pulse emitters. Carries the Neon Sign Core for Jax\u2019s repair and may yield a Battery for Pulse Grenades.",
     "portrait": "images/enemies/sentinel_mki_foundry_pass.png",
     "authored": {
       "cycle": [
@@ -971,7 +971,7 @@
     "agility": 14,
     "focus": 12,
     "luck": 5,
-    "speed": 16,
+    "speed": 18,
     "stability": 130,
     "element": "shock",
     "resistances": {
@@ -1031,7 +1031,7 @@
     "agility": 18,
     "focus": 16,
     "luck": 12,
-    "speed": 18,
+    "speed": 20,
     "stability": 165,
     "element": "physical",
     "resistances": {
@@ -1093,7 +1093,7 @@
     "agility": 5,
     "focus": 11,
     "luck": 3,
-    "speed": 6,
+    "speed": 8,
     "stability": 265,
     "element": "burn",
     "resistances": {
@@ -1153,10 +1153,10 @@
     "hp": 775,
     "strength": 28,
     "vitality": 16,
-    "agility": 12,
+    "agility": 13,
     "focus": 34,
     "luck": 8,
-    "speed": 12,
+    "speed": 14,
     "stability": 365,
     "broken_turns": 2,
     "element": "source",
@@ -1205,7 +1205,7 @@
       },
       "phase": {
         "hp_below": 0.35,
-        "name": "Emergency Mode — exposed command frame",
+        "name": "Emergency Mode \u2014 exposed command frame",
         "opening_skill": "spire_open_vents",
         "cycle": [
           "spire_emergency_lattice",
@@ -1237,7 +1237,7 @@
     "agility": 16,
     "focus": 15,
     "luck": 5,
-    "speed": 17,
+    "speed": 20,
     "stability": 185,
     "element": "burn",
     "resistances": {
@@ -1297,7 +1297,7 @@
     "agility": 4,
     "focus": 11,
     "luck": 3,
-    "speed": 5,
+    "speed": 8,
     "stability": 370,
     "element": "burn",
     "resistances": {
@@ -1361,7 +1361,7 @@
     "agility": 8,
     "focus": 11,
     "luck": 4,
-    "speed": 9,
+    "speed": 12,
     "stability": 205,
     "element": "burn",
     "resistances": {
@@ -1423,7 +1423,7 @@
     "agility": 7,
     "focus": 17,
     "luck": 5,
-    "speed": 7,
+    "speed": 10,
     "stability": 285,
     "element": "burn",
     "resistances": {
@@ -1483,7 +1483,7 @@
     "agility": 20,
     "focus": 26,
     "luck": 10,
-    "speed": 20,
+    "speed": 23,
     "stability": 245,
     "element": "source",
     "resistances": {
@@ -1546,7 +1546,7 @@
     "agility": 0,
     "focus": 0,
     "luck": 0,
-    "speed": 1,
+    "speed": 4,
     "stability": 999,
     "element": "physical",
     "resistances": {
@@ -1596,10 +1596,10 @@
     "hp": 1600,
     "strength": 41,
     "vitality": 20,
-    "agility": 8,
+    "agility": 10,
     "focus": 26,
     "luck": 6,
-    "speed": 8,
+    "speed": 14,
     "stability": 535,
     "broken_turns": 2,
     "element": "physical",
@@ -1768,7 +1768,7 @@
     "agility": 14,
     "focus": 37,
     "luck": 7,
-    "speed": 14,
+    "speed": 17,
     "stability": 250,
     "element": "shock",
     "resistances": {
@@ -1829,7 +1829,7 @@
     "agility": 20,
     "focus": 41,
     "luck": 5,
-    "speed": 18,
+    "speed": 21,
     "stability": 155,
     "element": "shock",
     "resistances": {
@@ -1888,7 +1888,7 @@
     "agility": 4,
     "focus": 43,
     "luck": 5,
-    "speed": 6,
+    "speed": 9,
     "stability": 265,
     "element": "source",
     "resistances": {
@@ -1948,7 +1948,7 @@
     "agility": 18,
     "focus": 26,
     "luck": 4,
-    "speed": 18,
+    "speed": 21,
     "stability": 600,
     "element": "physical",
     "resistances": {
@@ -1979,6 +1979,11 @@
         "id": "medkit_plus",
         "chance": 1.0,
         "quantity": 1
+      },
+      {
+        "id": "hk_servo_anchor",
+        "chance": 1.0,
+        "quantity": 1
       }
     ],
     "description": "Heavy Dominion pursuit automaton built to run down fugitives with seismic slams and self-repair routines. Stasis locks its actuators cold.",
@@ -2000,7 +2005,7 @@
     "agility": 13,
     "focus": 34,
     "luck": 8,
-    "speed": 12,
+    "speed": 15,
     "stability": 350,
     "element": "shock",
     "resistances": {
@@ -2028,7 +2033,7 @@
         "chance": 0.5
       }
     ],
-    "description": "Mirror Guard returns half the damage of single-target focus-scaled energy skills and energy firearm shots, capped at a quarter of the attacker’s maximum HP. Physical, melee and area attacks do not reflect. Its shield drops for a warned strike and recovery.",
+    "description": "Mirror Guard returns half the damage of single-target focus-scaled energy skills and energy firearm shots, capped at a quarter of the attacker\u2019s maximum HP. Physical, melee and area attacks do not reflect. Its shield drops for a warned strike and recovery.",
     "portrait": "images/enemies/elite_guard_combat.png",
     "authored": {
       "cycle": [
@@ -2057,7 +2062,7 @@
     "agility": 18,
     "focus": 56,
     "luck": 10,
-    "speed": 17,
+    "speed": 20,
     "stability": 370,
     "element": "source",
     "resistances": {
@@ -2120,10 +2125,10 @@
     "hp": 1655,
     "strength": 49,
     "vitality": 22,
-    "agility": 16,
+    "agility": 17,
     "focus": 52,
     "luck": 10,
-    "speed": 15,
+    "speed": 17,
     "stability": 600,
     "broken_turns": 2,
     "element": "source",
@@ -2179,7 +2184,7 @@
       ],
       "coordination": {
         "partner": "directive_conductor",
-        "name": "Command link severed — recalibrating",
+        "name": "Command link severed \u2014 recalibrating",
         "opening_skill": "ring_link_exposure",
         "cycle": [
           "ring_unlinked_fire",
@@ -2192,7 +2197,7 @@
       },
       "phase": {
         "hp_below": 0.5,
-        "name": "Purge Mode — command link exposed",
+        "name": "Purge Mode \u2014 command link exposed",
         "opening_skill": "ring_link_exposure",
         "cycle": [
           "ring_joint_purge",
@@ -2221,7 +2226,7 @@
     "agility": 14,
     "focus": 67,
     "luck": 9,
-    "speed": 14,
+    "speed": 18,
     "stability": 460,
     "element": "source",
     "resistances": {
@@ -2276,7 +2281,7 @@
     "agility": 13,
     "focus": 31,
     "luck": 7,
-    "speed": 9,
+    "speed": 13,
     "stability": 340,
     "element": "physical",
     "resistances": {
@@ -2331,7 +2336,7 @@
     "agility": 18,
     "focus": 70,
     "luck": 8,
-    "speed": 16,
+    "speed": 20,
     "stability": 405,
     "element": "source",
     "resistances": {
@@ -2548,7 +2553,7 @@
     "agility": 12,
     "focus": 74,
     "luck": 8,
-    "speed": 13,
+    "speed": 17,
     "stability": 135,
     "element": "source",
     "resistances": {
@@ -2609,7 +2614,7 @@
     "agility": 13,
     "focus": 50,
     "luck": 6,
-    "speed": 12,
+    "speed": 16,
     "stability": 160,
     "element": "physical",
     "resistances": {
@@ -2665,10 +2670,10 @@
     "hp": 1780,
     "strength": 38,
     "vitality": 16,
-    "agility": 16,
+    "agility": 17,
     "focus": 46,
     "luck": 12,
-    "speed": 12,
+    "speed": 16,
     "stability": 380,
     "broken_turns": 2,
     "element": "source",
@@ -2709,7 +2714,7 @@
       },
       "phase": {
         "hp_below": 0.5,
-        "name": "Soloist’s Verdict",
+        "name": "Soloist\u2019s Verdict",
         "opening_skill": "source_expose",
         "cycle": [
           "source_vale_verdict",
@@ -2733,10 +2738,10 @@
     "hp": 2440,
     "strength": 48,
     "vitality": 20,
-    "agility": 16,
+    "agility": 18,
     "focus": 53,
     "luck": 14,
-    "speed": 12,
+    "speed": 18,
     "stability": 540,
     "broken_turns": 3,
     "element": "source",
@@ -2819,10 +2824,10 @@
     "hp": 1130,
     "strength": 44,
     "vitality": 22,
-    "agility": 8,
+    "agility": 10,
     "focus": 18,
     "luck": 6,
-    "speed": 8,
+    "speed": 13,
     "stability": 450,
     "element": "burn",
     "resistances": {
@@ -2854,6 +2859,10 @@
       {
         "id": "power_cell",
         "chance": 0.8
+      },
+      {
+        "id": "crucible_slag_heart",
+        "chance": 1.0
       }
     ],
     "description": "A light checking jab precedes a warned hammer strike. Use the exposed recovery. White Heat shortens its recovery below 35% HP. Its prize includes one Pure Iron.",
@@ -2934,7 +2943,7 @@
         "gnaw"
       ],
       "windups": {
-        "sector9_exhale": "Moss plates part — mineral exhale"
+        "sector9_exhale": "Moss plates part \u2014 mineral exhale"
       },
       "duplicate_cycle_offset": 2
     },
@@ -2993,7 +3002,7 @@
         "sector9_exposed_recovery"
       ],
       "windups": {
-        "sector9_dive": "Mist membrane tightening — dive"
+        "sector9_dive": "Mist membrane tightening \u2014 dive"
       }
     },
     "sprite": [
@@ -3274,7 +3283,7 @@
     "agility": 20,
     "focus": 26,
     "luck": 5,
-    "speed": 10,
+    "speed": 12,
     "stability": 155,
     "element": "shock",
     "resistances": {
@@ -3326,7 +3335,7 @@
     "agility": 13,
     "focus": 47,
     "luck": 8,
-    "speed": 12,
+    "speed": 15,
     "stability": 350,
     "element": "shock",
     "resistances": {
@@ -3385,7 +3394,7 @@
     "agility": 20,
     "focus": 41,
     "luck": 5,
-    "speed": 13,
+    "speed": 16,
     "stability": 180,
     "element": "shock",
     "resistances": {
@@ -3438,7 +3447,7 @@
     "agility": 20,
     "focus": 41,
     "luck": 5,
-    "speed": 11,
+    "speed": 14,
     "stability": 180,
     "element": "shock",
     "resistances": {
@@ -3457,11 +3466,11 @@
       "ring_recover",
       "ring_recover"
     ],
-    "flavor": "An interruptible cable reduces a target’s damage briefly, followed by two recovery turns.",
+    "flavor": "An interruptible cable reduces a target\u2019s damage briefly, followed by two recovery turns.",
     "xp_reward": 200,
     "credit_reward": 110,
     "drops": [],
-    "description": "An interruptible cable reduces a target’s damage briefly, followed by two recovery turns.",
+    "description": "An interruptible cable reduces a target\u2019s damage briefly, followed by two recovery turns.",
     "portrait": "images/enemies/tether_rigger_combat.png",
     "sprite": [
       "images/enemies/tether_rigger_combat.png"
@@ -3493,7 +3502,7 @@
     "agility": 20,
     "focus": 41,
     "luck": 5,
-    "speed": 12,
+    "speed": 15,
     "stability": 180,
     "element": "shock",
     "resistances": {
@@ -3554,7 +3563,7 @@
     "agility": 20,
     "focus": 41,
     "luck": 5,
-    "speed": 13,
+    "speed": 16,
     "stability": 180,
     "element": "shock",
     "resistances": {
@@ -3607,7 +3616,7 @@
     "agility": 9,
     "focus": 67,
     "luck": 9,
-    "speed": 11,
+    "speed": 15,
     "stability": 460,
     "element": "source",
     "resistances": {
@@ -3659,7 +3668,7 @@
     "agility": 9,
     "focus": 31,
     "luck": 7,
-    "speed": 11,
+    "speed": 15,
     "stability": 340,
     "element": "physical",
     "resistances": {
@@ -3711,7 +3720,7 @@
     "agility": 9,
     "focus": 70,
     "luck": 8,
-    "speed": 10,
+    "speed": 14,
     "stability": 405,
     "element": "source",
     "resistances": {
@@ -3868,7 +3877,7 @@
     "agility": 16,
     "focus": 15,
     "luck": 5,
-    "speed": 17,
+    "speed": 20,
     "stability": 185,
     "element": "burn",
     "resistances": {
@@ -3922,7 +3931,7 @@
     "agility": 8,
     "focus": 11,
     "luck": 4,
-    "speed": 9,
+    "speed": 12,
     "stability": 205,
     "element": "burn",
     "resistances": {
@@ -3958,6 +3967,82 @@
     },
     "sprite": [
       "images/enemies/magnet_sifter_foundry_pass.png"
+    ]
+  },
+  {
+    "id": "aethel_first_choir",
+    "combat_size": "massive",
+    "name": "The First Choir",
+    "tier": "boss",
+    "combat_behavior": "boss",
+    "combat_role": "controller",
+    "hp": 2550,
+    "strength": 46,
+    "vitality": 22,
+    "agility": 17,
+    "focus": 58,
+    "luck": 10,
+    "speed": 17,
+    "stability": 620,
+    "broken_turns": 2,
+    "element": "source",
+    "resistances": {
+      "physical": 15,
+      "freeze": 25,
+      "source": 50,
+      "shock": -20
+    },
+    "tags": [
+      "nightmare",
+      "source",
+      "aethel",
+      "boss"
+    ],
+    "abilities": [
+      "source_tide",
+      "source_expose",
+      "source_vale_verdict",
+      "source_recover"
+    ],
+    "flavor": "The preserved chorus of the first Aethel who sealed their harmonics away so no empire could ever weaponize the current again.",
+    "xp_reward": 1200,
+    "credit_reward": 0,
+    "ap_reward": 0,
+    "drops": [
+      {
+        "id": "orion_aethel_chorus",
+        "chance": 1.0,
+        "qty_min": 1,
+        "qty_max": 1
+      }
+    ],
+    "description": "An optional World 6 Aethel guardian testing whether the crew will break Vale's cycle. Read the silence tides and verdicts, guard the marked ally, and punish its recovery.",
+    "portrait": "images/enemies/silent_shore_wraith_source_combat.png",
+    "authored": {
+      "cycle": [
+        "source_tide",
+        "source_expose",
+        "source_vale_verdict",
+        "source_recover"
+      ],
+      "windups": {
+        "source_tide": "First Tide rising",
+        "source_vale_verdict": "Choir pronouncing judgment"
+      },
+      "phase": {
+        "hp_below": 0.45,
+        "name": "First Tide Reckoning",
+        "opening_skill": "source_expose",
+        "cycle": [
+          "source_vale_verdict",
+          "source_tide",
+          "source_expose",
+          "source_recover"
+        ]
+      }
+    },
+    "sprite": [
+      "images/enemies/silent_shore_wraith_source_combat.png"
     ]
   }
 ]

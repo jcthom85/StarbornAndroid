@@ -22,8 +22,8 @@
   "partyMemberHp": {
     "nova": 372,
     "zeke": 489,
-    "orion": 385,
-    "gh0st": 346
+    "orion": 386,
+    "gh0st": 264
   },
   "trackedQuestId": "w6_mq26",
   "activeQuests": [
@@ -302,20 +302,19 @@
   ],
   "inventory": {
     "cryo_inductor": 1,
-    "scrap_metal": 5,
+    "scrap_metal": 6,
     "mining_pistol": 1,
     "nova_flux_liner": 1,
-    "ration_pack": 12,
+    "ration_pack": 13,
     "medkit_i": 6,
     "mine_access_badge": 1,
-    "armor_plate": 2,
-    "wiring_bundle": 6,
+    "armor_plate": 1,
+    "wiring_bundle": 4,
     "hydraulic_fluid": 1,
     "heavy_gear": 1,
-    "beast_meat": 4,
+    "beast_meat": 3,
     "tuning_fork": 1,
     "stability_gyro": 1,
-    "battery": 1,
     "medkit": 1,
     "warden_keycard": 1,
     "nova_laser_blaster": 1,
@@ -1930,6 +1929,9 @@
   ],
   "knownEnemyWeaknesses": {
     "faulted_loader": [
+      "shock"
+    ],
+    "resonance_buoy": [
       "shock"
     ],
     "the_iron_warden": [

@@ -56,7 +56,7 @@ class FoundryLoadoutsTest {
                 cost += (prices.getValue(id) * shop.getJSONObject("pricing").getDouble("sell_markup")).roundToInt()
             }
         }
-        assertEquals(2328, cost)
+        assertEquals(2400, cost)
         val earned = assets.loadProgressionData()!!.levelUpSkills.values.flatMap { it.filterKeys { level -> level.toInt() <= 9 }.values }.toSet()
         assertEquals(8, earned.size)
         assertTrue(state.unlockedSkills.containsAll(earned))

@@ -240,7 +240,7 @@
   {
     "id": "prismatic_tuning_fork",
     "name": "Prismatic Phase Core",
-    "description": "A primordial crystalline phase core recovered from Jed’s Echo Bench in the Source. It pulses with raw astral light.",
+    "description": "A primordial crystalline phase core recovered from Jed\u2019s Echo Bench in the Source. It pulses with raw astral light.",
     "type": "quest",
     "value": 0,
     "rarity": "legendary",
@@ -375,7 +375,7 @@
   {
     "id": "nova_laser_blaster",
     "name": "Laser Blaster",
-    "description": "Nova’s single-target sidearm. Its basic shots hit harder than the Mining Pistol.",
+    "description": "Nova\u2019s single-target sidearm. Its basic shots hit harder than the Mining Pistol.",
     "aliases": [
       "laser blaster"
     ],
@@ -391,7 +391,8 @@
       "attack_style": "single",
       "attack_power_mult": 1.05,
       "stat_mods": {
-        "agi": 2
+        "str": 2,
+        "agi": 1
       }
     }
   },
@@ -414,7 +415,9 @@
       "attack_style": "spread",
       "attack_power_mult": 0.75,
       "stat_mods": {
-        "agi": 3
+        "str": 3,
+        "agi": 1,
+        "foc": 2
       }
     }
   },
@@ -426,8 +429,8 @@
       "rocket launcher"
     ],
     "type": "weapon",
-    "value": 350,
-    "buy_price": 700,
+    "value": 450,
+    "buy_price": 900,
     "rarity": "epic",
     "equipment": {
       "slot": "weapon",
@@ -439,8 +442,9 @@
       "attack_power_mult": 1.6,
       "attack_splash_mult": 0.5,
       "stat_mods": {
-        "agi": 5,
-        "str": 3
+        "str": 6,
+        "foc": 3,
+        "agi": 2
       }
     }
   },
@@ -500,8 +504,8 @@
       "maul gauntlet"
     ],
     "type": "weapon",
-    "value": 360,
-    "buy_price": 720,
+    "value": 470,
+    "buy_price": 940,
     "rarity": "epic",
     "equipment": {
       "slot": "weapon",
@@ -575,8 +579,8 @@
       "stasis core"
     ],
     "type": "weapon",
-    "value": 355,
-    "buy_price": 710,
+    "value": 460,
+    "buy_price": 920,
     "rarity": "epic",
     "equipment": {
       "slot": "weapon",
@@ -613,7 +617,8 @@
       "attack_power_mult": 1.15,
       "crit_rate": 6,
       "stat_mods": {
-        "agi": 2
+        "str": 2,
+        "agi": 1
       }
     }
   },
@@ -636,7 +641,8 @@
       "attack_style": "all_enemies",
       "attack_power_mult": 0.8,
       "stat_mods": {
-        "agi": 3
+        "str": 3,
+        "agi": 2
       }
     }
   },
@@ -648,8 +654,8 @@
       "void fang"
     ],
     "type": "weapon",
-    "value": 365,
-    "buy_price": 730,
+    "value": 480,
+    "buy_price": 960,
     "rarity": "epic",
     "equipment": {
       "slot": "weapon",
@@ -662,8 +668,9 @@
       "attack_splash_mult": 0.5,
       "attack_element": "source",
       "stat_mods": {
-        "agi": 6,
-        "str": 3
+        "str": 6,
+        "agi": 2,
+        "foc": 3
       }
     }
   },
@@ -675,8 +682,8 @@
       "bulwark plate"
     ],
     "type": "armor_zeke",
-    "value": 220,
-    "buy_price": 440,
+    "value": 360,
+    "buy_price": 720,
     "rarity": "rare",
     "equipment": {
       "slot": "armor",
@@ -713,8 +720,8 @@
       "brawler rig"
     ],
     "type": "armor_zeke",
-    "value": 260,
-    "buy_price": 520,
+    "value": 270,
+    "buy_price": 540,
     "rarity": "rare",
     "equipment": {
       "slot": "armor",
@@ -734,8 +741,8 @@
       "ward coat"
     ],
     "type": "armor_orion",
-    "value": 210,
-    "buy_price": 420,
+    "value": 320,
+    "buy_price": 640,
     "rarity": "rare",
     "equipment": {
       "slot": "armor",
@@ -796,8 +803,8 @@
       "nullguard coat"
     ],
     "type": "armor_gh0st",
-    "value": 230,
-    "buy_price": 460,
+    "value": 340,
+    "buy_price": 680,
     "rarity": "rare",
     "equipment": {
       "slot": "armor",
@@ -834,8 +841,8 @@
       "killer harness"
     ],
     "type": "armor_gh0st",
-    "value": 270,
-    "buy_price": 540,
+    "value": 280,
+    "buy_price": 560,
     "rarity": "rare",
     "equipment": {
       "slot": "armor",
@@ -878,8 +885,8 @@
       "helioguard plate"
     ],
     "type": "armor_nova",
-    "value": 240,
-    "buy_price": 480,
+    "value": 340,
+    "buy_price": 680,
     "rarity": "rare",
     "equipment": {
       "slot": "armor",
@@ -920,8 +927,8 @@
       "starline jacket"
     ],
     "type": "armor_nova",
-    "value": 200,
-    "buy_price": 400,
+    "value": 240,
+    "buy_price": 480,
     "rarity": "rare",
     "equipment": {
       "slot": "armor",
@@ -2213,7 +2220,7 @@
   {
     "id": "resonance_carp_stew",
     "name": "Resonance Carp Stew",
-    "description": "A rich, warming stew that settles the pulse. Restores 120 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion’s perk. In battle, uses that ally’s turn.",
+    "description": "A rich, warming stew that settles the pulse. Restores 120 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion\u2019s perk. In battle, uses that ally\u2019s turn.",
     "type": "consumable",
     "value": 120,
     "buy_price": 240,
@@ -2273,7 +2280,7 @@
   {
     "id": "frequency_tetra_consomme",
     "name": "Frequency Tetra Consomme",
-    "description": "A clear, peppery broth that sharpens focus and steadies the hands. Restores 140 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion’s perk. In battle, uses that ally’s turn.",
+    "description": "A clear, peppery broth that sharpens focus and steadies the hands. Restores 140 HP to one ally. Eat before combat for a three-battle party meal bonus and your serving companion\u2019s perk. In battle, uses that ally\u2019s turn.",
     "type": "consumable",
     "value": 190,
     "buy_price": 380,
@@ -2425,7 +2432,7 @@
       "accuracy": 8,
       "crit_rate": 4,
       "passive_id": "opening_crit_12",
-      "passive_text": "Direct hits vs. enemies at ≥75% HP gain +12% Crit chance."
+      "passive_text": "Direct hits vs. enemies at \u226575% HP gain +12% Crit chance."
     }
   },
   {
@@ -2451,12 +2458,12 @@
     "name": "Vital Signet",
     "description": "An etched ring that reinforces the wearer's pulse.",
     "type": "accessory",
-    "value": 220,
-    "buy_price": 440,
+    "value": 290,
+    "buy_price": 580,
     "rarity": "rare",
     "equipment": {
       "slot": "accessory",
-      "hp_bonus": 120,
+      "hp_bonus": 80,
       "stat_mods": {
         "vit": 2
       },
@@ -2497,7 +2504,7 @@
         "spd": 2
       },
       "passive_id": "opening_crit_12",
-      "passive_text": "Direct hits vs. enemies at ≥75% HP gain +12% Crit chance."
+      "passive_text": "Direct hits vs. enemies at \u226575% HP gain +12% Crit chance."
     }
   },
   {
@@ -2551,7 +2558,7 @@
         "evasion": 4
       },
       "passive_id": "shield_reflect_stability",
-      "passive_text": "Taking a hit while Shielded reflects 15% max Stability (18–40) as Shock."
+      "passive_text": "Taking a hit while Shielded reflects 15% max Stability (18\u201340) as Shock."
     }
   },
   {
@@ -3203,12 +3210,12 @@
     "name": "Coolant System",
     "description": "An armor mod that pumps emergency coolant through heat-stressed plating.",
     "type": "accessory",
-    "value": 750,
-    "buy_price": 1500,
+    "value": 375,
+    "buy_price": 750,
     "rarity": "rare",
     "equipment": {
       "slot": "accessory",
-      "hp_bonus": 25,
+      "hp_bonus": 85,
       "stat_mods": {
         "vitality": 3
       },
@@ -3371,7 +3378,7 @@
       "bridge relic",
       "sanctuary bridge"
     ],
-    "description": "An Architect relic that links willing carriers on separate bands. Install it in the Astra at Hangar Bay. The salvaged conduits supply power, and the Chime verifies Orion’s identity.",
+    "description": "An Architect relic that links willing carriers on separate bands. Install it in the Astra at Hangar Bay. The salvaged conduits supply power, and the Chime verifies Orion\u2019s identity.",
     "type": "key_item",
     "value": 0,
     "rarity": "mythic",
@@ -3405,7 +3412,7 @@
   {
     "id": "vhs_tape_02",
     "name": "Film 02: Memories of Another Life",
-    "description": "An analog video cassette labeled “The Great Frontier — Feature 02: Memories of Another Life.” Recovered from the discarded document locker in Zeke’s Booth.",
+    "description": "An analog video cassette labeled \u201cThe Great Frontier \u2014 Feature 02: Memories of Another Life.\u201d Recovered from the discarded document locker in Zeke\u2019s Booth.",
     "aliases": [
       "memories of another life",
       "tape 2",
@@ -3735,7 +3742,7 @@
         "accuracy": 3
       },
       "passive_id": "opening_crit_12",
-      "passive_text": "Direct hits vs. enemies at ≥75% HP gain +12% Crit chance."
+      "passive_text": "Direct hits vs. enemies at \u226575% HP gain +12% Crit chance."
     }
   },
   {
@@ -3939,7 +3946,7 @@
         "defense": 3
       },
       "passive_id": "shield_reflect_stability",
-      "passive_text": "Taking a hit while Shielded reflects 15% max Stability (18–40) as Shock."
+      "passive_text": "Taking a hit while Shielded reflects 15% max Stability (18\u201340) as Shock."
     }
   },
   {
@@ -3990,7 +3997,7 @@
   {
     "id": "cyano_coolant_injector",
     "name": "Cyano-Coolant Injector",
-    "description": "A cryo-coolant injector recovered from Sorrell’s comms core. Supercools unaligned weapon discharges to flash-chill targets on impact.",
+    "description": "A cryo-coolant injector recovered from Sorrell\u2019s comms core. Supercools unaligned weapon discharges to flash-chill targets on impact.",
     "type": "mod",
     "value": 350,
     "rarity": "rare",
@@ -4008,7 +4015,7 @@
   {
     "id": "crucible_forge_plate",
     "name": "Crucible Forge-Plate",
-    "description": "Master-forged gladiator plating beaten under Foundry slag hammers—scarred, heavy, and nearly impervious to direct blows.",
+    "description": "Master-forged gladiator plating beaten under Foundry slag hammers\u2014scarred, heavy, and nearly impervious to direct blows.",
     "type": "armor",
     "value": 1500,
     "buy_price": 3000,
@@ -4111,5 +4118,209 @@
     "value": 0,
     "rarity": "exotic",
     "unsellable": true
+  },
+  {
+    "id": "crucible_slag_heart",
+    "name": "Crucible Slag Heart",
+    "description": "A super-dense ingot of furnace-forged alloy torn from the undefeated Crucible Champion. Holds a charge without warping under extreme arc current.",
+    "aliases": [
+      "crucible slag heart",
+      "slag heart"
+    ],
+    "type": "component",
+    "value": 650,
+    "rarity": "legendary"
+  },
+  {
+    "id": "jeds_bench_regulator",
+    "name": "Jed's Hand-Filed Regulator",
+    "description": "A brass arc-regulator marked with three crooked file grooves from Jed's remembered workbench\u2014the final piece of a carbine he sketched on a shift roster and never got to build.",
+    "aliases": [
+      "jeds regulator",
+      "bench regulator",
+      "hand-filed regulator"
+    ],
+    "type": "component",
+    "value": 650,
+    "rarity": "legendary"
+  },
+  {
+    "id": "schematic_shift_breaker",
+    "name": "Schematic: Shift-Breaker",
+    "description": "Jed's unfinished workbench sketch, completed in Nova's own hand. Pairs his hand-filed arc regulator with Crucible alloy and a Power Cell to forge Nova's ultimate carbine.",
+    "aliases": [
+      "shift breaker schematic",
+      "schematic shift breaker"
+    ],
+    "type": "schematic",
+    "value": 500,
+    "rarity": "legendary",
+    "effect": {
+      "learn_schematic": "craft_nova_shift_breaker"
+    }
+  },
+  {
+    "id": "nova_shift_breaker",
+    "name": "Shift-Breaker",
+    "description": "Jed's unfinished sketch, finally built right. Forged from Crucible Champion alloy and Jed's hand-filed regulator, this precision arc-carbine fires fast single-target shock bolts that short-circuit Dominion armor.",
+    "aliases": [
+      "shift-breaker",
+      "shift breaker"
+    ],
+    "type": "weapon",
+    "value": 1800,
+    "buy_price": 3600,
+    "rarity": "legendary",
+    "equipment": {
+      "slot": "weapon",
+      "weapon_type": "gun",
+      "damage_min": 48,
+      "damage_max": 62,
+      "attack_style": "single",
+      "attack_power_mult": 1.15,
+      "attack_element": "shock",
+      "status_on_hit": "short",
+      "status_chance": 35,
+      "accuracy": 8,
+      "crit_rate": 8,
+      "stat_mods": {
+        "str": 8,
+        "foc": 6,
+        "agi": 2
+      }
+    }
+  },
+  {
+    "id": "hk_servo_anchor",
+    "name": "HK-Series Servo Anchor",
+    "description": "The hydraulic strike-actuator ripped from Zenith's Hunter-Killer pursuit droid\u2014once built to break labor strikes, now waiting to be turned back against its makers.",
+    "aliases": [
+      "hk servo anchor",
+      "servo anchor"
+    ],
+    "type": "component",
+    "value": 700,
+    "rarity": "legendary"
+  },
+  {
+    "id": "revoked_collar_seal",
+    "name": "Revoked Dominion Seal",
+    "description": "The shattered authorization seal from Zeke's Dominion personnel file, burned clean of every obedience clause when he revoked the record across the Source.",
+    "aliases": [
+      "revoked dominion seal",
+      "revoked collar seal"
+    ],
+    "type": "component",
+    "value": 700,
+    "rarity": "legendary"
+  },
+  {
+    "id": "schematic_unshackled_breakers",
+    "name": "Schematic: Unshackled Breakers",
+    "description": "Zeke's heavy-rig modification plan: bolt a Hunter-Killer servo anchor and Composite Plate around his revoked Dominion seal to forge gauntlets that shatter oppression instead of enforcing it.",
+    "aliases": [
+      "unshackled breakers schematic",
+      "schematic unshackled breakers"
+    ],
+    "type": "schematic",
+    "value": 500,
+    "rarity": "legendary",
+    "effect": {
+      "learn_schematic": "craft_zeke_breaker_gauntlets"
+    }
+  },
+  {
+    "id": "zeke_breaker_gauntlets",
+    "name": "Unshackled Breakers",
+    "description": "Forged from a Dominion Hunter-Killer's own strike-servos and Zeke's revoked personnel seal. Every superheated blow hits without delay and cracks enemy defenses wide open.",
+    "aliases": [
+      "unshackled breakers",
+      "breaker gauntlets"
+    ],
+    "type": "weapon",
+    "value": 1850,
+    "buy_price": 3700,
+    "rarity": "legendary",
+    "equipment": {
+      "slot": "weapon",
+      "weapon_type": "glove",
+      "damage_min": 52,
+      "damage_max": 68,
+      "attack_style": "single",
+      "attack_power_mult": 1.2,
+      "attack_element": "fire",
+      "status_on_hit": "weak",
+      "status_chance": 35,
+      "accuracy": 6,
+      "hp_bonus": 60,
+      "stat_mods": {
+        "str": 10,
+        "vit": 6
+      }
+    }
+  },
+  {
+    "id": "gh0st_elara_refrain",
+    "name": "Elara's Refrain",
+    "description": "A black-site Source blade decrypted from Vale's Kill-Suite armory using Zenith's purged defensive cipher and tuned to Elara's clean melody. Its mono-harmonic edge slices straight through armor with surgical precision.",
+    "aliases": [
+      "elaras refrain",
+      "elara's refrain",
+      "refrain"
+    ],
+    "type": "weapon",
+    "value": 1900,
+    "buy_price": 3800,
+    "rarity": "legendary",
+    "equipment": {
+      "slot": "weapon",
+      "weapon_type": "sword",
+      "damage_min": 50,
+      "damage_max": 64,
+      "attack_style": "single",
+      "attack_power_mult": 1.2,
+      "attack_element": "source",
+      "status_on_hit": "bleed",
+      "status_chance": 40,
+      "accuracy": 10,
+      "crit_rate": 16,
+      "stat_mods": {
+        "str": 7,
+        "agi": 3,
+        "foc": 6
+      }
+    }
+  },
+  {
+    "id": "orion_aethel_chorus",
+    "name": "Chorus of the First Tide",
+    "description": "An ancient Aethel harmonic prism bestowed by the First Choir after Orion proved the current would never again be caged by a single voice. Channels pure Source resonance that leaves targets Exposed.",
+    "aliases": [
+      "chorus of the first tide",
+      "aethel chorus",
+      "first tide"
+    ],
+    "type": "weapon",
+    "value": 1900,
+    "buy_price": 3800,
+    "rarity": "legendary",
+    "equipment": {
+      "slot": "weapon",
+      "weapon_type": "jewel",
+      "damage_min": 46,
+      "damage_max": 60,
+      "attack_style": "single",
+      "attack_power_mult": 1.15,
+      "attack_element": "source",
+      "status_on_hit": "exposed",
+      "status_chance": 35,
+      "accuracy": 10,
+      "crit_rate": 8,
+      "hp_bonus": 45,
+      "stat_mods": {
+        "foc": 12,
+        "vit": 4
+      }
+    }
   }
 ]
