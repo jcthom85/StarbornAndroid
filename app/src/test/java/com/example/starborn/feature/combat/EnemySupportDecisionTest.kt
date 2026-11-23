@@ -68,8 +68,8 @@ class EnemySupportDecisionTest {
             })
         val after = processor.execute(state, CombatAction.ItemUse("nova", ration.id, "nova")) { CombatReward() }
         assertEquals(1, consumed)
-        assertEquals(135, after.combatants.getValue("nova").hp)
-        assertEquals(135, after.combatants.getValue("zeke").hp)
+        assertEquals(155, after.combatants.getValue("nova").hp)
+        assertEquals(155, after.combatants.getValue("zeke").hp)
         assertEquals(200, after.combatants.getValue("orion").hp)
         assertEquals(0, after.combatants.getValue("gh0st").hp)
         assertEquals(100, after.combatants.getValue(core.id).hp)

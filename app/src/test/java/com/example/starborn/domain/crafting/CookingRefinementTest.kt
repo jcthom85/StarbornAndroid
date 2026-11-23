@@ -194,7 +194,7 @@ class CookingRefinementTest {
     }
 
     private fun actor(id: String, side: CombatSide, resistance: Int = 0) = Combatant(
-        id, id, side, StatBlock(100, 10, 5, 5, 5, 5, 5, statusResistance = resistance))
+        id, id, side, StatBlock(200, 10, 5, 5, 5, 5, 5, statusResistance = resistance))
 
     @Test fun combatMealAppliesHealingAndBuffWithoutWellFed() {
         val engine = CombatEngine()
@@ -203,7 +203,7 @@ class CookingRefinementTest {
         inventory.addItem("glowfish_broth")
         val processor = CombatActionProcessor(engine = engine, statusRegistry = StatusRegistry(), skillLookup = { null }, consumeItem = inventory::useItem)
         val result = processor.execute(wounded, CombatAction.ItemUse("nova", "glowfish_broth", "nova")) { CombatReward() }
-        assertEquals(90, result.combatants.getValue("nova").hp)
+        assertEquals(150, result.combatants.getValue("nova").hp)
         assertTrue(result.combatants.getValue("nova").buffs.any { it.effect.stat == "accuracy" && it.effect.value == 5 })
         assertNull(store.state.value.activeMealBuff)
         assertFalse(inventory.hasItem("glowfish_broth"))

@@ -98,9 +98,9 @@ class ProvisionIntegrationTest {
 
         store.setPartyMemberHp(nova.id, 1)
         assertTrue(use.useItem("herbal_poultice") is ItemUseController.Result.Success)
-        assertEquals(46, store.state.value.partyMemberHp[nova.id])
-        assertTrue(use.useItem("burn_salve") is ItemUseController.Result.Success)
         assertEquals(81, store.state.value.partyMemberHp[nova.id])
+        assertTrue(use.useItem("burn_salve") is ItemUseController.Result.Success)
+        assertEquals(120, store.state.value.partyMemberHp[nova.id])
         assertFalse(inventory.hasItem("herbal_poultice"))
         assertFalse(inventory.hasItem("burn_salve"))
     }

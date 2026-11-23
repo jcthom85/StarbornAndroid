@@ -1,6 +1,6 @@
 package com.example.starborn.domain.leveling
 
-/** Modest per-level base stat growth so every level-up (Lv 2–12) feels tangible without overshadowing gear or skill trees. */
+/** Tangible per-level RPG stat growth (Lv 2–12) so every level-up visibly lifts HP and combat numbers alongside gear tiers. */
 object LevelStatGrowth {
 
     data class Growth(
@@ -11,20 +11,50 @@ object LevelStatGrowth {
         val focus: Int = 0
     )
 
-    private const val HP_PER_LEVEL = 6
+    private const val DEFAULT_HP_PER_LEVEL = 24
 
     fun forLevel(characterId: String, level: Int): Growth {
         val gained = (level - 1).coerceAtLeast(0)
         if (gained == 0) return Growth()
-        val hpBonus = gained * HP_PER_LEVEL
-        val primary = gained / 2 // +1 at Lv 3, 5, 7, 9, 11 (+5 max)
-        val secondary = gained / 3 // +1 at Lv 4, 7, 10 (+3 max)
+        val primary = gained * 2     // +2 every level (+22 by Lv 12)
+        val secondary = gained       // +1 every level (+11 by Lv 12)
+        val tertiary = gained / 2    // +1 every 2 levels (+5 by Lv 12)
         return when (characterId.trim().lowercase()) {
-            "nova" -> Growth(hpBonus = hpBonus, strength = secondary, agility = primary, focus = secondary)
-            "zeke" -> Growth(hpBonus = hpBonus, strength = primary, vitality = secondary)
-            "orion" -> Growth(hpBonus = hpBonus, agility = secondary, focus = primary)
-            "gh0st" -> Growth(hpBonus = hpBonus, strength = secondary, agility = primary)
-            else -> Growth(hpBonus = hpBonus, strength = secondary, agility = secondary, focus = secondary)
+            "nova" -> Growth(
+                hpBonus = gained * 24,
+                strength = secondary,
+                vitality = tertiary,
+                agility = primary,
+                focus = secondary
+            )
+            "zeke" -> Growth(
+                hpBonus = gained * 28,
+                strength = primary,
+                vitality = secondary,
+                agility = tertiary,
+                focus = gained / 3
+            )
+            "orion" -> Growth(
+                hpBonus = gained * 22,
+                strength = gained / 3,
+                vitality = tertiary,
+                agility = secondary,
+                focus = primary
+            )
+            "gh0st" -> Growth(
+                hpBonus = gained * 22,
+                strength = secondary,
+                vitality = tertiary,
+                agility = primary,
+                focus = secondary
+            )
+            else -> Growth(
+                hpBonus = gained * DEFAULT_HP_PER_LEVEL,
+                strength = secondary,
+                vitality = tertiary,
+                agility = secondary,
+                focus = secondary
+            )
         }
     }
 

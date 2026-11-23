@@ -33,7 +33,7 @@ class CombatClarityTest {
         assertTrue(comet.contains("not consumed"))
         assertTrue(comet.contains("skills use their own crit rules"))
         val healing = CombatClarity.snackPreview(items.findItem("stellar_scone"), 0)
-        assertTrue(healing.contains("Restores 35 HP"))
+        assertTrue(healing.contains("Restores 85 HP"))
         assertTrue(healing.contains("Target: self"))
         assertFalse(healing.contains("Weapon crit"))
         val pulse = CombatClarity.snackPreview(items.findItem("pulse_citrus"), 0)

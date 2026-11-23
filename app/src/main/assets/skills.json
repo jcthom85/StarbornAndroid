@@ -1062,7 +1062,7 @@
       "heal",
       "support"
     ],
-    "base_power": 40,
+    "base_power": 85,
     "scaling": "focus",
     "cooldown": 0,
     "status_applications": [
@@ -1323,7 +1323,7 @@
       "support",
       "heal"
     ],
-    "base_power": 130,
+    "base_power": 230,
     "scaling": "focus",
     "cooldown": 3,
     "status_applications": [
@@ -1641,7 +1641,7 @@
       "support",
       "aoe"
     ],
-    "base_power": 90,
+    "base_power": 145,
     "scaling": "focus",
     "cooldown": 4,
     "status_applications": [

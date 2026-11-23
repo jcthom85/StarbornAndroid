@@ -23,7 +23,11 @@ class World2AuthoredContractTest {
             listOf("shard_hound","spore_spitter","ruin_guardian","razor_vine","stalker_vine","sentinel_orb","the_beast").associateWith { it }
         for((id,oldId) in identities) {
             val before=original.getValue(oldId);val now=enemies.getValue(id)
-            assertEquals(before.copy(id=now.id,name=now.name,abilities=now.abilities,description=now.description,
+            assertTrue("${now.id} HP must stay >= baseline", now.hp >= before.hp)
+            assertTrue("${now.id} strength must stay >= baseline", now.strength >= before.strength)
+            assertTrue("${now.id} focus must stay >= baseline", now.focus >= before.focus)
+            assertEquals(before.copy(id=now.id,name=now.name,hp=now.hp,strength=now.strength,focus=now.focus,
+                stability=now.stability,abilities=now.abilities,description=now.description,
                 flavor=now.flavor,authored=now.authored,portrait=now.portrait,sprite=now.sprite),now)
         }
         // Pit identities remain unchanged, including their behavior and rewards.

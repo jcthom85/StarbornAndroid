@@ -20,10 +20,10 @@
     "gh0st": 7
   },
   "partyMemberHp": {
-    "nova": 156,
-    "zeke": 206,
-    "orion": 131,
-    "gh0st": 141
+    "nova": 314,
+    "zeke": 413,
+    "orion": 282,
+    "gh0st": 292
   },
   "trackedQuestId": "w4_mq16",
   "activeQuests": [
@@ -228,17 +228,17 @@
     "scrap_metal": 5,
     "mining_pistol": 1,
     "nova_flux_liner": 1,
-    "ration_pack": 13,
-    "medkit_i": 7,
+    "ration_pack": 12,
+    "medkit_i": 6,
     "mine_access_badge": 1,
-    "armor_plate": 1,
+    "armor_plate": 2,
     "wiring_bundle": 5,
     "hydraulic_fluid": 1,
     "heavy_gear": 1,
     "beast_meat": 4,
     "tuning_fork": 1,
     "stability_gyro": 1,
-    "battery": 2,
+    "battery": 1,
     "medkit": 1,
     "warden_keycard": 1,
     "nova_laser_blaster": 1,

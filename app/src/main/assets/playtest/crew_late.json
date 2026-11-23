@@ -6,7 +6,7 @@
   "playerLevel": 10,
   "playerXp": 21160,
   "playerAp": 44,
-  "playerCredits": 2933,
+  "playerCredits": 2903,
   "partyMemberXp": {
     "nova": 21160,
     "zeke": 21160,
@@ -20,10 +20,10 @@
     "gh0st": 10
   },
   "partyMemberHp": {
-    "nova": 137,
-    "zeke": 218,
-    "orion": 166,
-    "gh0st": 153
+    "nova": 372,
+    "zeke": 489,
+    "orion": 385,
+    "gh0st": 346
   },
   "trackedQuestId": "w6_mq26",
   "activeQuests": [
@@ -305,17 +305,17 @@
     "scrap_metal": 5,
     "mining_pistol": 1,
     "nova_flux_liner": 1,
-    "ration_pack": 13,
-    "medkit_i": 7,
+    "ration_pack": 12,
+    "medkit_i": 6,
     "mine_access_badge": 1,
-    "armor_plate": 1,
-    "wiring_bundle": 7,
+    "armor_plate": 2,
+    "wiring_bundle": 6,
     "hydraulic_fluid": 1,
     "heavy_gear": 1,
     "beast_meat": 4,
     "tuning_fork": 1,
     "stability_gyro": 1,
-    "battery": 2,
+    "battery": 1,
     "medkit": 1,
     "warden_keycard": 1,
     "nova_laser_blaster": 1,

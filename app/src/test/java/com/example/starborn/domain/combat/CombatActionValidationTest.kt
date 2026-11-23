@@ -237,12 +237,12 @@ class CombatActionValidationTest {
         })
         val processor = CombatActionProcessor(engine, statusRegistry, { null },
             consumeItem = inventory::useItem, itemLookup = items::get)
-        val ally = player.copy(id = "ally", side = CombatSide.ALLY)
+        val ally = player.copy(id = "ally", side = CombatSide.ALLY, stats = player.stats.copy(maxHp = 200))
         val initial = engine.beginEncounter(CombatSetup(listOf(player, ally), listOf(enemy)))
         val cases = listOf(
-            Triple("herbal_poultice", 45, setOf("weak")),
+            Triple("herbal_poultice", 80, setOf("weak")),
             Triple("antidote_flask", 0, setOf("corrosion", "poison", "erosion")),
-            Triple("burn_salve", 35, setOf("meltdown"))
+            Triple("burn_salve", 65, setOf("meltdown"))
         )
         for ((id, hp, cleared) in cases) {
             val item = items.getValue(id)

@@ -75,7 +75,7 @@
     "value": 300,
     "rarity": "rare",
     "effect": {
-      "restore_hp": 100,
+      "restore_hp": 170,
       "buffs": [
         {
           "stat": "accuracy",
@@ -302,7 +302,7 @@
       "cleanses": [
         "weak"
       ],
-      "restore_hp": 45
+      "restore_hp": 80
     }
   },
   {
@@ -333,7 +333,7 @@
       "cleanses": [
         "meltdown"
       ],
-      "restore_hp": 35
+      "restore_hp": 65
     }
   },
   {
@@ -386,10 +386,13 @@
     "equipment": {
       "slot": "weapon",
       "weapon_type": "gun",
-      "damage_min": 7,
-      "damage_max": 10,
+      "damage_min": 16,
+      "damage_max": 24,
       "attack_style": "single",
-      "attack_power_mult": 1
+      "attack_power_mult": 1.05,
+      "stat_mods": {
+        "agi": 2
+      }
     }
   },
   {
@@ -406,10 +409,13 @@
     "equipment": {
       "slot": "weapon",
       "weapon_type": "gun",
-      "damage_min": 5,
-      "damage_max": 8,
+      "damage_min": 24,
+      "damage_max": 34,
       "attack_style": "spread",
-      "attack_power_mult": 0.7
+      "attack_power_mult": 0.75,
+      "stat_mods": {
+        "agi": 3
+      }
     }
   },
   {
@@ -426,12 +432,16 @@
     "equipment": {
       "slot": "weapon",
       "weapon_type": "gun",
-      "damage_min": 9,
-      "damage_max": 14,
+      "damage_min": 44,
+      "damage_max": 60,
       "attack_style": "rocket",
       "attack_charge_turns": 1,
       "attack_power_mult": 1.6,
-      "attack_splash_mult": 0.5
+      "attack_splash_mult": 0.5,
+      "stat_mods": {
+        "agi": 5,
+        "str": 3
+      }
     }
   },
   {
@@ -448,12 +458,15 @@
     "equipment": {
       "slot": "weapon",
       "weapon_type": "glove",
-      "damage_min": 7,
-      "damage_max": 11,
+      "damage_min": 17,
+      "damage_max": 25,
       "attack_style": "single",
       "attack_power_mult": 1.1,
       "attack_element": "shock",
-      "accuracy": 4
+      "accuracy": 4,
+      "stat_mods": {
+        "str": 2
+      }
     }
   },
   {
@@ -470,10 +483,13 @@
     "equipment": {
       "slot": "weapon",
       "weapon_type": "glove",
-      "damage_min": 5,
-      "damage_max": 8,
+      "damage_min": 25,
+      "damage_max": 35,
       "attack_style": "all",
-      "attack_power_mult": 0.7
+      "attack_power_mult": 0.75,
+      "stat_mods": {
+        "str": 3
+      }
     }
   },
   {
@@ -490,12 +506,16 @@
     "equipment": {
       "slot": "weapon",
       "weapon_type": "glove",
-      "damage_min": 9,
-      "damage_max": 14,
+      "damage_min": 45,
+      "damage_max": 62,
       "attack_style": "charged_splash",
       "attack_charge_turns": 1,
       "attack_power_mult": 1.5,
-      "attack_splash_mult": 0.5
+      "attack_splash_mult": 0.5,
+      "stat_mods": {
+        "str": 6,
+        "vit": 2
+      }
     }
   },
   {
@@ -512,12 +532,15 @@
     "equipment": {
       "slot": "weapon",
       "weapon_type": "jewel",
-      "damage_min": 6,
-      "damage_max": 10,
+      "damage_min": 15,
+      "damage_max": 23,
       "attack_style": "single",
-      "attack_power_mult": 1,
+      "attack_power_mult": 1.05,
       "attack_element": "source",
-      "accuracy": 5
+      "accuracy": 5,
+      "stat_mods": {
+        "foc": 3
+      }
     }
   },
   {
@@ -534,11 +557,14 @@
     "equipment": {
       "slot": "weapon",
       "weapon_type": "jewel",
-      "damage_min": 4,
-      "damage_max": 7,
+      "damage_min": 22,
+      "damage_max": 32,
       "attack_style": "all",
-      "attack_power_mult": 0.65,
-      "attack_element": "source"
+      "attack_power_mult": 0.7,
+      "attack_element": "source",
+      "stat_mods": {
+        "foc": 4
+      }
     }
   },
   {
@@ -555,15 +581,15 @@
     "equipment": {
       "slot": "weapon",
       "weapon_type": "jewel",
-      "damage_min": 8,
-      "damage_max": 12,
+      "damage_min": 38,
+      "damage_max": 52,
       "attack_style": "charged_splash",
       "attack_charge_turns": 1,
       "attack_power_mult": 1.4,
       "attack_splash_mult": 0.5,
       "attack_element": "source",
       "stat_mods": {
-        "foc": 3
+        "foc": 7
       }
     }
   },
@@ -581,11 +607,14 @@
     "equipment": {
       "slot": "weapon",
       "weapon_type": "sword",
-      "damage_min": 7,
-      "damage_max": 11,
+      "damage_min": 17,
+      "damage_max": 25,
       "attack_style": "single",
       "attack_power_mult": 1.15,
-      "crit_rate": 6
+      "crit_rate": 6,
+      "stat_mods": {
+        "agi": 2
+      }
     }
   },
   {
@@ -602,10 +631,13 @@
     "equipment": {
       "slot": "weapon",
       "weapon_type": "sword",
-      "damage_min": 5,
-      "damage_max": 9,
+      "damage_min": 26,
+      "damage_max": 38,
       "attack_style": "all_enemies",
-      "attack_power_mult": 0.75
+      "attack_power_mult": 0.8,
+      "stat_mods": {
+        "agi": 3
+      }
     }
   },
   {
@@ -622,13 +654,17 @@
     "equipment": {
       "slot": "weapon",
       "weapon_type": "sword",
-      "damage_min": 9,
-      "damage_max": 14,
+      "damage_min": 44,
+      "damage_max": 60,
       "attack_style": "charged_splash",
       "attack_charge_turns": 1,
       "attack_power_mult": 1.6,
       "attack_splash_mult": 0.5,
-      "attack_element": "source"
+      "attack_element": "source",
+      "stat_mods": {
+        "agi": 6,
+        "str": 3
+      }
     }
   },
   {
@@ -644,8 +680,8 @@
     "rarity": "rare",
     "equipment": {
       "slot": "armor",
-      "defense": 12,
-      "hp_bonus": 80
+      "defense": 25,
+      "hp_bonus": 90
     }
   },
   {
@@ -661,11 +697,12 @@
     "rarity": "uncommon",
     "equipment": {
       "slot": "armor",
-      "defense": 4,
+      "defense": 9,
       "stat_mods": {
         "spd": 4,
         "evasion": 6
-      }
+      },
+      "hp_bonus": 35
     }
   },
   {
@@ -681,11 +718,12 @@
     "rarity": "rare",
     "equipment": {
       "slot": "armor",
-      "defense": 6,
+      "defense": 14,
       "stat_mods": {
         "str": 6,
         "crit_rate": 4
-      }
+      },
+      "hp_bonus": 55
     }
   },
   {
@@ -701,8 +739,8 @@
     "rarity": "rare",
     "equipment": {
       "slot": "armor",
-      "defense": 10,
-      "hp_bonus": 60,
+      "defense": 20,
+      "hp_bonus": 65,
       "stat_mods": {
         "foc": 2
       }
@@ -721,11 +759,12 @@
     "rarity": "uncommon",
     "equipment": {
       "slot": "armor",
-      "defense": 4,
+      "defense": 8,
       "stat_mods": {
         "foc": 5,
         "accuracy": 6
-      }
+      },
+      "hp_bonus": 25
     }
   },
   {
@@ -741,11 +780,12 @@
     "rarity": "uncommon",
     "equipment": {
       "slot": "armor",
-      "defense": 3,
+      "defense": 7,
       "stat_mods": {
         "spd": 4,
         "evasion": 6
-      }
+      },
+      "hp_bonus": 25
     }
   },
   {
@@ -761,8 +801,8 @@
     "rarity": "rare",
     "equipment": {
       "slot": "armor",
-      "defense": 9,
-      "hp_bonus": 50
+      "defense": 19,
+      "hp_bonus": 65
     }
   },
   {
@@ -778,11 +818,12 @@
     "rarity": "uncommon",
     "equipment": {
       "slot": "armor",
-      "defense": 3,
+      "defense": 7,
       "stat_mods": {
         "spd": 4,
         "evasion": 8
-      }
+      },
+      "hp_bonus": 25
     }
   },
   {
@@ -798,12 +839,13 @@
     "rarity": "rare",
     "equipment": {
       "slot": "armor",
-      "defense": 5,
+      "defense": 13,
       "stat_mods": {
         "str": 5,
         "crit_rate": 6,
         "accuracy": 4
-      }
+      },
+      "hp_bonus": 50
     }
   },
   {
@@ -841,8 +883,8 @@
     "rarity": "rare",
     "equipment": {
       "slot": "armor",
-      "defense": 11,
-      "hp_bonus": 60,
+      "defense": 22,
+      "hp_bonus": 75,
       "stat_mods": {
         "foc": 3
       }
@@ -861,12 +903,13 @@
     "rarity": "uncommon",
     "equipment": {
       "slot": "armor",
-      "defense": 3,
+      "defense": 5,
       "stat_mods": {
         "spd": 5,
         "evasion": 4,
         "accuracy": 4
-      }
+      },
+      "hp_bonus": 20
     }
   },
   {
@@ -882,12 +925,13 @@
     "rarity": "rare",
     "equipment": {
       "slot": "armor",
-      "defense": 7,
+      "defense": 15,
       "accuracy": 5,
       "crit_rate": 3,
       "stat_mods": {
         "foc": 2
-      }
+      },
+      "hp_bonus": 50
     }
   },
   {
@@ -924,8 +968,8 @@
     "rarity": "rare",
     "equipment": {
       "slot": "armor",
-      "defense": 9,
-      "hp_bonus": 50,
+      "defense": 18,
+      "hp_bonus": 60,
       "stat_mods": {
         "lck": 4,
         "evasion": 3
@@ -1178,7 +1222,7 @@
       "hp_bonus": 60
     },
     "effect": {
-      "restore_hp": 35,
+      "restore_hp": 85,
       "target": "self",
       "cooldown": 5
     }
@@ -1420,7 +1464,7 @@
       }
     },
     "effect": {
-      "restore_hp": 45,
+      "restore_hp": 110,
       "target": "self",
       "cooldown": 5
     }
@@ -1514,7 +1558,7 @@
     "value": 25,
     "buy_price": 50,
     "effect": {
-      "restore_hp": 75,
+      "restore_hp": 95,
       "damage": 0,
       "target": "ally"
     }
@@ -1709,7 +1753,7 @@
     "buy_price": 120,
     "rarity": "uncommon",
     "effect": {
-      "damage": 120,
+      "damage": 200,
       "damage_type": "physical",
       "target": "enemy_group"
     }
@@ -1726,7 +1770,7 @@
     "value": 35,
     "buy_price": 70,
     "effect": {
-      "restore_hp": 35,
+      "restore_hp": 55,
       "target": "party"
     },
     "resale_value": 18
@@ -1788,7 +1832,7 @@
     "buy_price": 110,
     "rarity": "uncommon",
     "effect": {
-      "restore_hp": 100,
+      "restore_hp": 170,
       "buffs": [
         {
           "stat": "speed",
@@ -2075,7 +2119,7 @@
     "buy_price": 480,
     "rarity": "exotic",
     "effect": {
-      "restore_hp": 150,
+      "restore_hp": 320,
       "buffs": [
         {
           "stat": "focus",
@@ -2100,7 +2144,7 @@
     "buy_price": 420,
     "rarity": "rare",
     "effect": {
-      "restore_hp": 130,
+      "restore_hp": 300,
       "buffs": [
         {
           "stat": "speed",
@@ -2135,7 +2179,7 @@
     "buy_price": 90,
     "rarity": "common",
     "effect": {
-      "restore_hp": 60,
+      "restore_hp": 105,
       "buffs": [
         {
           "stat": "defense",
@@ -2155,7 +2199,7 @@
     "buy_price": 150,
     "rarity": "uncommon",
     "effect": {
-      "restore_hp": 80,
+      "restore_hp": 140,
       "buffs": [
         {
           "stat": "accuracy",
@@ -2175,7 +2219,7 @@
     "buy_price": 240,
     "rarity": "rare",
     "effect": {
-      "restore_hp": 120,
+      "restore_hp": 210,
       "buffs": [
         {
           "stat": "focus",
@@ -2195,7 +2239,7 @@
     "buy_price": 290,
     "rarity": "rare",
     "effect": {
-      "restore_hp": 90,
+      "restore_hp": 170,
       "buffs": [
         {
           "stat": "luck",
@@ -2215,7 +2259,7 @@
     "buy_price": 230,
     "rarity": "rare",
     "effect": {
-      "restore_hp": 100,
+      "restore_hp": 190,
       "buffs": [
         {
           "stat": "defense",
@@ -2235,7 +2279,7 @@
     "buy_price": 380,
     "rarity": "epic",
     "effect": {
-      "restore_hp": 140,
+      "restore_hp": 260,
       "buffs": [
         {
           "stat": "evasion",
@@ -2276,7 +2320,7 @@
     "buy_price": 110,
     "rarity": "uncommon",
     "effect": {
-      "damage": 150
+      "damage": 260
     }
   },
   {
@@ -2312,7 +2356,7 @@
     "buy_price": 130,
     "rarity": "rare",
     "effect": {
-      "restore_hp": 150
+      "restore_hp": 260
     }
   },
   {
@@ -2519,7 +2563,7 @@
     "buy_price": 35,
     "rarity": "common",
     "effect": {
-      "restore_hp": 35,
+      "restore_hp": 65,
       "target": "ally",
       "cleanses": [
         "silence",
@@ -2886,7 +2930,7 @@
     "buy_price": 50,
     "rarity": "common",
     "effect": {
-      "restore_hp": 75,
+      "restore_hp": 95,
       "target": "ally"
     }
   },
@@ -3120,8 +3164,8 @@
     "rarity": "rare",
     "equipment": {
       "slot": "armor",
-      "defense": 6,
-      "hp_bonus": 20,
+      "defense": 15,
+      "hp_bonus": 55,
       "stat_mods": {
         "vitality": 2
       }
@@ -3558,7 +3602,7 @@
     "buy_price": 280,
     "rarity": "rare",
     "effect": {
-      "restore_hp": 160,
+      "restore_hp": 280,
       "buffs": [
         {
           "stat": "strength",
@@ -3578,7 +3622,7 @@
     "buy_price": 300,
     "rarity": "rare",
     "effect": {
-      "restore_hp": 140,
+      "restore_hp": 260,
       "buffs": [
         {
           "stat": "speed",
@@ -3603,7 +3647,7 @@
     "buy_price": 600,
     "rarity": "legendary",
     "effect": {
-      "restore_hp": 250,
+      "restore_hp": 450,
       "buffs": [
         {
           "stat": "strength",
@@ -3876,7 +3920,7 @@
       "duration": 3
     },
     "effect": {
-      "restore_hp": 60,
+      "restore_hp": 110,
       "target": "party"
     }
   },
@@ -3971,11 +4015,11 @@
     "rarity": "legendary",
     "equipment": {
       "slot": "armor",
-      "defense": 10,
-      "hp_bonus": 45,
+      "defense": 28,
+      "hp_bonus": 120,
       "stat_mods": {
-        "vitality": 4,
-        "strength": 2
+        "vitality": 6,
+        "strength": 5
       }
     }
   },
