@@ -66,7 +66,7 @@ class CampaignEventIntegrationTest {
             // 4,525 main-quest XP + 100 training XP; retired relay rewards contributed an invalid 480.
             assertEquals(4625 + rewards.sumOf { it.xp }, checkpoint.playerXp)
             assertEquals(rewards.sumOf { it.ap }, checkpoint.playerAp)
-            assertEquals(1250 + rewards.sumOf { it.credits }, checkpoint.playerCredits)
+            assertEquals(1450 + rewards.sumOf { it.credits }, checkpoint.playerCredits)
             assertEquals(1, checkpoint.inventory["nova_flux_liner"])
             assertTrue("Battle rewards must contribute to progression", rewards.sumOf { it.xp } > 0)
             println("BATTLE_EARNED_CHECKPOINT xp=${checkpoint.playerXp} level=${checkpoint.playerLevel} ap=${checkpoint.playerAp} credits=${checkpoint.playerCredits} inventory=${checkpoint.inventory.toSortedMap()}")
@@ -295,7 +295,7 @@ class CampaignEventIntegrationTest {
             // with the level-nine, 1,070-credit constructed combat checkpoint.
             assertEquals(4625, earned.playerXp)
             assertEquals(6, earned.playerLevel)
-            assertEquals(1250, earned.playerCredits)
+            assertEquals(1450, earned.playerCredits)
             assertEquals(0, earned.playerAp)
             val equipped = earned.copy(equippedArmors = earned.equippedArmors + ("nova" to "nova_flux_liner"))
             val restored = harness.roundTripSave(equipped)

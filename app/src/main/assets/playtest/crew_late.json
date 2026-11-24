@@ -6,7 +6,7 @@
   "playerLevel": 10,
   "playerXp": 21160,
   "playerAp": 44,
-  "playerCredits": 2903,
+  "playerCredits": 4068,
   "partyMemberXp": {
     "nova": 21160,
     "zeke": 21160,
@@ -20,10 +20,10 @@
     "gh0st": 10
   },
   "partyMemberHp": {
-    "nova": 372,
-    "zeke": 489,
-    "orion": 386,
-    "gh0st": 264
+    "nova": 396,
+    "zeke": 527,
+    "orion": 379,
+    "gh0st": 368
   },
   "trackedQuestId": "w6_mq26",
   "activeQuests": [
@@ -285,6 +285,10 @@
     "sector9_hangar_bay::west",
     "foundry_slag_river::east",
     "foundry_waste_intake::west",
+    "foundry_service_airlock::east",
+    "foundry_decon_chamber::west",
+    "foundry_service_airlock_scale_final::south",
+    "foundry_decon_chamber::north",
     "foundry_pipe_gallery::east",
     "foundry_reject_bay::west",
     "foundry_titan_dock::north",
@@ -305,16 +309,16 @@
     "scrap_metal": 6,
     "mining_pistol": 1,
     "nova_flux_liner": 1,
-    "ration_pack": 13,
-    "medkit_i": 6,
+    "ration_pack": 14,
+    "medkit_i": 7,
     "mine_access_badge": 1,
-    "armor_plate": 1,
-    "wiring_bundle": 4,
+    "wiring_bundle": 5,
     "hydraulic_fluid": 1,
     "heavy_gear": 1,
     "beast_meat": 3,
     "tuning_fork": 1,
     "stability_gyro": 1,
+    "battery": 1,
     "medkit": 1,
     "warden_keycard": 1,
     "nova_laser_blaster": 1,
@@ -1371,6 +1375,10 @@
     },
     "foundry_service_airlock": {
       "visited": true,
+      "discovered": true,
+      "airlock_open": true
+    },
+    "foundry_decon_chamber": {
       "discovered": true
     },
     "foundry_cooling_springs": {
@@ -1931,10 +1939,40 @@
     "faulted_loader": [
       "shock"
     ],
+    "acoustic_bulwark": [
+      "shock"
+    ],
     "resonance_buoy": [
       "shock"
     ],
+    "dominion_dampener": [
+      "shock"
+    ],
     "the_iron_warden": [
+      "shock"
+    ],
+    "the_beast": [
+      "shock"
+    ],
+    "heavy_mech": [
+      "shock"
+    ],
+    "administrator_boss": [
+      "shock"
+    ],
+    "titan_anchor_cannon": [
+      "shock"
+    ],
+    "titan_cutting_arm": [
+      "shock"
+    ],
+    "titan_missile_battery": [
+      "shock"
+    ],
+    "titan_walker_boss": [
+      "shock"
+    ],
+    "firewall_construct": [
       "shock"
     ]
   },

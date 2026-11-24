@@ -25,7 +25,7 @@ class EnvironmentalEffectsTest {
     private val geometry=EnvironmentalGeometry.fit(1440f,900f,9f,16f)
     @Test fun allCampaignDefinitionsAndOriginalSteamAssetsValidate() {
         assertTrue(catalog.validate().joinToString(),catalog.validate().isEmpty())
-        val rooms=data.loadRooms();assertEquals(477,rooms.size)
+        val rooms=data.loadRooms();assertEquals(445,rooms.size)
         val errors=rooms.flatMap(resolver::validateRoom);assertTrue(errors.joinToString(),errors.isEmpty())
         catalog.presets.values.filter {it.primitive=="jet"}.forEach {p->repeat(p.frameCount) {i->assertTrue(provider.exists("${p.frameAssetPrefix}%02d.png".format(i)))}}
     }

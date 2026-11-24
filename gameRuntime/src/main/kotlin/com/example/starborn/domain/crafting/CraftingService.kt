@@ -64,7 +64,7 @@ class CraftingService(
                 ModSlotComparison(target, previousId, previous?.name, deltas,
                     ModEquipmentRules.effectiveElement(state, owner, inventoryService::catalogItem),
                     ModEquipmentRules.effectiveElement(projected, owner, inventoryService::catalogItem),
-                    ModEquipmentRules.blockedReason(state, target), movingFrom)
+                    ModEquipmentRules.blockedReason(state, target, item), movingFrom)
             }
         }
     }

@@ -6,6 +6,7 @@ $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
 $assets = Join-Path $root "app/src/main/assets"
 $rawDir = Join-Path $root "app/src/main/res/raw"
+$assetAudioDir = Join-Path $root "world_assets/src/main/assets/audio"
 $minAudioBytes = 4096
 
 function Read-AssetJson($name) {
@@ -33,7 +34,12 @@ function Read-FileHeader($path, [int]$count) {
 function Get-RawAudioFile($cueId) {
     $normalized = Normalize-CueId $cueId
     if (-not $normalized) { return $null }
-    return Get-ChildItem -LiteralPath $rawDir -File -ErrorAction SilentlyContinue | Where-Object { $_.BaseName -eq $normalized } | Select-Object -First 1
+    foreach ($dir in @($rawDir, $assetAudioDir)) {
+        if (-not (Test-Path -LiteralPath $dir)) { continue }
+        $found = Get-ChildItem -LiteralPath $dir -File -ErrorAction SilentlyContinue | Where-Object { $_.BaseName -eq $normalized } | Select-Object -First 1
+        if ($null -ne $found) { return $found }
+    }
+    return $null
 }
 
 function Has-RawAudio($cueId) {

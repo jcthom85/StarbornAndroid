@@ -33,6 +33,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -43,6 +44,7 @@ import com.example.starborn.domain.model.Player
 import com.example.starborn.feature.combat.ui.CombatNameFont
 import com.example.starborn.feature.combat.ui.titleCaseName
 import com.example.starborn.ui.background.rememberAssetPainter
+import com.example.starborn.ui.dialogs.CombatInlineDrawerFrame
 import com.example.starborn.ui.theme.themeColor
 import com.example.starborn.ui.vfx.GlowProgressBar
 import java.util.Locale
@@ -450,11 +452,236 @@ fun CombatItemsDialog(
     theme: Theme?,
     highContrastMode: Boolean,
     onItemSelected: (InventoryEntry) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    inlineDrawer: Boolean = false,
+    maxDrawerHeight: Dp = 400.dp,
+    actorName: String? = null,
+    onSwitchToSkills: (() -> Unit)? = null,
+    modifier: Modifier = Modifier
 ) {
     val accent = themeColor(theme?.accent, Color(0xFF7BE4FF))
     val border = themeColor(theme?.border, Color(0xFF5CCBE8))
     val panel = themeColor(theme?.bg, Color(0xFF061018))
+    if (inlineDrawer) {
+        CombatInlineDrawerFrame(
+            accent = accent,
+            border = border,
+            panel = panel,
+            highContrastMode = highContrastMode,
+            maxHeight = maxDrawerHeight,
+            modifier = modifier
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(1.dp)
+                ) {
+                    if (!actorName.isNullOrBlank()) {
+                        Text(
+                            text = "${titleCaseName(actorName).uppercase(Locale.getDefault())} · TACTICAL PACK",
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                fontFamily = CombatNameFont,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 0.7.sp
+                            ),
+                            color = accent.copy(alpha = 0.90f),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                    Text(
+                        text = "Items",
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontFamily = CombatNameFont,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    )
+                }
+                if (onSwitchToSkills != null) {
+                    Surface(
+                        shape = RoundedCornerShape(10.dp),
+                        color = Color(0xFF141E2B),
+                        border = BorderStroke(1.dp, border.copy(alpha = 0.42f)),
+                        modifier = Modifier.clickable(onClick = onSwitchToSkills)
+                    ) {
+                        Text(
+                            text = "◂ Skills",
+                            style = MaterialTheme.typography.labelMedium.copy(
+                                fontFamily = CombatNameFont,
+                                fontWeight = FontWeight.SemiBold
+                            ),
+                            color = accent,
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp)
+                        )
+                    }
+                }
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(2.dp)
+                    .background(
+                        Brush.horizontalGradient(
+                            colors = listOf(accent.copy(alpha = 0.80f), border.copy(alpha = 0.28f), Color.Transparent)
+                        )
+                    )
+            )
+
+            if (items.isEmpty()) {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color.White.copy(alpha = 0.05f),
+                    border = BorderStroke(1.dp, border.copy(alpha = 0.24f))
+                ) {
+                    Text(
+                        text = "No usable items available.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White.copy(alpha = 0.76f),
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 16.dp)
+                    )
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f, fill = false)
+                        .heightIn(max = maxDrawerHeight),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(items, key = { it.item.id }) { entry ->
+                        val iconPainter = rememberAssetPainter(
+                            entry.item.resolvedIconAssetPath(),
+                            painterResource(R.drawable.main_menu_background),
+                            async = true
+                        )
+                        Surface(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(12.dp),
+                            color = Color(0xFF0D1622).copy(alpha = if (highContrastMode) 0.96f else 0.90f),
+                            border = BorderStroke(1.dp, border.copy(alpha = 0.36f))
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp, vertical = 10.dp),
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Surface(
+                                    shape = RoundedCornerShape(9.dp),
+                                    color = Color(0xFF151E2C),
+                                    border = BorderStroke(1.dp, border.copy(alpha = 0.32f)),
+                                    modifier = Modifier.size(38.dp)
+                                ) {
+                                    Image(
+                                        painter = iconPainter,
+                                        contentDescription = null,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(3.dp)
+                                            .clip(RoundedCornerShape(6.dp))
+                                    )
+                                }
+                                Column(
+                                    modifier = Modifier.weight(1f),
+                                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                                ) {
+                                    Text(
+                                        text = entry.item.name,
+                                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                                        color = Color.White,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    Text(
+                                        text = "${combatItemEffectSummary(entry)} · x${entry.quantity}",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = accent.copy(alpha = 0.88f),
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+                                Button(
+                                    onClick = { onItemSelected(entry) },
+                                    enabled = entry.quantity > 0,
+                                    shape = RoundedCornerShape(10.dp),
+                                    border = BorderStroke(1.dp, accent.copy(alpha = 0.72f)),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = Color(0xFF1E2534),
+                                        contentColor = Color.White
+                                    ),
+                                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp),
+                                    modifier = Modifier
+                                        .heightIn(min = 42.dp)
+                                        .widthIn(min = 82.dp)
+                                        .maestroTag("combat-item-${entry.item.id}")
+                                ) {
+                                    Text(
+                                        text = "Use",
+                                        style = MaterialTheme.typography.labelLarge.copy(
+                                            fontFamily = CombatNameFont,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = if (items.isEmpty()) "" else "${items.size} ${if (items.size == 1) "item" else "items"}",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color(0xFF93A7B6)
+                )
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    color = Color(0xFF1E2534),
+                    border = BorderStroke(1.dp, border.copy(alpha = 0.58f)),
+                    modifier = Modifier
+                        .heightIn(min = 42.dp)
+                        .maestroTag("combat-items-close")
+                        .clickable(onClick = onDismiss)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 9.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = null,
+                            tint = accent,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Text(
+                            text = "Close",
+                            style = MaterialTheme.typography.labelLarge.copy(
+                                fontFamily = CombatNameFont,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color.White
+                            )
+                        )
+                    }
+                }
+            }
+        }
+        return
+    }
     AlertDialog(
         onDismissRequest = onDismiss,
         containerColor = panel.copy(alpha = if (highContrastMode) 0.98f else 0.94f),

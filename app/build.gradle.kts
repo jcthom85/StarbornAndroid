@@ -82,6 +82,9 @@ android {
         buildConfig = true
         compose = true
     }
+    androidResources {
+        noCompress += listOf("mp3", "wav", "ogg")
+    }
     sourceSets {
         getByName("main") {
             assets.srcDir(layout.buildDirectory.dir("generated/playtestGuideAssets").get().asFile)

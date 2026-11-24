@@ -42,7 +42,9 @@ import com.example.starborn.feature.arcade.domain.ArcadeIds
 import com.example.starborn.feature.arcade.domain.ArcadeRunSubmission
 import com.example.starborn.feature.arcade.domain.ArcadeService
 import com.example.starborn.feature.arcade.games.harmonicpulse.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.withContext
 import kotlin.math.sin
 
 private val LaneCyan = Color(0xFF00F0FF)
@@ -60,15 +62,22 @@ fun HarmonicPulseArcadeScreen(
     largeTouchTargets: Boolean,
     reducedFlashes: Boolean,
     onPlayCue: (String) -> Unit,
-    hapticsDisabled: Boolean = false
+    hapticsDisabled: Boolean = false,
+    musicPositionSecondsProvider: (() -> Float?)? = null,
+    onRestartMusic: (() -> Unit)? = null,
+    onMusicPausedChanged: ((Boolean) -> Unit)? = null
 ) {
     val engine = remember { HarmonicPulseEngine() }
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
-    val backdrop = remember {
-        runCatching {
-            context.assets.open("images/arcade/harmonic_pulse/source_prism_v1.png").use { BitmapFactory.decodeStream(it)?.asImageBitmap() }
-        }.getOrNull()
+    var backdrop by remember { mutableStateOf<ImageBitmap?>(null) }
+    LaunchedEffect(context) {
+        backdrop = withContext(Dispatchers.IO) {
+            runCatching {
+                context.assets.open("images/arcade/harmonic_pulse/source_prism_v1.png")
+                    .use { BitmapFactory.decodeStream(it)?.asImageBitmap() }
+            }.getOrNull()
+        }
     }
     var snapshot by remember { mutableStateOf(engine.snapshot()) }
     var input by remember { mutableStateOf(HarmonicPulseInput()) }
@@ -76,6 +85,15 @@ fun HarmonicPulseArcadeScreen(
     var submitted by remember { mutableStateOf<ArcadeRunSubmission?>(null) }
     var tutorial by remember { mutableStateOf(true) }
     val highScore = maxOf(arcadeService.progress(ArcadeIds.HARMONIC_PULSE).highScore, submitted?.highScore ?: 0)
+    val latestMusicPositionProvider by rememberUpdatedState(musicPositionSecondsProvider)
+    val latestOnRestartMusic by rememberUpdatedState(onRestartMusic)
+    val latestOnMusicPausedChanged by rememberUpdatedState(onMusicPausedChanged)
+
+    LaunchedEffect(paused, tutorial, snapshot.gameOver) {
+        if (!tutorial && !snapshot.gameOver) {
+            latestOnMusicPausedChanged?.invoke(paused)
+        }
+    }
 
     BackHandler {
         if (!paused && !snapshot.gameOver) paused = true else onBack()
@@ -83,31 +101,48 @@ fun HarmonicPulseArcadeScreen(
 
     LaunchedEffect(engine, paused, tutorial) {
         var previous = 0L
+        var lastRawMusicSec = -1f
+        var lastRawMusicNano = 0L
         while (isActive) {
             withFrameNanos { now ->
                 if (previous != 0L && !paused && !tutorial) {
-                    engine.advance((now - previous) / 1_000_000_000f, input)
+                    val frameDeltaSec = (now - previous) / 1_000_000_000f
+                    val rawMusicSec = latestMusicPositionProvider?.invoke()
+                    val interpolatedMusicSec = if (rawMusicSec != null && rawMusicSec >= 0f) {
+                        if (rawMusicSec != lastRawMusicSec) {
+                            lastRawMusicSec = rawMusicSec
+                            lastRawMusicNano = now
+                        }
+                        val subTick = ((now - lastRawMusicNano) / 1_000_000_000f).coerceIn(0f, 0.05f)
+                        rawMusicSec + subTick
+                    } else {
+                        lastRawMusicSec = -1f
+                        null
+                    }
+                    engine.advance(frameDeltaSec, input, interpolatedMusicSec)
                     val next = engine.snapshot()
                     snapshot = next
                     when (next.audioEvent) {
                         PulseAudioEvent.HIT_NOTE -> {
-                            onPlayCue("sfx_arcade_laser")
+                            onPlayCue("ui_confirm")
                             if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                         }
                         PulseAudioEvent.HIT_PERFECT -> {
-                            onPlayCue("sfx_arcade_jump")
+                            onPlayCue("sfx_chime_splice")
                             if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                         }
                         PulseAudioEvent.OVERDRIVE_TRIGGER -> {
-                            onPlayCue("confirm")
+                            onPlayCue("sfx_skill_source_harmonic")
                             if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         }
                         PulseAudioEvent.MISS_NOTE -> {
-                            onPlayCue("action_inspect")
+                            onPlayCue("ui_error")
                             if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         }
                         PulseAudioEvent.TRACK_CLEAR -> {
-                            onPlayCue("confirm")
+                            lastRawMusicSec = -1f
+                            latestOnRestartMusic?.invoke()
+                            onPlayCue("sfx_rest_chime")
                             if (!hapticsDisabled) haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         }
                         PulseAudioEvent.GAME_OVER -> {
@@ -177,7 +212,13 @@ fun HarmonicPulseArcadeScreen(
                         "Clear all 3 cadence tracks to achieve resonance mastery."
                     ),
                     action = "START RESONANCE",
-                    onAction = { tutorial = false; onPlayCue("sfx_arcade_coin_insert") },
+                    onAction = {
+                        engine.reset()
+                        snapshot = engine.snapshot()
+                        latestOnRestartMusic?.invoke()
+                        tutorial = false
+                        onPlayCue("sfx_arcade_coin_insert")
+                    },
                     secondaryAction = "LEAVE CABINET",
                     onSecondaryAction = onBack
                 )
@@ -209,6 +250,7 @@ fun HarmonicPulseArcadeScreen(
                         snapshot = engine.snapshot()
                         submitted = null
                         input = HarmonicPulseInput()
+                        latestOnRestartMusic?.invoke()
                         onPlayCue("sfx_arcade_coin_insert")
                     },
                     secondaryAction = "LEAVE CABINET",

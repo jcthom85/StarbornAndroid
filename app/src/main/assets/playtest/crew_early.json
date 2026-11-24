@@ -6,7 +6,7 @@
   "playerLevel": 7,
   "playerXp": 6820,
   "playerAp": 26,
-  "playerCredits": 2420,
+  "playerCredits": 2680,
   "partyMemberXp": {
     "nova": 6820,
     "zeke": 6820,
@@ -228,16 +228,16 @@
     "scrap_metal": 6,
     "mining_pistol": 1,
     "nova_flux_liner": 1,
-    "ration_pack": 13,
-    "medkit_i": 6,
+    "ration_pack": 14,
+    "medkit_i": 7,
     "mine_access_badge": 1,
-    "armor_plate": 1,
-    "wiring_bundle": 3,
+    "wiring_bundle": 5,
     "hydraulic_fluid": 1,
     "heavy_gear": 1,
     "beast_meat": 3,
     "tuning_fork": 1,
     "stability_gyro": 1,
+    "battery": 1,
     "medkit": 1,
     "warden_keycard": 1,
     "nova_laser_blaster": 1,
@@ -255,7 +255,7 @@
     "gh0st_phaseweave_jacket": 1,
     "vital_signet": 1,
     "the_lens": 1,
-    "power_cell": 3
+    "power_cell": 2
   },
   "equippedItems": {},
   "equippedWeapons": {
@@ -1464,10 +1464,25 @@
     "faulted_loader": [
       "shock"
     ],
+    "acoustic_bulwark": [
+      "shock"
+    ],
     "resonance_buoy": [
       "shock"
     ],
+    "dominion_dampener": [
+      "shock"
+    ],
     "the_iron_warden": [
+      "shock"
+    ],
+    "the_beast": [
+      "shock"
+    ],
+    "heavy_mech": [
+      "shock"
+    ],
+    "administrator_boss": [
       "shock"
     ]
   },

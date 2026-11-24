@@ -1,5 +1,6 @@
 package com.example.starborn.domain.inventory
 
+import com.example.starborn.domain.model.Equipment
 import com.example.starborn.domain.model.Item
 import com.example.starborn.domain.session.GameSessionState
 
@@ -28,12 +29,56 @@ data class ModSlotComparison(
 
 object ModEquipmentRules {
     val slots = listOf("weapon_mod1", "weapon_mod2", "armor_mod1", "armor_mod2")
+    private val explicitWeaponOnlyModIds = setOf(
+        "ergonomic_grip",
+        "thermite_core_mod",
+        "magma_induction_core_mod"
+    )
+    private val explicitArmorOnlyModIds = setOf(
+        "relic_mod_thermal_aegis",
+        "relic_mod_graviton_matrix",
+        "adaptive_padding",
+        "astral_weave_mod"
+    )
+
+    fun isWeaponOnlyMod(itemId: String, equipment: Equipment?): Boolean {
+        val id = itemId.trim().lowercase()
+        if (id in explicitWeaponOnlyModIds) return true
+        val eq = equipment ?: return false
+        return !eq.attackElement.isNullOrBlank() || !eq.statusOnHit.isNullOrBlank()
+    }
+
+    fun isArmorOnlyMod(itemId: String, equipment: Equipment?): Boolean {
+        val id = itemId.trim().lowercase()
+        if (id in explicitArmorOnlyModIds) return true
+        val eq = equipment ?: return false
+        return (eq.statMods?.get("defense") ?: 0) > 0
+    }
+
+    fun isWeaponOnlyMod(item: Item): Boolean = isWeaponOnlyMod(item.id, item.equipment)
+
+    fun isArmorOnlyMod(item: Item): Boolean = isArmorOnlyMod(item.id, item.equipment)
+
+    fun slotCompatibilityError(slotId: String, itemId: String, equipment: Equipment?): String? {
+        val slot = slotId.trim().lowercase()
+        return when {
+            slot.startsWith("weapon_") && isArmorOnlyMod(itemId, equipment) ->
+                "Armor plating and defensive mods can only be installed in armor mod slots."
+            slot.startsWith("armor_") && isWeaponOnlyMod(itemId, equipment) ->
+                "Weapon payload and strike mods can only be installed in weapon mod slots."
+            else -> null
+        }
+    }
+
+    fun slotCompatibilityError(slotId: String, item: Item): String? =
+        slotCompatibilityError(slotId, item.id, item.equipment)
+
     fun locations(state: GameSessionState, itemId: String): List<ModLocation> = state.equippedItems.mapNotNull { (key, value) ->
         val slot = key.substringAfter(':')
         if (':' in key && slot in slots && value.equals(itemId, true)) ModLocation(key.substringBefore(':'), slot) else null
     }
 
-    fun blockedReason(state: GameSessionState, target: ModLocation): String? {
+    fun blockedReason(state: GameSessionState, target: ModLocation, item: Item? = null): String? {
         val owner = target.characterId.lowercase()
         val slot = target.slotId.lowercase()
         val party = state.partyMembers.ifEmpty { listOfNotNull(state.playerId) }
@@ -43,6 +88,7 @@ object ModEquipmentRules {
             !GearRules.isModSlotUnlocked(slot, state.completedMilestones) -> "This slot is locked by story progress."
             slot.startsWith("weapon_") && state.equippedWeapons[owner].isNullOrBlank() -> "Equip a weapon first."
             slot.startsWith("armor_") && state.equippedArmors[owner].isNullOrBlank() -> "Equip armor first."
+            item != null -> slotCompatibilityError(slot, item)
             else -> null
         }
     }
@@ -53,6 +99,7 @@ object ModEquipmentRules {
         blockedReason(state, target)?.let { return state to ModEquipResult.Rejected(it) }
         if (item.equipment?.slot?.equals("mod", true) != true && !item.type.equals("mod", true))
             return state to ModEquipResult.Rejected("This item is not a mod.")
+        slotCompatibilityError(target.slotId, item)?.let { return state to ModEquipResult.Rejected(it) }
         val owned = state.inventory[item.id] ?: 0
         if (owned <= 0) return state to ModEquipResult.Rejected("You don't own this mod.")
         val assigned = locations(state, item.id)

@@ -113,6 +113,8 @@ data class ItemEffect(
     @Json(name = "restore_hp")
     val restoreHp: Int? = null,
     val damage: Int? = null,
+    @Json(name = "damage_type")
+    val damageType: String? = null,
     @Json(name = "learn_schematic")
     val learnSchematic: String? = null,
     @Json(name = "buff_stat")

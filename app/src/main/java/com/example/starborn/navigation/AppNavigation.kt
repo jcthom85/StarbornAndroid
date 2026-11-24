@@ -73,7 +73,7 @@ import com.example.starborn.domain.audio.AudioCueType
 import com.example.starborn.domain.audio.AudioCommand
 import androidx.compose.runtime.DisposableEffect
 import com.example.starborn.feature.exploration.ui.TransitionMode
-import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -127,8 +127,12 @@ internal fun CampaignNavigationHost(
         services.audioCuePlayer,
         userSettings.musicVolume,
         userSettings.sfxVolume,
-        userSettings.voiceVolume
+        userSettings.voiceVolume,
+        userSettings.disableHaptics
     ) {
+        val hapticsEnabled = !userSettings.disableHaptics
+        com.example.starborn.ui.haptics.Haptics.enabled = hapticsEnabled
+        services.audioCuePlayer.setHapticsEnabled(hapticsEnabled)
         services.audioCuePlayer.setUserMusicGain(userSettings.musicVolume)
         services.audioCuePlayer.setUserSfxGain(userSettings.sfxVolume)
         services.audioCuePlayer.setUserVoiceGain(userSettings.voiceVolume)
@@ -307,10 +311,29 @@ internal fun CampaignNavigationHost(
                 }
             )
         }
-        composable(Exploration.route, exitTransition = {
-            if (onDemoCombatComposed != null && targetState.destination.route == Combat.route)
-                androidx.compose.animation.ExitTransition.None else null
-        }) { backStackEntry ->
+        composable(
+            route = Exploration.route,
+            enterTransition = {
+                if (initialState.destination.route == Combat.route) {
+                    androidx.compose.animation.EnterTransition.None
+                } else null
+            },
+            exitTransition = {
+                if (targetState.destination.route == Combat.route) {
+                    androidx.compose.animation.ExitTransition.None
+                } else null
+            },
+            popEnterTransition = {
+                if (initialState.destination.route == Combat.route) {
+                    androidx.compose.animation.EnterTransition.None
+                } else null
+            },
+            popExitTransition = {
+                if (targetState.destination.route == Combat.route) {
+                    androidx.compose.animation.ExitTransition.None
+                } else null
+            }
+        ) { backStackEntry ->
             val explorationViewModel: ExplorationViewModel = viewModel(factory = ExplorationViewModelFactory(services))
             val craftingViewModel: CraftingViewModel = viewModel(
                 factory = CraftingViewModelFactory(
@@ -320,6 +343,7 @@ internal fun CampaignNavigationHost(
                 )
             )
             var combatTransitionVisible by remember { mutableStateOf(false) }
+            var combatReturnVeilVisible by remember { mutableStateOf(false) }
             var pendingCombatEnemyIds by remember { mutableStateOf<List<String>?>(null) }
             val pulseScale = remember { androidx.compose.animation.core.Animatable(1f) }
 
@@ -330,14 +354,14 @@ internal fun CampaignNavigationHost(
             }
 
             LaunchedEffect(combatTransitionVisible) {
-                if (combatTransitionVisible) {
+                if (combatTransitionVisible && !userSettings.disableScreenshake) {
                     pulseScale.animateTo(
-                        targetValue = 1.05f,
-                        animationSpec = androidx.compose.animation.core.tween(100)
+                        targetValue = 1.022f,
+                        animationSpec = androidx.compose.animation.core.tween(90)
                     )
                     pulseScale.animateTo(
                         targetValue = 1f,
-                        animationSpec = androidx.compose.animation.core.tween(100)
+                        animationSpec = androidx.compose.animation.core.tween(110)
                     )
                 } else {
                     pulseScale.snapTo(1f)
@@ -357,6 +381,8 @@ internal fun CampaignNavigationHost(
                 launch {
                     resultFlow.collect { result ->
                         if (!result.isPlaceholder) {
+                            combatTransitionVisible = false
+                            combatReturnVeilVisible = onDemoCombatResult == null
                             if (onDemoCombatResult != null) onDemoCombatResult(result)
                             else when (result.outcome) {
                                 CombatResultPayload.Outcome.VICTORY ->
@@ -409,7 +435,11 @@ internal fun CampaignNavigationHost(
                     audioCuePlayer = services.audioCuePlayer,
                     uiEventBus = services.uiEventBus,
                     questPresentations = services.questPresentations,
-                    modifier = Modifier.scale(pulseScale.value),
+                    modifier = Modifier.graphicsLayer {
+                        val s = pulseScale.value
+                        scaleX = s
+                        scaleY = s
+                    },
                     onEnemySelected = { enemyIds ->
                         if (enemyIds.isEmpty() || combatTransitionVisible) return@ExplorationScreen
                         services.audioCuePlayer.execute(
@@ -485,6 +515,16 @@ internal fun CampaignNavigationHost(
                             combatTransitionVisible = false
                         }
                     }
+                )
+
+                CombatTransitionOverlay(
+                    visible = combatReturnVeilVisible,
+                    theme = environmentThemeState.theme,
+                    suppressFlashes = userSettings.disableFlashes,
+                    highContrastMode = userSettings.highContrastMode,
+                    mode = TransitionMode.QUICK_OPEN,
+                    mainText = "",
+                    onFinished = { combatReturnVeilVisible = false }
                 )
             }
         }
@@ -632,7 +672,7 @@ internal fun CampaignNavigationHost(
                     ArcadeIds.ORBITAL_DEFENSE, ArcadeIds.HARMONIC_PULSE)) {
                 DisposableEffect(cabinetId) {
                     val preferredCue = ArcadeIds.musicCueFor(cabinetId)
-                    val resolvedCue = if (context.resources.getIdentifier(preferredCue, "raw", context.packageName) != 0) {
+                    val resolvedCue = if (services.audioCuePlayer.hasCue(preferredCue)) {
                         preferredCue
                     } else {
                         ArcadeIds.DEFAULT_MUSIC_CUE
@@ -689,7 +729,18 @@ internal fun CampaignNavigationHost(
                             largeTouchTargets = userSettings.largeTouchTargets,
                             reducedFlashes = userSettings.disableFlashes,
                             onPlayCue = { cue -> services.audioCuePlayer.execute(services.audioRouter.commandsForUi(cue)) },
-                            hapticsDisabled = userSettings.disableHaptics
+                            hapticsDisabled = userSettings.disableHaptics,
+                            musicPositionSecondsProvider = {
+                                services.audioCuePlayer
+                                    .currentMusicPositionMs("music_arcade_harmonic_pulse")
+                                    ?.let { it / 1000f }
+                            },
+                            onRestartMusic = {
+                                services.audioCuePlayer.restartCurrentMusicFromStart("music_arcade_harmonic_pulse")
+                            },
+                            onMusicPausedChanged = { isPaused ->
+                                services.audioCuePlayer.setMusicPausedForOverlay(isPaused, "music_arcade_harmonic_pulse")
+                            }
                         )
                     }
                     else -> {
@@ -709,9 +760,10 @@ internal fun CampaignNavigationHost(
         }
         composable(
             route = Combat.route,
-            enterTransition = {
-                if (onDemoCombatComposed != null) androidx.compose.animation.EnterTransition.None else null
-            },
+            enterTransition = { androidx.compose.animation.EnterTransition.None },
+            exitTransition = { androidx.compose.animation.ExitTransition.None },
+            popEnterTransition = { androidx.compose.animation.EnterTransition.None },
+            popExitTransition = { androidx.compose.animation.ExitTransition.None },
             arguments = listOf(navArgument("enemyIds") { type = NavType.StringType })
         ) { backStackEntry ->
             val encoded = backStackEntry.arguments?.getString("enemyIds")
@@ -741,7 +793,35 @@ internal fun CampaignNavigationHost(
                     largeTouchTargets = userSettings.largeTouchTargets,
                     showCombatActionText = showCombatActionText,
                     cinematicState = services.cinematicState,
-                    onAdvanceCinematic = services.cinematicCoordinator::advance
+                    onAdvanceCinematic = services.cinematicCoordinator::advance,
+                    musicVolume = userSettings.musicVolume,
+                    sfxVolume = userSettings.sfxVolume,
+                    voiceVolume = userSettings.voiceVolume,
+                    disableHaptics = userSettings.disableHaptics,
+                    onMusicVolumeChange = { value ->
+                        settingsScope.launch { services.userSettingsStore.setMusicVolume(value) }
+                    },
+                    onSfxVolumeChange = { value ->
+                        settingsScope.launch { services.userSettingsStore.setSfxVolume(value) }
+                    },
+                    onVoiceVolumeChange = { value ->
+                        settingsScope.launch { services.userSettingsStore.setVoiceVolume(value) }
+                    },
+                    onToggleScreenshakeDisabled = { disabled ->
+                        settingsScope.launch { services.userSettingsStore.setScreenshakeDisabled(disabled) }
+                    },
+                    onToggleFlashesDisabled = { disabled ->
+                        settingsScope.launch { services.userSettingsStore.setFlashesDisabled(disabled) }
+                    },
+                    onToggleHapticsDisabled = { disabled ->
+                        settingsScope.launch { services.userSettingsStore.setHapticsDisabled(disabled) }
+                    },
+                    onToggleLargeTouchTargets = { enabled ->
+                        settingsScope.launch { services.userSettingsStore.setLargeTouchTargets(enabled) }
+                    },
+                    onToggleHighContrast = { enabled ->
+                        settingsScope.launch { services.userSettingsStore.setHighContrastMode(enabled) }
+                    }
                 )
                 // Release the booth cover only after the combat surface and its opaque
                 // reveal overlay have successfully composed, not on back-stack mutation.

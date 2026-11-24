@@ -178,8 +178,22 @@ fun SettingsTabContent(
             }
         }
 
-        // 4. Collapsible Developer & Playtest Tools Footer
-        if (onDebugTinkeringTutorial != null || onOpenWalkthrough != null || onEnvironmentalPreview != null) {
+        // 4. Player Field Guides (available independently of developer/playtest tools)
+        if (onOpenWalkthrough != null && onDebugTinkeringTutorial == null && onEnvironmentalPreview == null) {
+            SettingsCardContainer(title = "FIELD GUIDES", accentColor = FieldMenuDesign.cyan) {
+                OutlinedButton(
+                    onClick = onOpenWalkthrough,
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 44.dp),
+                    shape = RoundedCornerShape(10.dp),
+                    border = BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = 0.5f))
+                ) {
+                    Text("Campaign field guides", color = FieldMenuDesign.text)
+                }
+            }
+        }
+
+        // 5. Collapsible Developer & Playtest Tools Footer (debug / scenario builds only)
+        if (onDebugTinkeringTutorial != null || onEnvironmentalPreview != null) {
             Surface(
                 onClick = { showDevTools = !showDevTools },
                 shape = RoundedCornerShape(12.dp),

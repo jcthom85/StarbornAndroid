@@ -213,7 +213,7 @@
       "name": "Mira",
       "group": "World 1",
       "recommendation": "Retain",
-      "currentPortrait": "images/npcs/mira.webp",
+      "currentPortrait": "images/npcs/mira_portrait_v2.png",
       "rooms": [
         "workshop_yard"
       ],

@@ -1953,5 +1953,35 @@
     "id": "ms_fishing_clean_waters",
     "name": "Clean-Water Angler",
     "description": "Recorded a clean native catch in every fishing water."
+  },
+  {
+    "id": "ms_w4_landmark_refusal_trench",
+    "name": "Unit 09's Unburned Cell",
+    "description": "Discharged the quarantine latch in the Phantom Refusal Trench and salvaged the unburned coolant cell."
+  },
+  {
+    "id": "ms_w4_landmark_slag_chapel",
+    "name": "Bolt for the Missing Shift",
+    "description": "Tempered and seated a brass bolt into the Foundry casters' hidden Slag Chapel."
+  },
+  {
+    "id": "ms_w5_landmark_quarantined_berth",
+    "name": "Names Returned to the Board",
+    "description": "Restored the wiped passenger departure names in the Quarantined Berth Concourse."
+  },
+  {
+    "id": "ms_w5_landmark_birdsong_rig",
+    "name": "Sparrows Behind the False Sun",
+    "description": "Cleaned the gardener's taped birdsong deck behind the Solarium heliostat array."
+  },
+  {
+    "id": "ms_w6_landmark_memory_counter",
+    "name": "Four Seats Kept",
+    "description": "Shared a quiet pause at the crew's Half-Remembered Counter above the Source tide."
+  },
+  {
+    "id": "ms_w6_landmark_unruly_amphitheater",
+    "name": "Rough Human Harmony",
+    "description": "Sounded the off-pitch tuning forks together in the Amphitheater of Unruly Pitch."
   }
 ]

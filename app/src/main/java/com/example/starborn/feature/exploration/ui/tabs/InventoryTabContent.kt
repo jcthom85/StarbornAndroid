@@ -1308,10 +1308,14 @@ internal fun InventoryEquipmentPreview(
         val equippedKey = "${characterId.lowercase(Locale.getDefault())}:$normalizedSlot"
         val equippedId = equippedItems[equippedKey].orEmpty()
         val characterName = partyMembers.firstOrNull { it.id == characterId }?.name ?: characterId
+        val compatibleModOptions = modOptions.filter { option ->
+            com.example.starborn.domain.inventory.ModEquipmentRules
+                .slotCompatibilityError(normalizedSlot, option.id, option.equipment) == null
+        }
         GearSelectionDialog(
             characterName = characterName,
             slotLabel = slotLabel(slotId),
-            options = modOptions.map { option ->
+            options = compatibleModOptions.map { option ->
                 val equippedCount = equippedItems.values.count { it == option.id }
                 option.copy(description = "Owned: ${option.quantity} - Equipped: $equippedCount - Available: ${(option.quantity - equippedCount).coerceAtLeast(0)}\n${option.description.orEmpty()}")
             },

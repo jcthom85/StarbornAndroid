@@ -58,7 +58,7 @@ class CampaignEconomyStarvationTest {
                 .distinct()
         }
 
-        // Baseline essential purchases per world (medkits and core trauma restoratives)
+        // Baseline essential consumable purchases per world
         val baselinePurchasesPerWorld = mapOf(
             1 to listOf("medkit" to 2),
             2 to listOf("medkit" to 3),
@@ -66,6 +66,16 @@ class CampaignEconomyStarvationTest {
             4 to listOf("medkit" to 4),
             5 to listOf("medkit" to 4),
             6 to listOf("medkit" to 5)
+        )
+
+        // Progressive ungrinded gear & mod upgrades purchased from regional shops along the clean route
+        val gearUpgradesPerWorld = mapOf(
+            1 to listOf("nova_laser_blaster" to 1.20),
+            2 to listOf("orion_channeler_mantle" to 1.20, "power_lens_mk_i" to 1.20),
+            3 to listOf("nova_plasma_shotgun" to 1.15, "zeke_quake_knuckles" to 1.15, "orion_driftweave_cloak" to 1.15),
+            4 to listOf("nova_rocket_launcher" to 1.20, "heat_liner" to 1.20),
+            5 to listOf("orion_stasis_core" to 1.25, "gh0st_nullguard_coat" to 1.25, "rapid_capacitor" to 1.20),
+            6 to emptyList()
         )
 
         // Fixed quest credit rewards defined in events.json
@@ -101,8 +111,8 @@ class CampaignEconomyStarvationTest {
 
             for (enemyId in enemies) {
                 val enemy = allEnemies[enemyId]
-                // Credit drop from enemy
-                val creditReward = enemy?.creditReward?.takeIf { it > 0 } ?: 20
+                // Exact authored credit drop (never invent phantom credits for 0-CR enemies)
+                val creditReward = (enemy?.creditReward ?: 0).coerceAtLeast(0)
                 combatCreditsEarned += creditReward
 
                 // Baseline salvage/drop liquidation (selling 1 common scrap drop to vendor at markdown)
@@ -119,28 +129,34 @@ class CampaignEconomyStarvationTest {
             val questCredits = questCreditsByWorld[world] ?: 0
             playerCredits += questCredits
 
-            // 3. Outflow for mandatory healing and consumable supplies
+            // 3. Outflow for mandatory healing supplies + progressive gear/mod upgrades
             val purchases = baselinePurchasesPerWorld[world].orEmpty()
             var suppliesCost = 0
             for ((itemId, qty) in purchases) {
-                val item = allItems[itemId]
-                val basePrice = item?.value ?: 25
+                val item = requireNotNull(allItems[itemId]) { "Missing supply item $itemId" }
+                val basePrice = (item.buyPrice ?: item.value).coerceAtLeast(1)
                 val purchasePrice = (basePrice * 1.2).roundToInt()
                 suppliesCost += purchasePrice * qty
             }
-            playerCredits -= suppliesCost
+            var gearCost = 0
+            for ((gearId, shopMarkup) in gearUpgradesPerWorld[world].orEmpty()) {
+                val gearItem = requireNotNull(allItems[gearId]) { "Missing gear upgrade item $gearId" }
+                val basePrice = (gearItem.buyPrice ?: gearItem.value).coerceAtLeast(1)
+                gearCost += (basePrice * shopMarkup).roundToInt()
+            }
+            playerCredits -= (suppliesCost + gearCost)
 
             // Invariant: Player balance must NEVER drop below 0 (no starvation / bankruptcy soft-lock)
             assertTrue(
-                "World $world economy must remain solvent (balance was $playerCredits, started with $startingWorldBalance, earned +${combatCreditsEarned + lootSalvageCredits} combat/loot, spent -$suppliesCost on supplies)",
+                "World $world economy must remain solvent after supplies + gear upgrades (balance was $playerCredits, started with $startingWorldBalance, earned +${combatCreditsEarned + lootSalvageCredits} combat/loot +$questCredits quest, spent -$suppliesCost supplies -$gearCost gear)",
                 playerCredits >= 0
             )
         }
 
         // Final verification: player reaches endgame solvent with a comfortable surplus
         assertTrue(
-            "Player should reach endgame solvent with surplus credits (balance was $playerCredits)",
-            playerCredits >= 100
+            "Player should reach endgame solvent after full clean-route gear & supply progression (balance was $playerCredits)",
+            playerCredits >= 200
         )
     }
 

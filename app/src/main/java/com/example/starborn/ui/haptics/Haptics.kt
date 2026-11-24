@@ -13,8 +13,12 @@ enum class HapticType { TICK, SUCCESS, ALERT }
 
 object Haptics {
 
+    @Volatile
+    var enabled: Boolean = true
+
     @Suppress("DEPRECATION")
     fun pulse(context: Context, type: HapticType) {
+        if (!enabled) return
         val permissionGranted = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.VIBRATE

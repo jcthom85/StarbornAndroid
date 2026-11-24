@@ -186,33 +186,33 @@ fun MainMenuScreen(
 
     LaunchedEffect(introFastForward) {
         if (introFastForward) {
-            // Tapping the title screen during intro fast-forwards all elements to full fade-in over ~2s
+            // Tapping the title screen during intro fast-forwards all elements to full fade-in over 250ms
             launch {
                 logoFadeAlpha.animateTo(
                     targetValue = 1f,
-                    animationSpec = tween(durationMillis = 2000, easing = FastOutSlowInEasing)
+                    animationSpec = tween(durationMillis = 250, easing = FastOutSlowInEasing)
                 )
             }
             launch {
                 starfieldFadeAlpha.animateTo(
                     targetValue = 1f,
-                    animationSpec = tween(durationMillis = 2000, easing = FastOutSlowInEasing)
+                    animationSpec = tween(durationMillis = 250, easing = FastOutSlowInEasing)
                 )
             }
             launch {
                 bgFadeAlpha.animateTo(
                     targetValue = 1f,
-                    animationSpec = tween(durationMillis = 2000, easing = FastOutSlowInEasing)
+                    animationSpec = tween(durationMillis = 250, easing = FastOutSlowInEasing)
                 )
             }
             launch {
                 buttonsFadeAlpha.animateTo(
                     targetValue = 1f,
-                    animationSpec = tween(durationMillis = 2000, easing = LinearEasing)
+                    animationSpec = tween(durationMillis = 250, easing = FastOutSlowInEasing)
                 )
             }
             launch {
-                delay(2000)
+                delay(250)
                 bgZoomFactor.animateTo(
                     targetValue = 1f,
                     animationSpec = tween(durationMillis = 5000, easing = FastOutSlowInEasing)
@@ -369,7 +369,7 @@ fun MainMenuScreen(
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
-                enabled = buttonsFadeAlpha.value < 0.95f
+                enabled = !introFastForward && buttonsFadeAlpha.value < 0.35f
             ) {
                 introFastForward = true
             }
@@ -486,8 +486,8 @@ fun MainMenuScreen(
                 }
         )
 
-        // Stage 3: Title screen buttons fade in over ~2.2s alongside background start
-        val buttonsInteractable = buttonsFadeAlpha.value >= 0.95f && !startingGame && pendingScenario == null && pendingLoadSlot == null
+        // Stage 3: Title screen buttons fade in alongside background start; unlock taps as soon as readable
+        val buttonsInteractable = buttonsFadeAlpha.value >= 0.35f && !startingGame && !startingGamePlus && pendingScenario == null && pendingLoadSlot == null
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)

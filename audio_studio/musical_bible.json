@@ -1720,7 +1720,7 @@
       "target_lufs": -12.5,
       "cues": [
         {"id": "battle_start", "duration": 1.5, "prompt": "Punchy dramatic JRPG battle engage sting, sharp analog synth brass stab and low kinetic impact"},
-        {"id": "sfx_combat_transition_slam", "duration": 1.8, "prompt": "Sudden metallic ambush slam with deep sub boom and crisp tactical warning chirp"},
+        {"id": "sfx_combat_transition_slam", "duration": 1.3, "prompt": "Sleek sci-fi RPG combat engage transition: crisp magnetic shutter whoosh into a tight punchy sub-bass pulse and luminous crystalline harmonic fifth lock-on ring, clean modern game UI sound design, smooth fast decay, no harsh alarm beep"},
         {"id": "shield_block", "duration": 0.9, "prompt": "Heavy solid metal plate slamming shut against kinetic impact, dry resonant clank"},
         {"id": "shield_break", "duration": 1.3, "prompt": "Violent steel and energy barrier shattering under pressure, sharp metallic fracture"},
         {"id": "battle_weakness_resolve", "duration": 0.9, "prompt": "Two clean glass chimes forming a luminous perfect fifth with warm cello harmonic bloom"},

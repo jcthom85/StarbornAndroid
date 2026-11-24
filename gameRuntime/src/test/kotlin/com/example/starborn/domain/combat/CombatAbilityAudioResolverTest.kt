@@ -56,6 +56,7 @@ class CombatAbilityAudioResolverTest {
         val battleBindings = loadBattleBindings()
         val catalogIds = loadCatalogIds()
         val rawDir = File(repoRoot(), "app/src/main/res/raw")
+        val assetAudioDir = File(repoRoot(), "world_assets/src/main/assets/audio")
 
         for (skill in skills) {
             if (skill.type.equals("passive", ignoreCase = true)) continue
@@ -73,10 +74,10 @@ class CombatAbilityAudioResolverTest {
             val cueId = battleBindings[battleKey]
             assertNotNull("Skill '${skill.id}' resolved to unbound battle key '$battleKey'", cueId)
             assertTrue("Battle key '$battleKey' -> cue '$cueId' missing from audio_catalog.json", cueId in catalogIds)
-            val mp3 = File(rawDir, "$cueId.mp3")
-            val ogg = File(rawDir, "$cueId.ogg")
-            val wav = File(rawDir, "$cueId.wav")
-            assertTrue("Raw audio file missing for cue '$cueId' (skill '${skill.id}')", mp3.exists() || ogg.exists() || wav.exists())
+            val exists = listOf(rawDir, assetAudioDir).any { dir ->
+                File(dir, "$cueId.mp3").exists() || File(dir, "$cueId.ogg").exists() || File(dir, "$cueId.wav").exists()
+            }
+            assertTrue("Audio file missing for cue '$cueId' (skill '${skill.id}')", exists)
         }
     }
 

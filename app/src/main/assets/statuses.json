@@ -4,6 +4,7 @@
     "name": "Radiators Exposed",
     "default_duration": 2,
     "defense_multiplier": 0.0,
+    "incoming_multiplier": 1.25,
     "target": "self"
   },
   {
@@ -88,6 +89,7 @@
     "name": "Exposed",
     "default_duration": 1,
     "defense_multiplier": 0.0,
+    "incoming_multiplier": 1.25,
     "target": "enemy"
   },
   {
@@ -97,6 +99,17 @@
     "incoming_multiplier": 0.5,
     "prevent_stagger": true,
     "target": "ally"
+  },
+  {
+    "id": "defend",
+    "name": "Guarding",
+    "default_duration": 1,
+    "incoming_multiplier": 0.5,
+    "prevent_stagger": true,
+    "target": "ally",
+    "aliases": [
+      "defending"
+    ]
   },
   {
     "id": "braced",
@@ -242,6 +255,7 @@
     "name": "Overextended",
     "default_duration": 1,
     "defense_multiplier": 0.5,
+    "incoming_multiplier": 1.25,
     "target": "self"
   },
   {
@@ -256,6 +270,7 @@
     "name": "Exposed Vents",
     "default_duration": 2,
     "defense_multiplier": 0.7,
+    "incoming_multiplier": 1.2,
     "target": "self"
   },
   {

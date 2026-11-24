@@ -1,41 +1,53 @@
 package com.example.starborn.feature.exploration.ui
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.lerp
 import com.example.starborn.data.local.Theme
+import com.example.starborn.feature.combat.ui.CombatNameFont
 import com.example.starborn.ui.theme.themeColor
-import kotlin.math.hypot
-import kotlin.random.Random
+import kotlin.math.PI
+import kotlin.math.abs
+import kotlin.math.exp
+import kotlin.math.sin
 
 enum class TransitionMode {
     FULL,
     ENTER,
-    EXIT
+    EXIT,
+    QUICK_CLOSE,
+    QUICK_OPEN
 }
 
 @Composable
@@ -45,35 +57,78 @@ fun CombatTransitionOverlay(
     suppressFlashes: Boolean,
     highContrastMode: Boolean,
     mode: TransitionMode = TransitionMode.FULL,
-    mainText: String = "HOSTILES",
-    subText: String = "INCOMING!",
+    mainText: String = "HOSTILE CONTACT",
+    subText: String = "",
+    holdUntilReady: Boolean = false,
     onFinished: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (!visible) return
 
-    val progress = remember { Animatable(if (mode == TransitionMode.EXIT) 0.85f else 0f) }
+    val initialValue = when (mode) {
+        TransitionMode.EXIT -> 0.72f
+        TransitionMode.QUICK_OPEN -> 1f
+        else -> 0f
+    }
+    val progress = remember(mode) { Animatable(initialValue) }
 
-    // Resolve Theme Colors
-    val defaultAccent = Color(0xFFE91E63) // Default Fallback (Punchy Pink)
-    val defaultBg = Color(0xFF121212)
-    
+    val defaultAccent = Color(0xFF5CE1FF)
+    val defaultBg = Color(0xFF060D18)
+    val defaultBorder = Color(0xFF2B7A9B)
+
     val accentColor = themeColor(theme?.accent, defaultAccent)
     val bgColor = themeColor(theme?.bg, defaultBg)
-    val borderColor = themeColor(theme?.border, Color.Gray)
+    val borderColor = themeColor(theme?.border, defaultBorder)
+    val wavePath = remember { Path() }
 
-    LaunchedEffect(visible, mode) {
-        val start = if (mode == TransitionMode.EXIT) 0.85f else 0f
-        val end = if (mode == TransitionMode.ENTER) 0.85f else 1f
-        val duration = if (mode == TransitionMode.EXIT) 250 else 1400
-        val adjustedDuration = if (mode == TransitionMode.ENTER) (1400 * 0.85).toInt() else duration
-        
-        progress.snapTo(start)
-        progress.animateTo(
-            targetValue = end,
-            animationSpec = tween(durationMillis = adjustedDuration, easing = LinearEasing)
-        )
-        onFinished()
+    LaunchedEffect(visible, mode, holdUntilReady) {
+        when (mode) {
+            TransitionMode.ENTER -> {
+                progress.snapTo(0f)
+                progress.animateTo(
+                    targetValue = 0.72f,
+                    animationSpec = tween(durationMillis = 580, easing = LinearEasing)
+                )
+                onFinished()
+            }
+            TransitionMode.EXIT -> {
+                progress.snapTo(0.72f)
+                if (holdUntilReady) return@LaunchedEffect
+                // Let one frame settle so newly composed battle sprites are warm on the GPU.
+                withFrameNanos { }
+                progress.animateTo(
+                    targetValue = 1f,
+                    animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
+                )
+                onFinished()
+            }
+            TransitionMode.FULL -> {
+                progress.snapTo(0f)
+                progress.animateTo(
+                    targetValue = 1f,
+                    animationSpec = tween(durationMillis = 880, easing = LinearEasing)
+                )
+                onFinished()
+            }
+            TransitionMode.QUICK_CLOSE -> {
+                progress.snapTo(0f)
+                val closeDuration = if (mainText.isNotBlank()) 680 else 250
+                progress.animateTo(
+                    targetValue = 1f,
+                    animationSpec = tween(durationMillis = closeDuration, easing = FastOutSlowInEasing)
+                )
+                onFinished()
+            }
+            TransitionMode.QUICK_OPEN -> {
+                progress.snapTo(1f)
+                withFrameNanos { }
+                progress.animateTo(
+                    targetValue = 0f,
+                    animationSpec = tween(durationMillis = 230, easing = LinearOutSlowInEasing)
+                )
+                onFinished()
+            }
+        }
     }
 
     val t = progress.value
@@ -81,244 +136,274 @@ fun CombatTransitionOverlay(
     Box(
         modifier = modifier
             .fillMaxSize()
+            .graphicsLayer()
             .pointerInput(Unit) {
                 awaitPointerEventScope {
-                    while (true) { awaitPointerEvent() }
+                    while (true) {
+                        awaitPointerEvent()
+                    }
                 }
             }
     ) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val w = size.width
-            val h = size.height
-            val center = Offset(w / 2f, h / 2f)
-
-            // --- Phase 1: The Slash (Wipe) ---
-            // 0.0 -> 0.3: Slashes slam in quickly
-            val slashT = (t / 0.3f).coerceIn(0f, 1f)
-            val slashEase = FastOutSlowInEasing.transform(slashT)
-
-            // Rotate the entire canvas for the "Angled Wipe" effect
-            rotate(degrees = -15f, pivot = center) {
-                // Oversized dimensions to ensure corner coverage during rotation
-                val barWidth = w * 2.5f
-                val barHeight = h * 0.8f 
-                val barLeft = center.x - barWidth / 2f
-                
-                // Top Half Slam
-                // Starts way up, slams down to cover center-top
-                val topTargetY = center.y - barHeight
-                val topStartY = -h * 1.5f
-                val topCurrentY = androidx.compose.ui.util.lerp(topStartY, topTargetY, slashEase)
-                
-                drawRect(
-                    color = bgColor,
-                    topLeft = Offset(barLeft, topCurrentY),
-                    size = Size(barWidth, barHeight)
-                )
-                // Glowing Edge (Top)
-                drawRect(
-                    color = accentColor,
-                    topLeft = Offset(barLeft, topCurrentY + barHeight - 20f),
-                    size = Size(barWidth, 20f)
-                )
-
-                // Bottom Half Slam
-                // Starts way down, slams up to cover center-bottom
-                val bottomTargetY = center.y
-                val bottomStartY = h * 2.5f
-                val bottomCurrentY = androidx.compose.ui.util.lerp(bottomStartY, bottomTargetY, slashEase)
-
-                drawRect(
-                    color = bgColor,
-                    topLeft = Offset(barLeft, bottomCurrentY),
-                    size = Size(barWidth, barHeight)
-                )
-                // Glowing Edge (Bottom)
-                drawRect(
-                    color = accentColor,
-                    topLeft = Offset(barLeft, bottomCurrentY),
-                    size = Size(barWidth, 20f)
-                )
-            }
-
-            // --- Phase 2: The Hold (Full Coverage) ---
-            // 0.25 -> 0.85: Screen is fully blocked (or held indefinitely for ENTER until navigation leaves)
-            if (t > 0.25f && (mode == TransitionMode.ENTER || t <= 0.85f)) {
-                // Background fill to ensure no leaks
-                drawRect(color = bgColor)
-                
-                // Dynamic "Speed Lines" in background
-                val lineT = ((t - 0.25f) / 0.6f).coerceIn(0f, 1f)
-                val lineOffset = w * lineT
-                
-                rotate(degrees = -15f, pivot = center) {
-                    // Decorative accent lines passing through
-                    drawRect(
-                        color = borderColor.copy(alpha = 0.3f),
-                        topLeft = Offset(lineOffset, -h * 0.2f),
-                        size = Size(50f, h * 2f)
-                    )
-                    drawRect(
-                        color = accentColor.copy(alpha = 0.2f),
-                        topLeft = Offset(w - lineOffset, -h * 0.2f),
-                        size = Size(20f, h * 2f)
+        if (mode == TransitionMode.QUICK_CLOSE || mode == TransitionMode.QUICK_OPEN) {
+            val coverAlpha = t.coerceIn(0f, 1f)
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val w = size.width
+                val h = size.height
+                val cy = h * 0.5f
+                drawRect(color = bgColor.copy(alpha = coverAlpha))
+                val seamAlpha = (sin(coverAlpha * PI.toFloat()) * 0.85f).coerceIn(0f, 1f)
+                if (seamAlpha > 0.02f) {
+                    val halfSpan = w * (0.18f + 0.32f * sin(coverAlpha * PI.toFloat()))
+                    drawLine(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                accentColor.copy(alpha = seamAlpha),
+                                Color.Transparent
+                            ),
+                            startX = (w * 0.5f - halfSpan).coerceAtLeast(0f),
+                            endX = (w * 0.5f + halfSpan).coerceAtMost(w)
+                        ),
+                        start = Offset(0f, cy),
+                        end = Offset(w, cy),
+                        strokeWidth = 2.dp.toPx()
                     )
                 }
             }
+            if (mainText.isNotBlank()) {
+                val textAlpha = ((coverAlpha - 0.2f) / 0.35f).coerceIn(0f, 1f)
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(horizontal = 32.dp)
+                        .graphicsLayer { alpha = textAlpha }
+                ) {
+                    Text(
+                        text = mainText,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            color = Color.White.copy(alpha = 0.92f),
+                            fontWeight = FontWeight.SemiBold,
+                            lineHeight = 22.sp
+                        ),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+            return@Box
+        }
 
-            // --- Phase 3: The Reveal (Exit) ---
-            // 0.85 -> 1.0: Slashes retreat (only for FULL or EXIT modes, never ENTER)
-            if (t > 0.85f && mode != TransitionMode.ENTER) {
-                val exitT = ((t - 0.85f) / 0.15f).coerceIn(0f, 1f)
-                val exitEase = androidx.compose.animation.core.LinearOutSlowInEasing.transform(exitT)
-                
-                // Instead of reversing, let's "split" open vertically
-                val openHeight = (h / 2f) * exitEase
-                
-                // Oversized dimensions to match Phase 1
-                val barWidth = w * 2.5f
-                val barHeight = h * 0.8f 
-                val barLeft = center.x - barWidth / 2f
-                
-                // Draw remaining blocks
-                rotate(degrees = -15f, pivot = center) {
-                    // Top Block Retreating Up
-                    // Target was center.y - barHeight
-                    val topTargetY = center.y - barHeight
+        // Standard Tactical Resonance Lock-On Transition (ENTER / EXIT / FULL)
+        // [0.00 .. 0.34] Top & bottom blast-shutters converge cleanly onto center horizon seam
+        // [0.30 .. 0.72] Opaque backdrop + harmonic cymatic waveform + crisp tactical header
+        // [0.72 .. 1.00] Shutters part smoothly upward & downward to reveal the combat stage
+        val closeFrac = (t / 0.34f).coerceIn(0f, 1f)
+        val closeEase = FastOutSlowInEasing.transform(closeFrac)
+        val openFrac = ((t - 0.72f) / 0.28f).coerceIn(0f, 1f)
+        val openEase = FastOutSlowInEasing.transform(openFrac)
+
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val w = size.width
+            val h = size.height
+            val halfH = h * 0.5f + 2f
+
+            // Subtle initial sensor scan ring before shutters meet
+            if (!suppressFlashes && t < 0.34f) {
+                val pulseR = lerp(w * 0.08f, h * 0.68f, closeEase)
+                val pulseAlpha = (1f - closeFrac) * 0.32f
+                drawCircle(
+                    color = accentColor.copy(alpha = pulseAlpha),
+                    radius = pulseR,
+                    center = Offset(w * 0.5f, h * 0.5f),
+                    style = Stroke(width = 2.dp.toPx())
+                )
+            }
+
+            if (t <= 0.34f) {
+                val shutterH = halfH * closeEase
+                // Top shutter descending
+                drawRect(
+                    color = bgColor,
+                    topLeft = Offset(0f, 0f),
+                    size = Size(w, shutterH)
+                )
+                // Bottom shutter ascending
+                drawRect(
+                    color = bgColor,
+                    topLeft = Offset(0f, h - shutterH),
+                    size = Size(w, shutterH)
+                )
+                val edgeThickness = 2.dp.toPx()
+                val glowThickness = 14.dp.toPx()
+                drawRect(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(Color.Transparent, accentColor.copy(alpha = 0.28f)),
+                        startY = (shutterH - glowThickness).coerceAtLeast(0f),
+                        endY = shutterH
+                    ),
+                    topLeft = Offset(0f, (shutterH - glowThickness).coerceAtLeast(0f)),
+                    size = Size(w, glowThickness.coerceAtMost(shutterH))
+                )
+                drawLine(
+                    color = accentColor.copy(alpha = 0.9f),
+                    start = Offset(0f, shutterH),
+                    end = Offset(w, shutterH),
+                    strokeWidth = edgeThickness
+                )
+                val botY = h - shutterH
+                drawRect(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(accentColor.copy(alpha = 0.28f), Color.Transparent),
+                        startY = botY,
+                        endY = (botY + glowThickness).coerceAtMost(h)
+                    ),
+                    topLeft = Offset(0f, botY),
+                    size = Size(w, glowThickness.coerceAtMost(shutterH))
+                )
+                drawLine(
+                    color = accentColor.copy(alpha = 0.9f),
+                    start = Offset(0f, botY),
+                    end = Offset(w, botY),
+                    strokeWidth = edgeThickness
+                )
+            } else if (t <= 0.72f || mode == TransitionMode.ENTER) {
+                // Solid opaque hold — zero overdraw leaks
+                drawRect(color = bgColor)
+
+                val holdT = ((t - 0.34f) / 0.38f).coerceIn(0f, 1f)
+                val cy = h * 0.5f
+                val env = sin(holdT * PI.toFloat()).coerceIn(0f, 1f)
+
+                // Soft ambient radial glow behind lock-on reticle
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = listOf(
+                            accentColor.copy(alpha = if (highContrastMode) 0.08f else 0.14f * (0.4f + 0.6f * env)),
+                            Color.Transparent
+                        ),
+                        center = Offset(w * 0.5f, cy),
+                        radius = w * 0.55f
+                    ),
+                    radius = w * 0.55f,
+                    center = Offset(w * 0.5f, cy)
+                )
+
+                // Starborn oscilloscope harmonic wave across center horizon
+                val segments = 64
+                val amp = if (suppressFlashes) h * 0.012f else h * 0.032f * (0.25f + 0.75f * env)
+                val phase = holdT * 10f
+                wavePath.reset()
+                for (i in 0..segments) {
+                    val u = i.toFloat() / segments.toFloat()
+                    val x = u * w
+                    val centered = (u - 0.5f) * 2f
+                    val window = exp(-4.5f * centered * centered)
+                    val y = cy + sin(u * 22f - phase) * cosWave(u * 7f + phase * 0.4f) * amp * window
+                    if (i == 0) wavePath.moveTo(x, y) else wavePath.lineTo(x, y)
+                }
+                drawPath(
+                    path = wavePath,
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(
+                            Color.Transparent,
+                            borderColor.copy(alpha = 0.75f),
+                            accentColor.copy(alpha = 0.95f),
+                            borderColor.copy(alpha = 0.75f),
+                            Color.Transparent
+                        )
+                    ),
+                    style = Stroke(width = 2.2.dp.toPx(), cap = StrokeCap.Round)
+                )
+
+                // Clean tactical framing rules above and below center
+                val ruleOffset = 44.dp.toPx()
+                val ruleHalfW = w * (0.22f + 0.14f * FastOutSlowInEasing.transform(holdT))
+                val cx = w * 0.5f
+                for (sign in intArrayOf(-1, 1)) {
+                    val ry = cy + sign * ruleOffset
+                    drawLine(
+                        color = borderColor.copy(alpha = 0.55f),
+                        start = Offset(cx - ruleHalfW, ry),
+                        end = Offset(cx + ruleHalfW, ry),
+                        strokeWidth = 1.dp.toPx()
+                    )
+                }
+            } else {
+                // Reveal combat stage cleanly from center outward
+                val remainH = halfH * (1f - openEase)
+                if (remainH > 0.5f) {
                     drawRect(
                         color = bgColor,
-                        topLeft = Offset(barLeft, topTargetY - openHeight),
-                        size = Size(barWidth, barHeight)
+                        topLeft = Offset(0f, 0f),
+                        size = Size(w, remainH)
                     )
-                    // Bottom Block Retreating Down
-                    // Target was center.y
-                    val bottomTargetY = center.y
                     drawRect(
                         color = bgColor,
-                        topLeft = Offset(barLeft, bottomTargetY + openHeight),
-                        size = Size(barWidth, barHeight)
+                        topLeft = Offset(0f, h - remainH),
+                        size = Size(w, remainH)
                     )
-                    
-                    // The Split Line (Flash)
-                    if (!suppressFlashes && exitT < 0.5f) {
-                        val flashAlpha = (1f - (exitT * 2f))
-                        val flashHeight = 40f * (1f - exitT)
-                        // Top Flash
-                        drawRect(
-                            color = Color.White.copy(alpha = flashAlpha),
-                            topLeft = Offset(barLeft, topTargetY + barHeight - openHeight - flashHeight),
-                            size = Size(barWidth, flashHeight)
-                        )
-                        // Bottom Flash
-                        drawRect(
-                            color = Color.White.copy(alpha = flashAlpha),
-                            topLeft = Offset(barLeft, bottomTargetY + openHeight),
-                            size = Size(barWidth, flashHeight)
-                        )
-                    }
+                    val edgeAlpha = (1f - openFrac) * 0.85f
+                    val edgeW = 2.dp.toPx()
+                    drawLine(
+                        color = accentColor.copy(alpha = edgeAlpha),
+                        start = Offset(0f, remainH),
+                        end = Offset(w, remainH),
+                        strokeWidth = edgeW
+                    )
+                    drawLine(
+                        color = accentColor.copy(alpha = edgeAlpha),
+                        start = Offset(0f, h - remainH),
+                        end = Offset(w, h - remainH),
+                        strokeWidth = edgeW
+                    )
                 }
             }
         }
 
-        // --- Text: HOSTILES INCOMING! ---
-        // Appears at 0.25, Holds, Glitches out at 0.95
-        if (t > 0.25f && t < 0.95f) {
-            val textEnterT = ((t - 0.25f) / 0.1f).coerceIn(0f, 1f)
-            val textExitT = ((t - 0.85f) / 0.1f).coerceIn(0f, 1f)
-            
-            val scale = 2f - (1f * textEnterT) + (0.5f * textExitT) // Zoom in -> Hold -> Zoom out
-            val alpha = textEnterT * (1f - textExitT)
-            
-            Box(
+        if (mainText.isNotBlank() && t > 0.28f && t < 0.76f) {
+            val enterAlpha = ((t - 0.28f) / 0.10f).coerceIn(0f, 1f)
+            val exitAlpha = if (mode == TransitionMode.ENTER) 1f else (1f - ((t - 0.68f) / 0.08f).coerceIn(0f, 1f))
+            val combinedAlpha = enterAlpha * exitAlpha
+            val settleScale = lerp(1.06f, 1.0f, FastOutLinearInEasing.transform(enterAlpha))
+
+            Column(
                 modifier = Modifier
                     .align(Alignment.Center)
+                    .padding(horizontal = 24.dp)
                     .graphicsLayer {
-                        scaleX = scale
-                        scaleY = scale
-                        this.alpha = alpha
-                        if (!suppressFlashes) {
-                            // Tiny jitter
-                            translationX = (Math.random() * 10 - 5).toFloat()
-                            translationY = (Math.random() * 10 - 5).toFloat()
-                        }
-                    }
+                        alpha = combinedAlpha
+                        scaleX = settleScale
+                        scaleY = settleScale
+                    },
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    // Line 1: Main Text
-                    if (mainText.isNotBlank()) {
-                        Box {
-                            Text(
-                                text = mainText,
-                                style = MaterialTheme.typography.displayMedium.copy(
-                                    color = accentColor,
-                                    fontWeight = FontWeight.Black,
-                                    fontStyle = FontStyle.Italic,
-                                    letterSpacing = 4.sp,
-                                    shadow = Shadow(
-                                        color = borderColor,
-                                        offset = Offset(4f, 4f),
-                                        blurRadius = 0f
-                                    )
-                                ),
-                                textAlign = TextAlign.Center
-                            )
-                            // Ghost Text
-                            Text(
-                                text = mainText,
-                                style = MaterialTheme.typography.displayMedium.copy(
-                                    color = Color.White.copy(alpha = 0.5f),
-                                    fontWeight = FontWeight.Black,
-                                    fontStyle = FontStyle.Italic,
-                                    letterSpacing = 4.sp
-                                ),
-                                modifier = Modifier.graphicsLayer {
-                                    translationX = 6f
-                                    translationY = -3f
-                                },
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
-                    
-                    // Line 2: Sub Text
-                    if (subText.isNotBlank()) {
-                        Box(modifier = Modifier.graphicsLayer { translationY = -10f }) { 
-                            Text(
-                                text = subText,
-                                style = MaterialTheme.typography.displayMedium.copy(
-                                    color = accentColor,
-                                    fontWeight = FontWeight.Black,
-                                    fontStyle = FontStyle.Italic,
-                                    letterSpacing = 4.sp,
-                                    shadow = Shadow(
-                                        color = borderColor,
-                                        offset = Offset(4f, 4f),
-                                        blurRadius = 0f
-                                    )
-                                ),
-                                textAlign = TextAlign.Center
-                            )
-                            // Ghost Text
-                            Text(
-                                text = subText,
-                                style = MaterialTheme.typography.displayMedium.copy(
-                                    color = Color.White.copy(alpha = 0.5f),
-                                    fontWeight = FontWeight.Black,
-                                    fontStyle = FontStyle.Italic,
-                                    letterSpacing = 4.sp
-                                ),
-                                modifier = Modifier.graphicsLayer {
-                                    translationX = -6f
-                                    translationY = -3f
-                                },
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
+                Text(
+                    text = mainText.uppercase(),
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontFamily = CombatNameFont,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 3.2.sp,
+                        fontSize = 18.sp
+                    ),
+                    textAlign = TextAlign.Center
+                )
+                if (subText.isNotBlank()) {
+                    Text(
+                        text = subText.uppercase(),
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            fontFamily = CombatNameFont,
+                            color = accentColor.copy(alpha = 0.92f),
+                            fontWeight = FontWeight.SemiBold,
+                            letterSpacing = 2.4.sp
+                        ),
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }
     }
 }
+
+private fun cosWave(x: Float): Float = kotlin.math.cos(x)

@@ -94,7 +94,7 @@ class NavigationIntegrityTest {
     fun worldFourRoutesAreCardinalReciprocalAndKeepEveryRoom() {
         val foundry = rooms.values.filter { it.id.startsWith("foundry_") }
         val opposite = mapOf("north" to "south", "south" to "north", "east" to "west", "west" to "east")
-        assertEquals(74, foundry.size)
+        assertEquals(62, foundry.size)
         foundry.forEach { room ->
             assertTrue("${room.id} must fit NSEW", room.connections.size in 1..4)
             assertTrue("${room.id} must use swipe directions", opposite.keys.containsAll(room.connections.keys))
@@ -122,7 +122,7 @@ class NavigationIntegrityTest {
     fun worldFiveKeepsCardinalWalkingAndReviewedVerticalAlternatives() {
         val ring = rooms.values.filter { it.id.startsWith("orbital_") || it.id.startsWith("deep_") }
         val reverse = mapOf("north" to "south", "south" to "north", "east" to "west", "west" to "east")
-        assertEquals(81, ring.size)
+        assertEquals(61, ring.size)
         ring.forEach { room ->
             assertTrue("${room.id} must fit NSEW", room.connections.keys.count { it in reverse } in 1..4)
             val alternatives = room.connections.filterKeys { it !in reverse }

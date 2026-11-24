@@ -1,9 +1,15 @@
 package com.example.starborn.ui.vfx
 
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.graphics.GraphicsLayerScope
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.starborn.data.local.UserSettingsStore
 
@@ -78,14 +84,34 @@ fun rememberEnvironmentalSettings(): UserSettings {
 fun AndroidRoomEnvironmentalEffects(room:Room?, artworkSize:Size, roomState:Map<String,Boolean>,
     milestones:Set<String>, settings:UserSettings, assets:WorldAssetDataSource,
     dark:Boolean=false, combat:Boolean=false, paused:Boolean=false, suppressAccents:Boolean=false,
-    translationX:Float=0f, translationY:Float=0f, scale:Float=1f, opacity:Float=1f, transition:Boolean=false, sceneMemory:EnvironmentalSceneMemory?=null) {
-    BoxWithConstraints(Modifier.fillMaxSize()) {
-        val density=LocalDensity.current
-        val width=with(density) { maxWidth.toPx() };val height=with(density) { maxHeight.toPx() }
-        val base=EnvironmentalGeometry.fit(width,height,artworkSize.width,artworkSize.height,crop=true)
-        val geometry=base.copy(imageX=base.imageX+base.imageWidth*(1-scale)/2+width*translationX,
-            imageY=base.imageY+base.imageHeight*(1-scale)/2+height*translationY,
-            imageWidth=base.imageWidth*scale,imageHeight=base.imageHeight*scale)
+    translationX:Float=0f, translationY:Float=0f, scale:Float=1f, opacity:Float=1f, transition:Boolean=false,
+    sceneMemory:EnvironmentalSceneMemory?=null, layerTransform:(GraphicsLayerScope.()->Unit)?=null) {
+    if (room == null || settings.environmentalEffectsQuality == EnvironmentalEffectsQuality.OFF) return
+    val density = LocalDensity.current
+    val configuration = LocalConfiguration.current
+    val fallbackWidth = with(density) { configuration.screenWidthDp.dp.toPx() }
+    val fallbackHeight = with(density) { configuration.screenHeightDp.dp.toPx() }
+    var measuredSize by remember { mutableStateOf(IntSize.Zero) }
+    val width = if (measuredSize.width > 0) measuredSize.width.toFloat() else fallbackWidth
+    val height = if (measuredSize.height > 0) measuredSize.height.toFloat() else fallbackHeight
+    val base = remember(width, height, artworkSize.width, artworkSize.height) {
+        EnvironmentalGeometry.fit(width, height, artworkSize.width, artworkSize.height, crop = true)
+    }
+    val geometry = remember(base, width, height, translationX, translationY, scale) {
+        if (translationX == 0f && translationY == 0f && scale == 1f) base
+        else base.copy(
+            imageX = base.imageX + base.imageWidth * (1 - scale) / 2 + width * translationX,
+            imageY = base.imageY + base.imageHeight * (1 - scale) / 2 + height * translationY,
+            imageWidth = base.imageWidth * scale,
+            imageHeight = base.imageHeight * scale
+        )
+    }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .onSizeChanged { if (it != measuredSize) measuredSize = it }
+            .then(if (layerTransform != null) Modifier.graphicsLayer(block = layerTransform) else Modifier)
+    ) {
         AndroidEnvironmentalEffects(room,geometry,roomState,milestones,settings,dark,combat,paused,
             suppressAccents,opacity,transition,assets=assets,sceneMemory=sceneMemory)
     }

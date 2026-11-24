@@ -57,12 +57,15 @@ fun EnvironmentalEffectsOverlay(roomId: String, effects: List<ResolvedEnvironmen
             if(simulation.layers.all { it.time==0f } && initialTimeSeconds>0f) {
                 repeat((initialTimeSeconds.coerceIn(0f,60f)/.025f).toInt()) {simulation.advance(.025f,currentGeometry)}
             }
+            var smoothedDt = 1f / 60f
             var previous=withFrameNanos { it }
             while(simulation.layers.isNotEmpty()) {
                 withFrameNanos { now ->
                     if(now > previous) {
+                        val rawDt = ((now - previous) / 1_000_000_000f).coerceIn(0.001f, 0.05f)
+                        smoothedDt = if (rawDt > 0.034f) rawDt else smoothedDt * 0.72f + rawDt * 0.28f
                         val started=if(costCallback!=null) System.nanoTime() else 0L
-                        simulation.advance((now-previous)/1_000_000_000f,currentGeometry)
+                        simulation.advance(smoothedDt,currentGeometry)
                         if(started!=0L) costCallback?.invoke(System.nanoTime()-started)
                         previous=now;drawTick++
                         timeCallback?.invoke(simulation.elapsedSeconds)
@@ -72,7 +75,7 @@ fun EnvironmentalEffectsOverlay(roomId: String, effects: List<ResolvedEnvironmen
             }
         }
     }
-    Canvas(modifier.fillMaxSize()) {
+    Canvas(modifier.fillMaxSize().graphicsLayer()) {
         drawTick // State is read in drawing, not in composition for each moving particle.
         var jets=0
         simulation.layers.forEach { layer ->
@@ -80,6 +83,7 @@ fun EnvironmentalEffectsOverlay(roomId: String, effects: List<ResolvedEnvironmen
             val color=Color(preset.color[0],preset.color[1],preset.color[2],preset.color[3])
             val alpha=effect.alpha*layer.opacity*opacity
             val height=geometry.imageHeight
+            val precipStrokeWidth = (height * .0010f).coerceAtLeast(.75f)
             val glow=brushes[preset]
             fun DrawScope.veil(center:Offset,width:Float,height:Float,strength:Float) {
                 if(glow!=null) withTransform({ translate(center.x,center.y);scale(width,height,Offset.Zero) }) {
@@ -97,7 +101,7 @@ fun EnvironmentalEffectsOverlay(roomId: String, effects: List<ResolvedEnvironmen
                             drawCircle(color.copy(alpha=color.alpha*a),radius,at)
                         } else {
                             val trail=Offset(p.vx,p.vy)*radius*1.8f
-                            drawLine(color.copy(alpha=color.alpha*a),at-trail,at,strokeWidth=(height*.0009f).coerceAtLeast(.6f),cap=StrokeCap.Round)
+                            drawLine(color.copy(alpha=color.alpha*a),at-trail,at,strokeWidth=precipStrokeWidth,cap=StrokeCap.Butt)
                             if(preset.style=="drip" && p.y>.85f) drawOval(color.copy(alpha=.15f*a),Offset(at.x-radius,at.y),androidx.compose.ui.geometry.Size(radius*2,radius*.4f),style=Stroke(.6f))
                         }
                         "haze" -> veil(at,radius*2.5f,radius,.12f*p.alpha*(.3f+effect.intensity))

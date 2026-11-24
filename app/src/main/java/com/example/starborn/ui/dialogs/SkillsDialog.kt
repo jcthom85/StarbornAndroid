@@ -56,6 +56,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -94,218 +95,328 @@ fun SkillsDialog(
     allowedSkillIds: Set<String>? = null,
     highlightedSkillId: String? = null,
     theme: Theme? = null,
-    highContrastMode: Boolean = false
+    highContrastMode: Boolean = false,
+    inlineDrawer: Boolean = false,
+    maxDrawerHeight: Dp = 420.dp,
+    onSwitchToItems: (() -> Unit)? = null,
+    modifier: Modifier = Modifier
 ) {
     val accent = themeColor(theme?.accent, Color(0xFF7BE4FF))
     val border = themeColor(theme?.border, Color(0xFF5CCBE8))
     val panel = themeColor(theme?.bg, Color(0xFF061018))
     val momentum = viewModel.momentumFor(player.id)
     val (infusedElement, infusedStatus) = viewModel.weaponInfusionFor(player.id)
-    var detailSkill by remember { mutableStateOf<Skill?>(null) }
+    var detailSkill by remember(player.id) { mutableStateOf<Skill?>(null) }
 
-    CombatDialogFrame(
-        onDismiss = onDismiss,
-        accent = accent,
-        border = border,
-        panel = panel,
-        highContrastMode = highContrastMode
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            val portraitPainter = rememberAssetPainter(
-                player.miniIconPath,
-                painterResource(R.drawable.main_menu_background)
-            )
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = Color(0xFF151C28),
-                border = BorderStroke(1.dp, border.copy(alpha = 0.45f)),
-                modifier = Modifier.size(44.dp)
-            ) {
-                Image(
-                    painter = portraitPainter,
-                    contentDescription = titleCaseName(player.name),
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(3.dp)
-                        .clip(RoundedCornerShape(9.dp))
-                )
-            }
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(1.dp)
-            ) {
-                Text(
-                    text = "${titleCaseName(player.name).uppercase(Locale.getDefault())} · READY",
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontFamily = CombatNameFont,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 0.7.sp
-                    ),
-                    color = accent.copy(alpha = 0.90f),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = "Abilities",
-                    style = MaterialTheme.typography.headlineSmall.copy(
-                        fontFamily = CombatNameFont,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    color = Color.White,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-            MomentumGaugePill(
+    val drawerBody: @Composable ColumnScope.() -> Unit = {
+        val activeDetail = detailSkill
+        if (inlineDrawer && activeDetail != null) {
+            InlineAbilityDetailsBody(
+                skill = activeDetail,
+                targetRequirement = viewModel.targetRequirementFor(activeDetail),
+                cooldownRemaining = viewModel.skillCooldownRemaining(player.id, activeDetail.id),
                 momentum = momentum,
-                borderColor = border
-            )
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(2.dp)
-                .background(
-                    Brush.horizontalGradient(
-                        colors = listOf(
-                            accent.copy(alpha = 0.82f),
-                            border.copy(alpha = 0.28f),
-                            Color.Transparent
-                        )
-                    )
-                )
-        )
-
-        OverchargeStrip(
-            momentum = momentum,
-            border = border
-        )
-
-        if (infusedElement != null || infusedStatus != null) {
-            FlowRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Text(
-                    text = "Weapon Synergy:",
-                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
-                    color = Color(0xFF9FB4C4),
-                    modifier = Modifier.align(Alignment.CenterVertically)
-                )
-                infusedElement?.let { elem ->
-                    AbilitySpecChip(
-                        text = weaknessLabel(elem),
-                        tint = weaknessTintColor(elem)
-                    )
-                }
-                infusedStatus?.let { status ->
-                    AbilitySpecChip(
-                        text = CombatClarity.statusName(status),
-                        tint = accent
-                    )
-                }
-                Text(
-                    text = "· Attack abilities",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color(0xFF8399A8),
-                    modifier = Modifier.align(Alignment.CenterVertically)
-                )
-            }
-        }
-
-        if (skills.isEmpty()) {
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(14.dp),
-                color = Color.White.copy(alpha = 0.05f),
-                border = BorderStroke(1.dp, border.copy(alpha = 0.24f))
-            ) {
-                Text(
-                    text = "No abilities available.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White.copy(alpha = 0.78f),
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp)
-                )
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f, fill = false)
-                    .heightIn(max = 430.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                items(skills, key = { it.id }) { skill ->
-                    val allowedByGuide = allowedSkillIds == null || skill.id in allowedSkillIds
-                    val unavailableReason = if (!allowedByGuide) {
-                        "Follow the tutorial's highlighted ability"
-                    } else {
-                        viewModel.skillUnavailableReason(player.id, skill)
-                    }
-                    val canUse = unavailableReason == null
-                    val cooldown = viewModel.skillCooldownRemaining(player.id, skill.id)
-                    val highlighted = skill.id == highlightedSkillId
-                    AbilityRow(
-                        skill = skill,
-                        cooldownRemaining = cooldown,
-                        canUse = canUse,
-                        unavailableReason = unavailableReason,
-                        highlighted = highlighted,
-                        momentum = momentum,
-                        infusedElement = infusedElement,
-                        infusedStatus = infusedStatus,
-                        accent = accent,
-                        border = border,
-                        highContrastMode = highContrastMode,
-                        onDetails = { detailSkill = skill },
-                        onUse = { onSkillSelected(skill) },
-                        targetScopeLabel = viewModel.skillTargetScopeLabel(skill)
-                    )
-                }
-            }
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = if (skills.isEmpty()) "" else "${skills.size} ${if (skills.size == 1) "ability" else "abilities"}",
-                style = MaterialTheme.typography.labelSmall,
-                color = Color(0xFF93A7B6)
-            )
-            DialogTacticalButton(
-                label = "Close",
-                icon = Icons.Filled.Close,
+                infusedElement = infusedElement,
+                infusedStatus = infusedStatus,
                 accent = accent,
                 border = border,
-                onClick = onDismiss,
-                modifier = Modifier.maestroTag("combat-abilities-close")
+                highContrastMode = highContrastMode,
+                onBack = { detailSkill = null }
             )
+        } else {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                val portraitPainter = rememberAssetPainter(
+                    player.miniIconPath,
+                    painterResource(R.drawable.main_menu_background)
+                )
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color(0xFF151C28),
+                    border = BorderStroke(1.dp, border.copy(alpha = 0.45f)),
+                    modifier = Modifier.size(if (inlineDrawer) 40.dp else 44.dp)
+                ) {
+                    Image(
+                        painter = portraitPainter,
+                        contentDescription = titleCaseName(player.name),
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(3.dp)
+                            .clip(RoundedCornerShape(9.dp))
+                    )
+                }
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(1.dp)
+                ) {
+                    Text(
+                        text = "${titleCaseName(player.name).uppercase(Locale.getDefault())} · READY",
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontFamily = CombatNameFont,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 0.7.sp
+                        ),
+                        color = accent.copy(alpha = 0.90f),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = "Abilities",
+                        style = (if (inlineDrawer) MaterialTheme.typography.titleLarge else MaterialTheme.typography.headlineSmall).copy(
+                            fontFamily = CombatNameFont,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        color = Color.White,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                if (inlineDrawer && onSwitchToItems != null && allowedSkillIds == null) {
+                    Surface(
+                        shape = RoundedCornerShape(10.dp),
+                        color = Color(0xFF141E2B),
+                        border = BorderStroke(1.dp, border.copy(alpha = 0.42f)),
+                        modifier = Modifier.clickable(onClick = onSwitchToItems)
+                    ) {
+                        Text(
+                            text = "Bag ▸",
+                            style = MaterialTheme.typography.labelMedium.copy(
+                                fontFamily = CombatNameFont,
+                                fontWeight = FontWeight.SemiBold
+                            ),
+                            color = accent,
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp)
+                        )
+                    }
+                }
+                MomentumGaugePill(
+                    momentum = momentum,
+                    borderColor = border
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(2.dp)
+                    .background(
+                        Brush.horizontalGradient(
+                            colors = listOf(
+                                accent.copy(alpha = 0.82f),
+                                border.copy(alpha = 0.28f),
+                                Color.Transparent
+                            )
+                        )
+                    )
+            )
+
+            OverchargeStrip(
+                momentum = momentum,
+                border = border
+            )
+
+            if (infusedElement != null || infusedStatus != null) {
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = "Weapon Synergy:",
+                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
+                        color = Color(0xFF9FB4C4),
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    )
+                    infusedElement?.let { elem ->
+                        AbilitySpecChip(
+                            text = weaknessLabel(elem),
+                            tint = weaknessTintColor(elem)
+                        )
+                    }
+                    infusedStatus?.let { status ->
+                        AbilitySpecChip(
+                            text = CombatClarity.statusName(status),
+                            tint = accent
+                        )
+                    }
+                    Text(
+                        text = "· Attack abilities",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color(0xFF8399A8),
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    )
+                }
+            }
+
+            if (skills.isEmpty()) {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(14.dp),
+                    color = Color.White.copy(alpha = 0.05f),
+                    border = BorderStroke(1.dp, border.copy(alpha = 0.24f))
+                ) {
+                    Text(
+                        text = "No abilities available.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White.copy(alpha = 0.78f),
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 18.dp)
+                    )
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f, fill = false)
+                        .heightIn(max = if (inlineDrawer) maxDrawerHeight else 430.dp),
+                    verticalArrangement = Arrangement.spacedBy(9.dp)
+                ) {
+                    items(skills, key = { it.id }) { skill ->
+                        val allowedByGuide = allowedSkillIds == null || skill.id in allowedSkillIds
+                        val unavailableReason = if (!allowedByGuide) {
+                            "Follow the tutorial's highlighted ability"
+                        } else {
+                            viewModel.skillUnavailableReason(player.id, skill)
+                        }
+                        val canUse = unavailableReason == null
+                        val cooldown = viewModel.skillCooldownRemaining(player.id, skill.id)
+                        val highlighted = skill.id == highlightedSkillId
+                        AbilityRow(
+                            skill = skill,
+                            cooldownRemaining = cooldown,
+                            canUse = canUse,
+                            unavailableReason = unavailableReason,
+                            highlighted = highlighted,
+                            momentum = momentum,
+                            infusedElement = infusedElement,
+                            infusedStatus = infusedStatus,
+                            accent = accent,
+                            border = border,
+                            highContrastMode = highContrastMode,
+                            onDetails = { detailSkill = skill },
+                            onUse = { onSkillSelected(skill) },
+                            targetScopeLabel = viewModel.skillTargetScopeLabel(skill)
+                        )
+                    }
+                }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = if (skills.isEmpty()) "" else "${skills.size} ${if (skills.size == 1) "ability" else "abilities"}",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color(0xFF93A7B6)
+                )
+                DialogTacticalButton(
+                    label = "Close",
+                    icon = Icons.Filled.Close,
+                    accent = accent,
+                    border = border,
+                    onClick = onDismiss,
+                    modifier = Modifier.maestroTag("combat-abilities-close")
+                )
+            }
         }
     }
 
-    detailSkill?.let { skill ->
-        AbilityDetailsDialog(
-            skill = skill,
-            targetRequirement = viewModel.targetRequirementFor(skill),
-            cooldownRemaining = viewModel.skillCooldownRemaining(player.id, skill.id),
-            momentum = momentum,
-            infusedElement = infusedElement,
-            infusedStatus = infusedStatus,
+    if (inlineDrawer) {
+        CombatInlineDrawerFrame(
             accent = accent,
             border = border,
             panel = panel,
             highContrastMode = highContrastMode,
-            onDismiss = { detailSkill = null }
+            maxHeight = maxDrawerHeight,
+            modifier = modifier,
+            content = drawerBody
+        )
+    } else {
+        CombatDialogFrame(
+            onDismiss = onDismiss,
+            accent = accent,
+            border = border,
+            panel = panel,
+            highContrastMode = highContrastMode,
+            content = drawerBody
+        )
+
+        detailSkill?.let { skill ->
+            AbilityDetailsDialog(
+                skill = skill,
+                targetRequirement = viewModel.targetRequirementFor(skill),
+                cooldownRemaining = viewModel.skillCooldownRemaining(player.id, skill.id),
+                momentum = momentum,
+                infusedElement = infusedElement,
+                infusedStatus = infusedStatus,
+                accent = accent,
+                border = border,
+                panel = panel,
+                highContrastMode = highContrastMode,
+                onDismiss = { detailSkill = null }
+            )
+        }
+    }
+}
+
+@Composable
+internal fun CombatInlineDrawerFrame(
+    accent: Color,
+    border: Color,
+    panel: Color,
+    highContrastMode: Boolean,
+    maxHeight: Dp,
+    modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .widthIn(max = 560.dp)
+            .heightIn(max = maxHeight)
+            .padding(horizontal = 10.dp, vertical = 4.dp)
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp, bottomStart = 16.dp, bottomEnd = 16.dp),
+            color = panel.copy(alpha = if (highContrastMode) 0.98f else 0.95f),
+            border = BorderStroke(
+                width = 1.25.dp,
+                color = border.copy(alpha = if (highContrastMode) 0.88f else 0.68f)
+            ),
+            shadowElevation = 18.dp,
+            tonalElevation = 8.dp
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(accent.copy(alpha = 0.14f), Color.Transparent)
+                        )
+                    )
+                    .padding(start = 14.dp, top = 12.dp, end = 14.dp, bottom = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(9.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .width(36.dp)
+                        .height(3.dp)
+                        .clip(RoundedCornerShape(999.dp))
+                        .background(border.copy(alpha = 0.45f))
+                )
+                content()
+            }
+        }
+        CommandPaletteMarkers(
+            color = accent,
+            modifier = Modifier.matchParentSize()
         )
     }
 }
@@ -856,6 +967,207 @@ private fun AbilityRowActions(
             UseAction(modifier = Modifier.fillMaxWidth())
             DetailsAction(modifier = Modifier.fillMaxWidth())
         }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun ColumnScope.InlineAbilityDetailsBody(
+    skill: Skill,
+    targetRequirement: TargetRequirement,
+    cooldownRemaining: Int,
+    momentum: Int = 0,
+    infusedElement: String? = null,
+    infusedStatus: String? = null,
+    accent: Color,
+    border: Color,
+    highContrastMode: Boolean,
+    onBack: () -> Unit
+) {
+    val visuals = remember(skill) { abilityCardVisuals(skill) }
+    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        val eyebrow = if (visuals.isSourceArt) {
+            "${visuals.primaryLabel.uppercase(Locale.getDefault())} · SOURCE ART"
+        } else {
+            visuals.primaryLabel.uppercase(Locale.getDefault())
+        }
+        Text(
+            text = eyebrow,
+            style = MaterialTheme.typography.labelSmall.copy(
+                fontFamily = CombatNameFont,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 0.7.sp
+            ),
+            color = visuals.tint
+        )
+        Text(
+            text = skill.name,
+            style = MaterialTheme.typography.titleLarge.copy(
+                fontFamily = CombatNameFont,
+                fontWeight = FontWeight.Bold
+            ),
+            color = Color.White
+        )
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(2.dp)
+            .background(
+                Brush.horizontalGradient(
+                    colors = listOf(
+                        visuals.tint.copy(alpha = 0.82f),
+                        border.copy(alpha = 0.28f),
+                        Color.Transparent
+                    )
+                )
+            )
+    )
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .weight(1f, fill = false),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        item {
+            Text(
+                text = skill.description.ifBlank { "No description available." },
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.White
+            )
+        }
+        if (momentum > 0) {
+            item {
+                val bonusText = when (momentum) {
+                    1 -> "+25% Power / Healing"
+                    2 -> "+50% Power / Healing & -1 Turn Cooldown Refund"
+                    3 -> "+80% Power / Healing, -1 Turn Cooldown Refund & Guaranteed Critical Hit"
+                    else -> ""
+                }
+                val overchargeBorder = if (momentum >= 3) Color(0xFFFFD700) else Color(0xFF00E5FF)
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(10.dp),
+                    color = overchargeBorder.copy(alpha = 0.15f),
+                    border = BorderStroke(1.dp, overchargeBorder.copy(alpha = 0.65f))
+                ) {
+                    Column(
+                        modifier = Modifier.padding(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = "⚡ Overcharge Active (Level $momentum)",
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                            color = overchargeBorder
+                        )
+                        Text(
+                            text = bonusText,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color.White
+                        )
+                    }
+                }
+            }
+        }
+        if (!visuals.isHeal && (infusedElement != null || infusedStatus != null)) {
+            item {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(10.dp),
+                    color = accent.copy(alpha = 0.12f),
+                    border = BorderStroke(1.dp, accent.copy(alpha = 0.45f))
+                ) {
+                    Column(
+                        modifier = Modifier.padding(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = "Weapon Synergy Infusion",
+                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                            color = accent
+                        )
+                        Text(
+                            text = buildString {
+                                if (infusedElement != null) append("Element: ${infusedElement.toDisplayLabel()}  ")
+                                if (infusedStatus != null) append("Status Proc: ${infusedStatus.toDisplayLabel()}")
+                            },
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color.White
+                        )
+                    }
+                }
+            }
+        }
+        item {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                color = Color.White.copy(alpha = if (highContrastMode) 0.10f else 0.06f),
+                border = BorderStroke(1.dp, border.copy(alpha = 0.34f))
+            ) {
+                Column(
+                    modifier = Modifier.padding(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    AbilityDetailLine("Type", skill.type.toDisplayLabel())
+                    AbilityDetailLine("Power", abilityPowerLabel(skill, momentum))
+                    AbilityDetailLine("Target selection", abilityTargetLabel(targetRequirement))
+                    AbilityDetailLine(
+                        "Scaling",
+                        skill.scaling?.toDisplayLabel() ?: "None"
+                    )
+                    AbilityDetailLine(
+                        "Cooldown",
+                        abilityCooldownLabel(skill.cooldown, cooldownRemaining, momentum)
+                    )
+                    skill.usesPerBattle?.let { uses ->
+                        AbilityDetailLine("Battle limit", "$uses use${if (uses == 1) "" else "s"}")
+                    }
+                }
+            }
+        }
+        if (!skill.statusApplications.isNullOrEmpty()) {
+            item {
+                AbilityDetailSection(
+                    title = "Applies",
+                    values = skill.statusApplications.orEmpty().map(CombatClarity::statusName),
+                    tint = Color(0xFFB39DDB)
+                )
+            }
+        }
+        if (!skill.combatTags.isNullOrEmpty()) {
+            item {
+                AbilityDetailSection(
+                    title = "Combat traits",
+                    values = skill.combatTags.orEmpty().map { it.toDisplayLabel() },
+                    tint = accent
+                )
+            }
+        }
+        if (!skill.conditions.isNullOrEmpty()) {
+            item {
+                AbilityDetailSection(
+                    title = "Requirements",
+                    values = skill.conditions.orEmpty().map { it.toDisplayLabel() },
+                    tint = Color(0xFFFFC857)
+                )
+            }
+        }
+    }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.End
+    ) {
+        DialogTacticalButton(
+            label = "Back to Abilities",
+            icon = Icons.AutoMirrored.Rounded.ArrowBack,
+            accent = accent,
+            border = border,
+            onClick = onBack
+        )
     }
 }
 

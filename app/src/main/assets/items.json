@@ -1761,7 +1761,7 @@
     "rarity": "uncommon",
     "effect": {
       "damage": 200,
-      "damage_type": "physical",
+      "damage_type": "shock",
       "target": "enemy_group"
     }
   },
@@ -2327,7 +2327,9 @@
     "buy_price": 110,
     "rarity": "uncommon",
     "effect": {
-      "damage": 260
+      "damage": 260,
+      "damage_type": "burn",
+      "target": "enemy_group"
     }
   },
   {
@@ -2727,7 +2729,7 @@
       "attack_element": "electric",
       "status_on_hit": "shock",
       "status_chance": 25.0,
-      "crit_rate": 0.1,
+      "crit_rate": 10.0,
       "accuracy": 5.0,
       "stat_mods": {
         "focus": 6

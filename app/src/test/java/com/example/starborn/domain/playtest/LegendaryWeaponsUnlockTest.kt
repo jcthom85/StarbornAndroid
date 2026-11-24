@@ -62,6 +62,34 @@ class LegendaryWeaponsUnlockTest {
         manager.handleTrigger("player_action", EventPayload.Action("w6_sq26_carry_legacy"))
         manager.handleTrigger("player_action", EventPayload.Action("w6_sq27_free_workers"))
         assertTrue(granted.containsAll(listOf("jeds_bench_regulator", "schematic_shift_breaker", "revoked_collar_seal", "schematic_unshackled_breakers")))
+
+        // Leaving the HR review intact as evidence also awards Zeke's Legendary catalyst + schematic
+        val leaveGranted = mutableListOf<String>()
+        val leaveStore = GameSessionStore().apply { setMilestone("ms_w6_hr_revoked") }
+        val leaveManager = EventManager(events, leaveStore, EventHooks(onGiveItem = { id, _ -> leaveGranted += id }))
+        leaveManager.handleTrigger("player_action", EventPayload.Action("w6_sq27_leave_review"))
+        assertTrue(leaveGranted.containsAll(listOf("revoked_collar_seal", "schematic_unshackled_breakers")))
+    }
+
+    @Test fun allLegendaryWeaponsSchematicsAndCatalystsHaveShippedItemIcons() {
+        val assetProvider = DesktopAssetProvider()
+        val legendaryItemIds = listOf(
+            "crucible_slag_heart",
+            "jeds_bench_regulator",
+            "schematic_shift_breaker",
+            "nova_shift_breaker",
+            "hk_servo_anchor",
+            "revoked_collar_seal",
+            "schematic_unshackled_breakers",
+            "zeke_breaker_gauntlets",
+            "gh0st_elara_refrain",
+            "orion_aethel_chorus"
+        )
+        legendaryItemIds.forEach { id ->
+            val path = items.getValue(id).resolvedIconAssetPath()
+            assertNotNull("Expected icon path for $id", path)
+            assertTrue("Expected shipped WebP icon at $path for $id", assetProvider.exists(path!!))
+        }
     }
 
     @Test fun ghostElaraRefrainRequiresBothWorldFiveAndWorldSixQuests() {

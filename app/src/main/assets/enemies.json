@@ -391,7 +391,7 @@
       },
       "phase": {
         "hp_below": 0.4,
-        "name": "Emergency Overclock \u2014 shield down",
+        "name": "Emergency Overclock — shield down",
         "opening_skill": "iron_warden_overclock",
         "cycle": [
           "triple_burst",
@@ -454,7 +454,7 @@
         "sector9_recover"
       ],
       "windups": {
-        "pounce": "Prey marked \u2014 pounce"
+        "pounce": "Prey marked — pounce"
       },
       "duplicate_cycle_offset": 2
     }
@@ -562,7 +562,7 @@
         "sector9_recover"
       ],
       "windups": {
-        "relic_strike": "Stone joints align \u2014 relic strike"
+        "relic_strike": "Stone joints align — relic strike"
       }
     }
   },
@@ -606,7 +606,7 @@
         "sector9_recover"
       ],
       "windups": {
-        "sector9_coil": "Tendril coiling \u2014 strike it to interrupt"
+        "sector9_coil": "Tendril coiling — strike it to interrupt"
       },
       "interrupt_on_damage": [
         "sector9_coil"
@@ -717,7 +717,7 @@
         "sector9_recover"
       ],
       "windups": {
-        "sector9_orb_beam": "Iris opening \u2014 discharge"
+        "sector9_orb_beam": "Iris opening — discharge"
       }
     }
   },
@@ -755,7 +755,7 @@
       "beast_frenzy_pounce",
       "beast_frenzy_roar"
     ],
-    "flavor": "An apex Sector 9 predator warped by leaking Source dynamo resonance\u2014the same creature whose containment breach drove Orion into stasis twenty years ago. It hunts by sound, stalking its prey before committing its weight; wounded, it abandons patience for a frantic two-strike rush that leaves its flanks exposed.",
+    "flavor": "An apex Sector 9 predator warped by leaking Source dynamo resonance—the same creature whose containment breach drove Orion into stasis twenty years ago. It hunts by sound, stalking its prey before committing its weight; wounded, it abandons patience for a frantic two-strike rush that leaves its flanks exposed.",
     "xp_reward": 500,
     "credit_reward": 250,
     "drops": [
@@ -772,13 +772,13 @@
         "sector9_exposed_recovery"
       ],
       "windups": {
-        "beast_hunt_claw": "Prey marked \u2014 hunting lunge",
-        "beast_frenzy_claw": "Frenzy 1/2 \u2014 raking claw",
-        "beast_frenzy_pounce": "Frenzy 2/2 \u2014 bounding pounce"
+        "beast_hunt_claw": "Prey marked — hunting lunge",
+        "beast_frenzy_claw": "Frenzy 1/2 — raking claw",
+        "beast_frenzy_pounce": "Frenzy 2/2 — bounding pounce"
       },
       "phase": {
         "hp_below": 0.5,
-        "name": "Frenzy \u2014 two strikes, then overextension",
+        "name": "Frenzy — two strikes, then overextension",
         "opening_skill": "beast_frenzy_roar",
         "cycle": [
           "beast_frenzy_claw",
@@ -821,7 +821,7 @@
     ],
     "flavor": "A fast, multi-legged sewer dweller that thrives in the toxic run-offs of the Spire. Its bite carries corrosive acid.",
     "xp_reward": 80,
-    "credit_reward": 20,
+    "credit_reward": 40,
     "drops": [
       {
         "id": "wiring_bundle",
@@ -875,7 +875,7 @@
     ],
     "flavor": "Dominion crowd control specialists armored in heavy composite plates. They carry high-voltage stun batons to enforce the curfew.",
     "xp_reward": 100,
-    "credit_reward": 40,
+    "credit_reward": 70,
     "drops": [
       {
         "id": "armor_plate",
@@ -930,7 +930,7 @@
     ],
     "flavor": "A specialized flying drone designed to monitor and quarantine the Lower City boundaries. It is shielded against electrical surges.",
     "xp_reward": 180,
-    "credit_reward": 80,
+    "credit_reward": 115,
     "drops": [
       {
         "id": "neon_sign_core",
@@ -941,7 +941,7 @@
         "chance": 0.5
       }
     ],
-    "description": "Airborne Dominion patrol drone fitted with a riot barrier and quarantine pulse emitters. Carries the Neon Sign Core for Jax\u2019s repair and may yield a Battery for Pulse Grenades.",
+    "description": "Airborne Dominion patrol drone fitted with a riot barrier and quarantine pulse emitters. Carries the Neon Sign Core for Jax’s repair and may yield a Battery for Pulse Grenades.",
     "portrait": "images/enemies/sentinel_mki_foundry_pass.png",
     "authored": {
       "cycle": [
@@ -1052,7 +1052,7 @@
     ],
     "flavor": "An executive problem-solver with a clean suit, quiet boots, and no paperwork.",
     "xp_reward": 140,
-    "credit_reward": 90,
+    "credit_reward": 135,
     "drops": [
       {
         "id": "medkit",
@@ -1114,7 +1114,7 @@
     ],
     "flavor": "A luxury riot frame carrying enough heat to make a clean rooftop smell like slag.",
     "xp_reward": 180,
-    "credit_reward": 120,
+    "credit_reward": 160,
     "drops": [
       {
         "id": "scrap_metal",
@@ -1205,7 +1205,7 @@
       },
       "phase": {
         "hp_below": 0.35,
-        "name": "Emergency Mode \u2014 exposed command frame",
+        "name": "Emergency Mode — exposed command frame",
         "opening_skill": "spire_open_vents",
         "cycle": [
           "spire_emergency_lattice",
@@ -1256,7 +1256,7 @@
     ],
     "flavor": "A heat-shielded aerial harasser built to herd workers away from restricted slag channels.",
     "xp_reward": 120,
-    "credit_reward": 60,
+    "credit_reward": 95,
     "drops": [
       {
         "id": "power_cell",
@@ -1320,7 +1320,7 @@
     },
     "flavor": "A furnace-bulk material hauler with slag hardened around its frame like living armor.",
     "xp_reward": 220,
-    "credit_reward": 130,
+    "credit_reward": 190,
     "drops": [
       {
         "id": "scrap_metal",
@@ -1379,7 +1379,7 @@
     ],
     "flavor": "A close-range assembly bot whose safety governors were removed for productivity.",
     "xp_reward": 130,
-    "credit_reward": 55,
+    "credit_reward": 90,
     "drops": [
       {
         "id": "scrap_metal",
@@ -1442,7 +1442,7 @@
     ],
     "flavor": "Armored Dominion infantry trained to clear factory uprisings without damaging the machinery.",
     "xp_reward": 190,
-    "credit_reward": 110,
+    "credit_reward": 155,
     "drops": [
       {
         "id": "medkit",
@@ -1504,7 +1504,7 @@
     ],
     "flavor": "A fast, empty derivative of Gh0st built with better hardware and no self.",
     "xp_reward": 230,
-    "credit_reward": 120,
+    "credit_reward": 165,
     "drops": [
       {
         "id": "wiring_bundle",
@@ -1567,7 +1567,7 @@
     ],
     "flavor": "An industrial press that does not know you are alive and would not care if it did.",
     "xp_reward": 0,
-    "credit_reward": 0,
+    "credit_reward": 75,
     "drops": [],
     "description": "The press rises, commits to a warned slam, then exposes its mechanism. Guard or break it before the press lands.",
     "portrait": "images/enemies/conveyor_crusher_foundry_pass.png",
@@ -2033,7 +2033,7 @@
         "chance": 0.5
       }
     ],
-    "description": "Mirror Guard returns half the damage of single-target focus-scaled energy skills and energy firearm shots, capped at a quarter of the attacker\u2019s maximum HP. Physical, melee and area attacks do not reflect. Its shield drops for a warned strike and recovery.",
+    "description": "Mirror Guard returns half the damage of single-target focus-scaled energy skills and energy firearm shots, capped at a quarter of the attacker’s maximum HP. Physical, melee and area attacks do not reflect. Its shield drops for a warned strike and recovery.",
     "portrait": "images/enemies/elite_guard_combat.png",
     "authored": {
       "cycle": [
@@ -2184,7 +2184,7 @@
       ],
       "coordination": {
         "partner": "directive_conductor",
-        "name": "Command link severed \u2014 recalibrating",
+        "name": "Command link severed — recalibrating",
         "opening_skill": "ring_link_exposure",
         "cycle": [
           "ring_unlinked_fire",
@@ -2197,7 +2197,7 @@
       },
       "phase": {
         "hp_below": 0.5,
-        "name": "Purge Mode \u2014 command link exposed",
+        "name": "Purge Mode — command link exposed",
         "opening_skill": "ring_link_exposure",
         "cycle": [
           "ring_joint_purge",
@@ -2714,7 +2714,7 @@
       },
       "phase": {
         "hp_below": 0.5,
-        "name": "Soloist\u2019s Verdict",
+        "name": "Soloist’s Verdict",
         "opening_skill": "source_expose",
         "cycle": [
           "source_vale_verdict",
@@ -2805,9 +2805,9 @@
       "group": "vale_silence",
       "role": "core",
       "offset_x": 0,
-      "offset_y": 0.02,
-      "width_scale": 1.32,
-      "height_scale": 1.32,
+      "offset_y": 0.01,
+      "width_scale": 1.68,
+      "height_scale": 1.68,
       "z": 0
     },
     "sprite": [
@@ -2943,7 +2943,7 @@
         "gnaw"
       ],
       "windups": {
-        "sector9_exhale": "Moss plates part \u2014 mineral exhale"
+        "sector9_exhale": "Moss plates part — mineral exhale"
       },
       "duplicate_cycle_offset": 2
     },
@@ -3002,7 +3002,7 @@
         "sector9_exposed_recovery"
       ],
       "windups": {
-        "sector9_dive": "Mist membrane tightening \u2014 dive"
+        "sector9_dive": "Mist membrane tightening — dive"
       }
     },
     "sprite": [
@@ -3040,7 +3040,7 @@
     ],
     "flavor": "Broadcasts one interruptible shield order, then repositions.",
     "xp_reward": 0,
-    "credit_reward": 0,
+    "credit_reward": 45,
     "drops": [],
     "description": "Broadcasts one interruptible shield order, then repositions.",
     "portrait": "images/enemies/concierge_relay_foundry_pass.png",
@@ -3466,11 +3466,11 @@
       "ring_recover",
       "ring_recover"
     ],
-    "flavor": "An interruptible cable reduces a target\u2019s damage briefly, followed by two recovery turns.",
+    "flavor": "An interruptible cable reduces a target’s damage briefly, followed by two recovery turns.",
     "xp_reward": 200,
     "credit_reward": 110,
     "drops": [],
-    "description": "An interruptible cable reduces a target\u2019s damage briefly, followed by two recovery turns.",
+    "description": "An interruptible cable reduces a target’s damage briefly, followed by two recovery turns.",
     "portrait": "images/enemies/tether_rigger_combat.png",
     "sprite": [
       "images/enemies/tether_rigger_combat.png"
@@ -3802,10 +3802,10 @@
     "composite": {
       "group": "vale_silence",
       "role": "part",
-      "offset_x": -0.57,
-      "offset_y": 0.04,
-      "width_scale": 0.46,
-      "height_scale": 0.68,
+      "offset_x": -0.58,
+      "offset_y": -0.16,
+      "width_scale": 0.54,
+      "height_scale": 0.54,
       "z": 1
     },
     "sprite": [
@@ -3854,10 +3854,10 @@
     "composite": {
       "group": "vale_silence",
       "role": "part",
-      "offset_x": 0.57,
-      "offset_y": 0.07,
-      "width_scale": 0.48,
-      "height_scale": 0.43,
+      "offset_x": 0.58,
+      "offset_y": -0.17,
+      "width_scale": 0.50,
+      "height_scale": 0.50,
       "z": 1
     },
     "sprite": [
@@ -3896,7 +3896,7 @@
     ],
     "flavor": "Its coolant sac swells before a cold vent. Damage interrupts the swelling.",
     "xp_reward": 120,
-    "credit_reward": 60,
+    "credit_reward": 85,
     "drops": [],
     "description": "Its coolant sac swells before a cold vent. Damage interrupts the swelling.",
     "portrait": "images/enemies/quench_mite_foundry_pass.png",
@@ -3949,7 +3949,7 @@
     ],
     "flavor": "Marks one crew member so its partner can aim a committed attack at them.",
     "xp_reward": 130,
-    "credit_reward": 55,
+    "credit_reward": 85,
     "drops": [],
     "description": "Marks one crew member so its partner can aim a committed attack at them.",
     "portrait": "images/enemies/magnet_sifter_foundry_pass.png",

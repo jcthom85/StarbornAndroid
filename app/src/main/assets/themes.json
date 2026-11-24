@@ -430,5 +430,167 @@
       1
     ],
     "background_image": "images/rooms/world_2/crash_site.webp"
+  },
+  "swamp": {
+    "bg": [
+      0.03,
+      0.08,
+      0.07,
+      1
+    ],
+    "fg": [
+      0.92,
+      0.98,
+      0.95,
+      1
+    ],
+    "border": [
+      0.22,
+      0.72,
+      0.58,
+      1
+    ],
+    "accent": [
+      0.28,
+      0.92,
+      0.76,
+      1
+    ],
+    "background_image": "images/rooms/world_2/crash_site.webp"
+  },
+  "logistics": {
+    "bg": [
+      0.06,
+      0.08,
+      0.11,
+      1
+    ],
+    "fg": [
+      0.94,
+      0.96,
+      0.99,
+      1
+    ],
+    "border": [
+      0.82,
+      0.62,
+      0.26,
+      1
+    ],
+    "accent": [
+      0.98,
+      0.76,
+      0.28,
+      1
+    ],
+    "background_image": "images/rooms/world_1/mine_landing.webp"
+  },
+  "space": {
+    "bg": [
+      0.03,
+      0.04,
+      0.09,
+      1
+    ],
+    "fg": [
+      0.94,
+      0.97,
+      1,
+      1
+    ],
+    "border": [
+      0.42,
+      0.66,
+      0.96,
+      1
+    ],
+    "accent": [
+      0.48,
+      0.84,
+      1,
+      1
+    ],
+    "background_image": "images/rooms/astra/bridge.webp"
+  },
+  "city": {
+    "bg": [
+      0.05,
+      0.06,
+      0.13,
+      1
+    ],
+    "fg": [
+      0.95,
+      0.96,
+      0.99,
+      1
+    ],
+    "border": [
+      0.32,
+      0.74,
+      0.84,
+      1
+    ],
+    "accent": [
+      0.38,
+      0.88,
+      0.98,
+      1
+    ],
+    "background_image": ""
+  },
+  "industrial": {
+    "bg": [
+      0.09,
+      0.06,
+      0.05,
+      1
+    ],
+    "fg": [
+      0.98,
+      0.94,
+      0.89,
+      1
+    ],
+    "border": [
+      0.92,
+      0.48,
+      0.22,
+      1
+    ],
+    "accent": [
+      1,
+      0.78,
+      0.36,
+      1
+    ],
+    "background_image": ""
+  },
+  "weather_lab": {
+    "bg": [
+      0.05,
+      0.07,
+      0.1,
+      1
+    ],
+    "fg": [
+      0.94,
+      0.97,
+      1,
+      1
+    ],
+    "border": [
+      0.4,
+      0.72,
+      0.92,
+      1
+    ],
+    "accent": [
+      0.48,
+      0.86,
+      1,
+      1
+    ],
+    "background_image": ""
   }
 }

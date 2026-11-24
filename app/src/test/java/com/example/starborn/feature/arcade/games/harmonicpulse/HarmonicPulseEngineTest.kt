@@ -33,4 +33,34 @@ class HarmonicPulseEngineTest {
         assertEquals(1, snap.multiplier)
         assertEquals(0, snap.combo)
     }
+
+    @Test
+    fun audioClockSync_convergesMonotonicallyWithoutBackwardJumps() {
+        val engine = HarmonicPulseEngine(42)
+        // Simulate an initial Bluetooth/ExoPlayer lead of +140ms during intro and steady playback
+        var audioClock = 0.14f
+        var previousSongTime = 0f
+        repeat(180) {
+            audioClock += 1f / 60f
+            engine.advance(1f / 60f, HarmonicPulseInput(), audioSongTimeSeconds = audioClock)
+            val currentSongTime = engine.snapshot().songTimeSeconds
+            assertTrue(
+                "Song time must advance monotonically ($currentSongTime < $previousSongTime)",
+                currentSongTime >= previousSongTime
+            )
+            previousSongTime = currentSongTime
+        }
+        // Within 3 seconds of playback, engine songTime should be phase-locked within < 5ms of audioClock
+        assertEquals(audioClock, engine.snapshot().songTimeSeconds, 0.005f)
+    }
+
+    @Test
+    fun audioClockSync_ignoresStalePreSeekPositionAfterReset() {
+        val engine = HarmonicPulseEngine(99)
+        // Stale pre-seek 41.8s reported on the first frame after reset must not jump songTime to end of round
+        engine.advance(1f / 60f, HarmonicPulseInput(), audioSongTimeSeconds = 41.8f)
+        val snap = engine.snapshot()
+        assertEquals(1, snap.round)
+        assertTrue("Expected songTime near 1/60s, got ${snap.songTimeSeconds}", snap.songTimeSeconds < 0.1f)
+    }
 }

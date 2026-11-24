@@ -1865,7 +1865,7 @@ class CombatController(
                     val showAttackFx = shouldShowAttackFx(entry, currentAction, updated)
                     val targetState = updated.combatants[entry.targetId]
                     val targetDefeated = targetState?.isAlive == false
-                    if (entry.isWeakness && entry.amount > 0 && entry.sourceId in playerIdList) {
+                    if ((entry.isWeakness || entry.isVantage) && entry.amount > 0 && entry.sourceId in playerIdList) {
                         enemyDefinitions[entry.targetId]?.let { enemy ->
                             sessionStore.discoverEnemyWeakness(enemy.id, entry.element ?: "physical")
                         }

@@ -56,12 +56,12 @@ object CrewBuildPrototype {
     val zeke = SkillTreeDefinition("zeke", linkedMapOf(
         "Protector" to listOf(
             SkillTreeNode(COVER, "Cover", 1, listOf(0, 0), listOf(), SkillNodeEffect(type = "active", subtype = COVER_SKILL), "Unlock Cover: Grant Shield to one ally (or Zeke) for 2 turns, reducing incoming damage by 25%. (3-turn cooldown)"),
-            SkillTreeNode(REINFORCED_HARNESS, "Reinforced Harness", 2, listOf(0, 1), listOf("zeke_cover_v2"), SkillNodeEffect(type = "buff", buffType = "vitality", value = 1), "Permanent +1 Vitality, raising Zeke's Max HP and resilience."),
+            SkillTreeNode(REINFORCED_HARNESS, "Reinforced Harness", 2, listOf(0, 1), listOf("zeke_cover_v2"), SkillNodeEffect(type = "buff", buffType = "vitality", value = 5), "Permanent +5 Vitality, raising Zeke's Max HP (+50) and physical resilience."),
             SkillTreeNode(STEADY_COVER, "Steady Cover", 3, listOf(0, 2), listOf("zeke_reinforced_harness_v2"), SkillNodeEffect(type = "talent", subtype = STEADY_COVER), "Cover also restores +20 Stability to its target."),
             SkillTreeNode(LAST_LINE, "Last Line", 4, listOf(0, 3), listOf("zeke_steady_cover_v2", "ms_w4_mq20_complete"), SkillNodeEffect(type = "talent", subtype = LAST_LINE), "Once per battle, Zeke can cast Cover even while on cooldown to protect an ally below 30% HP.")
         ),
         "Disruptor" to listOf(
-            SkillTreeNode(TRAINING_SESSION, "Training Session", 1, listOf(0, 0), listOf(), SkillNodeEffect(type = "buff", buffType = "strength", value = 1), "Permanent +1 Strength, boosting Zeke's weapon strikes and physical skills."),
+            SkillTreeNode(TRAINING_SESSION, "Training Session", 1, listOf(0, 0), listOf(), SkillNodeEffect(type = "buff", buffType = "strength", value = 3), "Permanent +3 Strength, boosting Zeke's weapon strikes and physical skills."),
             SkillTreeNode(FAULT_LINE, "Fault Line", 2, listOf(0, 1), listOf("zeke_training_session_v2"), SkillNodeEffect(type = "talent", subtype = FAULT_LINE), "Shatter Blow deals +20% Stability damage."),
             SkillTreeNode(OPENING, "Opening", 3, listOf(0, 2), listOf("zeke_fault_line_v2"), SkillNodeEffect(type = "talent", subtype = OPENING), "When Shatter Blow inflicts Discord, mark the target for 2 turns; the next direct hit from an ally consumes the mark for +10% HP damage."),
             SkillTreeNode(CONTROLLED_DEMOLITION, "Controlled Demolition", 4, listOf(0, 3), listOf("zeke_opening_v2", "ms_w4_mq20_complete"), SkillNodeEffect(type = "talent", subtype = CONTROLLED_DEMOLITION), "Zeke's physical attacks deal +15% Stability damage against enemies afflicted with Discord.")
@@ -70,13 +70,13 @@ object CrewBuildPrototype {
 
     val orion = SkillTreeDefinition("orion", linkedMapOf(
         "Field Medic" to listOf(
-            SkillTreeNode(FIELD_RESILIENCE, "Field Resilience", 1, listOf(0, 0), listOf(), SkillNodeEffect(type = "buff", buffType = "vitality", value = 1), "Permanent +1 Vitality, raising Orion's Max HP and durability."),
+            SkillTreeNode(FIELD_RESILIENCE, "Field Resilience", 1, listOf(0, 0), listOf(), SkillNodeEffect(type = "buff", buffType = "vitality", value = 3), "Permanent +3 Vitality, raising Orion's Max HP (+30) and durability."),
             SkillTreeNode(FIELD_TREATMENT, "Field Treatment", 2, listOf(0, 1), listOf("orion_field_resilience_v2"), SkillNodeEffect(type = "active", subtype = TREATMENT_SKILL), "Unlock Field Treatment: Restore 20% of one ally's Max HP directly. (4-turn cooldown)"),
             SkillTreeNode(TRIAGE, "Triage", 3, listOf(0, 2), listOf("orion_field_treatment_v2"), SkillNodeEffect(type = "talent", subtype = TRIAGE), "Field Treatment restores 25% Max HP (up from 20%) when healing an ally below 35% HP."),
             SkillTreeNode(AFTERCARE, "Aftercare", 4, listOf(0, 3), listOf("orion_triage_v2", "ms_w4_mq20_complete"), SkillNodeEffect(type = "talent", subtype = AFTERCARE), "Field Treatment also applies Aftercare for 2 turns, restoring 5% Max HP at the end of each turn (unless Regen is already active).")
         ),
         "Controller" to listOf(
-            SkillTreeNode(CLEAR_FOCUS, "Clear Focus", 1, listOf(0, 0), listOf(), SkillNodeEffect(type = "buff", buffType = "focus", value = 1), "Permanent +1 Focus, boosting Orion's Source power, healing, and status accuracy."),
+            SkillTreeNode(CLEAR_FOCUS, "Clear Focus", 1, listOf(0, 0), listOf(), SkillNodeEffect(type = "buff", buffType = "focus", value = 3), "Permanent +3 Focus, boosting Orion's Source power, healing, accuracy, and critical rate."),
             SkillTreeNode(PRISM_LENS, "Prism Lens", 2, listOf(0, 1), listOf("orion_clear_focus_v2"), SkillNodeEffect(type = "talent", subtype = PRISM_LENS), "Prism Lance deals +20% Stability damage."),
             SkillTreeNode(SAFE_EXPOSURE, "Safe Exposure", 3, listOf(0, 2), listOf("orion_prism_lens_v2"), SkillNodeEffect(type = "talent", subtype = SAFE_EXPOSURE), "Prism Lance inflicts Discord (1 turn) on enemies that aren't already afflicted."),
             SkillTreeNode(STEADY_FIELD, "Steady Field", 4, listOf(0, 3), listOf("orion_safe_exposure_v2", "ms_w4_mq20_complete"), SkillNodeEffect(type = "talent", subtype = STEADY_FIELD), "Discord newly applied by Orion lasts +1 extra turn (up to 3 turns).")
@@ -86,12 +86,12 @@ object CrewBuildPrototype {
     val gh0st = SkillTreeDefinition("gh0st", linkedMapOf(
         "Precision" to listOf(
             SkillTreeNode(SCOPE, "Scope", 1, listOf(0, 0), listOf(), SkillNodeEffect(type = "talent", subtype = SCOPE), "Headshot deals +10% HP damage against enemies at or above 75% HP."),
-            SkillTreeNode(STEADY_AIM, "Steady Aim", 2, listOf(0, 1), listOf("gh0st_scope_v2"), SkillNodeEffect(type = "talent", subtype = STEADY_AIM), "Headshot gains +5% Critical Chance."),
+            SkillTreeNode(STEADY_AIM, "Steady Aim", 2, listOf(0, 1), listOf("gh0st_scope_v2"), SkillNodeEffect(type = "talent", subtype = STEADY_AIM), "Headshot gains +10% Critical Chance, and Gh0st's other attacks and abilities gain +5% Critical Chance."),
             SkillTreeNode(EXECUTE, "Execute", 3, listOf(0, 2), listOf("gh0st_steady_aim_v2"), SkillNodeEffect(type = "talent", subtype = EXECUTE), "Gh0st's single-target skills deal +15% HP damage against enemies at or below 30% HP."),
             SkillTreeNode(COOL_HEAD, "Cool Head", 4, listOf(0, 3), listOf("gh0st_execute_v2", "ms_w4_mq20_complete"), SkillNodeEffect(type = "talent", subtype = COOL_HEAD), "Landing a basic attack primes a Steady Shot, boosting Gh0st's next Headshot by +15% HP damage.")
         ),
         "Tactical" to listOf(
-            SkillTreeNode(QUICK_POSITION, "Quick Position", 1, listOf(0, 0), listOf(), SkillNodeEffect(type = "buff", buffType = "agility", value = 1), "Permanent +1 Agility, improving turn speed and evasion."),
+            SkillTreeNode(QUICK_POSITION, "Quick Position", 1, listOf(0, 0), listOf(), SkillNodeEffect(type = "buff", buffType = "agility", value = 3), "Permanent +3 Agility, improving turn speed and evasion."),
             SkillTreeNode(SURGICAL_STRIKE, "Surgical Strike", 2, listOf(0, 1), listOf("gh0st_quick_position_v2"), SkillNodeEffect(type = "talent", subtype = SURGICAL_STRIKE), "Gh0st's basic attacks deal +20% Stability damage."),
             SkillTreeNode(DISARM, "Disarm", 3, listOf(0, 2), listOf("gh0st_surgical_strike_v2"), SkillNodeEffect(type = "active", subtype = DISARM_SKILL), "Unlock Disarm: Agility-scaled physical shot (60 power) that inflicts Discord for 2 turns. (3-turn cooldown)"),
             SkillTreeNode(RECENTER, "Recenter", 4, listOf(0, 3), listOf("gh0st_disarm_v2", "ms_w4_mq20_complete"), SkillNodeEffect(type = "talent", subtype = RECENTER), "Once per battle, automatically shake off Stun or Stagger at turn start instead of losing the turn.")

@@ -74,13 +74,12 @@ private object AssetImageCache {
 }
 
 @Composable
-fun rememberAssetPainter(
+fun rememberCachedAssetPainterOrNull(
     imagePath: String?,
-    fallback: Painter = painterResource(R.drawable.main_menu_background),
-    async: Boolean = false
-): Painter {
+    async: Boolean = true
+): Painter? {
     val context = LocalContext.current.applicationContext
-    if (imagePath.isNullOrBlank()) return fallback
+    if (imagePath.isNullOrBlank()) return null
 
     val resolvedId = remember(imagePath) {
         val resourceName = imagePath
@@ -94,7 +93,7 @@ fun rememberAssetPainter(
     if (async) {
         var imageBitmap by remember(imagePath) { mutableStateOf(AssetImageCache[imagePath]) }
         LaunchedEffect(imagePath) {
-            if (imageBitmap == null) {
+            if (imageBitmap == null && !AssetImageCache.isMissing(imagePath)) {
                 imageBitmap = withContext(Dispatchers.IO) {
                     loadAssetImage(context, imagePath)
                 }
@@ -102,7 +101,7 @@ fun rememberAssetPainter(
         }
         return imageBitmap?.let { bitmap ->
             remember(bitmap) { BitmapPainter(bitmap) }
-        } ?: fallback
+        }
     }
 
     val imageBitmap = remember(imagePath) {
@@ -110,51 +109,70 @@ fun rememberAssetPainter(
     }
     return imageBitmap?.let { bitmap ->
         remember(bitmap) { BitmapPainter(bitmap) }
-    } ?: fallback
+    }
+}
+
+@Composable
+fun rememberAssetPainter(
+    imagePath: String?,
+    fallback: Painter = painterResource(R.drawable.main_menu_background),
+    async: Boolean = false
+): Painter {
+    return rememberCachedAssetPainterOrNull(imagePath, async = async) ?: fallback
 }
 
 @Composable
 fun rememberRoomBackgroundPainter(imagePath: String?): Painter {
-    val context = LocalContext.current
-    if (!imagePath.isNullOrBlank()) {
-        val resourceName = remember(imagePath) {
-            imagePath
-                .substringAfterLast('/')
-                .substringBeforeLast('.')
-                .lowercase(Locale.getDefault())
-        }
-        val resolvedId = remember(imagePath) {
-            context.resources.getIdentifier(resourceName, "drawable", context.packageName)
-        }
-        if (resolvedId != 0) {
-            return painterResource(resolvedId)
-        }
+    val context = LocalContext.current.applicationContext
+    if (imagePath.isNullOrBlank()) {
+        return remember { ColorPainter(Color.Black) }
+    }
 
-        val exists = remember(imagePath) {
-            runCatching {
-                context.assets.open(imagePath).use { }
-                true
-            }.getOrDefault(false)
-        }
-        if (exists) {
-            return rememberAssetPainter(imagePath, fallback = ColorPainter(Color.Black))
-        }
+    val resolvedId = remember(imagePath) {
+        val resourceName = imagePath
+            .substringAfterLast('/')
+            .substringBeforeLast('.')
+            .lowercase(Locale.getDefault())
+        context.resources.getIdentifier(resourceName, "drawable", context.packageName)
+    }
+    if (resolvedId != 0) {
+        return painterResource(resolvedId)
+    }
 
-        if (imagePath.contains("world_2") || imagePath.contains("sector9")) {
-            return remember {
-                androidx.compose.ui.graphics.painter.BrushPainter(
-                    androidx.compose.ui.graphics.Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xFF030D14),
-                            Color(0xFF051D18),
-                            Color(0xFF020E15)
-                        )
-                    )
-                )
+    var imageBitmap by remember(imagePath) { mutableStateOf(AssetImageCache[imagePath]) }
+    var isMissing by remember(imagePath) { mutableStateOf(AssetImageCache.isMissing(imagePath)) }
+    LaunchedEffect(imagePath) {
+        if (imageBitmap == null && !isMissing) {
+            val loaded = withContext(Dispatchers.IO) {
+                loadAssetImage(context, imagePath)
+            }
+            if (loaded != null) {
+                imageBitmap = loaded
+            } else {
+                isMissing = true
             }
         }
     }
-    return rememberAssetPainter(imagePath, fallback = ColorPainter(Color.Black))
+
+    imageBitmap?.let { bitmap ->
+        return remember(bitmap) { BitmapPainter(bitmap) }
+    }
+
+    if (isMissing && (imagePath.contains("world_2") || imagePath.contains("sector9"))) {
+        return remember {
+            androidx.compose.ui.graphics.painter.BrushPainter(
+                androidx.compose.ui.graphics.Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFF030D14),
+                        Color(0xFF051D18),
+                        Color(0xFF020E15)
+                    )
+                )
+            )
+        }
+    }
+
+    return remember { ColorPainter(Color.Black) }
 }
 
 private fun loadAssetImage(

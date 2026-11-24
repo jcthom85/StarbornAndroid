@@ -31,6 +31,7 @@ object AccessoryPassives {
     const val LEGENDARY_STARBORN_SURGE = "legendary_starborn_surge"
 
     private const val MAX_MOMENTUM = 3
+    private val DEFENSIVE_STATUS_IDS = setOf("shield", "guard", "defend", "defending")
     private val STATUS_HUNTER_IDS = setOf("burn", "shock", "corrosion", "bleed", "weak", "brittle")
     private val CLEANSEABLE_DEBUFFS = setOf(
         "burn", "shock", "corrosion", "bleed", "weak", "brittle",
@@ -283,7 +284,7 @@ object AccessoryPassives {
                 val victimBefore = before.combatants[victimId] ?: return@forEach
                 val victimAfter = working.combatants[victimId] ?: return@forEach
                 if (!victimAfter.isAlive || victimAfter.combatant.side == CombatSide.ENEMY) return@forEach
-                val wasShielded = victimBefore.statusEffects.any { it.id == "shield" || it.id == "defending" }
+                val wasShielded = victimBefore.statusEffects.any { it.id in DEFENSIVE_STATUS_IDS }
                 val victimPassive = victimAfter.combatant.accessoryPassiveId
                 val victimLabel = victimAfter.combatant.accessoryName ?: "Accessory"
 
@@ -353,7 +354,7 @@ object AccessoryPassives {
         val label = actor.combatant.accessoryName ?: "Accessory"
         if (passive == LOW_HP_REGEN) {
             val lowHp = actor.hp.toLong() * 100 < actor.combatant.stats.maxHp.toLong() * 60
-            val fortified = actor.statusEffects.any { it.id == "shield" || it.id == "defending" }
+            val fortified = actor.statusEffects.any { it.id in DEFENSIVE_STATUS_IDS }
             if ((lowHp || fortified) && actor.hp < actor.combatant.stats.maxHp) {
                 val healAmt = (actor.combatant.stats.maxHp * 0.06).roundToInt().coerceAtLeast(1)
                 val healed = engine.applyHeal(state, actorId, actorId, healAmt)

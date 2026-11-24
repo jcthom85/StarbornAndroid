@@ -96,6 +96,7 @@ class CombatEngine(
 
         val clamped = if (effectiveAmount < 0) 0 else effectiveAmount
         val isWeakness = clamped > 0 && tier == AffinityTier.WEAKNESS
+        val isVantage = clamped > 0 && tier == AffinityTier.VANTAGE
         val newHp = (targetState.hp - clamped).coerceAtLeast(0)
 
         val stabilityBase = (stabilityBaseAmount ?: clamped).coerceAtLeast(0)
@@ -106,6 +107,7 @@ class CombatEngine(
             opMode && isAttackerFriendly -> 9999
             stabilityProtected -> 0
             isWeakness -> (stabilityBase * 2 * stabilityMultiplier).roundToInt()
+            isVantage -> (stabilityBase * 1.5 * stabilityMultiplier).roundToInt()
             else -> (stabilityBase * stabilityMultiplier).roundToInt()
         }
         var newStability = targetState.stability - stabilityDamage
@@ -130,7 +132,8 @@ class CombatEngine(
             critical = effectiveCritical,
             isWeakness = isWeakness,
             isBrokenBonus = brokenBonus,
-            momentumSpent = momentumSpent
+            momentumSpent = momentumSpent,
+            isVantage = isVantage
         )
         var working = state.copy(
             combatants = state.combatants + (targetId to updated),
@@ -373,8 +376,14 @@ class CombatEngine(
         val maxHp = current.combatant.stats.maxHp.coerceAtLeast(1)
         val amount = when {
             tick.amount != null -> tick.amount
-            tick.perMaxHpDivisor != null && tick.perMaxHpDivisor > 0 ->
-                max(tick.min ?: 1, maxHp / tick.perMaxHpDivisor)
+            tick.perMaxHpDivisor != null && tick.perMaxHpDivisor > 0 -> {
+                val rawPercentTick = max(tick.min ?: 1, maxHp / tick.perMaxHpDivisor)
+                if (tick.mode.equals("damage", ignoreCase = true)) {
+                    rawPercentTick.coerceAtMost(MAX_PERCENT_HP_DOT_TICK)
+                } else {
+                    rawPercentTick
+                }
+            }
             else -> 0
         }
         if (amount <= 0) return state
@@ -426,16 +435,25 @@ class CombatEngine(
         element: String?
     ): AffinityTier {
         val profile = targetState.combatant.resistances
-        val key = element?.lowercase()
-        val override = targetState.statusEffects.asReversed().firstNotNullOfOrNull {
-            statusRegistry.definition(it.id)?.affinityOverrides?.get(key)
+        val canonicalKey = when (element?.trim()?.lowercase()) {
+            "burn", "fire" -> "burn"
+            "freeze", "ice", "cryo" -> "freeze"
+            "shock", "lightning", "electric" -> "shock"
+            "acid", "poison", "corrosion" -> "acid"
+            "source", "harmonic", "psychic", "psionic" -> "source"
+            "physical" -> "physical"
+            else -> element?.trim()?.lowercase()
         }
-        val base = override ?: when (key) {
-            "burn", "fire" -> profile.burn
-            "freeze", "ice" -> profile.freeze
-            "shock", "lightning" -> profile.shock
-            "acid", "poison", "corrosion" -> profile.acid
-            "source", "harmonic", "psychic", "psionic" -> profile.source
+        val override = targetState.statusEffects.asReversed().firstNotNullOfOrNull {
+            val overrides = statusRegistry.definition(it.id)?.affinityOverrides
+            overrides?.get(canonicalKey) ?: overrides?.get(element?.lowercase())
+        }
+        val base = override ?: when (canonicalKey) {
+            "burn" -> profile.burn
+            "freeze" -> profile.freeze
+            "shock" -> profile.shock
+            "acid" -> profile.acid
+            "source" -> profile.source
             else -> profile.physical
         } ?: AffinityTier.NEUTRAL.code
         return ElementalAffinityRules.tierForValue(base)
@@ -445,6 +463,7 @@ class CombatEngine(
         private const val DEFAULT_BUFF_DURATION = 2
         private const val DEFAULT_STATUS_DURATION = 2
         private const val STATUS_SOURCE_PREFIX = "status_"
+        private const val MAX_PERCENT_HP_DOT_TICK = 120
         private const val BURN_BURST_DIVISOR = 10
         private const val SHOCK_BURST_DIVISOR = 10
         private const val FREEZE_BURST_DURATION = 2

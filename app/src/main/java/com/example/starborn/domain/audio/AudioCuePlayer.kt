@@ -333,7 +333,7 @@ class AudioCuePlayer(
     }
 
     private fun playStingerStreaming(type: AudioCueType, cueId: String, command: AudioCommand.Play) {
-        val uri = resolveRawResourceUri(cueId) ?: return
+        val uri = resolveStreamingUri(cueId) ?: return
         ensureAppAudioFocus()
         stingerAnimator?.cancel()
         stingerAnimator = null
@@ -524,7 +524,7 @@ class AudioCuePlayer(
     }
 
     private fun playStreaming(player: ExoPlayer, type: AudioCueType, cueId: String, command: AudioCommand.Play) {
-        val uri = resolveRawResourceUri(cueId) ?: return
+        val uri = resolveStreamingUri(cueId) ?: return
         ensureAppAudioFocus()
         cancelFade(type)
         if (type == AudioCueType.MUSIC) {
@@ -685,7 +685,7 @@ class AudioCuePlayer(
     }
 
     private fun playAmbientStreaming(cueId: String, command: AudioCommand.Play) {
-        val uri = resolveRawResourceUri(cueId) ?: return
+        val uri = resolveStreamingUri(cueId) ?: return
         ensureAppAudioFocus()
         ambientAnimators.remove(cueId)?.cancel()
         val player = ambientPlayers.getOrPut(cueId) { createAmbientExoPlayer() }
@@ -920,31 +920,110 @@ class AudioCuePlayer(
         }
     }
 
+    private val assetAudioFiles: Map<String, String> by lazy {
+        runCatching {
+            context.assets.list("audio").orEmpty().associateBy { fileName ->
+                fileName.substringBeforeLast('.').lowercase()
+            }
+        }.getOrDefault(emptyMap())
+    }
+
+    private fun resolveAssetAudioPath(name: String): String? {
+        val fileName = assetAudioFiles[name.lowercase()] ?: return null
+        return "audio/$fileName"
+    }
+
+    fun hasCue(cueId: String): Boolean {
+        val normalized = cueId.trim().lowercase().replace('-', '_')
+        if (normalized.isBlank()) return false
+        return resolveAssetAudioPath(normalized) != null ||
+            resolveRawResourceId(normalized, logMissing = false) != 0
+    }
+
+    fun currentMusicPositionMs(expectedCueId: String? = null): Long? {
+        val activeCue = currentMusicCue ?: return null
+        if (expectedCueId != null) {
+            val expected = expectedCueId.trim().lowercase().replace('-', '_')
+            if (activeCue != expected) return null
+        }
+        if (!musicPlayer.isPlaying && !musicPlayer.playWhenReady) return null
+        return absoluteMusicPosition(musicPlayer).coerceAtLeast(0L)
+    }
+
+    fun restartCurrentMusicFromStart(expectedCueId: String? = null) {
+        val activeCue = currentMusicCue ?: return
+        if (expectedCueId != null) {
+            val expected = expectedCueId.trim().lowercase().replace('-', '_')
+            if (activeCue != expected) return
+        }
+        musicTrackPositions[activeCue] = 0L
+        if (musicPlayer.mediaItemCount > 1) {
+            musicPlayer.seekTo(0, 0L)
+            musicPlayer.repeatMode = Player.REPEAT_MODE_OFF
+            currentMusicInLoopBodyOnly = false
+        } else {
+            musicPlayer.seekTo(0L)
+        }
+        if (!pausedForBackground && !pausedByFocusLoss) {
+            musicPlayer.play()
+        }
+    }
+
+    fun setMusicPausedForOverlay(paused: Boolean, expectedCueId: String? = null) {
+        val activeCue = currentMusicCue ?: return
+        if (expectedCueId != null) {
+            val expected = expectedCueId.trim().lowercase().replace('-', '_')
+            if (activeCue != expected) return
+        }
+        if (paused) {
+            musicPlayer.pause()
+        } else if (!pausedForBackground && !pausedByFocusLoss) {
+            musicPlayer.play()
+        }
+    }
+
     private fun ensureSound(name: String): Int? {
         val cached = soundCache[name]
         if (cached != null) {
             return cached.takeUnless { it == MISSING_SOUND_ID }
         }
-        val resId = resolveRawResourceId(name)
-        if (resId == 0) {
-            soundCache[name] = MISSING_SOUND_ID
-            return null
+        val resId = resolveRawResourceId(name, logMissing = false)
+        if (resId != 0) {
+            val loadedId = soundPool.load(context, resId, /*priority*/ 1)
+            soundCache[name] = loadedId
+            return loadedId
         }
-        val loadedId = soundPool.load(context, resId, /*priority*/ 1)
-        soundCache[name] = loadedId
-        return loadedId
+        val assetPath = resolveAssetAudioPath(name)
+        if (assetPath != null) {
+            val loadedId = runCatching {
+                context.assets.openFd(assetPath).use { afd ->
+                    soundPool.load(afd, /*priority*/ 1)
+                }
+            }.getOrNull()
+            if (loadedId != null && loadedId != 0) {
+                soundCache[name] = loadedId
+                return loadedId
+            }
+        }
+        Log.d(TAG, "Missing audio cue resource for '$name'")
+        soundCache[name] = MISSING_SOUND_ID
+        return null
     }
 
-    private fun resolveRawResourceId(name: String): Int {
+    private fun resolveRawResourceId(name: String, logMissing: Boolean = true): Int {
         val resId = context.resources.getIdentifier(name, "raw", context.packageName)
-        if (resId == 0) {
+        if (resId == 0 && logMissing) {
             Log.d(TAG, "Missing audio cue resource for '$name'")
         }
         return resId
     }
 
     @UnstableApi
-    private fun resolveRawResourceUri(name: String): android.net.Uri? {
+    private fun resolveStreamingUri(name: String): android.net.Uri? {
+        val assetPath = resolveAssetAudioPath(name)
+        if (assetPath != null) {
+            return android.net.Uri.parse("asset:///$assetPath")
+        }
         val resId = resolveRawResourceId(name)
         if (resId == 0) return null
         return RawResourceDataSource.buildRawResourceUri(resId)

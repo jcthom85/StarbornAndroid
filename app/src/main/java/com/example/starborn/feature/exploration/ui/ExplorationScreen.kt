@@ -139,6 +139,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.collectAsState
 import com.example.starborn.feature.exploration.ui.tabs.TinkeringTutorialOverlay
@@ -386,8 +387,8 @@ fun ExplorationScreen(
     val areaEntry = uiState.areaEntry ?: hubAreaEntry
     var finishedAreaEntryId by rememberSaveable { mutableStateOf<Long?>(null) }
     val areaEntryActive = areaEntry != null && areaEntry.id != finishedAreaEntryId
-    val environmentSettings=rememberEnvironmentalSettings()
-    val environmentMemory=remember { com.example.starborn.domain.environment.EnvironmentalSceneMemory() }
+    val environmentSettings = rememberEnvironmentalSettings()
+    val environmentMemory = remember { com.example.starborn.domain.environment.EnvironmentalSceneMemory() }
     val environmentSession by viewModel.environmentalSession.collectAsStateWithLifecycle()
     val environmentRooms=remember(viewModel) { viewModel.environmentalAssets.loadRooms().associateBy { it.id } }
     var pendingModMove by remember { mutableStateOf<com.example.starborn.domain.inventory.ModTransferRequest?>(null) }
@@ -505,20 +506,7 @@ fun ExplorationScreen(
                         approachingAmbush = event.isAmbush
                         approachingCombat = true
                         viewModel.setExplorationInteractionBlocked(true)
-                        if (event.isAmbush) {
-                            audioCuePlayer.execute(
-                                listOf(
-                                    AudioCommand.Play(
-                                        type = AudioCueType.UI,
-                                        cueId = "sfx_combat_transition_slam",
-                                        loop = false,
-                                        fadeMs = 0L,
-                                        triggerHaptic = true
-                                    )
-                                )
-                            )
-                        }
-                        delay(if (event.isAmbush) 380L else 350L)
+                        delay(if (event.isAmbush) 240L else 200L)
                     }
                     onEnemySelected(event.enemyIds)
                     approachingCombat = false
@@ -649,16 +637,24 @@ fun ExplorationScreen(
     val roomTransitionProgress = remember(roomTransition?.id) {
         CoreAnimatable(if (roomTransition == null) 1f else 0f)
     }
-    val roomTransitionInProgress = roomTransitionActive || roomTransitionProgress.value < 1f
+    val roomTransitionSettled by remember(roomTransitionProgress) {
+        derivedStateOf { roomTransitionProgress.value >= 0.999f }
+    }
+    val roomTransitionInProgress = roomTransitionActive || !roomTransitionSettled
     val patrolInteractionBlocked = blockingOverlayActive || importantQuestPopupVisible || approachingCombat || roomTransitionInProgress
     LaunchedEffect(viewModel, patrolInteractionBlocked) {
         viewModel.setExplorationInteractionBlocked(patrolInteractionBlocked)
     }
 
     val outgoingBackgroundPainter = rememberRoomBackgroundPainter(outgoingBackgroundPath)
-    val backdropProgress = if (scriptedTravelActive) {
-        if (roomTransitionProgress.value < .5f) 0f else 1f
-    } else roomTransitionProgress.value
+    val readBackdropProgress: () -> Float = {
+        val raw = roomTransitionProgress.value
+        if (scriptedTravelActive) {
+            if (raw < .5f) 0f else 1f
+        } else {
+            raw
+        }
+    }
 
     LaunchedEffect(roomTransition?.id) {
         roomTransition ?: return@LaunchedEffect
@@ -929,15 +925,16 @@ fun ExplorationScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .graphicsLayer {
-                        val remaining = 1f - backdropProgress
+                        val bp = readBackdropProgress()
+                        val remaining = 1f - bp
                         translationX = enterX * size.width * 0.12f * remaining
                         translationY = enterY * size.height * 0.12f * remaining
-                        scaleX = 0.99f + (0.01f * backdropProgress)
+                        scaleX = 0.99f + (0.01f * bp)
                         scaleY = scaleX
                     },
                 contentScale = ContentScale.Crop
             )
-            if (outgoingBackgroundPath != null) {
+            if (outgoingBackgroundPath != null && !roomTransitionSettled) {
                 val exitX = when (transitionDirection) {
                     "east" -> 1f
                     "west" -> -1f
@@ -953,11 +950,8 @@ fun ExplorationScreen(
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxSize()
-                        .blur(
-                            (6f * (backdropProgress / 0.55f).coerceIn(0f, 1f)).dp
-                        )
                         .graphicsLayer {
-                            val exitProgress = backdropProgress
+                            val exitProgress = readBackdropProgress()
                             translationX = exitX * size.width * 0.78f * exitProgress
                             translationY = exitY * size.height * 0.78f * exitProgress
                             alpha = (1f - (exitProgress / 0.82f)).coerceIn(0f, 1f)
@@ -1039,27 +1033,31 @@ fun ExplorationScreen(
                 modifier = Modifier.fillMaxSize()
             )
         }
-        val effectProgress=backdropProgress.coerceIn(0f,1f)
-        val effectsMoving=outgoingBackgroundPath!=null && effectProgress<1f
-        val effectEnterX=when(roomTransition?.direction) { "east"->-1f;"west"->1f;else->0f }
-        val effectEnterY=when(roomTransition?.direction) { "north"->1f;"south"->-1f;else->0f }
-        if(effectsMoving) {
-            val outgoingRoom=environmentRooms[roomTransition?.fromRoomId]
-            val outgoingState=outgoingRoom?.state.orEmpty().mapNotNull { (k,v)->(v as? Boolean)?.let { k to it } }.toMap()+environmentSession.roomStates[outgoingRoom?.id].orEmpty()
-            AndroidRoomEnvironmentalEffects(outgoingRoom,outgoingBackgroundPainter.intrinsicSize,outgoingState,
-                uiState.completedMilestones,environmentSettings,viewModel.environmentalAssets,
-                dark=outgoingState["dark"] ?: outgoingRoom?.dark ?: false,paused=blockingOverlayActive || uiState.isMenuOverlayVisible,
-                translationX=-effectEnterX*.78f*effectProgress,translationY=-effectEnterY*.78f*effectProgress,
-                scale=1-.025f*effectProgress,opacity=(1-effectProgress/.82f).coerceIn(0f,1f),transition=true,sceneMemory=environmentMemory)
-        }
+        val effectEnterX = when (roomTransition?.direction) { "east" -> -1f; "west" -> 1f; else -> 0f }
+        val effectEnterY = when (roomTransition?.direction) { "north" -> 1f; "south" -> -1f; else -> 0f }
+        val effectsTransitioning = outgoingBackgroundPath != null && !roomTransitionSettled
         AndroidRoomEnvironmentalEffects(
-            room=if(debugWeatherOverride!=null) currentRoom?.copy(weather=activeWeatherId,environmentalEffects=null) else currentRoom,
-            artworkSize=backgroundPainter.intrinsicSize,roomState=uiState.roomState,
-            milestones=uiState.completedMilestones,settings=environmentSettings,assets=viewModel.environmentalAssets,
-            dark=isRoomDark,paused=blockingOverlayActive || uiState.isMenuOverlayVisible,
-            translationX=effectEnterX*.12f*(1-effectProgress),translationY=effectEnterY*.12f*(1-effectProgress),
-            scale=.99f+.01f*effectProgress,opacity=if(effectsMoving) effectProgress else 1f,
-            transition=effectsMoving,sceneMemory=environmentMemory)
+            room = if (debugWeatherOverride != null) currentRoom?.copy(weather = activeWeatherId, environmentalEffects = null) else currentRoom,
+            artworkSize = backgroundPainter.intrinsicSize,
+            roomState = uiState.roomState,
+            milestones = uiState.completedMilestones,
+            settings = environmentSettings,
+            assets = viewModel.environmentalAssets,
+            dark = isRoomDark,
+            paused = blockingOverlayActive || uiState.isMenuOverlayVisible,
+            transition = effectsTransitioning,
+            sceneMemory = environmentMemory,
+            layerTransform = {
+                val bp = readBackdropProgress().coerceIn(0f, 1f)
+                val rem = 1f - bp
+                translationX = effectEnterX * size.width * 0.12f * rem
+                translationY = effectEnterY * size.height * 0.12f * rem
+                val s = 0.99f + 0.01f * bp
+                scaleX = s
+                scaleY = s
+                alpha = if (outgoingBackgroundPath != null && bp < 1f) (0.35f + 0.65f * bp) else 1f
+            }
+        )
         val vignetteIntensity = 0.48f * darknessAlpha
         VignetteOverlay(
             visible = uiState.settings.vignetteEnabled && vignetteIntensity > 0f,

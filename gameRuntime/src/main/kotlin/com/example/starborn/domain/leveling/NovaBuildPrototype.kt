@@ -30,7 +30,7 @@ object NovaBuildPrototype {
             node(BREAKER, "Breaker Bolt", 3, VENT, "Unlock Breaker Bolt: Focused physical shot (100 power, Agility scaling) dealing +50% Stability damage. (3-turn cooldown)", SkillNodeEffect(type = "active", subtype = BREAKER_SKILL)),
             node(SEAM, "Exposed Seam", 4, BREAKER, "Nova's direct hits deal +15% HP damage against targets afflicted with Discord or Brittle.")),
         "Improviser" to listOf(
-            node(STEPS, "Quiet Steps", 1, null, "Permanent +1 Speed.", SkillNodeEffect(type = "buff", buffType = "speed", value = 1)),
+            node(STEPS, "Quiet Steps", 1, null, "Permanent +3 Speed, accelerating Nova's turn cadence.", SkillNodeEffect(type = "buff", buffType = "speed", value = 3)),
             node(SCATTER, "Scatter Charge", 2, STEPS, "Unlock Scatter Charge: Agility-scaled physical blast (60 power) hitting all enemies. (2-turn cooldown)", SkillNodeEffect(type = "active", subtype = SCATTER_SKILL)),
             node(START, "Hot Start", 3, SCATTER, "Nova's direct hits deal +15% HP damage against enemies above 75% HP."),
             node(MOVING, "Keep Moving", 4, START, "Scoring a direct KO grants Nova Shield for 1 turn (up to twice per battle)."))),

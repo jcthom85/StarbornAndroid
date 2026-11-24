@@ -111,7 +111,7 @@
       "source": "output/imagegen/npc_cast_20261116/keyed/thorne_refined.png",
       "prompt": "prompts/thorne.txt",
       "refinementPrompt": "prompts/thorne_refine.txt",
-      "bytes": 89080
+      "bytes": 81736
     },
     {
       "id": "elara",
@@ -133,7 +133,7 @@
       "source": "output/imagegen/npc_cast_20261116/keyed/vale_refined.png",
       "prompt": "prompts/vale.txt",
       "refinementPrompt": "prompts/vale_refine.txt",
-      "bytes": 86586
+      "bytes": 72298
     },
     {
       "id": "miner_orlo",
@@ -144,7 +144,7 @@
       "source": "output/imagegen/npc_cast_20261116/keyed/miner_orlo.png",
       "prompt": "prompts/miner_orlo.txt",
       "refinementPrompt": null,
-      "bytes": 119492
+      "bytes": 86978
     },
     {
       "id": "cook_vance",
@@ -155,7 +155,7 @@
       "source": "output/imagegen/npc_cast_20261116/keyed/cook_vance.png",
       "prompt": "prompts/cook_vance.txt",
       "refinementPrompt": null,
-      "bytes": 120050
+      "bytes": 102180
     },
     {
       "id": "scout_kaelen",
@@ -287,7 +287,7 @@
       "source": "output/imagegen/npc_cast_20261116/keyed/oliver_supervisor_refined.png",
       "prompt": "prompts/oliver_supervisor.txt",
       "refinementPrompt": "prompts/oliver_supervisor_refine.txt",
-      "bytes": 60636
+      "bytes": 54044
     },
     {
       "id": "clinician_megan",
@@ -320,7 +320,7 @@
       "source": "output/imagegen/npc_cast_20261116/keyed/entrepreneur_robert_refined.png",
       "prompt": "prompts/entrepreneur_robert.txt",
       "refinementPrompt": "prompts/entrepreneur_robert_refine.txt",
-      "bytes": 131892
+      "bytes": 92588
     },
     {
       "id": "matriarch_pam",
@@ -331,7 +331,7 @@
       "source": "output/imagegen/npc_cast_20261116/keyed/matriarch_pam.png",
       "prompt": "prompts/matriarch_pam.txt",
       "refinementPrompt": null,
-      "bytes": 131198
+      "bytes": 105830
     },
     {
       "id": "feline_meeko",
@@ -353,7 +353,7 @@
       "source": "output/imagegen/npc_cast_20261116/keyed/bartender_dax_refined.png",
       "prompt": "prompts/bartender_dax.txt",
       "refinementPrompt": "prompts/bartender_dax_refine.txt",
-      "bytes": 78526
+      "bytes": 71462
     },
     {
       "id": "director_vance",

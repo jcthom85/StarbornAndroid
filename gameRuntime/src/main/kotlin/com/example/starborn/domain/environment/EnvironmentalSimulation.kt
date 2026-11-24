@@ -94,8 +94,12 @@ class EnvironmentalEffectSimulation(private val particleCap: Int = 240) {
                 particle.y += particle.vy * step * verticalScale
                 if (continuousRain) {
                     // Recycle beyond the visible region so each streak keeps its speed and brightness.
-                    particle.x = wrapRainCoordinate(particle.x, e.region.x, e.region.width)
-                    particle.y = wrapRainCoordinate(particle.y, e.region.y, e.region.height)
+                    if (particle.y >= e.region.y + e.region.height + .08f || particle.y < e.region.y - .16f) {
+                        particle.y = wrapRainCoordinate(particle.y, e.region.y, e.region.height)
+                        particle.x = e.region.x - .12f + f.random.nextFloat() * (e.region.width + .24f)
+                    } else {
+                        particle.x = wrapRainCoordinate(particle.x, e.region.x, e.region.width)
+                    }
                     particle.alpha = 1f
                     continue
                 }

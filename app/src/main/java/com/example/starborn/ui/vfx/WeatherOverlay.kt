@@ -28,9 +28,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -140,53 +142,80 @@ fun RainEffect(
     modifier: Modifier = Modifier,
     intensity: String,
     color: Color,
-    drift: Float = Random.nextFloat() * 0.02f - 0.01f
+    drift: Float = 0f
 ) {
-    val particles = remember { mutableStateListOf<Particle>() }
-    val random = remember { Random(System.currentTimeMillis()) }
+    val dropCount = when (intensity) {
+        "low" -> 42
+        "medium" -> 76
+        "high" -> 115
+        else -> 0
+    }
+    if (dropCount == 0) return
 
-    LaunchedEffect(intensity) {
+    val xs = remember(dropCount) { FloatArray(dropCount) }
+    val ys = remember(dropCount) { FloatArray(dropCount) }
+    val speeds = remember(dropCount) { FloatArray(dropCount) }
+    val lengths = remember(dropCount) { FloatArray(dropCount) }
+    val alphas = remember(dropCount) { FloatArray(dropCount) }
+    var initialized by remember(dropCount) { androidx.compose.runtime.mutableStateOf(false) }
+    var frameTick by remember { androidx.compose.runtime.mutableLongStateOf(0L) }
+
+    LaunchedEffect(dropCount, drift) {
+        val rng = Random(4217L + dropCount)
+        if (!initialized) {
+            for (i in 0 until dropCount) {
+                xs[i] = rng.nextFloat() * 1.24f - 0.12f
+                ys[i] = rng.nextFloat() * 1.20f - 0.15f
+                speeds[i] = 0.72f + rng.nextFloat() * 0.42f
+                lengths[i] = 0.018f + rng.nextFloat() * 0.022f
+                alphas[i] = 0.22f + rng.nextFloat() * 0.30f
+            }
+            initialized = true
+        }
+        var smoothedDt = 1f / 60f
+        var prevNanos = androidx.compose.runtime.withFrameNanos { it }
         while (true) {
-            val newParticles = particles.filter { it.life > 0 }
-            particles.clear()
-            particles.addAll(newParticles)
-
-            val numToEmit = when (intensity) {
-                "low" -> 10
-                "medium" -> 20
-                "high" -> 40
-                else -> 0
+            androidx.compose.runtime.withFrameNanos { now ->
+                if (now > prevNanos) {
+                    val rawDt = ((now - prevNanos) / 1_000_000_000f).coerceIn(0.001f, 0.05f)
+                    smoothedDt = if (rawDt > 0.034f) rawDt else smoothedDt * 0.72f + rawDt * 0.28f
+                    prevNanos = now
+                    val wind = drift - 0.14f
+                    for (i in 0 until dropCount) {
+                        val step = speeds[i] * smoothedDt
+                        xs[i] += wind * step
+                        ys[i] += step
+                        if (ys[i] > 1.08f) {
+                            ys[i] -= 1.22f
+                            xs[i] = rng.nextFloat() * 1.24f - 0.12f
+                        } else if (xs[i] < -0.14f) {
+                            xs[i] += 1.28f
+                        }
+                    }
+                    frameTick++
+                }
             }
-
-            for (i in 0 until numToEmit) {
-                val x = random.nextFloat() * 1.7f - 0.5f
-                val y = -0.1f
-                val size = (random.nextFloat() * 0.003f + 0.001f) to (random.nextFloat() * 0.015f + 0.005f)
-                val velocity = Offset(drift + (random.nextFloat() - 0.5f) * 0.01f, random.nextFloat() * 0.01f + 0.01f)
-                val life = random.nextFloat() * 0.8f + 0.2f
-                particles.add(Particle(Offset(x, y), velocity, size, color, life, life))
-            }
-
-            for (p in particles) {
-                p.position = Offset(p.position.x + p.velocity.x, p.position.y + p.velocity.y)
-                p.life -= 0.016f
-            }
-
-            delay(16)
         }
     }
 
-    Canvas(modifier = modifier.fillMaxSize()) {
-        particles.forEach { p ->
-            val alpha = (p.life / p.maxLife).coerceIn(0f, 1f)
-            val shimmer = (kotlin.math.sin(p.life * 30f) + 1f) / 2f * 0.2f + 0.8f
-            rotate(degrees = 15f, pivot = Offset(p.position.x * size.width, p.position.y * size.height)) {
-                drawRect(
-                    color = p.color.copy(alpha = alpha * shimmer),
-                    topLeft = Offset(p.position.x * size.width, p.position.y * size.height),
-                    size = androidx.compose.ui.geometry.Size(p.size.first * size.width, p.size.second * size.height)
-                )
-            }
+    Canvas(modifier = modifier.fillMaxSize().graphicsLayer()) {
+        frameTick
+        val w = size.width
+        val h = size.height
+        val strokeW = (h * 0.0011f).coerceAtLeast(1f)
+        val windSlope = drift - 0.14f
+        for (i in 0 until dropCount) {
+            val x = xs[i] * w
+            val y = ys[i] * h
+            val lenY = lengths[i] * h
+            val lenX = lenY * windSlope
+            drawLine(
+                color = color.copy(alpha = (color.alpha * alphas[i]).coerceIn(0f, 1f)),
+                start = Offset(x - lenX, y - lenY),
+                end = Offset(x, y),
+                strokeWidth = strokeW,
+                cap = StrokeCap.Butt
+            )
         }
     }
 }

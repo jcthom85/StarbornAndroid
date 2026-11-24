@@ -308,13 +308,29 @@ fun CombatScreen(
     onAdvanceCinematic: (() -> Unit)? = null,
     overlayPaused: Boolean = false,
     demoMode: Boolean = false,
-    onDemoRootBack: (() -> Unit)? = null
+    onDemoRootBack: (() -> Unit)? = null,
+    musicVolume: Float = 1f,
+    sfxVolume: Float = 1f,
+    voiceVolume: Float = 1f,
+    disableHaptics: Boolean = false,
+    onMusicVolumeChange: (Float) -> Unit = {},
+    onSfxVolumeChange: (Float) -> Unit = {},
+    onVoiceVolumeChange: (Float) -> Unit = {},
+    onToggleScreenshakeDisabled: (Boolean) -> Unit = {},
+    onToggleFlashesDisabled: (Boolean) -> Unit = {},
+    onToggleHapticsDisabled: (Boolean) -> Unit = {},
+    onToggleLargeTouchTargets: (Boolean) -> Unit = {},
+    onToggleHighContrast: (Boolean) -> Unit = {}
 ) {
+    var showCombatPause by remember { mutableStateOf(false) }
     BackHandler(enabled = true) {
-        // Campaign combat cannot be left by Back; booth combat opens its pause menu.
-        onDemoRootBack?.invoke()
+        if (demoMode && onDemoRootBack != null) {
+            onDemoRootBack.invoke()
+        } else {
+            showCombatPause = !showCombatPause
+        }
     }
-    CombatLifecyclePause(overlayPaused, viewModel::setBackgroundPaused)
+    CombatLifecyclePause(overlayPaused || showCombatPause, viewModel::setBackgroundPaused)
     val persistedEnvironmentSettings=rememberEnvironmentalSettings()
     val environmentSettings=persistedEnvironmentSettings.copy(disableFlashes=suppressFlashes || persistedEnvironmentSettings.disableFlashes,disableScreenshake=suppressScreenshake || persistedEnvironmentSettings.disableScreenshake,highContrastMode=highContrastMode || persistedEnvironmentSettings.highContrastMode)
     val environmentSession by viewModel.environmentalSession.collectAsStateWithLifecycle()
@@ -685,13 +701,22 @@ fun CombatScreen(
             showSkillsDialog.value = false
             showItemsDialog.value = false
         }
+        if (combatLocked || cinematicPlayback != null || isExiting) {
+            showCombatPause = false
+        }
         val menuActorSkills = menuActor?.let { viewModel.skillsForPlayer(it.id) }.orEmpty()
         val victoryEmotes = pendingVictoryPayload?.let { it.enemyIds != listOf("ascended_vale") } == true
 
-        BackHandler(enabled = inspectedEnemyId != null || showSkillsDialog.value || showItemsDialog.value || pendingTargetRequest != null) {
+        BackHandler(
+            enabled = showCombatPause || inspectedEnemyId != null || showSkillsDialog.value || showItemsDialog.value || pendingTargetRequest != null
+        ) {
             when {
+                showCombatPause -> showCombatPause = false
                 inspectedEnemyId != null -> viewModel.dismissEnemyInspection()
-                showSkillsDialog.value -> showSkillsDialog.value = false
+                showSkillsDialog.value -> {
+                    showSkillsDialog.value = false
+                    viewModel.onCombatTutorialSkillDialogDismissed()
+                }
                 showItemsDialog.value -> showItemsDialog.value = false
                 pendingTargetRequest != null -> {
                     pendingTargetRequest = null
@@ -829,44 +854,9 @@ fun CombatScreen(
             }
         }
 
-        if (showSkillsDialog.value && menuActor != null && !combatLocked && !menuActorCannotAct) {
-            val tutorial = combatTutorial
-            val tutorialSkillId = tutorial?.takeIf { it.step == CombatTutorialStep.CHOOSE_HYDRAULIC_KICK }?.expectedSkillId
-            SkillsDialog(
-                player = menuActor,
-                skills = menuActorSkills,
-                viewModel = viewModel,
-                onDismiss = {
-                    showSkillsDialog.value = false
-                    viewModel.onCombatTutorialSkillDialogDismissed()
-                },
-                onSkillSelected = { skill ->
-                    showSkillsDialog.value = false
-                    handleSkillSelection(skill)
-                },
-                allowedSkillIds = tutorialSkillId?.let { setOf(it) },
-                highlightedSkillId = tutorialSkillId,
-                theme = viewModel.theme,
-                highContrastMode = highContrastMode
-            )
-        }
-
-        if (showItemsDialog.value && !combatLocked && !menuActorCannotAct && menuActor != null) {
-            CombatItemsDialog(
-                items = battleUsableItems,
-                theme = viewModel.theme,
-                highContrastMode = highContrastMode,
-                onItemSelected = { entry ->
-                    showItemsDialog.value = false
-                    handleItemSelection(entry)
-                },
-                onDismiss = { showItemsDialog.value = false }
-            )
-        }
-
         val combatFocusRequester = remember { FocusRequester() }
-        LaunchedEffect(showSkillsDialog.value, showItemsDialog.value) {
-            if (!showSkillsDialog.value && !showItemsDialog.value) {
+        LaunchedEffect(showSkillsDialog.value, showItemsDialog.value, showCombatPause) {
+            if (!showSkillsDialog.value && !showItemsDialog.value && !showCombatPause) {
                 androidx.compose.runtime.withFrameNanos { }
                 combatFocusRequester.requestFocus()
             }
@@ -880,11 +870,22 @@ fun CombatScreen(
                 .clipToBounds()
                 .focusRequester(combatFocusRequester)
                 .onKeyEvent { keyEvent ->
+                    if (showCombatPause && keyEvent.key !in listOf(Key.ButtonB, Key.Escape, Key.ButtonStart)) return@onKeyEvent true
                     if (inspectedEnemyId != null && keyEvent.key !in listOf(Key.ButtonB, Key.Escape, Key.ButtonL1, Key.ButtonR1, Key.Tab)) return@onKeyEvent true
                     if (keyEvent.type == KeyEventType.KeyDown) {
                         when (keyEvent.key) {
+                            Key.ButtonStart -> {
+                                if (!demoMode && !combatLocked && cinematicPlayback == null && !isExiting) {
+                                    showCombatPause = !showCombatPause
+                                    return@onKeyEvent true
+                                }
+                            }
                             Key.ButtonB, Key.Escape -> {
                                 when {
+                                    showCombatPause -> {
+                                        showCombatPause = false
+                                        return@onKeyEvent true
+                                    }
                                     inspectedEnemyId != null -> { viewModel.dismissEnemyInspection(); return@onKeyEvent true }
                                     showSkillsDialog.value -> {
                                         showSkillsDialog.value = false
@@ -900,6 +901,10 @@ fun CombatScreen(
                                         return@onKeyEvent true
                                     }
                                     pendingVictoryPayload != null -> return@onKeyEvent true
+                                    !demoMode && !combatLocked && cinematicPlayback == null && !isExiting -> {
+                                        showCombatPause = true
+                                        return@onKeyEvent true
+                                    }
                                 }
                             }
                             Key.G -> {
@@ -933,7 +938,9 @@ fun CombatScreen(
                             Key.ButtonX -> {
                                 if (menuActor != null && !combatLocked && !menuActorCannotAct && menuActorSkills.isNotEmpty()) {
                                     if (viewModel.isCombatTutorialCommandEnabled("Abilities")) {
-                                        showSkillsDialog.value = !showSkillsDialog.value
+                                        val next = !showSkillsDialog.value
+                                        showSkillsDialog.value = next
+                                        if (next) showItemsDialog.value = false else viewModel.onCombatTutorialSkillDialogDismissed()
                                         pendingTargetRequest = null
                                         pendingInstruction = null
                                         return@onKeyEvent true
@@ -943,7 +950,9 @@ fun CombatScreen(
                             Key.ButtonY -> {
                                 if (menuActor != null && !combatLocked && !menuActorCannotAct && battleUsableItems.isNotEmpty()) {
                                     if (viewModel.isCombatTutorialCommandEnabled("Items")) {
-                                        showItemsDialog.value = !showItemsDialog.value
+                                        val next = !showItemsDialog.value
+                                        showItemsDialog.value = next
+                                        if (next) showSkillsDialog.value = false
                                         pendingTargetRequest = null
                                         pendingInstruction = null
                                         return@onKeyEvent true
@@ -1006,7 +1015,7 @@ fun CombatScreen(
                 val environmentState=environmentRoom?.state.orEmpty().mapNotNull { (key,value) -> (value as? Boolean)?.let { key to it } }.toMap() + environmentSession.roomStates[environmentRoom?.id].orEmpty()
                 AndroidRoomEnvironmentalEffects(environmentRoom,backgroundPainter.intrinsicSize,environmentState,
                     environmentSession.completedMilestones,environmentSettings,viewModel.environmentalAssets,
-                    combat=true,paused=overlayPaused || pendingOutcome!=null,
+                    combat=true,paused=overlayPaused || showCombatPause || pendingOutcome!=null,
                     suppressAccents=timedPromptState!=null || combatTutorial?.showsModal==true)
                 if (highContrastMode) {
                     Box(
@@ -1032,9 +1041,14 @@ fun CombatScreen(
                 else -> null
             }
             val targetMode = !targetPromptText.isNullOrBlank()
+            val actionDrawerOpen = (showSkillsDialog.value || showItemsDialog.value) &&
+                commandActor != null &&
+                !combatLocked &&
+                !menuActorCannotAct
             val commandPaletteVisible = commandActor != null &&
                 !combatLocked &&
                 !menuActorCannotAct &&
+                !actionDrawerOpen &&
                 !targetMode && inspectedEnemyId == null
             val hasTargets = enemyCombatantIds.any { state.combatants[it]?.isAlive == true }
             val snackBaseLabel = commandActor?.let { actor -> viewModel.snackLabel(actor.id) } ?: "Snack"
@@ -1061,8 +1075,19 @@ fun CombatScreen(
                 (maxHeight < 640.dp || (maxHeight < 800.dp && (formationCount > 3 || density.fontScale >= 1.2f)))
             val crewPortraitSize = if (compactCrew) 48.dp else if (maxHeight < 640.dp) 64.dp else 80.dp
             val crewSingleRow = maxWidth >= 600.dp
-            val multipart = enemies.firstOrNull()?.composite?.group?.let { it != "driller" } == true
-            val titanFormation = enemies.firstOrNull()?.composite?.group == "titan_walker"
+            val compositeGroup = enemies.firstOrNull()?.composite?.group
+            val multipart = compositeGroup?.let { it != "driller" } == true
+            val titanFormation = compositeGroup == "titan_walker"
+            val silenceFormation = compositeGroup == "vale_silence"
+            val orderedMultipartIds = remember(enemies, enemyCombatantIds, silenceFormation) {
+                if (silenceFormation && enemies.size == enemyCombatantIds.size) {
+                    enemies.indices
+                        .sortedBy { idx -> enemies[idx].composite?.offsetX ?: 0f }
+                        .map { idx -> enemyCombatantIds[idx] }
+                } else {
+                    enemyCombatantIds
+                }
+            }
             val scrollBattle = multipart && maxHeight < 720.dp
             val battleScrollState = rememberScrollState()
             val contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
@@ -1095,11 +1120,24 @@ fun CombatScreen(
                             highContrastMode = highContrastMode,
                             modifier = Modifier.fillMaxWidth().padding(end = if (demoMode) 76.dp else 0.dp),
                             actions = {
-                                CombatPlaytestControls(
-                                    isOpMode = isOpMode,
-                                    onToggleOpMode = { viewModel.toggleOpMode() },
-                                    onInstaWin = { viewModel.instaWinBattle() }
-                                )
+                                if (com.example.starborn.BuildConfig.DEBUG ||
+                                    com.example.starborn.BuildConfig.IS_PLAYTEST_BUILD ||
+                                    com.example.starborn.BuildConfig.ENABLE_SCENARIO_MENU
+                                ) {
+                                    CombatPlaytestControls(
+                                        isOpMode = isOpMode,
+                                        onToggleOpMode = { viewModel.toggleOpMode() },
+                                        onInstaWin = { viewModel.instaWinBattle() }
+                                    )
+                                }
+                                if (!demoMode && !combatLocked && cinematicPlayback == null && !isExiting) {
+                                    CombatPauseButton(
+                                        onClick = { showCombatPause = true },
+                                        theme = viewModel.theme,
+                                        highContrastMode = highContrastMode,
+                                        largeTouchTargets = largeTouchTargets
+                                    )
+                                }
                             }
                         )
                         combatTutorial?.takeUnless { it.showsModal }?.let { tutorial ->
@@ -1109,7 +1147,7 @@ fun CombatScreen(
                         }
                         if (multipart) {
                             com.example.starborn.feature.combat.ui.components.MultipartEnemyStatus(
-                                state, enemyCombatantIds, activeId, selectedEnemyIds, atbMeters, accentColor,
+                                state, orderedMultipartIds, activeId, selectedEnemyIds, atbMeters, accentColor,
                                 modifier = Modifier.zIndex(2f),
                                 onEnemyTap = ::handleEnemyTap,
                                 onEnemyLongPress = { if (!combatLocked) viewModel.inspectEnemy(it) }
@@ -1119,7 +1157,7 @@ fun CombatScreen(
                             Modifier.fillMaxWidth().zIndex(1f)
                                 .then(if (scrollBattle) Modifier.height(280.dp) else Modifier.weight(1f))
                                 .testTag("combat-enemies"),
-                            topOverlap = if (titanFormation) 8.dp else 0.dp
+                            topOverlap = if (titanFormation) 8.dp else if (silenceFormation) 6.dp else 0.dp
                         ) {
                           EnemyRoster(
                             enemies = enemies,
@@ -1249,12 +1287,14 @@ fun CombatScreen(
                 },
                 onSkills = {
                     if (viewModel.onCombatTutorialCommand("Abilities")) {
+                        showItemsDialog.value = false
                         showSkillsDialog.value = true
                         pendingTargetRequest = null
                         pendingInstruction = null
                     }
                 },
                 onItems = {
+                    showSkillsDialog.value = false
                     showItemsDialog.value = true
                     pendingTargetRequest = null
                     pendingInstruction = null
@@ -1314,6 +1354,129 @@ fun CombatScreen(
                     .padding(bottom = if (compactCrew) 104.dp else 136.dp)
                     .zIndex(6f)
             )
+            val maxInlineDrawerHeight = (maxHeight * 0.54f).coerceIn(280.dp, 440.dp)
+            AnimatedVisibility(
+                visible = showSkillsDialog.value && menuActor != null && !combatLocked && !menuActorCannotAct,
+                enter = fadeIn(tween(180)) + slideInVertically(tween(220, easing = FastOutSlowInEasing)) { it / 2 },
+                exit = fadeOut(tween(140)) + slideOutVertically(tween(180, easing = FastOutSlowInEasing)) { it / 2 },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .navigationBarsPadding()
+                    .padding(bottom = 6.dp)
+                    .zIndex(14f)
+            ) {
+                if (menuActor != null) {
+                    val tutorial = combatTutorial
+                    val tutorialSkillId = tutorial
+                        ?.takeIf { it.step == CombatTutorialStep.CHOOSE_HYDRAULIC_KICK }
+                        ?.expectedSkillId
+                    val canSwitchToItems = battleUsableItems.isNotEmpty() &&
+                        tutorialSkillId == null &&
+                        viewModel.isCombatTutorialCommandEnabled("Items")
+                    SkillsDialog(
+                        player = menuActor,
+                        skills = menuActorSkills,
+                        viewModel = viewModel,
+                        onDismiss = {
+                            showSkillsDialog.value = false
+                            viewModel.onCombatTutorialSkillDialogDismissed()
+                        },
+                        onSkillSelected = { skill ->
+                            showSkillsDialog.value = false
+                            handleSkillSelection(skill)
+                        },
+                        allowedSkillIds = tutorialSkillId?.let { setOf(it) },
+                        highlightedSkillId = tutorialSkillId,
+                        theme = viewModel.theme,
+                        highContrastMode = highContrastMode,
+                        inlineDrawer = true,
+                        maxDrawerHeight = maxInlineDrawerHeight,
+                        onSwitchToItems = if (canSwitchToItems) {
+                            {
+                                showSkillsDialog.value = false
+                                showItemsDialog.value = true
+                            }
+                        } else null
+                    )
+                }
+            }
+            AnimatedVisibility(
+                visible = showItemsDialog.value && menuActor != null && !combatLocked && !menuActorCannotAct,
+                enter = fadeIn(tween(180)) + slideInVertically(tween(220, easing = FastOutSlowInEasing)) { it / 2 },
+                exit = fadeOut(tween(140)) + slideOutVertically(tween(180, easing = FastOutSlowInEasing)) { it / 2 },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .navigationBarsPadding()
+                    .padding(bottom = 6.dp)
+                    .zIndex(14f)
+            ) {
+                if (menuActor != null) {
+                    val canSwitchToSkills = menuActorSkills.isNotEmpty() &&
+                        viewModel.isCombatTutorialCommandEnabled("Abilities")
+                    CombatItemsDialog(
+                        items = battleUsableItems,
+                        theme = viewModel.theme,
+                        highContrastMode = highContrastMode,
+                        onItemSelected = { entry ->
+                            showItemsDialog.value = false
+                            handleItemSelection(entry)
+                        },
+                        onDismiss = { showItemsDialog.value = false },
+                        inlineDrawer = true,
+                        maxDrawerHeight = maxInlineDrawerHeight,
+                        actorName = menuActor.name,
+                        onSwitchToSkills = if (canSwitchToSkills) {
+                            {
+                                showItemsDialog.value = false
+                                showSkillsDialog.value = true
+                            }
+                        } else null
+                    )
+                }
+            }
+            if (showCombatPause && !demoMode) {
+                val tutorialAllowsRetreat = viewModel.isCombatTutorialCommandEnabled("Retreat")
+                val canRetreatFromPause = menuActor != null &&
+                    !combatLocked &&
+                    !menuActorCannotAct &&
+                    tutorialAllowsRetreat
+                val retreatHint = when {
+                    !tutorialAllowsRetreat -> "Retreat is unavailable during combat training."
+                    menuActor == null || menuActorCannotAct -> "Retreat becomes available when an ally's turn is ready."
+                    else -> null
+                }
+                CombatPauseOverlay(
+                    theme = viewModel.theme,
+                    highContrastMode = highContrastMode,
+                    largeTouchTargets = largeTouchTargets,
+                    musicVolume = musicVolume,
+                    sfxVolume = sfxVolume,
+                    voiceVolume = voiceVolume,
+                    suppressScreenshake = suppressScreenshake,
+                    suppressFlashes = suppressFlashes,
+                    disableHaptics = disableHaptics,
+                    onMusicVolumeChange = onMusicVolumeChange,
+                    onSfxVolumeChange = onSfxVolumeChange,
+                    onVoiceVolumeChange = onVoiceVolumeChange,
+                    onToggleScreenshakeDisabled = onToggleScreenshakeDisabled,
+                    onToggleFlashesDisabled = onToggleFlashesDisabled,
+                    onToggleHapticsDisabled = onToggleHapticsDisabled,
+                    onToggleLargeTouchTargets = onToggleLargeTouchTargets,
+                    onToggleHighContrast = onToggleHighContrast,
+                    canRetreat = canRetreatFromPause,
+                    retreatUnavailableHint = retreatHint,
+                    onRetreat = {
+                        showCombatPause = false
+                        showSkillsDialog.value = false
+                        showItemsDialog.value = false
+                        pendingTargetRequest = null
+                        pendingInstruction = null
+                        viewModel.attemptRetreat()
+                    },
+                    onResume = { showCombatPause = false },
+                    modifier = Modifier.zIndex(40f)
+                )
+            }
             outcomeFx?.let { OutcomeOverlay(it, playerParty) }
             timedPromptState?.let { prompt ->
                 TimedPromptOverlay(
@@ -1414,7 +1577,7 @@ fun CombatScreen(
                     theme = viewModel.theme,
                     suppressFlashes = suppressFlashes,
                     highContrastMode = highContrastMode,
-                    mode = TransitionMode.ENTER,
+                    mode = TransitionMode.QUICK_CLOSE,
                     mainText = exitMainText,
                     subText = "",
                     onFinished = { navController.popBackStack() },
@@ -1443,6 +1606,9 @@ fun CombatScreen(
         suppressFlashes = suppressFlashes,
         highContrastMode = highContrastMode,
         mode = TransitionMode.EXIT,
+        mainText = "",
+        subText = "",
+        holdUntilReady = combatState == null,
         onFinished = { exitTransitionVisible = false },
         modifier = Modifier.zIndex(100f)
     )

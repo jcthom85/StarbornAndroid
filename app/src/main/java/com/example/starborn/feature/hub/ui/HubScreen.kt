@@ -2,6 +2,8 @@ package com.example.starborn.feature.hub.ui
 
 import com.example.starborn.feature.hub.presentation.HubMapLayouts
 import com.example.starborn.feature.hub.presentation.nodeMatchesQuest
+import com.example.starborn.ui.background.rememberAssetPainter
+import com.example.starborn.ui.background.rememberCachedAssetPainterOrNull
 
 import android.graphics.BitmapFactory
 import androidx.activity.compose.BackHandler
@@ -1330,33 +1332,13 @@ private fun HubLockedPromptOverlay(
 
 @Composable
 internal fun rememberHubNodePainter(iconPath: String?): Painter? {
-    if (iconPath.isNullOrBlank()) return null
-    val context = LocalContext.current
-    return remember(iconPath) {
-        runCatching {
-            context.assets.open(iconPath).use { stream ->
-                BitmapFactory.decodeStream(stream)?.asImageBitmap()?.let { BitmapPainter(it) }
-            }
-        }.getOrNull()
-    }
+    return rememberCachedAssetPainterOrNull(iconPath, async = true)
 }
 
 @Composable
 private fun rememberHubBackgroundPainter(imagePath: String?): Painter {
-    val context = LocalContext.current
-    val fallback = ColorPainter(Color.Black)
-    val painter = remember(imagePath) {
-        if (imagePath.isNullOrBlank()) {
-            null
-        } else {
-            runCatching {
-                context.assets.open(imagePath).use { stream ->
-                    BitmapFactory.decodeStream(stream)?.asImageBitmap()?.let { BitmapPainter(it) }
-                }
-            }.getOrNull()
-        }
-    }
-    return painter ?: fallback
+    val fallback = remember { ColorPainter(Color.Black) }
+    return rememberAssetPainter(imagePath, fallback = fallback, async = true)
 }
 
 @Composable

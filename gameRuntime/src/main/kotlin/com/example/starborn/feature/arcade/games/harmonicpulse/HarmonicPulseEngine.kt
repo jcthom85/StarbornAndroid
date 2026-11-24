@@ -44,7 +44,8 @@ data class HarmonicPulseSnapshot(
     val gameOver: Boolean,
     val message: String,
     val elapsedSeconds: Float,
-    val audioEvent: PulseAudioEvent = PulseAudioEvent.NONE
+    val audioEvent: PulseAudioEvent = PulseAudioEvent.NONE,
+    val songTimeSeconds: Float = 0f
 )
 
 class HarmonicPulseEngine(
@@ -153,18 +154,61 @@ class HarmonicPulseEngine(
     }
 
     fun advance(deltaSeconds: Float, input: HarmonicPulseInput) {
+        advance(deltaSeconds, input, audioSongTimeSeconds = null)
+    }
+
+    fun advance(
+        deltaSeconds: Float,
+        input: HarmonicPulseInput,
+        audioSongTimeSeconds: Float?
+    ) {
         if (gameOver) return
         currentAudioEvent = PulseAudioEvent.NONE
-        accumulator = (accumulator + deltaSeconds.coerceIn(0f, .1f)).coerceAtMost(.2f)
+        val clampedDelta = deltaSeconds.coerceIn(0f, .1f)
+        accumulator = (accumulator + clampedDelta).coerceAtMost(.2f)
+        val stepsToRun = (accumulator / STEP).toInt()
+        if (stepsToRun <= 0) return
+
+        // Guard against stale pre-seek ExoPlayer position immediately after reset/round clear.
+        val validAudioTarget = audioSongTimeSeconds?.takeIf { raw ->
+            raw >= 0f && !(songTime < 2f && raw > 4f)
+        }
+        var stepIndex = 0
         while (accumulator >= STEP) {
-            update(STEP, input)
+            stepIndex++
+            val interpolatedTarget = validAudioTarget?.let { endTarget ->
+                // Project intermediate fixed steps smoothly toward the frame's audio clock sample.
+                val remainingSteps = (stepsToRun - stepIndex).coerceAtLeast(0)
+                (endTarget - remainingSteps * STEP).coerceAtLeast(0f)
+            }
+            update(
+                dt = STEP,
+                input = input,
+                targetSongTime = if (currentAudioEvent == PulseAudioEvent.TRACK_CLEAR) null else interpolatedTarget
+            )
             accumulator -= STEP
         }
     }
 
-    private fun update(dt: Float, input: HarmonicPulseInput) {
+    private fun update(dt: Float, input: HarmonicPulseInput, targetSongTime: Float? = null) {
         elapsed += dt
-        songTime += dt
+        if (targetSongTime != null) {
+            val predicted = songTime + dt
+            val drift = targetSongTime - predicted
+            if (songTime < 0.75f && targetSongTime < 1.2f) {
+                // Lock immediately during the 2-beat intro lead-in before the first note arrives.
+                songTime = targetSongTime.coerceAtLeast(songTime)
+            } else if (abs(drift) > 0.30f) {
+                // Recover quickly from OS stalls or Bluetooth audio buffer re-anchoring.
+                songTime = (predicted + drift * 0.5f).coerceAtLeast(songTime)
+            } else {
+                // Monotonic PLL slew keeps 60/120Hz note motion silky while zeroing clock drift.
+                val slew = (drift * 0.25f).coerceIn(-dt * 0.45f, dt * 0.45f)
+                songTime = predicted + slew
+            }
+        } else {
+            songTime += dt
+        }
 
         if (ratingTimer > 0f) {
             ratingTimer = (ratingTimer - dt).coerceAtLeast(0f)
@@ -300,6 +344,7 @@ class HarmonicPulseEngine(
         gameOver = gameOver,
         message = message,
         elapsedSeconds = elapsed,
-        audioEvent = currentAudioEvent
+        audioEvent = currentAudioEvent,
+        songTimeSeconds = songTime
     )
 }

@@ -128,7 +128,7 @@ class CombatActionProcessor(
                     attackerId = action.actorId,
                     preferredTargetId = action.targetId,
                     multiplier = attack.powerMultiplier,
-                    element = attack.element ?: PHYSICAL_ELEMENT,
+                    element = normalizeElement(attack.element) ?: PHYSICAL_ELEMENT,
                     forceHit = forcePhysicalHit(action.actorId, action.targetId)
                 )
             }
@@ -136,7 +136,7 @@ class CombatActionProcessor(
                 state.clearWeaponCharge(action.actorId).applyWeaponAttackAllEnemies(
                     attackerId = action.actorId,
                     multiplier = attack.powerMultiplier,
-                    element = attack.element ?: PHYSICAL_ELEMENT
+                    element = normalizeElement(attack.element) ?: PHYSICAL_ELEMENT
                 )
             }
             is WeaponAttack.ChargedSplash -> {
@@ -265,7 +265,7 @@ class CombatActionProcessor(
             preferredTargetId = preferredTargetId,
             allowFallback = true
         ) ?: return this
-        val element = attack.element ?: PHYSICAL_ELEMENT
+        val element = normalizeElement(attack.element) ?: PHYSICAL_ELEMENT
         val primaryMultiplier = attack.powerMultiplier
         val splashMultiplier = attack.splashMultiplier
 
@@ -547,7 +547,8 @@ class CombatActionProcessor(
             return state
         }
 
-        val momentumSpent = if (attackerState.combatant.side == CombatSide.PLAYER) attackerState.momentum else 0
+        val consumesMomentum = skill == null || skill.basePower > 0
+        val momentumSpent = if (attackerState.combatant.side == CombatSide.PLAYER && consumesMomentum) attackerState.momentum else 0
         val momentumMultiplier = when (momentumSpent) {
             1 -> 1.25
             2 -> 1.50
@@ -566,11 +567,11 @@ class CombatActionProcessor(
                 } else {
                     attackerState.activeCooldowns - skill.id
                 },
-                momentum = 0
+                momentum = if (consumesMomentum) 0 else attackerState.momentum
             )
             state.copy(combatants = state.combatants + (attackerId to updatedAttacker))
         } else {
-            if (attackerState.momentum != 0) {
+            if (consumesMomentum && attackerState.momentum != 0) {
                 val updatedAttacker = attackerState.copy(momentum = 0)
                 state.copy(combatants = state.combatants + (attackerId to updatedAttacker))
             } else {
@@ -588,7 +589,7 @@ class CombatActionProcessor(
         if (!special.handled) {
             val skillElement = resolveElement(skill)
             val weaponElement = if (freshAttackerState.combatant.side == CombatSide.PLAYER) {
-                freshAttackerState.combatant.weapon?.attack?.element?.takeIf { it.isNotBlank() && it != PHYSICAL_ELEMENT }
+                normalizeElement(freshAttackerState.combatant.weapon?.attack?.element)?.takeIf { it != PHYSICAL_ELEMENT }
             } else null
             val effectiveElement = if (skillElement != null && skillElement != PHYSICAL_ELEMENT) {
                 skillElement
@@ -701,6 +702,7 @@ class CombatActionProcessor(
             if (!target.hasBlockingStatus()) return@forEach
             working = working.removeStatus(targetId, "invulnerable")
             working = working.removeStatus(targetId, "guard")
+            working = working.removeStatus(targetId, "defend")
             working = working.removeStatus(targetId, "shield")
         }
         return working
@@ -892,18 +894,48 @@ class CombatActionProcessor(
             val currentAttacker = working.combatants[attackerId] ?: return@forEach
             val targetState = working.combatants[targetId] ?: return@forEach
             val outgoing = adjustOutgoingDamage(currentAttacker, damageMode.baseDamage)
+            val hadTargetLock = skillId != null && targetState.hasStatus(TARGET_LOCK_STATUS_ID)
             var isCrit = forceCrit || targetState.statusEffects.any { status ->
                 statusRegistry.definition(status.id)?.forceCrit == true
             }
-            if (skillId == "gh0st_headshot" && skillId in explicitStatusSkillIds) {
+            if (skillId != null) {
                 val forcedHit = forcePhysicalHit(attackerId, targetId)
-                if (!forcedHit && random.nextDouble(0.0, 100.0) > (currentAttacker.accuracyRating() - targetState.evasionRating()).coerceIn(MIN_HIT_CHANCE, MAX_HIT_CHANCE)) {
-                    working = working.logMiss(attackerId, targetId)
-                    return@forEach
+                val opFriendly = CombatPlaytestBridge.isOpMode &&
+                    (currentAttacker.combatant.side == CombatSide.PLAYER || currentAttacker.combatant.side == CombatSide.ALLY)
+                if (opFriendly) {
+                    isCrit = true
+                } else if (!forcedHit) {
+                    val targetImmobilized = targetState.breakTurns > 0 ||
+                        targetState.statusEffects.any { it.id.lowercase() in setOf("stun", "stagger", "freeze") }
+                    val attackerImpaired = currentAttacker.totalBuffValue("accuracy") < 0 ||
+                        currentAttacker.statusEffects.any { status ->
+                            (statusRegistry.definition(status.id)?.accuracyMultiplier ?: 1.0) < 1.0
+                        }
+                    val targetEvasionBoosted = targetState.totalBuffValue("evasion") > 0 ||
+                        targetState.combatant.stats.evasionBonus > 0.0
+                    if (skillId == "gh0st_headshot" || attackerImpaired || (targetEvasionBoosted && !targetImmobilized)) {
+                        val effectiveEvasion = if (targetImmobilized) 0.0 else targetState.evasionRating()
+                        val hitChance = (currentAttacker.accuracyRating() - effectiveEvasion)
+                            .coerceIn(MIN_HIT_CHANCE, MAX_HIT_CHANCE)
+                        if (random.nextDouble(0.0, 100.0) > hitChance) {
+                            working = working.logMiss(attackerId, targetId)
+                            return@forEach
+                        }
+                    }
+                    val steadyAimBonus = when {
+                        com.example.starborn.domain.leveling.CrewBuildPrototype.STEADY_AIM !in currentAttacker.combatant.talents -> 0.0
+                        skillId == "gh0st_headshot" -> 10.0
+                        else -> 5.0
+                    }
+                    val bonus = steadyAimBonus +
+                        targetLockCritBonus(targetState) +
+                        AccessoryPassives.critChanceBonus(currentAttacker, targetState)
+                    isCrit = isCrit || random.nextDouble(0.0, 100.0) <= (currentAttacker.critChance() + bonus).coerceIn(0.0, 100.0)
+                } else if (skillId == "gh0st_headshot" && skillId in explicitStatusSkillIds) {
+                    val bonus = (if (com.example.starborn.domain.leveling.CrewBuildPrototype.STEADY_AIM in currentAttacker.combatant.talents) 10.0 else 0.0) +
+                        AccessoryPassives.critChanceBonus(currentAttacker, targetState)
+                    isCrit = isCrit || random.nextDouble(0.0, 100.0) <= (currentAttacker.critChance() + bonus).coerceIn(0.0, 100.0)
                 }
-                val bonus = (if (com.example.starborn.domain.leveling.CrewBuildPrototype.STEADY_AIM in currentAttacker.combatant.talents) 5.0 else 0.0) +
-                    AccessoryPassives.critChanceBonus(currentAttacker, targetState)
-                isCrit = isCrit || random.nextDouble(0.0, 100.0) <= (currentAttacker.critChance() + bonus).coerceIn(0.0, 100.0)
             }
             val brokenBonus = qualifiesForBrokenDamageBonus(currentAttacker, targetState)
             val minimum = if (outgoing > 0 && !targetState.hasBlockingStatus()) 1 else 0
@@ -913,6 +945,9 @@ class CombatActionProcessor(
             val finalDamage = previousHp - (working.combatants[targetId]?.hp ?: previousHp)
             if (finalDamage > 0) {
                 working = working.consumeForceCritIfPresent(targetId)
+                if (hadTargetLock) {
+                    working = working.consumeTargetLockIfPresent(targetId)
+                }
             }
         }
         return working
@@ -988,18 +1023,25 @@ class CombatActionProcessor(
         action: CombatAction.ItemUse,
         result: ItemUseResult.Damage
     ): CombatState {
+        val resolvedElement = normalizeElement(result.item.effect?.damageType) ?: PHYSICAL_ELEMENT
         val damageMode = SkillMode.Damage(
             baseDamage = result.amount.coerceAtLeast(1),
-            element = PHYSICAL_ELEMENT
+            element = resolvedElement
         )
-        return applyDamage(
+        val targets = resolveTargetsForItem(
             state = state,
+            action = action,
+            fallback = itemOffenseTargeting(result.item.effect?.target)
+        )
+        val prepared = if (result.item.id.equals("pulse_grenade", ignoreCase = true)) {
+            applyGuardBreak(state, targets)
+        } else {
+            state
+        }
+        return applyDamage(
+            state = prepared,
             attackerId = action.actorId,
-            explicitTargets = resolveTargetsForItem(
-                state = state,
-                action = action,
-                fallback = itemOffenseTargeting(result.item.effect?.target)
-            ),
+            explicitTargets = targets,
             damageMode = damageMode
         )
     }
@@ -1101,7 +1143,8 @@ class CombatActionProcessor(
         if (roll > hitChance) return HitRoll.Miss
         val baseDamage = basePhysicalDamage(attacker, target)
         val critRoll = random.nextDouble(0.0, 100.0)
-        val critChance = (attacker.critChance() + critBonus + AccessoryPassives.critChanceBonus(attacker, target)).coerceIn(0.0, 100.0)
+        val steadyAimBasicBonus = if (com.example.starborn.domain.leveling.CrewBuildPrototype.STEADY_AIM in attacker.combatant.talents) 5.0 else 0.0
+        val critChance = (attacker.critChance() + critBonus + steadyAimBasicBonus + AccessoryPassives.critChanceBonus(attacker, target)).coerceIn(0.0, 100.0)
         
         val forceCrit = target.statusEffects.any { status ->
             statusRegistry.definition(status.id)?.forceCrit == true
@@ -1196,7 +1239,20 @@ class CombatActionProcessor(
 
     private fun resolveElement(skill: Skill?): String? {
         val tags = skill?.combatTags ?: return null
-        return tags.firstOrNull { ELEMENT_TAGS.contains(it.lowercase()) }?.lowercase()
+        return tags.firstNotNullOfOrNull(::normalizeElement)
+    }
+
+    private fun normalizeElement(raw: String?): String? {
+        val key = raw?.trim()?.lowercase()?.takeIf { it.isNotEmpty() } ?: return null
+        return when (key) {
+            "burn", "fire" -> "burn"
+            "freeze", "ice", "cryo" -> "freeze"
+            "shock", "lightning", "electric" -> "shock"
+            "acid", "poison", "corrosion" -> "acid"
+            "source", "harmonic", "psychic", "psionic" -> "source"
+            "physical" -> "physical"
+            else -> null
+        }
     }
 
     private fun resolveSkillDamage(
@@ -1346,7 +1402,7 @@ class CombatActionProcessor(
         if (actor.combatant.side != CombatSide.PLAYER) return resolved
         val newEntries = resolved.log.drop(beforeLogSize)
         val triggered = newEntries.filterIsInstance<CombatLogEntry.Damage>()
-            .any { it.sourceId == action.actorId && it.isWeakness }
+            .any { it.sourceId == action.actorId && (it.isWeakness || it.isVantage) }
         if (!triggered) return resolved
 
         val actorInResolved = resolved.combatants[action.actorId] ?: return resolved
@@ -1628,7 +1684,7 @@ class CombatActionProcessor(
         private const val MAX_HIT_CHANCE = 99.0
         private const val PHYSICAL_VARIANCE_MIN = -2
         private const val PHYSICAL_VARIANCE_MAX = 2
-        private val BLOCKING_STATUS_IDS = setOf("invulnerable", "shield", "guard")
+        private val BLOCKING_STATUS_IDS = setOf("invulnerable", "shield", "guard", "defend")
 
         private val ELEMENT_TAGS = setOf(
             "burn",

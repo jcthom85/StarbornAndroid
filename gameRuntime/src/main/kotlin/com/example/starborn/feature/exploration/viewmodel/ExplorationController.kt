@@ -1830,7 +1830,10 @@ class ExplorationController(
         }
         if (actionId.equals("source_board_astra", ignoreCase = true)) {
             if (sessionStore.state.value.roomId?.startsWith("source_") == true &&
-                "ms_game_complete" !in sessionStore.state.value.completedMilestones) return
+                "ms_game_complete" !in sessionStore.state.value.completedMilestones) {
+                showInspection("The Astra's hull signal stays out of reach beyond the Tear until the Source is settled.")
+                return
+            }
             boardAstraFromWorld()
         }
         eventManager.handleTrigger("player_action", EventPayload.Action(actionId, itemId))
@@ -6205,8 +6208,8 @@ class ExplorationController(
                         when (cabinetId) {
                             ArcadeIds.HARMONIC_PULSE -> {
                                 showInspection(
-                                    "Nova touches the radiant crystal bezel as harmonious chimes echo through the common room deck. " +
-                                        "\"Listen to that resonance... all six cabinets are humming together like a choir. We've built an arcade legend.\" " +
+                                    "Nova rests a hand on the crystal bezel as clean six-part chimes carry across the common room. " +
+                                        "\"Listen to that. All six cabinets are holding pitch together. Zeke's never leaving the rec bay again.\" " +
                                         "HARMONIC PULSE completes the Astra arcade collection!"
                                 )
                             }

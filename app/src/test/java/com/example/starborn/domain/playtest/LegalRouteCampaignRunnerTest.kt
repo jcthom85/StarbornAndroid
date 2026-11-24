@@ -812,10 +812,10 @@ class LegalRouteCampaignRunnerTest {
                 if (crateFirst) agent.performAction("w4_sq16_destroy_crate_gamma")
                 checkDescription("sealed against the heat", crateFirst)
                 checkBlocked("east", "foundry_service_airlock")
-                listOf("north", "north", "north", "north", "east").forEach(agent::travelDirection)
+                listOf("north", "north", "east").forEach(agent::travelDirection)
                 checkBlocked("south", "foundry_service_airlock_scale_final")
 
-                listOf("west", "south", "south", "south", "south", "west").forEach(agent::travelDirection)
+                listOf("west", "south", "south", "west").forEach(agent::travelDirection)
                 assertEquals("foundry_waste_intake", h.sessionStore.state.value.roomId)
                 agent.performAction("w4_mq16_hack_cooling_vents")
                 agent.travelDirection("east")

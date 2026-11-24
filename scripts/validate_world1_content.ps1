@@ -9,6 +9,7 @@ $root = Split-Path -Parent $PSScriptRoot
 $assets = Join-Path $root "app/src/main/assets"
 $assetPackAssets = Join-Path $root "world_assets/src/main/assets"
 $rawDir = Join-Path $root "app/src/main/res/raw"
+$assetAudioDir = Join-Path $assetPackAssets "audio"
 $minImageBytes = 4096
 $minAudioBytes = 4096
 $pngSignature = [byte[]](0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A)
@@ -172,7 +173,12 @@ function Normalize-CueId($cueId) {
 function Get-RawAudioFile($cueId) {
     $name = Normalize-CueId $cueId
     if (-not $name) { return $null }
-    return Get-ChildItem -LiteralPath $rawDir -File -ErrorAction SilentlyContinue | Where-Object { $_.BaseName -eq $name } | Select-Object -First 1
+    foreach ($dir in @($rawDir, $assetAudioDir)) {
+        if (-not (Test-Path -LiteralPath $dir)) { continue }
+        $found = Get-ChildItem -LiteralPath $dir -File -ErrorAction SilentlyContinue | Where-Object { $_.BaseName -eq $name } | Select-Object -First 1
+        if ($null -ne $found) { return $found }
+    }
+    return $null
 }
 
 function Has-RawAudio($cueId) {

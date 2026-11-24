@@ -933,7 +933,7 @@
       },
       {
         "type": "show_message",
-        "message": "Ground bus routing: Nova locks the suit-linked Flux Liner's sacrificial copper strap to the shop's bedrock ground lug. The circuit analyzer ticks solid green\u2014power spikes are safely shunted."
+        "message": "Ground bus routing: Nova locks the suit-linked Flux Liner's sacrificial copper strap to the shop's bedrock ground lug. The circuit analyzer ticks solid green—power spikes are safely shunted."
       }
     ]
   },
@@ -967,7 +967,7 @@
       },
       {
         "type": "show_message",
-        "message": "Diagnostic phase tuning: Factory sweep limit (61 kHz) bypassed. Nova manually trims the induction coil potentiometer to 84 kHz\u2014the cutter emitter crackles with a steady, high-frequency blue ionization."
+        "message": "Diagnostic phase tuning: Factory sweep limit (61 kHz) bypassed. Nova manually trims the induction coil potentiometer to 84 kHz—the cutter emitter crackles with a steady, high-frequency blue ionization."
       }
     ]
   },
@@ -1936,7 +1936,7 @@
       },
       {
         "type": "narrate",
-        "message": "Fluorescent strips buzz to life down the shafts\u2014and somewhere deeper along the conveyor line, heavy hydraulic treads grind awake."
+        "message": "Fluorescent strips buzz to life down the shafts—and somewhere deeper along the conveyor line, heavy hydraulic treads grind awake."
       }
     ],
     "repeatable": true
@@ -2415,7 +2415,7 @@
       },
       {
         "type": "narrate",
-        "message": "The Dominion concrete ends in a sheared seam. Beyond it, dark stone rises in smooth, impossible angles\u2014and the hum in Nova's cutter answers through the soles of her boots."
+        "message": "The Dominion concrete ends in a sheared seam. Beyond it, dark stone rises in smooth, impossible angles—and the hum in Nova's cutter answers through the soles of her boots."
       }
     ]
   },
@@ -2610,7 +2610,7 @@
       },
       {
         "type": "narrate",
-        "message": "Nova's knees nearly buckle. The burnt smell of her Flux Liner's spent ground strip hangs in the cold air\u2014and overhead, the colony PA cuts straight through the hum."
+        "message": "Nova's knees nearly buckle. The burnt smell of her Flux Liner's spent ground strip hangs in the cold air—and overhead, the colony PA cuts straight through the hum."
       },
       {
         "type": "show_message",
@@ -2670,7 +2670,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "Red strobes sweep the maintenance route. Heavy boots echo behind the closing bulkheads\u2014the Warden's sweep teams are already sealing the levels behind Nova."
+        "message": "Red strobes sweep the maintenance route. Heavy boots echo behind the closing bulkheads—the Warden's sweep teams are already sealing the levels behind Nova."
       }
     ]
   },
@@ -3698,7 +3698,7 @@
       },
       {
         "type": "show_message",
-        "message": "Quest Complete: A Strange Coast\n\nZeke\u2019s suit is sealed. From the bank, Nova feels the Chime pull south toward the vines beyond the wreck. East, the glow-water runs into the mist."
+        "message": "Quest Complete: A Strange Coast\n\nZeke’s suit is sealed. From the bank, Nova feels the Chime pull south toward the vines beyond the wreck. East, the glow-water runs into the mist."
       },
       {
         "type": "give_reward",
@@ -3752,7 +3752,7 @@
       },
       {
         "type": "show_message",
-        "message": "When the fighting stops, Zeke picks up the distress pulse again. It\u2019s coming from a stone gate beyond Canopy Ridge."
+        "message": "When the fighting stops, Zeke picks up the distress pulse again. It’s coming from a stone gate beyond Canopy Ridge."
       }
     ]
   },
@@ -3996,7 +3996,7 @@
     "actions": [
       {
         "type": "narrate",
-        "message": "A low, sub-audible vibration rolls through the canopy roots, silencing every insect on the slope\u2014and far above in the mist, a pale glint catches the ridge like an optic lens."
+        "message": "A low, sub-audible vibration rolls through the canopy roots, silencing every insect on the slope—and far above in the mist, a pale glint catches the ridge like an optic lens."
       }
     ],
     "repeatable": false
@@ -4503,7 +4503,7 @@
       },
       {
         "type": "show_message",
-        "message": "The cargo ramp rings beneath four pairs of boots. Amber consoles warm to life and the Astra's low engine hum replaces the hangar echoes\u2014Zeke already grinning toward the helm, Gh0st checking the airlock seal, Orion resting a steady hand on the bulkhead. The bridge is through the common room; use its nav console when you are ready to leave."
+        "message": "The cargo ramp rings beneath four pairs of boots. Amber consoles warm to life and the Astra's low engine hum replaces the hangar echoes—Zeke already grinning toward the helm, Gh0st checking the airlock seal, Orion resting a steady hand on the bulkhead. The bridge is through the common room; use its nav console when you are ready to leave."
       }
     ],
     "repeatable": true
@@ -5031,7 +5031,7 @@
       },
       {
         "type": "give_reward",
-        "credits": 250
+        "credits": 450
       }
     ]
   },
@@ -5217,7 +5217,7 @@
       },
       {
         "type": "show_message",
-        "message": "Gh0st copies the staff routes. His finger stops on a deleted transfer. \u201cElara. That\u2019s my sister.\u201d He copies the case number too."
+        "message": "Gh0st copies the staff routes. His finger stops on a deleted transfer. “Elara. That’s my sister.” He copies the case number too."
       },
       {
         "type": "start_dialogue",
@@ -5481,7 +5481,7 @@
       },
       {
         "type": "show_message",
-        "message": "The sign\u2019s power core is burnt out. Jax points you toward the Sentinel in the Upper City Exec Lounge\u2019s private booths. Bring its core back when you have access upstairs."
+        "message": "The sign’s power core is burnt out. Jax points you toward the Sentinel in the Upper City Exec Lounge’s private booths. Bring its core back when you have access upstairs."
       }
     ]
   },
@@ -5669,7 +5669,7 @@
       },
       {
         "type": "show_message",
-        "message": "Zeke combines the schedules, badges, disguises and security records into a service route. He sends the Astra\u2019s autopilot a maintenance clearance to relocate from the sewer dock to the rooftop pad. The crew rides the service lift into Upper City."
+        "message": "Zeke combines the schedules, badges, disguises and security records into a service route. He sends the Astra’s autopilot a maintenance clearance to relocate from the sewer dock to the rooftop pad. The crew rides the service lift into Upper City."
       }
     ]
   },
@@ -5972,7 +5972,7 @@
       },
       {
         "type": "show_message",
-        "message": "Zeke traces the gold tether to the Administrator\u2019s audit bus. Gold controls authorization, not pressure. Copy its local hold signal before disconnecting the audit; cutting it outright would raise an alarm."
+        "message": "Zeke traces the gold tether to the Administrator’s audit bus. Gold controls authorization, not pressure. Copy its local hold signal before disconnecting the audit; cutting it outright would raise an alarm."
       }
     ]
   },
@@ -6234,7 +6234,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "Scan shows the local security curtain cycling above the roof. The planetary Shield is farther overhead; the Administrator\u2019s targeting lattice still crosses every low-altitude launch line."
+        "message": "Scan shows the local security curtain cycling above the roof. The planetary Shield is farther overhead; the Administrator’s targeting lattice still crosses every low-altitude launch line."
       }
     ]
   },
@@ -6269,7 +6269,7 @@
       },
       {
         "type": "show_message",
-        "message": "Scan separates the Spire\u2019s local security curtain from the planetary Shield above it. Orion marks a narrow low-altitude launch window toward the Foundry."
+        "message": "Scan separates the Spire’s local security curtain from the planetary Shield above it. Orion marks a narrow low-altitude launch window toward the Foundry."
       }
     ]
   },
@@ -6369,7 +6369,7 @@
       },
       {
         "type": "show_message",
-        "message": "The Administrator\u2019s command frame collapses. The rooftop guns go dark, and for the first time since the heist began, the Spire falls quiet. Use the shield window to read the opening in the local security curtain, then depart for the Foundry."
+        "message": "The Administrator’s command frame collapses. The rooftop guns go dark, and for the first time since the heist began, the Spire falls quiet. Use the shield window to read the opening in the local security curtain, then depart for the Foundry."
       }
     ],
     "recover_recorded_victory": true
@@ -6610,7 +6610,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova runs the corrected profile against the recorded trial. A maintenance worker silhouette crosses the lane: the targeting bracket opens and lets it pass. An armed drone rises behind it: the bracket closes, and the burst strikes the drone's weapon mount. The replay freezes on the unharmed worker. Then a red line appears\u2014OPERATOR SIGNATURE RECORDED. The Landing Pad Roof relay can scrub it."
+        "message": "Nova runs the corrected profile against the recorded trial. A maintenance worker silhouette crosses the lane: the targeting bracket opens and lets it pass. An armed drone rises behind it: the bracket closes, and the burst strikes the drone's weapon mount. The replay freezes on the unharmed worker. Then a red line appears—OPERATOR SIGNATURE RECORDED. The Landing Pad Roof relay can scrub it."
       }
     ]
   },
@@ -6882,7 +6882,7 @@
       },
       {
         "type": "show_message",
-        "message": "PROJECT PHANTOM: ELARA \u2014 NEURAL MAP DERIVATIVE. UNIT 734 \u2014 CHIP INSERTION. A handwritten correction crosses out \u201crepeat until compliant.\u201d Beside it: \u201cAllow time for an answer.\u201d Gh0st keeps that page open."
+        "message": "PROJECT PHANTOM: ELARA — NEURAL MAP DERIVATIVE. UNIT 734 — CHIP INSERTION. A handwritten correction crosses out “repeat until compliant.” Beside it: “Allow time for an answer.” Gh0st keeps that page open."
       }
     ]
   },
@@ -7696,6 +7696,10 @@
       {
         "type": "show_message",
         "message": "The broken Construct cools beside the empty cradle. The Anvil is yours. Rylos is moving the Titan Walker into position. If the crew wants the engine, they'll have to go through him."
+      },
+      {
+        "type": "give_reward",
+        "credits": 350
       }
     ]
   },
@@ -7729,7 +7733,7 @@
       },
       {
         "type": "show_message",
-        "message": "Gh0st steps in front of the others. \u201cLog this under Gh0st.\u201d"
+        "message": "Gh0st steps in front of the others. “Log this under Gh0st.”"
       }
     ]
   },
@@ -8364,7 +8368,7 @@
       },
       {
         "type": "show_message",
-        "message": "ARCHITECT PROTOCOL: GREAT SILENCE. The recovered log maps living voices to control circuits. Harmony\u2019s directory lists occupied seats with the names withheld; their release requests are marked DENIED. The retention orders carry Mara Thorne\u2019s signature. A newer command assigns every output to Vale."
+        "message": "ARCHITECT PROTOCOL: GREAT SILENCE. The recovered log maps living voices to control circuits. Harmony’s directory lists occupied seats with the names withheld; their release requests are marked DENIED. The retention orders carry Mara Thorne’s signature. A newer command assigns every output to Vale."
       }
     ]
   },
@@ -8428,7 +8432,11 @@
       },
       {
         "type": "show_message",
-        "message": "Zeke saves the occupied-seat list. Thorne\u2019s coolant map resolves into three marked branches: Alpha, Beta and Gamma. The first leads into the firewall."
+        "message": "Zeke saves the occupied-seat list. Thorne’s coolant map resolves into three marked branches: Alpha, Beta and Gamma. The first leads into the firewall."
+      },
+      {
+        "type": "give_reward",
+        "credits": 250
       }
     ]
   },
@@ -8649,7 +8657,7 @@
       },
       {
         "type": "show_message",
-        "message": "Zeke maps the repeating aisles by coolant pulse instead of rack number. Thorne's old bus links all three firewall nodes to Elara's tank: Line 1 feeds Alpha and Elara's relay in parallel; Beta loops overflow between Alpha and Gamma; Gamma draws projector power off Beta's return rail. Cut main power and Elara's relay dies\u2014shunt Alpha onto Elara's cold rail first, trap the bleed in Beta, then isolate Gamma on its own drained capacitor."
+        "message": "Zeke maps the repeating aisles by coolant pulse instead of rack number. Thorne's old bus links all three firewall nodes to Elara's tank: Line 1 feeds Alpha and Elara's relay in parallel; Beta loops overflow between Alpha and Gamma; Gamma draws projector power off Beta's return rail. Cut main power and Elara's relay dies—shunt Alpha onto Elara's cold rail first, trap the bleed in Beta, then isolate Gamma on its own drained capacitor."
       }
     ]
   },
@@ -8854,6 +8862,10 @@
       {
         "type": "show_message",
         "message": "The construct shatters into dead glyphs. The Anchor Chamber opens, and Gh0st hears Elara through the system Vale stole. Thorne's route worked, but every open door now points at the person Dominion turned into infrastructure. The Anchor access lift now runs directly down to the chamber and back up to this aisle. The westward route through the Server Farm remains open for walking back."
+      },
+      {
+        "type": "give_reward",
+        "credits": 300
       }
     ],
     "recover_recorded_victory": true
@@ -9653,7 +9665,7 @@
       },
       {
         "type": "show_message",
-        "message": "Zeke grips the edge. \u201cThe pod wouldn\u2019t turn. Nova told me to hold the frame. I could do that.\u201d A strip of worn launch rail settles under his hand."
+        "message": "Zeke grips the edge. “The pod wouldn’t turn. Nova told me to hold the frame. I could do that.” A strip of worn launch rail settles under his hand."
       }
     ]
   },
@@ -9681,7 +9693,7 @@
       },
       {
         "type": "show_message",
-        "message": "\u201cThe order was still in my head,\u201d Gh0st says. \u201cI lowered the rifle.\u201d Broken roots take shape beneath the next section of bridge."
+        "message": "“The order was still in my head,” Gh0st says. “I lowered the rifle.” Broken roots take shape beneath the next section of bridge."
       }
     ]
   },
@@ -9709,7 +9721,7 @@
       },
       {
         "type": "show_message",
-        "message": "Orion traces a patch of blue beneath the dust. \u201cI painted that ceiling. Zeke found me a place to sit.\u201d The patch widens into a solid span."
+        "message": "Orion traces a patch of blue beneath the dust. “I painted that ceiling. Zeke found me a place to sit.” The patch widens into a solid span."
       }
     ]
   },
@@ -9795,7 +9807,7 @@
       },
       {
         "type": "show_message",
-        "message": "The launch rail joins the ridge roots, the blue ceiling and Jed\u2019s scorched bench. Spire rain runs between the boards. The crossing holds east to Shared Memory Span, where the crew can pause around the campfire promise."
+        "message": "The launch rail joins the ridge roots, the blue ceiling and Jed’s scorched bench. Spire rain runs between the boards. The crossing holds east to Shared Memory Span, where the crew can pause around the campfire promise."
       }
     ]
   },
@@ -10019,7 +10031,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova checks the hinge before leaning on the shift gate. It holds, and she steps through with Jed's hand-filed regulator and his unfinished carbine sketch. Legacy unlocked\u2014forge Shift-Breaker at the Tinkering Table with Crucible Champion alloy."
+        "message": "Nova checks the hinge before leaning on the shift gate. It holds, and she steps through with Jed's hand-filed regulator and his unfinished carbine sketch. Legacy unlocked—forge Shift-Breaker at the Tinkering Table with Crucible Champion alloy."
       }
     ]
   },
@@ -10129,8 +10141,18 @@
         "milestone": "ms_w6_unshackled_unlocked"
       },
       {
+        "type": "give_item",
+        "item_id": "revoked_collar_seal",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "schematic_unshackled_breakers",
+        "quantity": 1
+      },
+      {
         "type": "show_message",
-        "message": "Zeke leaves the records intact as evidence and closes the review without seeking approval. The file no longer has authority over him. Unshackled unlocked."
+        "message": "Zeke leaves the records intact as evidence and closes the review without seeking approval, pocketing his broken Dominion seal and gauntlet schematics. The file no longer has authority over him. Unshackled unlocked—forge Unshackled Breakers with a Zenith Hunter-Killer's servo anchor."
       }
     ]
   },
@@ -10627,7 +10649,7 @@
       },
       {
         "type": "show_message",
-        "message": "Vale\u2019s geometry collapses. The Key answers at the shared tuning focus. Bring the crew\u2019s voices together."
+        "message": "Vale’s geometry collapses. The Key answers at the shared tuning focus. Bring the crew’s voices together."
       }
     ],
     "recover_recorded_victory": true
@@ -13503,7 +13525,7 @@
       },
       {
         "type": "show_message",
-        "message": "Zeke's revocation sweeps through every copy\u2014none of them can issue another order. He pockets the broken Dominion seal and gauntlet schematics. Unshackled unlocked\u2014forge Unshackled Breakers with a Zenith Hunter-Killer's servo anchor."
+        "message": "Zeke's revocation sweeps through every copy—none of them can issue another order. He pockets the broken Dominion seal and gauntlet schematics. Unshackled unlocked—forge Unshackled Breakers with a Zenith Hunter-Killer's servo anchor."
       }
     ]
   },
@@ -15679,7 +15701,7 @@
       },
       {
         "type": "show_message",
-        "message": "The crime-scene barrier marks Auditor Malick\u2019s booth. Security has ordered four patrons to remain for questioning; the public gallery exit is still open."
+        "message": "The crime-scene barrier marks Auditor Malick’s booth. Security has ordered four patrons to remain for questioning; the public gallery exit is still open."
       }
     ]
   },
@@ -15702,7 +15724,7 @@
       },
       {
         "type": "show_message",
-        "message": "Nova checks the dregs of Malick's synth-sparkler. Chemical resonance reveals Cyano-Coolant 9\u2014a lethal high-viscosity refrigerant used in executive comms rigs."
+        "message": "Nova checks the dregs of Malick's synth-sparkler. Chemical resonance reveals Cyano-Coolant 9—a lethal high-viscosity refrigerant used in executive comms rigs."
       }
     ]
   },
@@ -17215,7 +17237,7 @@
       },
       {
         "type": "show_message",
-        "message": "Kaelen: Real greens and roasted beast meat? By the stars, that smells better than anything Dominion ever packed into a ration tube. A deal's a deal. Here\u2014take this Precision Sight from my optic rig. It'll keep your shots centered when the wind whips across the ridge."
+        "message": "Kaelen: Real greens and roasted beast meat? By the stars, that smells better than anything Dominion ever packed into a ration tube. A deal's a deal. Here—take this Precision Sight from my optic rig. It'll keep your shots centered when the wind whips across the ridge."
       }
     ]
   },
@@ -17548,7 +17570,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "Steam drifts across the pool. Gh0st stays on his feet. \u201cBefore we sit down, I need to see what\u2019s on that Phantom terminal in Waste Intake.\u201d"
+        "message": "Steam drifts across the pool. Gh0st stays on his feet. “Before we sit down, I need to see what’s on that Phantom terminal in Waste Intake.”"
       }
     ]
   },
@@ -17962,7 +17984,7 @@
       },
       {
         "type": "show_message",
-        "message": "Vale\u2019s geometry collapses. Return to The Center to use the shared tuning focus."
+        "message": "Vale’s geometry collapses. Return to The Center to use the shared tuning focus."
       }
     ],
     "recover_recorded_victory": true
@@ -18147,7 +18169,7 @@
       },
       {
         "type": "narrate",
-        "message": "Nova wedges a miner's salvage pack out of the seam\u2014and the loose wall behind it caves in as an Echo Borer lunges straight out of the dark!"
+        "message": "Nova wedges a miner's salvage pack out of the seam—and the loose wall behind it caves in as an Echo Borer lunges straight out of the dark!"
       },
       {
         "type": "spawn_encounter",
@@ -18226,7 +18248,7 @@
       },
       {
         "type": "show_message",
-        "message": "Inside the surveyor lockbox sits a scratched tape label\u2014'SURVEY 04: THE SIGNAL IS OLDER THAN THE COLONY'\u2014packed beside a Pulse Grenade and Medkit I."
+        "message": "Inside the surveyor lockbox sits a scratched tape label—'SURVEY 04: THE SIGNAL IS OLDER THAN THE COLONY'—packed beside a Pulse Grenade and Medkit I."
       }
     ],
     "repeatable": false
@@ -18340,7 +18362,7 @@
       },
       {
         "type": "narrate",
-        "message": "Nova pulls a waterproof salvage satchel from the base of the obelisk\u2014just as a Mist Glider drops silently out of the sea-arch spray!"
+        "message": "Nova pulls a waterproof salvage satchel from the base of the obelisk—just as a Mist Glider drops silently out of the sea-arch spray!"
       },
       {
         "type": "spawn_encounter",
@@ -18592,7 +18614,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "Orion sounds the Aethel chorus across the black tide. The reliquary cracks open in blue fire\u2014the First Choir rises to test whether the living will break Vale's cycle or repeat it!"
+        "message": "Orion sounds the Aethel chorus across the black tide. The reliquary cracks open in blue fire—the First Choir rises to test whether the living will break Vale's cycle or repeat it!"
       },
       {
         "type": "spawn_encounter",
@@ -18624,7 +18646,7 @@
       },
       {
         "type": "show_message",
-        "message": "The First Choir lowers its tide and bows in silent chord. From the opened reliquary, Orion receives the Chorus of the First Tide\u2014an unchained Aethel prism entrusted to the living."
+        "message": "The First Choir lowers its tide and bows in silent chord. From the opened reliquary, Orion receives the Chorus of the First Tide—an unchained Aethel prism entrusted to the living."
       }
     ]
   },
@@ -18748,7 +18770,7 @@
     "actions": [
       {
         "type": "show_message",
-        "message": "Gamma's hard-light projector is still drawing full bus power from Beta's return rail. Isolating Gamma now would back-surge Elara's relay\u2014trap Beta's overflow and cut its return feed first."
+        "message": "Gamma's hard-light projector is still drawing full bus power from Beta's return rail. Isolating Gamma now would back-surge Elara's relay—trap Beta's overflow and cut its return feed first."
       }
     ]
   },
@@ -18801,6 +18823,340 @@
       {
         "type": "start_dialogue",
         "npc": "line:w4_magma_regulator_prompt"
+      }
+    ]
+  },
+  {
+    "id": "w4_landmark_refusal_latch_inspect",
+    "description": "Inspect the live quarantine latch in the Phantom Refusal Trench.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_landmark_refusal_latch_inspect"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w4_landmark_refusal_trench"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:w4_landmark_refusal_prompt"
+      }
+    ]
+  },
+  {
+    "id": "w4_landmark_refusal_solved",
+    "description": "Safely discharge the quarantine latch and claim Unit 09's coolant injector.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_landmark_refusal_solved"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w4_landmark_refusal_trench"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_landmark_refusal_trench"
+      },
+      {
+        "type": "give_item",
+        "item_id": "cyano_coolant_injector",
+        "quantity": 1
+      },
+      {
+        "type": "give_xp",
+        "xp": 180
+      },
+      {
+        "type": "show_message",
+        "message": "Grounded the quarantine latch and recovered Unit 09's Cyano-Coolant Injector (+180 XP)."
+      }
+    ]
+  },
+  {
+    "id": "w4_landmark_slag_chapel_inspect",
+    "description": "Examine the open prayer-bolt socket in The Slag Chapel.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_landmark_slag_chapel_inspect"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w4_landmark_slag_chapel"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:w4_landmark_chapel_prompt"
+      }
+    ]
+  },
+  {
+    "id": "w4_landmark_slag_chapel_solved",
+    "description": "Seat a quenched brass bolt in The Slag Chapel and claim the hidden smelter cache.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w4_landmark_slag_chapel_solved"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w4_landmark_slag_chapel"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w4_landmark_slag_chapel"
+      },
+      {
+        "type": "give_item",
+        "item_id": "magma_induction_core_mod",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "foundry_smoked_brisket",
+        "quantity": 1
+      },
+      {
+        "type": "give_xp",
+        "xp": 180
+      },
+      {
+        "type": "show_message",
+        "message": "Seated a tempered bolt in the Slag Chapel and recovered a Magma Induction Core and Smoked Brisket (+180 XP)."
+      }
+    ]
+  },
+  {
+    "id": "w5_landmark_berth_desk_inspect",
+    "description": "Examine the offline porters' claim desk in the Quarantined Berth Concourse.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_landmark_berth_desk_inspect"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w5_landmark_quarantined_berth"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:w5_landmark_berth_prompt"
+      }
+    ]
+  },
+  {
+    "id": "w5_landmark_berth_solved",
+    "description": "Restore passenger departure names to the Quarantined Berth board.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_landmark_berth_solved"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w5_landmark_quarantined_berth"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w5_landmark_quarantined_berth"
+      },
+      {
+        "type": "give_item",
+        "item_id": "zero_g_gyro_stabilizer_mod",
+        "quantity": 1
+      },
+      {
+        "type": "give_item",
+        "item_id": "orbital_glimmer_tonic",
+        "quantity": 1
+      },
+      {
+        "type": "give_xp",
+        "xp": 220
+      },
+      {
+        "type": "show_message",
+        "message": "Restored the wiped passenger roll to the berth board and recovered a Zero-G Gyro Stabilizer (+220 XP)."
+      }
+    ]
+  },
+  {
+    "id": "w5_landmark_birdsong_rig_inspect",
+    "description": "Inspect the gardener's taped cassette rig behind the Solarium mirrors.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_landmark_birdsong_rig_inspect"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w5_landmark_birdsong_rig"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:w5_landmark_birdsong_prompt"
+      }
+    ]
+  },
+  {
+    "id": "w5_landmark_birdsong_solved",
+    "description": "Clean the birdsong tape deck roller and recover the stowed Orbital Deflector Mod.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w5_landmark_birdsong_solved"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w5_landmark_birdsong_rig"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w5_landmark_birdsong_rig"
+      },
+      {
+        "type": "give_item",
+        "item_id": "orbital_deflector_mod",
+        "quantity": 1
+      },
+      {
+        "type": "give_xp",
+        "xp": 220
+      },
+      {
+        "type": "show_message",
+        "message": "Tuned the birdsong cassette deck and recovered an Orbital Deflector Mod (+220 XP)."
+      }
+    ]
+  },
+  {
+    "id": "w6_landmark_counter_mugs_inspect",
+    "description": "Pause at the four scratched mugs on the Half-Remembered Counter.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_landmark_counter_mugs_inspect"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_landmark_memory_counter"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:w6_landmark_counter_prompt"
+      }
+    ]
+  },
+  {
+    "id": "w6_landmark_counter_solved",
+    "description": "Share a warm round at the Half-Remembered Counter.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_landmark_counter_solved"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_landmark_memory_counter"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_landmark_memory_counter"
+      },
+      {
+        "type": "give_item",
+        "item_id": "source_astral_feast",
+        "quantity": 1
+      },
+      {
+        "type": "give_xp",
+        "xp": 260
+      },
+      {
+        "type": "show_message",
+        "message": "Shared a quiet round at the counter and claimed a Source Astral Feast (+260 XP)."
+      }
+    ]
+  },
+  {
+    "id": "w6_landmark_tuning_forks_inspect",
+    "description": "Listen to the brass off-pitch tuning forks in the Amphitheater.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_landmark_tuning_forks_inspect"
+    },
+    "repeatable": true,
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_landmark_unruly_amphitheater"
+      }
+    ],
+    "actions": [
+      {
+        "type": "start_dialogue",
+        "npc": "line:w6_landmark_amphitheater_prompt"
+      }
+    ]
+  },
+  {
+    "id": "w6_landmark_amphitheater_solved",
+    "description": "Sound the rough chord across the Amphitheater of Unruly Pitch.",
+    "trigger": {
+      "type": "player_action",
+      "action": "w6_landmark_amphitheater_solved"
+    },
+    "conditions": [
+      {
+        "type": "milestone_not_set",
+        "milestone": "ms_w6_landmark_unruly_amphitheater"
+      }
+    ],
+    "actions": [
+      {
+        "type": "set_milestone",
+        "milestone": "ms_w6_landmark_unruly_amphitheater"
+      },
+      {
+        "type": "give_item",
+        "item_id": "astral_weave_mod",
+        "quantity": 1
+      },
+      {
+        "type": "give_xp",
+        "xp": 260
+      },
+      {
+        "type": "show_message",
+        "message": "Sounded the open chord across the split marble and claimed an Astral Weave Mod (+260 XP)."
       }
     ]
   }

@@ -657,7 +657,7 @@
     ],
     "base_power": 110,
     "scaling": "agility",
-    "cooldown": 2,
+    "cooldown": 3,
     "status_applications": [
       "bleed"
     ],
@@ -710,7 +710,7 @@
     ],
     "base_power": 120,
     "scaling": "strength",
-    "cooldown": 2,
+    "cooldown": 3,
     "status_applications": [
       "shock"
     ]
@@ -809,7 +809,7 @@
     ],
     "base_power": 110,
     "scaling": "agility",
-    "cooldown": 2,
+    "cooldown": 3,
     "status_applications": [
       "erosion"
     ]
@@ -1374,6 +1374,8 @@
     "type": "active",
     "description": "Orion focuses stored solar energy into a burning Source beam.",
     "combat_tags": [
+      "burn",
+      "source",
       "dmg"
     ],
     "base_power": 145,

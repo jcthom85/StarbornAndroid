@@ -155,7 +155,8 @@ sealed interface CombatLogEntry {
         val critical: Boolean = false,
         val isWeakness: Boolean = false,
         val isBrokenBonus: Boolean = false,
-        val momentumSpent: Int = 0
+        val momentumSpent: Int = 0,
+        val isVantage: Boolean = false
     ) : CombatLogEntry
 
     data class Heal(

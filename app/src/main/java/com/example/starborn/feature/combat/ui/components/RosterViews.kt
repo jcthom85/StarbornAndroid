@@ -129,11 +129,30 @@ fun PartyRoster(
                             val isAlive = memberState?.isAlive != false
                             val memberLungeToken = if (member.id == lungeActorId) lungeToken else null
                             val isMissLunge = memberLungeToken != null && lungeStyle == AttackLungeStyle.MISS
+                            val damageFlash = rememberDamageFlash(member.id, combatState.log)
+                            val isImmobilized = memberState?.statusEffects.orEmpty().any { status ->
+                                status.id.lowercase(Locale.ROOT) in setOf(
+                                    "stun",
+                                    "stagger",
+                                    "freeze",
+                                    "frozen",
+                                    "paralyze",
+                                    "sleep"
+                                )
+                            }
+                            val isShieldedOrCharged = (memberState?.momentum ?: 0) >= 2 ||
+                                memberState?.statusEffects.orEmpty().any { isShieldVisualStatus(it.id) }
+                            val isCriticalHp = maxHp > 0 && currentHp * 100 <= maxHp * 30
                             val portraitPath = when {
                                 !isAlive -> "images/characters/emotes/${member.id}_down.png"
+                                victoryEmotes -> "images/characters/emotes/${member.id}_cool.png"
                                 isMissLunge -> "images/characters/emotes/${member.id}_confident.png"
                                 memberLungeToken != null -> "images/characters/emotes/${member.id}_angry.png"
-                                victoryEmotes -> "images/characters/emotes/${member.id}_cool.png"
+                                damageFlash > 0.12f || isImmobilized -> "images/characters/emotes/${member.id}_gasping.png"
+                                supportHighlights.isNotEmpty() -> "images/characters/emotes/${member.id}_happy.png"
+                                telegraphHighlights.isNotEmpty() -> "images/characters/emotes/${member.id}_surprised.png"
+                                isCriticalHp -> "images/characters/emotes/${member.id}_worried.png"
+                                isActive || isShieldedOrCharged -> "images/characters/emotes/${member.id}_confident.png"
                                 else -> member.combatIconPath.takeIf { it.isNotBlank() } ?: member.miniIconPath
                             }
                             val basePortrait = rememberAssetPainter(member.combatIconPath.takeIf { it.isNotBlank() } ?: member.miniIconPath,
@@ -152,7 +171,6 @@ fun PartyRoster(
                             } else {
                                 baseModifier.maestroTag("combat-party-${member.id}")
                             }
-                            val damageFlash = rememberDamageFlash(member.id, combatState.log)
                             val hitPulse = rememberHitPulse(member.id, combatState.log)
                             val hitRecoilY = rememberHitRecoil(
                                 targetId = member.id,
@@ -892,7 +910,11 @@ fun CompositeEnemyRoster(
         val extentFactorX = entries.maxOf { entry ->
             abs(entry.layout.offsetX) + (entry.layout.widthScale / 2f)
         }
-        val widthLimit = boxWidth * if (compositeGroup == "driller") 0.95f else 1f
+        val widthLimit = boxWidth * when (compositeGroup) {
+            "driller" -> 0.95f
+            "vale_silence" -> 1.14f
+            else -> 1f
+        }
         val sizeLimit = widthLimit / (extentFactorX * 2f + paddingFactor)
         val baseSize = if (compositeGroup == "driller") minOf(237.6.dp, sizeLimit) else sizeLimit
         val baseValue = baseSize.value

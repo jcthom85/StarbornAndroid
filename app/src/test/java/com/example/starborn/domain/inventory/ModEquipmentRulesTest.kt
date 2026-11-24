@@ -97,4 +97,23 @@ class ModEquipmentRulesTest {
         assertEquals("source", ModEquipmentRules.resolveAttackElement(null, listOf("source", "shock")))
         assertEquals("shock", ModEquipmentRules.resolveAttackElement(null, listOf(null, "shock")))
     }
+
+    @Test fun armorModsRejectWeaponSlotsAndWeaponPayloadModsRejectArmorSlots() {
+        val armorPlating = items.getValue("armor_plating_mk_i")
+        val corrosiveRounds = items.getValue("mod_corrosive_rounds")
+        store.restore(store.state.value.copy(
+            inventory = weapons + mapOf(
+                "nova_flux_liner" to 1,
+                armorPlating.id to 1,
+                corrosiveRounds.id to 1,
+                lens.id to 2
+            ),
+            equippedArmors = mapOf("nova" to "nova_flux_liner")
+        ))
+        assertTrue(store.tryEquipMod(ModLocation("nova", "weapon_mod1"), armorPlating) is ModEquipResult.Rejected)
+        assertTrue(store.tryEquipMod(ModLocation("nova", "armor_mod1"), corrosiveRounds) is ModEquipResult.Rejected)
+        assertEquals(ModEquipResult.Success, store.tryEquipMod(ModLocation("nova", "armor_mod1"), armorPlating))
+        assertEquals(ModEquipResult.Success, store.tryEquipMod(ModLocation("nova", "weapon_mod1"), corrosiveRounds))
+        assertEquals(ModEquipResult.Success, store.tryEquipMod(ModLocation("nova", "armor_mod2"), lens))
+    }
 }
