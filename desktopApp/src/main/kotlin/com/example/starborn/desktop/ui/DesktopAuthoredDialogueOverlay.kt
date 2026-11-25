@@ -30,7 +30,10 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.ScrollbarStyle
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -231,28 +234,44 @@ fun DesktopAuthoredDialogueOverlay(
                             .clip(RoundedCornerShape(999.dp))
                             .background(accentColor.copy(alpha = 0.7f))
                     )
+                    val dialogueScroll = rememberScrollState()
                     Box(
                         modifier = Modifier
                             .weight(1f)
                             .heightIn(max = 240.dp)
-                            .verticalScroll(rememberScrollState())
                     ) {
-                        Text(
-                            text = fullText,
+                        Box(
                             modifier = Modifier
-                                .alpha(0f)
-                                .clearAndSetSemantics { },
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            textAlign = TextAlign.Left
-                        )
-                        Text(
-                            text = typewriterText(fullText, displayedText.length),
-                            modifier = Modifier.graphicsLayer { alpha = textEntrance.value },
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            textAlign = TextAlign.Left
-                        )
+                                .fillMaxWidth()
+                                .padding(end = 10.dp)
+                                .verticalScroll(dialogueScroll)
+                        ) {
+                            Text(
+                                text = fullText,
+                                modifier = Modifier
+                                    .alpha(0f)
+                                    .clearAndSetSemantics { },
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                textAlign = TextAlign.Left
+                            )
+                            Text(
+                                text = typewriterText(fullText, displayedText.length),
+                                modifier = Modifier.graphicsLayer { alpha = textEntrance.value },
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                textAlign = TextAlign.Left
+                            )
+                        }
+                        if (dialogueScroll.maxValue > 0 && dialogueScroll.maxValue < Int.MAX_VALUE) {
+                            Box(modifier = Modifier.matchParentSize()) {
+                                VerticalScrollbar(
+                                    adapter = rememberScrollbarAdapter(dialogueScroll),
+                                    modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight().width(5.dp),
+                                    style = ScrollbarStyle(16.dp, 5.dp, RoundedCornerShape(3.dp), 150, accentColor.copy(alpha = 0.28f), accentColor.copy(alpha = 0.72f))
+                                )
+                            }
+                        }
                     }
                 }
 

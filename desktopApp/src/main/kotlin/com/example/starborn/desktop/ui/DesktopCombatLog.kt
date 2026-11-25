@@ -1,6 +1,8 @@
 package com.example.starborn.desktop.ui
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ScrollbarStyle
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -8,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -265,51 +268,62 @@ internal fun DesktopCombatLogDialog(
                 HorizontalDivider(color = accentColor.copy(alpha = 0.25f))
 
                 // Scrollable log body
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = 440.dp),
-                    verticalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    if (history.isEmpty()) {
-                        item {
-                            Text(
-                                text = "No combat actions recorded yet.",
-                                color = Color.White.copy(alpha = 0.5f),
-                                fontSize = 12.sp,
-                                fontFamily = LocalStarbornFonts.current.orbitron,
-                                modifier = Modifier.padding(vertical = 24.dp)
-                            )
-                        }
-                    } else {
-                        items(history.asReversed().toList()) { entry ->
-                            val (textColor, text) = formatLogEntry(entry)
-                            Surface(
-                                shape = RoundedCornerShape(6.dp),
-                                color = Color.White.copy(alpha = 0.03f),
-                                border = BorderStroke(0.6.dp, Color.White.copy(alpha = 0.08f)),
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Row(
-                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                    verticalAlignment = Alignment.CenterVertically
+                val dialogListState = rememberLazyListState()
+                Box(modifier = Modifier.fillMaxWidth().heightIn(max = 440.dp)) {
+                    LazyColumn(
+                        state = dialogListState,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 10.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        if (history.isEmpty()) {
+                            item {
+                                Text(
+                                    text = "No combat actions recorded yet.",
+                                    color = Color.White.copy(alpha = 0.5f),
+                                    fontSize = 12.sp,
+                                    fontFamily = LocalStarbornFonts.current.orbitron,
+                                    modifier = Modifier.padding(vertical = 24.dp)
+                                )
+                            }
+                        } else {
+                            items(history.asReversed().toList()) { entry ->
+                                val (textColor, text) = formatLogEntry(entry)
+                                Surface(
+                                    shape = RoundedCornerShape(6.dp),
+                                    color = Color.White.copy(alpha = 0.03f),
+                                    border = BorderStroke(0.6.dp, Color.White.copy(alpha = 0.08f)),
+                                    modifier = Modifier.fillMaxWidth()
                                 ) {
-                                    Text(
-                                        text = "•",
-                                        color = accentColor,
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Text(
-                                        text = text,
-                                        color = textColor,
-                                        fontSize = 11.5.sp,
-                                        fontFamily = LocalStarbornFonts.current.orbitron
-                                    )
+                                    Row(
+                                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "•",
+                                            color = accentColor,
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Text(
+                                            text = text,
+                                            color = textColor,
+                                            fontSize = 11.5.sp,
+                                            fontFamily = LocalStarbornFonts.current.orbitron
+                                        )
+                                    }
                                 }
                             }
                         }
+                    }
+                    Box(modifier = Modifier.matchParentSize()) {
+                        VerticalScrollbar(
+                            adapter = rememberScrollbarAdapter(dialogListState),
+                            modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight().width(6.dp),
+                            style = ScrollbarStyle(16.dp, 5.dp, RoundedCornerShape(3.dp), 150, accentColor.copy(alpha = 0.28f), accentColor.copy(alpha = 0.72f))
+                        )
                     }
                 }
 

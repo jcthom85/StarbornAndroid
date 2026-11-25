@@ -4,6 +4,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
@@ -66,7 +67,9 @@ internal fun DesktopRuntimeJournalContent(services: DesktopAppServices) {
         if (category == "Active" || category == "Completed") {
             OutlinedTextField(query, { query = it }, Modifier.fillMaxWidth(), label = { Text("Search quests") }, singleLine = true)
             Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-                LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                val questListState = rememberLazyListState()
+                Box(Modifier.weight(1f).fillMaxHeight()) {
+                LazyColumn(state = questListState, modifier = Modifier.fillMaxSize().padding(end = 10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     if (quests.isEmpty()) item { Text("No quests match this view.") }
                     val groups = if (category == "Completed") quests.groupBy {
                         com.example.starborn.feature.exploration.presentation.QuestJournalGrouping.group(it.id)
@@ -81,7 +84,7 @@ internal fun DesktopRuntimeJournalContent(services: DesktopAppServices) {
                         }
                         if (open) {
                             items(groupQuests, key = { it.id }) { quest ->
-                                Surface(Modifier.fillMaxWidth().clickable { selectedId = quest.id }, shape = RoundedCornerShape(6.dp),
+                                Surface(Modifier.fillMaxWidth().desktopPointerHover().clickable { selectedId = quest.id }, shape = RoundedCornerShape(6.dp),
                                     color = if (selected?.id == quest.id) Color(0xFF173443) else Color(0xFF101D28),
                                     border = BorderStroke(1.dp, if (selected?.id == quest.id) Color(0xFF63E6FF) else Color(0xFF354454))) {
                                     Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -93,6 +96,12 @@ internal fun DesktopRuntimeJournalContent(services: DesktopAppServices) {
                             }
                         }
                     }
+                }
+                VerticalScrollbar(
+                    adapter = rememberScrollbarAdapter(questListState),
+                    modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight().width(6.dp),
+                    style = ScrollbarStyle(16.dp, 5.dp, RoundedCornerShape(3.dp), 150, FieldMenuDesign.cyan.copy(alpha = 0.28f), FieldMenuDesign.cyan.copy(alpha = 0.72f))
+                )
                 }
 
                 selected?.let { quest ->

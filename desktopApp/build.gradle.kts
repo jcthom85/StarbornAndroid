@@ -73,6 +73,9 @@ compose.desktop {
     application {
         javaHome = providers.gradleProperty("starborn.packagingJavaHome").orNull ?: System.getenv("JAVA_HOME")
         jvmArgs += listOf("-Dstarborn.packagedAssets=true")
+        if (System.getProperty("os.name").orEmpty().lowercase().contains("mac")) {
+            jvmArgs += listOf("-Xdock:name=Starborn")
+        }
         if (providers.gradleProperty("starborn.novaPrototype").orNull == "true" || providers.gradleProperty("starborn.crewPrototype").orNull == "true") {
             jvmArgs += listOf("-Dstarborn.novaPrototype=true", "-Dstarborn.debug=true")
         }
@@ -81,6 +84,7 @@ compose.desktop {
         nativeDistributions {
             includeAllModules = true
             targetFormats(
+                org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg,
                 org.jetbrains.compose.desktop.application.dsl.TargetFormat.Msi,
                 org.jetbrains.compose.desktop.application.dsl.TargetFormat.Exe
             )
@@ -88,6 +92,11 @@ compose.desktop {
             packageVersion = providers.gradleProperty("starborn.versionName").get()
             description = "Starborn - Sci-Fi Turn-Based RPG"
             vendor = "June Wire Games"
+            macOS {
+                bundleID = "com.junewiregames.starborn.desktop"
+                dockName = "Starborn"
+                iconFile.set(project.file("src/main/resources/icon.icns"))
+            }
             windows {
                 menuGroup = "Starborn"
                 upgradeUuid = "a4c28bb0-7988-466d-8b01-f1190db981b2"

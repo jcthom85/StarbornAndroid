@@ -2,30 +2,44 @@ package com.example.starborn.desktop.ui
 
 import com.example.starborn.domain.environment.EnvironmentalGeometry
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollbarStyle
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.PointerButton
@@ -123,6 +137,25 @@ private fun DesktopCombatContent(
     val cues = remember(runtime) { mutableStateListOf<DesktopCombatCue>() }
     var cueToken by remember(runtime) { mutableLongStateOf(0) }
     val history = remember(runtime) { mutableStateListOf<String>() }
+    val probedElementsByEnemyType = remember(runtime) { mutableStateMapOf<String, Set<String>>() }
+    val playerIdSet = remember(runtime.playerParty) { runtime.playerParty.map { it.id.lowercase() }.toSet() }
+    val stageShakeX = remember { Animatable(0f) }
+    val stageShakeY = remember { Animatable(0f) }
+    fun triggerStageShake(heavy: Boolean) {
+        if (settings.disableScreenshake) return
+        val amp = if (heavy) 8.5f else 4.8f
+        scope.launch {
+            stageShakeX.snapTo(amp)
+            stageShakeX.animateTo(-amp * 0.55f, tween(45, easing = LinearEasing))
+            stageShakeX.animateTo(amp * 0.28f, tween(45, easing = LinearEasing))
+            stageShakeX.animateTo(0f, tween(55, easing = FastOutSlowInEasing))
+        }
+        scope.launch {
+            stageShakeY.snapTo(-amp * 0.42f)
+            stageShakeY.animateTo(amp * 0.22f, tween(55, easing = LinearEasing))
+            stageShakeY.animateTo(0f, tween(75, easing = FastOutSlowInEasing))
+        }
+    }
     fun name(id: String) = runtime.state.value?.combatants?.get(id)?.combatant?.name ?: services.contentName(id)
     fun record(message: String) { history.add(message); if (history.size > 60) history.removeAt(0) }
     fun showCue(
@@ -135,9 +168,13 @@ private fun DesktopCombatContent(
         amount: Int? = null,
         critical: Boolean = false,
         isWeakness: Boolean = false,
+        isVantage: Boolean = false,
         isBrokenBonus: Boolean = false,
         isGuardBreak: Boolean = false,
-        element: String? = null
+        element: String? = null,
+        sourceId: String? = null,
+        statusId: String? = null,
+        heroFxStyle: DesktopAttackFxStyle? = null
     ) {
         val cue = DesktopCombatCue(
             token = ++cueToken,
@@ -150,9 +187,13 @@ private fun DesktopCombatContent(
             amount = amount,
             critical = critical,
             isWeakness = isWeakness,
+            isVantage = isVantage,
             isBrokenBonus = isBrokenBonus,
             isGuardBreak = isGuardBreak,
-            element = element
+            element = element,
+            sourceId = sourceId,
+            statusId = statusId,
+            heroFxStyle = heroFxStyle
         )
         cues.add(cue)
         scope.launch { delay(if (cue.isGuardBreak) 1900L else 1500L); cues.remove(cue) }
@@ -174,8 +215,16 @@ private fun DesktopCombatContent(
                     record("${name(effect.actorId)} prepares $label")
                 }
                 is CombatFxEvent.Impact -> {
-                    val targetProfile = runtime.state.value?.combatants?.get(effect.targetId)?.combatant?.resistances
+                    val targetState = runtime.state.value?.combatants?.get(effect.targetId)
+                    val targetProfile = targetState?.combatant?.resistances
                     val hitElement = effect.element
+                    if (hitElement != null && targetState?.combatant?.side == CombatSide.ENEMY) {
+                        val enemyType = runtime.enemyTypeId(effect.targetId)
+                        if (enemyType != null) {
+                            val normalizedEl = hitElement.trim().lowercase()
+                            probedElementsByEnemyType[enemyType] = probedElementsByEnemyType[enemyType].orEmpty() + normalizedEl
+                        }
+                    }
                     val isVantageHit = !effect.isWeakness && hitElement != null && targetProfile != null &&
                         ElementalAffinityRules.tierForValue(resistanceValueForElement(targetProfile, hitElement)) == AffinityTier.VANTAGE
                     val tags = listOfNotNull(
@@ -194,6 +243,12 @@ private fun DesktopCombatContent(
                         "glove", "sword" -> AttackLungeStyle.MELEE
                         else -> runtime.lungeStyle.value
                     }
+                    val heroFxStyle = if (effect.showAttackFx) {
+                        resolveDesktopAttackFxStyle(effect.sourceId, runtime.state.value, playerIdSet)
+                    } else null
+                    if (effect.critical || effect.isGuardBreak) {
+                        triggerStageShake(effect.isGuardBreak)
+                    }
                     showCue(
                         target = effect.targetId,
                         label = label,
@@ -204,9 +259,12 @@ private fun DesktopCombatContent(
                         amount = effect.amount,
                         critical = effect.critical,
                         isWeakness = effect.isWeakness,
+                        isVantage = isVantageHit,
                         isBrokenBonus = effect.isBrokenBonus,
                         isGuardBreak = effect.isGuardBreak,
-                        element = effect.element
+                        element = effect.element,
+                        sourceId = effect.sourceId,
+                        heroFxStyle = heroFxStyle
                     )
                     intents.remove(effect.sourceId)
                     record("${name(effect.targetId)}: $label")
@@ -225,7 +283,7 @@ private fun DesktopCombatContent(
                 }
                 is CombatFxEvent.StatusApplied -> {
                     val label = effect.displayLabel ?: services.contentName(effect.statusId)
-                    showCue(effect.targetId, label, Color(0xFFD3A1FF), AttackLungeStyle.CAST, kind = DesktopCueKind.STATUS)
+                    showCue(effect.targetId, label, Color(0xFFD3A1FF), AttackLungeStyle.CAST, kind = DesktopCueKind.STATUS, statusId = effect.statusId)
                     record("${name(effect.targetId)}: $label")
                 }
                 is CombatFxEvent.SupportCue -> {
@@ -234,6 +292,7 @@ private fun DesktopCombatContent(
                     record("${name(effect.actorId)}: ${effect.skillName}")
                 }
                 is CombatFxEvent.ShieldBreak -> {
+                    triggerStageShake(true)
                     showCue(effect.targetId, "STABILITY BREAK!", Color(0xFF00E5FF), AttackLungeStyle.CAST, true, DesktopCueKind.BREAK)
                     record("${name(effect.targetId)}: stability broken")
                 }
@@ -478,72 +537,216 @@ private fun DesktopCombatContent(
                         runtime::onCombatTutorialContinue, runtime::skipCombatTutorial)
                 }
                 val focused = enemies.firstOrNull { it.combatant.id == inspectedEnemyId }
-                focused?.let { target -> DesktopMenuCard(Modifier.fillMaxWidth()) {
-                    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                            Text(target.combatant.name, style = MaterialTheme.typography.titleMedium)
-                            if (target.combatant.id == hoveredEnemyId || target.combatant.id == selectedTarget) {
-                                Surface(shape = RoundedCornerShape(4.dp), color = Color(0xFF63E6FF).copy(alpha = 0.15f), border = BorderStroke(1.dp, Color(0xFF63E6FF).copy(alpha = 0.6f))) {
-                                    Text(if (target.combatant.id == selectedTarget) "TARGET LOCK" else "INSPECTED", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = Color(0xFF63E6FF), style = MaterialTheme.typography.labelSmall)
+                focused?.let { target ->
+                    val enemyTypeId = runtime.enemyTypeId(target.combatant.id)
+                    val enemyDef = runtime.enemies.firstOrNull { it.id == enemyTypeId }
+                    val tierNorm = enemyDef?.tier?.lowercase().orEmpty()
+                    val (tierLabel, tierColor) = when (tierNorm) {
+                        "boss" -> "BOSS THREAT" to Color(0xFFFF8A80)
+                        "elite", "miniboss" -> "ELITE HOSTILE" to Color(0xFFFFD54F)
+                        else -> "HOSTILE" to Color(0xFF63E6FF)
+                    }
+                    val thumbPath = enemyDef?.portrait?.takeIf { it.isNotBlank() }
+                        ?: enemyDef?.sprite?.firstOrNull()?.takeIf { it.isNotBlank() }
+                        ?: "images/enemies/${enemyTypeId}_combat.png"
+                    val maxHp = target.combatant.stats.maxHp.coerceAtLeast(1)
+                    val maxStability = target.combatant.stats.stability.coerceAtLeast(1)
+                    val isBroken = target.isAlive && target.breakTurns > 0
+                    DesktopMenuCard(Modifier.fillMaxWidth().testTag("combat-enemy-inspection")) {
+                        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(9.dp)) {
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Surface(
+                                    modifier = Modifier.size(44.dp),
+                                    shape = RoundedCornerShape(10.dp),
+                                    color = Color(0xFF101924),
+                                    border = BorderStroke(1.dp, tierColor.copy(alpha = 0.55f))
+                                ) {
+                                    Image(
+                                        painter = rememberDesktopAssetPainter(thumbPath, services.assetProvider),
+                                        contentDescription = null,
+                                        modifier = Modifier.fillMaxSize().padding(4.dp),
+                                        contentScale = ContentScale.Fit
+                                    )
+                                }
+                                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                                    Text(
+                                        tierLabel,
+                                        color = tierColor,
+                                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, letterSpacing = 0.7.sp),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    Text(
+                                        target.combatant.name,
+                                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                        color = Color.White,
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+                                if (target.combatant.id == hoveredEnemyId || target.combatant.id == selectedTarget) {
+                                    Surface(
+                                        shape = RoundedCornerShape(4.dp),
+                                        color = Color(0xFF63E6FF).copy(alpha = 0.15f),
+                                        border = BorderStroke(1.dp, Color(0xFF63E6FF).copy(alpha = 0.6f))
+                                    ) {
+                                        Text(
+                                            if (target.combatant.id == selectedTarget) "TARGET LOCK" else "INSPECTED",
+                                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                            color = Color(0xFF63E6FF),
+                                            style = MaterialTheme.typography.labelSmall
+                                        )
+                                    }
                                 }
                             }
-                        }
-                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                            Text("HP ${target.hp}/${target.combatant.stats.maxHp}", color = Color.White.copy(alpha = 0.85f), fontSize = 12.sp)
-                            Text("Stability ${target.stability}/${target.combatant.stats.stability}", color = Color(0xFF9F79D2), fontSize = 12.sp)
-                        }
-                        intents[target.combatant.id]?.let { Text(it, color = Color(0xFFFFBB55), fontSize = 12.sp) }
-                        val discovered = weaknessKnowledge.knownEnemyWeaknesses[runtime.enemyTypeId(target.combatant.id)].orEmpty().sorted()
-                        val (vantageElements, weakElements) = discovered.partition { element ->
-                            ElementalAffinityRules.tierForValue(
-                                resistanceValueForElement(target.combatant.resistances, element)
-                            ) == AffinityTier.VANTAGE
-                        }
-                        Column(verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.testTag("combat-affinity-radar")) {
-                            if (discovered.isEmpty()) {
-                                Text("Weaknesses", color = Color(0xFF63E6FF), fontSize = 10.sp)
-                                Text("Not discovered", color = Color(0xFF91A8B3), fontSize = 12.sp)
-                            } else {
-                                if (weakElements.isNotEmpty()) {
-                                    Text("Weaknesses (2× Stability · -1 CD)", color = Color(0xFF63E6FF), fontSize = 10.sp)
-                                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                        weakElements.forEach { element ->
-                                            Surface(shape = RoundedCornerShape(4.dp), color = combatElementColor(element).copy(alpha = .16f)) {
-                                                Text(com.example.starborn.feature.combat.presentation.weaknessLabel(element),
-                                                    Modifier.padding(horizontal = 6.dp, vertical = 3.dp), color = combatElementColor(element), fontSize = 12.sp)
+                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                                    Text("HP ${target.hp}/$maxHp", color = Color.White.copy(alpha = 0.88f), fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                                    LinearProgressIndicator(
+                                        progress = { (target.hp.toFloat() / maxHp).coerceIn(0f, 1f) },
+                                        modifier = Modifier.fillMaxWidth().height(5.dp).clip(RoundedCornerShape(999.dp)),
+                                        color = Color(0xFFFF5252),
+                                        trackColor = Color(0xCC070B12)
+                                    )
+                                }
+                                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                                    Text("Stability ${target.stability}/$maxStability", color = Color(0xFFB39DDB), fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                                    LinearProgressIndicator(
+                                        progress = { (if (isBroken) 0f else target.stability.toFloat() / maxStability).coerceIn(0f, 1f) },
+                                        modifier = Modifier.fillMaxWidth().height(5.dp).clip(RoundedCornerShape(999.dp)),
+                                        color = if (isBroken) Color(0xFFE57373) else Color(0xFF7E57C2),
+                                        trackColor = Color(0xCC070B12)
+                                    )
+                                }
+                            }
+                            if (isBroken) {
+                                Surface(
+                                    shape = RoundedCornerShape(6.dp),
+                                    color = Color(0xFFE57373).copy(alpha = 0.16f),
+                                    border = BorderStroke(1.dp, Color(0xFFFF8A80).copy(alpha = 0.65f)),
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(
+                                        "STABILITY BROKEN · ${target.breakTurns} ${if (target.breakTurns == 1) "turn" else "turns"} remaining (+25% damage)",
+                                        color = Color(0xFFFFAB91),
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                    )
+                                }
+                            }
+                            intents[target.combatant.id]?.let { Text(it, color = Color(0xFFFFBB55), fontSize = 12.sp, fontWeight = FontWeight.Medium) }
+                            val discovered = (weaknessKnowledge.knownEnemyWeaknesses[enemyTypeId].orEmpty() +
+                                probedElementsByEnemyType[enemyTypeId].orEmpty()).sorted()
+                            val weakElements = discovered.filter {
+                                ElementalAffinityRules.tierForValue(resistanceValueForElement(target.combatant.resistances, it)) == AffinityTier.WEAKNESS
+                            }
+                            val vantageElements = discovered.filter {
+                                ElementalAffinityRules.tierForValue(resistanceValueForElement(target.combatant.resistances, it)) == AffinityTier.VANTAGE
+                            }
+                            val resistElements = discovered.filter {
+                                ElementalAffinityRules.tierForValue(resistanceValueForElement(target.combatant.resistances, it)) == AffinityTier.RESIST
+                            }
+                            val immuneElements = discovered.filter {
+                                ElementalAffinityRules.tierForValue(resistanceValueForElement(target.combatant.resistances, it)) == AffinityTier.IMMUNE
+                            }
+                            Column(verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.testTag("combat-affinity-radar")) {
+                                if (weakElements.isEmpty() && vantageElements.isEmpty() && resistElements.isEmpty() && immuneElements.isEmpty()) {
+                                    Text("Weaknesses", color = Color(0xFF63E6FF), fontSize = 10.sp)
+                                    Text("Not discovered", color = Color(0xFF91A8B3), fontSize = 12.sp)
+                                } else {
+                                    if (weakElements.isNotEmpty()) {
+                                        Text("Weaknesses (2× Stability · -1 CD)", color = Color(0xFF63E6FF), fontSize = 10.sp)
+                                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                            weakElements.forEach { element ->
+                                                Surface(shape = RoundedCornerShape(4.dp), color = combatElementColor(element).copy(alpha = .16f)) {
+                                                    Text(com.example.starborn.feature.combat.presentation.weaknessLabel(element),
+                                                        Modifier.padding(horizontal = 6.dp, vertical = 3.dp), color = combatElementColor(element), fontSize = 12.sp)
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (vantageElements.isNotEmpty()) {
+                                        Text("Vantage (1.5× Stability · -1 CD)", color = Color(0xFFFFC857), fontSize = 10.sp)
+                                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                            vantageElements.forEach { element ->
+                                                Surface(
+                                                    shape = RoundedCornerShape(4.dp),
+                                                    color = combatElementColor(element).copy(alpha = .16f),
+                                                    border = BorderStroke(1.dp, Color(0xFFFFC857).copy(alpha = 0.55f))
+                                                ) {
+                                                    Text(
+                                                        com.example.starborn.feature.combat.presentation.weaknessLabel(element),
+                                                        Modifier.padding(horizontal = 6.dp, vertical = 3.dp),
+                                                        color = combatElementColor(element),
+                                                        fontSize = 12.sp
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (resistElements.isNotEmpty()) {
+                                        Text("Resists (Reduced Damage)", color = Color(0xFF90A4AE), fontSize = 10.sp)
+                                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                            resistElements.forEach { element ->
+                                                Surface(
+                                                    shape = RoundedCornerShape(4.dp),
+                                                    color = Color(0xFF90A4AE).copy(alpha = 0.14f),
+                                                    border = BorderStroke(1.dp, Color(0xFF90A4AE).copy(alpha = 0.4f))
+                                                ) {
+                                                    Text(
+                                                        com.example.starborn.feature.combat.presentation.weaknessLabel(element),
+                                                        Modifier.padding(horizontal = 6.dp, vertical = 3.dp),
+                                                        color = Color(0xFFCFD8DC),
+                                                        fontSize = 12.sp
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (immuneElements.isNotEmpty()) {
+                                        Text("Immunities (No Effect)", color = Color(0xFFEF9A9A), fontSize = 10.sp)
+                                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                            immuneElements.forEach { element ->
+                                                Surface(
+                                                    shape = RoundedCornerShape(4.dp),
+                                                    color = Color(0xFFEF9A9A).copy(alpha = 0.14f),
+                                                    border = BorderStroke(1.dp, Color(0xFFEF9A9A).copy(alpha = 0.45f))
+                                                ) {
+                                                    Text(
+                                                        com.example.starborn.feature.combat.presentation.weaknessLabel(element),
+                                                        Modifier.padding(horizontal = 6.dp, vertical = 3.dp),
+                                                        color = Color(0xFFFFCDD2),
+                                                        fontSize = 12.sp
+                                                    )
+                                                }
                                             }
                                         }
                                     }
                                 }
-                                if (vantageElements.isNotEmpty()) {
-                                    Text("Vantage (1.5× Stability · -1 CD)", color = Color(0xFFFFC857), fontSize = 10.sp)
-                                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                        vantageElements.forEach { element ->
-                                            Surface(
-                                                shape = RoundedCornerShape(4.dp),
-                                                color = combatElementColor(element).copy(alpha = .16f),
-                                                border = BorderStroke(1.dp, Color(0xFFFFC857).copy(alpha = 0.55f))
-                                            ) {
-                                                Text(
-                                                    com.example.starborn.feature.combat.presentation.weaknessLabel(element),
-                                                    Modifier.padding(horizontal = 6.dp, vertical = 3.dp),
-                                                    color = combatElementColor(element),
-                                                    fontSize = 12.sp
-                                                )
-                                            }
-                                        }
-                                    }
+                            }
+                            if (target.statusEffects.isNotEmpty() || target.buffs.isNotEmpty()) {
+                                FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                    target.statusEffects.forEach { DesktopCombatStatusChip(it, services) }
+                                    target.buffs.forEach { DesktopCombatBuffChip(it, services) }
                                 }
                             }
-                        }
-                        if (target.statusEffects.isNotEmpty() || target.buffs.isNotEmpty()) {
-                            FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                target.statusEffects.forEach { DesktopCombatStatusChip(it, services) }
-                                target.buffs.forEach { DesktopCombatBuffChip(it, services) }
+                            enemyDef?.flavor?.takeIf { it.isNotBlank() }?.let { flavor ->
+                                Text(
+                                    flavor,
+                                    color = Color(0xFF9EB4C4),
+                                    style = MaterialTheme.typography.bodySmall.copy(fontStyle = FontStyle.Italic, lineHeight = 16.sp),
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis
+                                )
                             }
                         }
                     }
-                } }
+                }
                 val victoryEmotesActive = battle.outcome is CombatOutcome.Victory && runtime.encounterEnemyIds != listOf("ascended_vale")
                 DesktopCombatPartyRoster(
                     party = party,
@@ -601,7 +804,9 @@ private fun DesktopCombatContent(
                             Text(if (menu == "skills") "Abilities" else "Items", Modifier.weight(1f), style = MaterialTheme.typography.titleMedium)
                             TextButton(onClick = { menu = null; runtime.onCombatTutorialSkillDialogDismissed() }) { Text("Back") }
                         }
-                    LazyColumn(Modifier.fillMaxWidth().weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    val menuListState = rememberLazyListState()
+                    Box(Modifier.fillMaxWidth().weight(1f)) {
+                    LazyColumn(state = menuListState, modifier = Modifier.fillMaxSize().padding(end = 10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         if (menu == "skills") {
                             item { Text("Cooldowns count this character's turns.", style = MaterialTheme.typography.bodySmall) }
                             if (runtime.activePlayerSkills().isEmpty()) item { Text("No abilities available") }
@@ -735,6 +940,12 @@ private fun DesktopCombatContent(
                             }
                         }
                     }
+                    VerticalScrollbar(
+                        adapter = rememberScrollbarAdapter(menuListState),
+                        modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight().width(6.dp),
+                        style = ScrollbarStyle(16.dp, 5.dp, RoundedCornerShape(3.dp), 150, Color(0xFF63E6FF).copy(alpha = 0.28f), Color(0xFF63E6FF).copy(alpha = 0.72f))
+                    )
+                    }
                     } else if (actor != null) {
                         Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     DesktopRichTooltip(
@@ -776,11 +987,6 @@ private fun DesktopCombatContent(
                             )
                         }
                     ) {
-                        DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().testTag("combat-action-guard").heightIn(min = 44.dp),
-                            onClick = { runtime.guard() }, icon = Icons.Rounded.Shield,
-                            enabled = actor != null && targetAction == null && timedPrompt == null && tutorial == null) {
-                            Text("Guard", fontWeight = FontWeight.SemiBold)
-                        }
                         DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().testTag("combat-action-skills").heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::openSkills, icon = Icons.Rounded.AutoAwesome,
                             enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("skills")) {
                             Row(
@@ -797,6 +1003,40 @@ private fun DesktopCombatContent(
                                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
                                 ) {
                                     Text("[2]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                }
+                            }
+                        }
+                    }
+                    DesktopRichTooltip(
+                        tooltip = {
+                            DesktopCombatActionTooltipContent(
+                                title = "Guard",
+                                shortcut = "[G]",
+                                description = "Brace against incoming strikes to reduce damage taken and fortify stability until your next turn.",
+                                details = "Consumes turn  |  Self defense"
+                            )
+                        }
+                    ) {
+                        DesktopCombatActionButton(
+                            modifier = Modifier.fillMaxWidth().testTag("combat-action-guard").heightIn(min = if (settings.largeTouchTargets) 52.dp else 44.dp),
+                            onClick = { runtime.guard() },
+                            icon = Icons.Rounded.Shield,
+                            enabled = actor != null && targetAction == null && timedPrompt == null && tutorial == null
+                        ) {
+                            Row(
+                                Modifier.fillMaxWidth().clearAndSetSemantics {
+                                    set(SemanticsProperties.Text, listOf(AnnotatedString("Guard"), AnnotatedString("Guard [G]")))
+                                },
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text("Guard", fontWeight = FontWeight.SemiBold)
+                                Surface(
+                                    shape = RoundedCornerShape(4.dp),
+                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
+                                ) {
+                                    Text("[G]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                                 }
                             }
                         }
@@ -936,8 +1176,15 @@ private fun DesktopCombatContent(
                 DesktopVignetteOverlay(.3f, Modifier.fillMaxSize(), Color(0xFF030508))
             }
             Box(Modifier.offset(x = with(density) { layout.center.left.toDp() }).width(with(density) { layout.center.width.toDp() }).fillMaxHeight()) {
-
                 DesktopVignetteOverlay(.38f, Modifier.fillMaxSize(), Color(0xFF030508))
+                DesktopBattleStageBackdrop(
+                    accentColor = commandAccent,
+                    borderColor = Color(0xFF5CCBE8),
+                    panelColor = Color(0xFF061018),
+                    highContrastMode = settings.highContrastMode,
+                    animate = !settings.disableFlashes && !settings.disableScreenshake,
+                    modifier = Modifier.fillMaxSize()
+                )
             }
             val environmentSession by services.sessionStore.state.collectAsState()
             val environmentRoom=services.roomDefinitions[runtime.encounterRoomId]
@@ -948,6 +1195,10 @@ private fun DesktopCombatContent(
                 environmentState,environmentSession.completedMilestones,settings,combat=true,
                 paused=!foreground || showLog || showPauseSettings || battle.outcome!=null,suppressAccents=timedPrompt!=null || tutorial?.showsModal==true)
             Column(Modifier.offset(x = centerX).width(centerWidth).fillMaxHeight()
+                .graphicsLayer {
+                    translationX = stageShakeX.value
+                    translationY = stageShakeY.value
+                }
                 .background(Color(if (settings.highContrastMode) 0x9505070D else 0x2505070D)).padding(start = 12.dp, end = 12.dp, bottom = 44.dp, top = if (wide) 12.dp else 64.dp)) {
 DesktopBattleFormation(enemies, services, Modifier.fillMaxWidth().weight(if (wide) .58f else .64f), true,
                     sprite = { id -> runtime.enemies.firstOrNull { it.id == runtime.enemyTypeId(id) }?.let { enemy ->

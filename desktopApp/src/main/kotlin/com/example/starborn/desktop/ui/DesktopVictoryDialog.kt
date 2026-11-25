@@ -170,6 +170,7 @@ internal fun DesktopVictoryDialog(
                     Box(Modifier.weight(1f, fill = false).fillMaxWidth()) {
                     when (stage) {
                         DesktopVictoryStage.SPOILS -> DesktopVictorySpoilsContent(
+                            services = services,
                             payload = payload,
                             itemNameResolver = itemNameResolver,
                             cardColor = cardColor,
@@ -212,6 +213,7 @@ internal fun DesktopVictoryDialog(
 
 @Composable
 internal fun DesktopVictorySpoilsContent(
+    services: DesktopAppServices,
     payload: CombatResultPayload,
     itemNameResolver: (String) -> String,
     cardColor: Color,
@@ -248,9 +250,75 @@ internal fun DesktopVictorySpoilsContent(
         if (itemEntries.isNotEmpty()) {
             item { Text("Loot", style = MaterialTheme.typography.titleMedium, color = Color.White) }
             items(itemEntries, key = { it.key }) { entry ->
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text(itemNameResolver(entry.key), Modifier.weight(1f), color = Color.White)
-                    Text("\u00d7${entry.value}", color = Color.White, fontWeight = FontWeight.Bold)
+                val itemObj = remember(entry.key, services) { services.itemRepository.findItem(entry.key) }
+                val rarityNorm = itemObj?.rarity?.lowercase().orEmpty()
+                val rarityAccent = when (rarityNorm) {
+                    "legendary" -> Color(0xFFFFC857)
+                    "epic" -> Color(0xFFCE93D8)
+                    "rare" -> Color(0xFF63E6FF)
+                    "uncommon" -> Color(0xFF80E7A0)
+                    else -> accentColor.copy(alpha = 0.45f)
+                }
+                val displayName = itemNameResolver(entry.key)
+                DesktopRichTooltip(
+                    tooltip = {
+                        DesktopItemTooltipContent(
+                            item = itemObj,
+                            fallbackName = displayName,
+                            quantity = entry.value,
+                            services = services
+                        )
+                    },
+                    accent = rarityAccent,
+                    maxWidth = 320.dp
+                ) {
+                    Surface(
+                        color = cardColor.copy(alpha = 0.58f),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(1.dp, rarityAccent.copy(alpha = if (rarityNorm == "legendary") 0.85f else 0.42f)),
+                        modifier = Modifier.fillMaxWidth().testTag("victory-loot-${entry.key}").desktopPointerHover()
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            DesktopMenuItemArt(
+                                services = services,
+                                item = itemObj,
+                                modifier = Modifier.size(36.dp).testTag("victory-loot-icon-${entry.key}")
+                            )
+                            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                                Text(
+                                    displayName,
+                                    color = if (rarityNorm == "legendary") Color(0xFFFFE082) else Color.White,
+                                    fontWeight = if (rarityNorm in setOf("legendary", "epic", "rare")) FontWeight.SemiBold else FontWeight.Normal,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                if (rarityNorm.isNotBlank() && rarityNorm != "common") {
+                                    Text(
+                                        rarityNorm.uppercase(),
+                                        color = rarityAccent,
+                                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
+                                    )
+                                }
+                            }
+                            Surface(
+                                color = rarityAccent.copy(alpha = 0.14f),
+                                shape = RoundedCornerShape(6.dp),
+                                border = BorderStroke(1.dp, rarityAccent.copy(alpha = 0.45f))
+                            ) {
+                                Text(
+                                    "\u00d7${entry.value}",
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    style = MaterialTheme.typography.labelMedium,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }

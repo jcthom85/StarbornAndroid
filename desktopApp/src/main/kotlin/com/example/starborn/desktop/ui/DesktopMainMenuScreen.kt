@@ -4,6 +4,7 @@ import com.example.starborn.domain.session.SessionSaveRepository
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,7 +13,6 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -31,19 +31,27 @@ import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.starborn.data.local.UserSettings
 import com.example.starborn.desktop.DesktopAppServices
 import com.example.starborn.desktop.DesktopBuildInfo
-import androidx.compose.ui.platform.testTag
 import com.example.starborn.domain.audio.AudioCueType
+import com.example.starborn.domain.cinematic.CinematicPlaybackState
+import com.example.starborn.domain.cinematic.CinematicPresentation
+import com.example.starborn.domain.cinematic.CinematicScene
+import com.example.starborn.feature.exploration.viewmodel.CinematicUiState
+import com.example.starborn.feature.exploration.viewmodel.helpers.CinematicPlaybackManager
 import com.example.starborn.feature.mainmenu.DebugScenario
 import com.example.starborn.feature.mainmenu.DebugScenarioCatalog
 import com.example.starborn.feature.mainmenu.DebugScenarioCategory
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Locale
 
 private val TitleGold = Color(0xFFFFC857)
 private val TitleAmber = Color(0xFFFF9F2E)
@@ -51,6 +59,92 @@ private val TitleCyan = Color(0xFF63E6FF)
 private val TitlePanel = Color(0xFF061018)
 private val TitleText = Color(0xFFF7FBFF)
 private val TitleMutedText = Color(0xFFD7EAF4)
+
+internal data class DesktopScreeningEntry(
+    val worldLabel: String,
+    val scene: CinematicScene,
+    val durationSeconds: Double,
+    val imageCount: Int
+)
+
+internal fun buildDesktopScreeningCatalog(services: DesktopAppServices): List<DesktopScreeningEntry> {
+    val allIllustrated = services.cinematicService.allScenes()
+        .filter { it.presentation == CinematicPresentation.ILLUSTRATED }
+        .associateBy { it.id }
+    val curatedOrder: List<Pair<String, List<String>>> = listOf(
+        "World 1 — Mining Colony" to listOf(
+            "intro_prologue",
+            "scene_cutter_surge",
+            "scene_relic_sync",
+            "scene_w1_lift_separation",
+            "scene_launch_crash"
+        ),
+        "World 2 — The Wilds" to listOf(
+            "scene_w2_orion_awakening",
+            "scene_anchor_drill",
+            "scene_w2_astra_departure"
+        ),
+        "World 3 — The Spire" to listOf(
+            "scene_w3_lens_heist",
+            "scene_w3_foundry_flight"
+        ),
+        "World 4 — The Foundry" to listOf(
+            "scene_w4_anvil_forged",
+            "scene_w4_rylos_spared",
+            "scene_w4_outer_shield"
+        ),
+        "World 5 — The Orbital Ring" to listOf(
+            "scene_w5_anchor_stasis",
+            "scene_w5_soloist_breach",
+            "scene_w5_cross_the_tear"
+        ),
+        "World 6 — The Source" to listOf(
+            "scene_w6_song_fire_reunion",
+            "scene_w6_jed_echo_lesson",
+            "scene_w6_silence_rises",
+            "scene_w6_final_note",
+            "scene_w6_epilogue_credits"
+        )
+    )
+    fun CinematicScene.toEntry(worldLabel: String): DesktopScreeningEntry = DesktopScreeningEntry(
+        worldLabel = worldLabel,
+        scene = this,
+        durationSeconds = steps.sumOf { it.durationSeconds ?: 4.0 },
+        imageCount = steps.mapNotNull { it.imagePath }.distinct().size
+    )
+    val entries = mutableListOf<DesktopScreeningEntry>()
+    val seen = mutableSetOf<String>()
+    for ((worldLabel, ids) in curatedOrder) {
+        for (id in ids) {
+            val scene = allIllustrated[id] ?: continue
+            seen += id
+            entries += scene.toEntry(worldLabel)
+        }
+    }
+    allIllustrated.values
+        .filter { it.id !in seen && it.id != "new_game_fade_in" }
+        .sortedBy { it.id }
+        .forEach { scene -> entries += scene.toEntry("Archive & Extras") }
+    return entries
+}
+
+internal fun buildDesktopScreeningUiState(scene: CinematicScene, stepIndex: Int): CinematicUiState {
+    val playback = CinematicPlaybackState(
+        scene = scene,
+        stepIndex = stepIndex.coerceIn(0, (scene.steps.size - 1).coerceAtLeast(0))
+    )
+    return CinematicPlaybackManager.toUiState(
+        playback = playback,
+        resolveEmotePortrait = { speaker, emote ->
+            val normalized = speaker.trim().lowercase(Locale.US)
+            val cleanEmote = emote?.trim()?.lowercase(Locale.US)?.takeIf { it.isNotBlank() }
+            if (cleanEmote != null) "images/characters/emotes/${normalized}_${cleanEmote}.png" else null
+        },
+        resolvePortraitKey = { speaker ->
+            "images/characters/${speaker.trim().lowercase(Locale.US)}_portrait.png"
+        }
+    )
+}
 
 @Composable
 fun DesktopMainMenuScreen(
@@ -61,6 +155,9 @@ fun DesktopMainMenuScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     var showDebugScenarios by remember { mutableStateOf(false) }
+    var showScreeningRoom by remember { mutableStateOf(false) }
+    var screeningQueue by remember { mutableStateOf<List<CinematicScene>>(emptyList()) }
+    var screeningStepIndex by remember { mutableIntStateOf(0) }
     var debugScenarioError by remember { mutableStateOf<String?>(null) }
     var showLoadGame by remember { mutableStateOf(false) }
     var showSettingsDialog by remember { mutableStateOf(false) }
@@ -71,9 +168,12 @@ fun DesktopMainMenuScreen(
     var latestSlot by remember(services) { mutableStateOf(latestSlotInfo?.slotIndex) }
     var newGamePlusUnlocked by remember(services) { mutableStateOf(services.completedGameForNewGamePlus() != null) }
     var loading by remember { mutableStateOf(false) }
+    var transitioningOut by remember { mutableStateOf(false) }
+    val fadeOutAlpha = remember { Animatable(0f) }
     val saveError by services.saveManager.lastError.collectAsState()
+
     LaunchedEffect(services) {
-        val meta = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+        val meta = withContext(Dispatchers.IO) {
             (SessionSaveRepository.ALL_SLOTS).mapNotNull { slot -> services.saveManager.getSlotMetadata(slot) }.maxByOrNull { it.timestamp }
         }
         latestSlotInfo = meta
@@ -81,21 +181,48 @@ fun DesktopMainMenuScreen(
         newGamePlusUnlocked = services.completedGameForNewGamePlus() != null
     }
 
-    val userSettings by services.userSettingsStore.settings.collectAsState(
-        initial = UserSettings()
-    )
+    val userSettings by services.userSettingsStore.settings.collectAsState(initial = UserSettings())
 
-    // Trigger Title Music on launch
     LaunchedEffect(services) {
         services.playTitleMusic()
     }
 
-    val startGameWithAudio: () -> Unit = {
-        services.audioDriver.executeAll(services.audioRouter.commandsForUi("ui_title_start"))
-        onStartGame()
+    fun transitionIntoGame(prepareAction: suspend () -> Boolean) {
+        if (loading || transitioningOut) return
+        coroutineScope.launch {
+            loading = true
+            transitioningOut = true
+            services.audioDriver.executeAll(services.audioRouter.commandsForUi("ui_title_start"))
+            services.audioDriver.executeAll(
+                services.audioRouter.commandsForLayerOverride(
+                    layer = AudioCueType.MUSIC,
+                    fadeMs = 520L,
+                    stop = true
+                )
+            )
+            val fadeMs = if (userSettings.disableFlashes) 0 else 480
+            if (fadeMs > 0) {
+                fadeOutAlpha.animateTo(1f, tween(durationMillis = fadeMs, easing = FastOutSlowInEasing))
+            } else {
+                fadeOutAlpha.snapTo(1f)
+            }
+            val ok = prepareAction()
+            loading = false
+            if (ok) {
+                onStartGame()
+            } else {
+                transitioningOut = false
+                fadeOutAlpha.animateTo(0f, tween(durationMillis = 220, easing = FastOutSlowInEasing))
+                services.playTitleMusic()
+            }
+        }
     }
+
     val titleFocusRequester = remember { FocusRequester() }
-    val anyModalOpen = showLoadGame || showSettingsDialog || showDebugScenarios || showNewGameConfirm || debugScenarioError != null
+    val activeScreeningScene = screeningQueue.firstOrNull()
+    val anyModalOpen = showLoadGame || showSettingsDialog || showDebugScenarios ||
+        showScreeningRoom || activeScreeningScene != null || showNewGameConfirm || debugScenarioError != null
+
     LaunchedEffect(anyModalOpen) {
         if (!anyModalOpen) {
             withFrameNanos { }
@@ -103,29 +230,34 @@ fun DesktopMainMenuScreen(
         }
     }
 
+    LaunchedEffect(activeScreeningScene?.id, screeningStepIndex) {
+        val scene = activeScreeningScene ?: return@LaunchedEffect
+        val cue = scene.steps.getOrNull(screeningStepIndex)?.musicCue?.takeIf { it.isNotBlank() } ?: return@LaunchedEffect
+        if (cue.equals("none", true) || cue.equals("stop", true) || cue.equals("silence", true)) {
+            services.audioDriver.executeAll(services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, stop = true, fadeMs = 450L))
+        } else {
+            services.audioDriver.executeAll(services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, cueId = cue))
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF05070D))
+            .background(Color(0xFF03050A))
             .focusRequester(titleFocusRequester)
             .onPreviewKeyEvent { keyEvent ->
-                if (!anyModalOpen && keyEvent.type == KeyEventType.KeyDown) {
+                if (!anyModalOpen && !transitioningOut && keyEvent.type == KeyEventType.KeyDown) {
                     when (keyEvent.key) {
                         Key.C, Key.Enter, Key.Spacebar -> {
                             if (latestSlot != null) {
-                                if (!loading) coroutineScope.launch {
-                                    loading = true
-                                    val loaded = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { services.loadSlot(latestSlot!!) }
-                                    loading = false
-                                    if (loaded) startGameWithAudio()
-                                }
+                                val slotToLoad = latestSlot!!
+                                transitionIntoGame { withContext(Dispatchers.IO) { services.loadSlot(slotToLoad) } }
                                 true
                             } else if (keyEvent.key != Key.C) {
                                 if (services.hasExistingSave()) {
                                     showNewGameConfirm = true
                                 } else {
-                                    services.startNewGame()
-                                    startGameWithAudio()
+                                    transitionIntoGame { services.startNewGame() }
                                 }
                                 true
                             } else false
@@ -134,8 +266,7 @@ fun DesktopMainMenuScreen(
                             if (services.hasExistingSave()) {
                                 showNewGameConfirm = true
                             } else {
-                                services.startNewGame()
-                                startGameWithAudio()
+                                transitionIntoGame { services.startNewGame() }
                             }
                             true
                         }
@@ -146,6 +277,12 @@ fun DesktopMainMenuScreen(
                         Key.D -> {
                             if (services.isDebugEnabled) {
                                 showDebugScenarios = true
+                                true
+                            } else false
+                        }
+                        Key.V -> {
+                            if (services.isDebugEnabled || newGamePlusUnlocked) {
+                                showScreeningRoom = true
                                 true
                             } else false
                         }
@@ -163,7 +300,6 @@ fun DesktopMainMenuScreen(
             }
             .focusable()
     ) {
-        // 1. Authentic Starborn Title Background Image with slow cinematic drift
         val bgTransition = rememberInfiniteTransition(label = "title_bg_motion")
         val bgScale by bgTransition.animateFloat(
             initialValue = 1.0f,
@@ -207,7 +343,12 @@ fun DesktopMainMenuScreen(
             contentScale = ContentScale.Crop
         )
 
-        // 2. Soft celestial bloom overlay
+        // Cosmic starfield & anamorphic lens shimmer layered subtly over the deep-space sky
+        DesktopTitleCosmicStarfield(
+            alpha = if (userSettings.disableFlashes) 0.28f else 0.52f,
+            animate = !userSettings.disableFlashes && !userSettings.disableScreenshake
+        )
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -224,7 +365,6 @@ fun DesktopMainMenuScreen(
                 )
         )
 
-        // 3. Vignette overlay
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -233,13 +373,12 @@ fun DesktopMainMenuScreen(
                         colorStops = arrayOf(
                             0f to Color.Black.copy(alpha = 0.45f),
                             0.5f to Color.Transparent,
-                            1f to Color.Black.copy(alpha = 0.65f)
+                            1f to Color.Black.copy(alpha = 0.68f)
                         )
                     )
                 )
         )
 
-        // 4. Main 16:9 Landscape Layout
         Row(
             modifier = Modifier
                 .fillMaxSize()
@@ -247,7 +386,6 @@ fun DesktopMainMenuScreen(
             horizontalArrangement = Arrangement.spacedBy(40.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Left hero: original logo with room to breathe.
             Column(
                 modifier = Modifier
                     .weight(1.35f)
@@ -256,11 +394,8 @@ fun DesktopMainMenuScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AuthenticTitleLogo(services)
-
-
             }
 
-            // Right Action Menu: Authentic Starborn Title Buttons
             Column(
                 modifier = Modifier
                     .weight(.85f)
@@ -270,20 +405,16 @@ fun DesktopMainMenuScreen(
             ) {
                 Column(
                     modifier = Modifier.fillMaxWidth(0.95f),
-                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     latestSlot?.let { slot ->
                         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             AuthenticTitleButton(
                                 text = if (loading) "Loading…" else "Continue",
                                 primary = true,
+                                enabled = !transitioningOut,
                                 onClick = {
-                                    if (!loading) coroutineScope.launch {
-                                        loading = true
-                                        val loaded = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { services.loadSlot(slot) }
-                                        loading = false
-                                        if (loaded) startGameWithAudio()
-                                    }
+                                    transitionIntoGame { withContext(Dispatchers.IO) { services.loadSlot(slot) } }
                                 }
                             )
                             latestSlotInfo?.let { info ->
@@ -321,19 +452,24 @@ fun DesktopMainMenuScreen(
                             }
                         }
                     }
-                    if (newGamePlusUnlocked) AuthenticTitleButton(text = "New Game+ · Master Protocol", primary = false, onClick = {
-                        if (services.startNewGamePlus()) startGameWithAudio()
-                    })
+                    if (newGamePlusUnlocked) {
+                        AuthenticTitleButton(
+                            text = "New Game+ · Master Protocol",
+                            primary = false,
+                            enabled = !transitioningOut,
+                            onClick = { transitionIntoGame { services.startNewGamePlus() } }
+                        )
+                    }
                     saveError?.let { Text(it, color = Color(0xFFFF8A80)) }
                     AuthenticTitleButton(
                         text = "New Game",
                         primary = latestSlot == null,
+                        enabled = !transitioningOut,
                         onClick = {
                             if (services.hasExistingSave()) {
                                 showNewGameConfirm = true
                             } else {
-                                services.startNewGame()
-                                startGameWithAudio()
+                                transitionIntoGame { services.startNewGame() }
                             }
                         }
                     )
@@ -341,6 +477,7 @@ fun DesktopMainMenuScreen(
                     AuthenticTitleButton(
                         text = "Load Game",
                         primary = false,
+                        enabled = !transitioningOut,
                         onClick = { showLoadGame = true }
                     )
 
@@ -348,86 +485,170 @@ fun DesktopMainMenuScreen(
                         AuthenticTitleButton(
                             text = "Debug Scenarios",
                             primary = false,
+                            enabled = !transitioningOut,
                             onClick = { showDebugScenarios = true }
+                        )
+                    }
+
+                    if (services.isDebugEnabled || newGamePlusUnlocked) {
+                        AuthenticTitleButton(
+                            text = "Screening Room",
+                            primary = false,
+                            enabled = !transitioningOut,
+                            onClick = { showScreeningRoom = true }
                         )
                     }
 
                     AuthenticTitleButton(
                         text = "Settings",
                         primary = false,
+                        enabled = !transitioningOut,
                         onClick = { showSettingsDialog = true }
                     )
 
                     AuthenticTitleButton(
                         text = "Exit to Desktop",
                         primary = false,
+                        enabled = !transitioningOut,
                         onClick = onQuit
                     )
                 }
             }
         }
 
-        // Dialogs
-        Text(DesktopBuildInfo.DISPLAY_LABEL,
+        Text(
+            DesktopBuildInfo.DISPLAY_LABEL,
             modifier = Modifier.align(Alignment.BottomStart).padding(16.dp).testTag("desktop-build-label"),
-            color = TitleMutedText, style = MaterialTheme.typography.labelSmall)
+            color = TitleMutedText,
+            style = MaterialTheme.typography.labelSmall
+        )
 
         if (showNewGameConfirm) {
-            AlertDialog(
-                onDismissRequest = { showNewGameConfirm = false },
-                title = {
-                    Text("Start New Game?", color = Color.White, fontWeight = FontWeight.Bold)
-                },
-                text = {
-                    Text(
-                        "Starting a new game will begin a fresh run and overwrite your current autosave.",
-                        color = Color.White.copy(alpha = 0.85f)
-                    )
-                },
-                confirmButton = {
+            DesktopConsoleModal(
+                eyebrow = "Campaign Deployment",
+                title = "Start New Game?",
+                onDismiss = { showNewGameConfirm = false },
+                accent = TitleGold,
+                maxWidth = 500.dp,
+                testTag = "title-new-game-confirm",
+                footer = {
+                    TextButton(
+                        onClick = { showNewGameConfirm = false },
+                        modifier = Modifier.desktopPointerHover()
+                    ) {
+                        Text("Cancel", color = TitleMutedText)
+                    }
                     Button(
                         onClick = {
                             showNewGameConfirm = false
-                            services.startNewGame()
-                            startGameWithAudio()
+                            transitionIntoGame { services.startNewGame() }
                         },
+                        modifier = Modifier.desktopPointerHover(),
                         colors = ButtonDefaults.buttonColors(containerColor = TitleGold, contentColor = Color(0xFF1B1608))
                     ) {
                         Text("Begin New Game", fontWeight = FontWeight.Bold)
                     }
-                },
-                dismissButton = {
-                    TextButton(onClick = { showNewGameConfirm = false }) {
-                        Text("Cancel", color = Color.White.copy(alpha = 0.7f))
-                    }
-                },
-                containerColor = Color(0xFF141C24),
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier.border(1.dp, TitleCyan.copy(alpha = 0.4f), RoundedCornerShape(16.dp))
-            )
+                }
+            ) {
+                Text(
+                    "Starting a new game will begin a fresh run and overwrite your current autosave. Manual save slots remain untouched.",
+                    color = TitleText.copy(alpha = 0.90f),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
         }
 
         if (showDebugScenarios) {
             DesktopDebugScenarioDialog(
                 onLaunch = { scenario ->
                     showDebugScenarios = false
-                    if (services.startDebugScenario(scenario.id)) startGameWithAudio()
-                    else debugScenarioError = "Unable to launch ${scenario.title}: its starting location is unavailable in the current game data."
+                    transitionIntoGame {
+                        val launched = services.startDebugScenario(scenario.id)
+                        if (!launched) {
+                            debugScenarioError = "Unable to launch ${scenario.title}: its starting location is unavailable in the current game data."
+                        }
+                        launched
+                    }
                 },
                 onDismiss = { showDebugScenarios = false }
             )
         }
 
-        debugScenarioError?.let { message ->
-            AlertDialog(onDismissRequest = { debugScenarioError = null }, title = { Text("Scenario unavailable") }, text = { Text(message) }, confirmButton = { TextButton(onClick = { debugScenarioError = null }) { Text("Close") } })
+        if (showScreeningRoom && activeScreeningScene == null) {
+            val entries = remember(services) { buildDesktopScreeningCatalog(services) }
+            DesktopScreeningRoomDialog(
+                entries = entries,
+                onPlayScenes = { scenes ->
+                    if (scenes.isNotEmpty()) {
+                        showScreeningRoom = false
+                        screeningStepIndex = 0
+                        screeningQueue = scenes
+                        services.audioDriver.executeAll(
+                            services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, stop = true, fadeMs = 250L)
+                        )
+                    }
+                },
+                onDismiss = { showScreeningRoom = false }
+            )
         }
+
+        if (activeScreeningScene != null) {
+            val screeningUiState = remember(activeScreeningScene.id, screeningStepIndex) {
+                buildDesktopScreeningUiState(activeScreeningScene, screeningStepIndex)
+            }
+            val finishScreening: (Boolean) -> Unit = { advanceReel ->
+                val remaining = if (advanceReel) screeningQueue.drop(1) else emptyList()
+                if (remaining.isNotEmpty()) {
+                    screeningStepIndex = 0
+                    screeningQueue = remaining
+                    services.audioDriver.executeAll(
+                        services.audioRouter.commandsForLayerOverride(AudioCueType.MUSIC, stop = true, fadeMs = 250L)
+                    )
+                } else {
+                    screeningQueue = emptyList()
+                    screeningStepIndex = 0
+                    showScreeningRoom = true
+                    services.playTitleMusic()
+                }
+            }
+            DesktopCinematicOverlay(
+                state = screeningUiState,
+                services = services,
+                onAdvance = {
+                    if (screeningStepIndex + 1 < activeScreeningScene.steps.size) {
+                        screeningStepIndex += 1
+                    } else {
+                        finishScreening(true)
+                    }
+                },
+                onSkip = { finishScreening(false) }
+            )
+        }
+
+        debugScenarioError?.let { message ->
+            DesktopConsoleModal(
+                eyebrow = "Scenario Launch",
+                title = "Scenario unavailable",
+                onDismiss = { debugScenarioError = null },
+                accent = Color(0xFFFF8A80),
+                maxWidth = 480.dp,
+                footer = {
+                    Button(onClick = { debugScenarioError = null }, modifier = Modifier.desktopPointerHover()) {
+                        Text("Close")
+                    }
+                }
+            ) {
+                Text(message, color = TitleText)
+            }
+        }
+
         if (showLoadGame) {
             DesktopSaveLoadDialog(
                 services = services,
                 initialMode = SaveDialogMode.LOAD,
                 onLoadState = {
                     showLoadGame = false
-                    startGameWithAudio()
+                    transitionIntoGame { true }
                 },
                 onDismiss = { showLoadGame = false }
             )
@@ -438,6 +659,112 @@ fun DesktopMainMenuScreen(
                 services = services,
                 userSettings = userSettings,
                 onDismiss = { showSettingsDialog = false }
+            )
+        }
+
+        if (fadeOutAlpha.value > 0.01f) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag("title-blackout-curtain")
+                    .background(Color.Black.copy(alpha = fadeOutAlpha.value.coerceIn(0f, 1f)))
+            )
+        }
+    }
+}
+
+private data class DesktopTitleStar(
+    val relX: Float,
+    val relY: Float,
+    val radius: Float,
+    val baseAlpha: Float,
+    val r: Float,
+    val g: Float,
+    val b: Float
+)
+
+@Composable
+internal fun DesktopTitleCosmicStarfield(
+    alpha: Float,
+    animate: Boolean = true,
+    modifier: Modifier = Modifier
+) {
+    if (alpha <= 0.001f) return
+    val stars = remember {
+        val rnd = java.util.Random(42L)
+        List(120) {
+            DesktopTitleStar(
+                relX = rnd.nextFloat(),
+                relY = rnd.nextFloat(),
+                radius = if (rnd.nextFloat() > 0.82f) 2.2f else 1.2f,
+                baseAlpha = 0.35f + rnd.nextFloat() * 0.65f,
+                r = (0.65f + rnd.nextFloat() * 0.35f).coerceIn(0f, 1f),
+                g = (0.85f + rnd.nextFloat() * 0.15f).coerceIn(0f, 1f),
+                b = 1.0f
+            )
+        }
+    }
+    val twinklePulse = if (animate) {
+        val twinkleTransition = rememberInfiniteTransition(label = "desktop_title_star_twinkle")
+        val anim by twinkleTransition.animateFloat(
+            initialValue = 0.82f,
+            targetValue = 1.18f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(3800, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "twinkle_pulse"
+        )
+        anim
+    } else 1f
+
+    Canvas(
+        modifier = modifier
+            .fillMaxSize()
+            .testTag("title-cosmic-starfield")
+            .graphicsLayer { this.alpha = alpha }
+    ) {
+        val cx = size.width * 0.36f
+        val cy = size.height * 0.42f
+        val outerR = (size.width * 0.50f).coerceAtLeast(1f)
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(
+                    Color(0xFF008CDC).copy(alpha = 0.28f),
+                    Color(0xFF0B3A5A).copy(alpha = 0.14f),
+                    Color.Transparent
+                ),
+                center = Offset(cx, cy),
+                radius = outerR
+            ),
+            center = Offset(cx, cy),
+            radius = outerR
+        )
+        val streakWidth = (size.width * 0.68f).coerceAtLeast(1f)
+        val streakHeight = 4.dp.toPx()
+        drawOval(
+            brush = Brush.radialGradient(
+                colors = listOf(
+                    Color(0xFF78DCFF).copy(alpha = 0.45f),
+                    Color(0xFF1EC8FF).copy(alpha = 0.16f),
+                    Color.Transparent
+                ),
+                center = Offset(cx, cy),
+                radius = streakWidth / 2f
+            ),
+            topLeft = Offset(cx - streakWidth / 2f, cy - streakHeight / 2f),
+            size = androidx.compose.ui.geometry.Size(streakWidth, streakHeight)
+        )
+        for (star in stars) {
+            val sx = star.relX * size.width
+            val sy = star.relY * size.height
+            val dist = kotlin.math.hypot(sx - cx, (sy - cy) * 1.4f)
+            val centerSuppression = if (dist < 160f) 0.4f else 1f
+            val starAlpha = (star.baseAlpha * centerSuppression * twinklePulse).coerceIn(0f, 1f)
+            drawCircle(
+                color = Color(star.r, star.g, star.b, starAlpha),
+                radius = star.radius,
+                center = Offset(sx, sy)
             )
         }
     }
@@ -518,6 +845,7 @@ private fun AuthenticTitleLogo(services: DesktopAppServices) {
 private fun AuthenticTitleButton(
     text: String,
     primary: Boolean,
+    enabled: Boolean = true,
     onClick: () -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -530,8 +858,8 @@ private fun AuthenticTitleButton(
 
     val buttonModifier = Modifier
         .fillMaxWidth()
-        .desktopPointerHover()
-        .height(if (primary) 58.dp else 52.dp)
+        .desktopPointerHover(enabled)
+        .height(if (primary) 58.dp else 50.dp)
         .graphicsLayer {
             scaleX = buttonScale
             scaleY = buttonScale
@@ -540,12 +868,15 @@ private fun AuthenticTitleButton(
     if (primary) {
         Button(
             onClick = onClick,
+            enabled = enabled,
             interactionSource = interactionSource,
             shape = RoundedCornerShape(14.dp),
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp, pressedElevation = 12.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = TitleGold,
-                contentColor = Color(0xFF1B1608)
+                contentColor = Color(0xFF1B1608),
+                disabledContainerColor = TitleGold.copy(alpha = 0.7f),
+                disabledContentColor = Color(0xFF1B1608)
             ),
             modifier = buttonModifier
         ) {
@@ -559,12 +890,15 @@ private fun AuthenticTitleButton(
     } else {
         OutlinedButton(
             onClick = onClick,
+            enabled = enabled,
             interactionSource = interactionSource,
             shape = RoundedCornerShape(14.dp),
             border = BorderStroke(1.5.dp, TitleCyan.copy(alpha = 0.75f)),
             colors = ButtonDefaults.outlinedButtonColors(
                 containerColor = TitlePanel.copy(alpha = 0.70f),
-                contentColor = TitleText
+                contentColor = TitleText,
+                disabledContainerColor = TitlePanel.copy(alpha = 0.50f),
+                disabledContentColor = TitleText.copy(alpha = 0.65f)
             ),
             modifier = buttonModifier
                 .background(
@@ -589,6 +923,97 @@ private fun AuthenticTitleButton(
 }
 
 @Composable
+internal fun DesktopScreeningRoomDialog(
+    entries: List<DesktopScreeningEntry>,
+    onPlayScenes: (List<CinematicScene>) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val grouped = remember(entries) { entries.groupBy { it.worldLabel } }
+    val world1Reel = remember(entries) {
+        entries.filter { it.worldLabel.startsWith("World 1") && it.scene.id != "new_game_fade_in" }.map { it.scene }
+    }
+    DesktopConsoleModal(
+        eyebrow = "Illustrated Theater",
+        title = "Cinematic Screening Room",
+        onDismiss = onDismiss,
+        accent = TitleGold,
+        maxWidth = 680.dp,
+        testTag = "desktop-screening-room",
+        headerTrailing = {
+            if (world1Reel.isNotEmpty()) {
+                OutlinedButton(
+                    onClick = { onPlayScenes(world1Reel) },
+                    modifier = Modifier.desktopPointerHover(),
+                    border = BorderStroke(1.dp, TitleCyan.copy(alpha = 0.6f))
+                ) {
+                    Text("Play World 1 Reel (${world1Reel.size})", color = TitleCyan, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                }
+            }
+        },
+        footer = {
+            TextButton(onClick = onDismiss, modifier = Modifier.desktopPointerHover()) {
+                Text("Close", color = TitleGold)
+            }
+        }
+    ) {
+        DesktopConsoleLazyList(accent = TitleGold, maxHeight = 460.dp) {
+            grouped.forEach { (worldLabel, worldEntries) ->
+                item(key = "header-$worldLabel") {
+                    Text(
+                        worldLabel.uppercase(Locale.US),
+                        color = TitleCyan,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.sp
+                    )
+                }
+                items(worldEntries, key = { it.scene.id }) { entry ->
+                    Surface(
+                        onClick = { onPlayScenes(listOf(entry.scene)) },
+                        color = Color.White.copy(alpha = 0.05f),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(1.dp, TitleCyan.copy(alpha = 0.22f)),
+                        modifier = Modifier.fillMaxWidth().desktopPointerHover()
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                                Text(
+                                    entry.scene.title ?: entry.scene.id,
+                                    color = TitleText,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 14.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                Text(
+                                    String.format(
+                                        Locale.US,
+                                        "%s · %d beats · %d imgs · %.1fs",
+                                        entry.scene.id,
+                                        entry.scene.steps.size,
+                                        entry.imageCount,
+                                        entry.durationSeconds
+                                    ),
+                                    color = TitleMutedText.copy(alpha = 0.78f),
+                                    fontSize = 11.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                            Text("Play ›", color = TitleGold, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun DesktopDebugScenarioDialog(
     onLaunch: (DebugScenario) -> Unit,
     onDismiss: () -> Unit
@@ -603,72 +1028,69 @@ private fun DesktopDebugScenarioDialog(
         }
     }
 
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("DEBUG SCENARIOS", color = TitleCyan, fontWeight = FontWeight.Black) },
-        text = {
-            Column(
-                modifier = Modifier.width(600.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                Text("Select any scenario to jump directly to that sector or encounter.", color = TitleMutedText, fontSize = 13.sp)
-                OutlinedTextField(
-                    value = query,
-                    onValueChange = { query = it },
-                    label = { Text("Search by world, sector, quest or system") },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
+    DesktopConsoleModal(
+        eyebrow = "Playtest Harness",
+        title = "DEBUG SCENARIOS",
+        onDismiss = onDismiss,
+        accent = TitleCyan,
+        maxWidth = 720.dp,
+        testTag = "desktop-debug-scenarios",
+        footer = {
+            OutlinedButton(onClick = onDismiss, modifier = Modifier.desktopPointerHover()) {
+                Text("Close")
+            }
+        }
+    ) {
+        Text("Select any scenario to jump directly to that sector or encounter.", color = TitleMutedText, fontSize = 13.sp)
+        OutlinedTextField(
+            value = query,
+            onValueChange = { query = it },
+            label = { Text("Search by world, sector, quest or system") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            DebugScenarioCategory.entries.forEach { option ->
+                FilterChip(
+                    selected = category == option,
+                    onClick = { category = option.takeUnless { it == category } },
+                    modifier = Modifier.desktopPointerHover(),
+                    label = { Text(option.label, fontSize = 11.sp) }
                 )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    modifier = Modifier.fillMaxWidth()
+            }
+        }
+        DesktopConsoleLazyList(accent = TitleCyan, maxHeight = 360.dp) {
+            items(filtered, key = { it.id }) { scenario ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color(0xFF0D1424))
+                        .border(BorderStroke(1.dp, TitleCyan.copy(alpha = 0.3f)), RoundedCornerShape(8.dp))
+                        .desktopPointerHover()
+                        .clickable { onLaunch(scenario) }
+                        .padding(12.dp)
                 ) {
-                    DebugScenarioCategory.entries.forEach { option ->
-                        FilterChip(
-                            selected = category == option,
-                            onClick = { category = option.takeUnless { it == category } },
-                            label = { Text(option.label, fontSize = 11.sp) }
+                    Column {
+                        Text(scenario.title, fontWeight = FontWeight.Bold, color = TitleText, fontSize = 14.sp)
+                        Text(
+                            "${scenario.category.label}  •  ${scenario.worldLabel}",
+                            color = TitleGold,
+                            fontSize = 11.sp
                         )
-                    }
-                }
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(6.dp),
-                    modifier = Modifier.height(340.dp)
-                ) {
-                    items(filtered, key = { it.id }) { scenario ->
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(Color(0xFF0D1424))
-                                .border(BorderStroke(1.dp, TitleCyan.copy(alpha = 0.3f)), RoundedCornerShape(8.dp))
-                                .clickable { onLaunch(scenario) }
-                                .padding(12.dp)
-                        ) {
-                            Column {
-                                Text(scenario.title, fontWeight = FontWeight.Bold, color = TitleText, fontSize = 14.sp)
-                                Text(
-                                    "${scenario.category.label}  •  ${scenario.worldLabel}",
-                                    color = TitleGold,
-                                    fontSize = 11.sp
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(scenario.description, color = TitleMutedText, fontSize = 12.sp)
-                            }
-                        }
-                    }
-                    if (filtered.isEmpty()) {
-                        item { Text("No matching scenarios.", color = TitleMutedText) }
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(scenario.description, color = TitleMutedText, fontSize = 12.sp)
                     }
                 }
             }
-        },
-        confirmButton = {},
-        dismissButton = { OutlinedButton(onClick = onDismiss) { Text("Close") } },
-        containerColor = TitlePanel,
-        shape = RoundedCornerShape(16.dp),
-        modifier = Modifier.border(1.dp, TitleCyan.copy(alpha = 0.4f), RoundedCornerShape(16.dp))
-    )
+            if (filtered.isEmpty()) {
+                item { Text("No matching scenarios.", color = TitleMutedText) }
+            }
+        }
+    }
 }
 
 @Composable
@@ -678,24 +1100,14 @@ private fun DesktopSettingsDialog(
     onDismiss: () -> Unit
 ) {
     var showControls by remember { mutableStateOf(false) }
-    if (showControls) {
-        DesktopControlsDialog(onDismiss = { showControls = false })
-    }
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("SETTINGS & CONFIGURATION", color = TitleCyan, fontWeight = FontWeight.Black) },
-        text = {
-            Box(Modifier.width(760.dp).height(500.dp)) {
-                DesktopSettingsContent(
-                    services = services,
-                    userSettings = userSettings,
-                    currentRoomTitle = null,
-                    onReturnToTitle = null,
-                    onOpenControls = { showControls = true }
-                )
-            }
-        },
-        confirmButton = {
+    DesktopConsoleModal(
+        eyebrow = "System Configuration",
+        title = "SETTINGS & CONFIGURATION",
+        onDismiss = onDismiss,
+        accent = TitleCyan,
+        maxWidth = 820.dp,
+        testTag = "desktop-title-settings",
+        footer = {
             Button(
                 onClick = onDismiss,
                 modifier = Modifier.desktopPointerHover(),
@@ -703,10 +1115,19 @@ private fun DesktopSettingsDialog(
             ) {
                 Text("Done", fontWeight = FontWeight.Bold)
             }
-        },
-        dismissButton = {},
-        containerColor = TitlePanel,
-        shape = RoundedCornerShape(16.dp),
-        modifier = Modifier.border(1.dp, TitleCyan.copy(alpha = 0.4f), RoundedCornerShape(16.dp))
-    )
+        }
+    ) {
+        Box(Modifier.fillMaxWidth().height(480.dp)) {
+            DesktopSettingsContent(
+                services = services,
+                userSettings = userSettings,
+                currentRoomTitle = null,
+                onReturnToTitle = null,
+                onOpenControls = { showControls = true }
+            )
+        }
+    }
+    if (showControls) {
+        DesktopControlsDialog(onDismiss = { showControls = false })
+    }
 }

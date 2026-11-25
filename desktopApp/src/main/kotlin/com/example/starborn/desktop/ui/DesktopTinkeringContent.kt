@@ -1,6 +1,7 @@
 package com.example.starborn.desktop.ui
 
 import androidx.compose.foundation.*
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.ui.platform.testTag
@@ -55,11 +56,20 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
         if (cue != null) services.audioDriver.executeAll(services.audioRouter.commandsForUi(cue))
     } }
     pendingScrap?.let { item ->
-        AlertDialog(onDismissRequest = { pendingScrap = null },
-            title = { Text("Scrap ${item.name}?") },
-            text = { Text("Consumes one item. You receive:\n${item.salvage.joinToString("\n")}") },
-            confirmButton = { TextButton(onClick = { pendingScrap = null; runtime.scrap(item.id) }) { Text("Scrap one") } },
-            dismissButton = { TextButton(onClick = { pendingScrap = null }) { Text("Cancel") } })
+        DesktopConsoleModal(
+            eyebrow = "Workbench Salvage",
+            title = "Scrap ${item.name}?",
+            onDismiss = { pendingScrap = null },
+            accent = FieldMenuDesign.cyan,
+            maxWidth = 460.dp,
+            footer = {
+                TextButton(onClick = { pendingScrap = null }, modifier = Modifier.desktopPointerHover()) { Text("Cancel") }
+                Button(onClick = { pendingScrap = null; runtime.scrap(item.id) }, modifier = Modifier.desktopPointerHover()) { Text("Scrap one") }
+            }
+        ) {
+            Text("Consumes one item. You receive:", color = FieldMenuDesign.textMuted)
+            item.salvage.forEach { line -> Text(line, color = FieldMenuDesign.gold) }
+        }
     }
     LaunchedEffect(state.tutorialStep) {
         state.tutorialStep?.let { step ->

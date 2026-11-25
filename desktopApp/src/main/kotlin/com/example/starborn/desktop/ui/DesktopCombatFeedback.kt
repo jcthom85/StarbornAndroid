@@ -42,9 +42,13 @@ internal data class DesktopCombatCue(
     val amount: Int? = null,
     val critical: Boolean = false,
     val isWeakness: Boolean = false,
+    val isVantage: Boolean = false,
     val isBrokenBonus: Boolean = false,
     val isGuardBreak: Boolean = false,
-    val element: String? = null
+    val element: String? = null,
+    val sourceId: String? = null,
+    val statusId: String? = null,
+    val heroFxStyle: DesktopAttackFxStyle? = null
 )
 
 internal fun combatElementColor(element: String?): Color = when (element?.lowercase()) {
@@ -193,13 +197,13 @@ internal fun DesktopDamageBubble(
         },
         contentAlignment = Alignment.Center
     ) {
-        // Sparkle flares on crit or weakness
-        if ((cue.critical || cue.isWeakness || cue.isBrokenBonus) && t < 0.38f) {
+        // Sparkle flares on crit, weakness, or vantage
+        if ((cue.critical || cue.isWeakness || cue.isVantage || cue.isBrokenBonus) && t < 0.38f) {
             val sparkProgress = t / 0.38f
             val sparkAlpha = (1f - sparkProgress) * 0.9f
             Canvas(modifier = Modifier.size(68.dp)) {
                 val sparkDist = size.minDimension * 0.45f * sparkProgress
-                val sparkColor = if (cue.isWeakness) Color(0xFFFFD54F) else Color(0xFFFFCC80)
+                val sparkColor = if (cue.isWeakness || cue.isVantage) Color(0xFFFFD54F) else Color(0xFFFFCC80)
                 for (i in 0 until 6) {
                     val angle = (i * (Math.PI.toFloat() / 3f) + ((seed % 100) * 0.05f))
                     val sx = center.x + cos(angle.toDouble()).toFloat() * sparkDist
@@ -218,6 +222,7 @@ internal fun DesktopDamageBubble(
                 cue.isGuardBreak -> "GUARD BREAK!"
                 cue.isBrokenBonus -> "BROKEN +25%"
                 cue.isWeakness -> "WEAKNESS!"
+                cue.isVantage -> "VANTAGE!"
                 cue.critical -> "CRITICAL!"
                 else -> null
             }
@@ -226,6 +231,7 @@ internal fun DesktopDamageBubble(
                     cue.isGuardBreak -> Color(0xFF64B5F6)
                     cue.isBrokenBonus -> Color(0xFFFF8A80)
                     cue.isWeakness -> Color(0xFFFFD54F)
+                    cue.isVantage -> Color(0xFFFFC857)
                     cue.critical -> Color(0xFFFF8A65)
                     else -> Color.White
                 }
@@ -304,60 +310,102 @@ internal fun DesktopCombatHit(cue: DesktopCombatCue, flashesDisabled: Boolean, m
         com.example.starborn.shared.combat.StabilityBreakBurst(cue.token, modifier, flashesDisabled)
         return
     }
-    val phase = remember(cue.token) { Animatable(0f) }
-    LaunchedEffect(cue.token) { phase.animateTo(1f, tween(if (cue.kind == DesktopCueKind.BREAK) 520 else 600, easing = FastOutSlowInEasing)) }
-    if (cue.kind == DesktopCueKind.HIT && cue.style == null) return
-    Canvas(modifier) {
-        val t = phase.value
-        val color = cue.color.copy(alpha = (1f - t) * if (flashesDisabled) .25f else .8f)
-        val center = Offset(size.width / 2, size.height / 2)
-        val radius = size.minDimension * (.1f + .3f * t)
-        val stroke = if (cue.strong) 4.dp.toPx() else 2.dp.toPx()
-        when (cue.kind) {
-            DesktopCueKind.HEAL -> {
-                repeat(7) { index ->
-                    val x = size.width * ((index + 1) / 8f)
-                    val y = size.height * (1f - t) + (index % 3) * 5.dp.toPx()
-                    drawLine(color, Offset(x - 4.dp.toPx(), y), Offset(x + 4.dp.toPx(), y), stroke)
-                    drawLine(color, Offset(x, y - 4.dp.toPx()), Offset(x, y + 4.dp.toPx()), stroke)
-                }
+    if (cue.kind == DesktopCueKind.HIT) {
+        Box(modifier) {
+            if (cue.amount != null || cue.style != null || cue.heroFxStyle != null) {
+                DesktopElementalImpactBurst(
+                    token = cue.token,
+                    element = cue.element,
+                    critical = cue.critical,
+                    flashesDisabled = flashesDisabled,
+                    modifier = Modifier.matchParentSize()
+                )
             }
-            DesktopCueKind.STATUS -> repeat(8) { index ->
-                val angle = index * Math.PI / 4 + t * Math.PI
-                drawCircle(color, 3.dp.toPx(), center + Offset(cos(angle).toFloat(), sin(angle).toFloat()) * radius)
-            }
-            DesktopCueKind.SUPPORT -> {
-                drawOval(color, Offset(size.width * .1f, size.height * .75f), androidx.compose.ui.geometry.Size(size.width * .8f, size.height * .15f), style = Stroke(stroke))
-                repeat(5) { index -> val x = size.width * (index + 1) / 6
-                    drawLine(color, Offset(x, size.height * .8f), Offset(x, size.height * (.8f - t * .6f)), stroke)
-                }
-            }
-            DesktopCueKind.BREAK -> Unit // Rendered by the shared mobile burst above.
-            DesktopCueKind.TELEGRAPH -> {
-                drawCircle(color, size.minDimension * .38f, center, style = Stroke(stroke))
-                drawLine(color, center - Offset(0f, 12.dp.toPx()), center + Offset(0f, 3.dp.toPx()), stroke * 2)
-                drawCircle(color, 2.dp.toPx(), center + Offset(0f, 10.dp.toPx()))
-            }
-            DesktopCueKind.KNOCKOUT -> repeat(12) { index ->
-                val angle = index * Math.PI / 6 + t
-                drawCircle(color, (1f - t) * 4.dp.toPx(), center + Offset(cos(angle).toFloat(), sin(angle).toFloat()) * radius)
-            }
-            DesktopCueKind.HIT -> when (cue.style) {
-                AttackLungeStyle.MELEE -> {
-                    drawLine(color, center - Offset(radius, radius), center + Offset(radius, radius), stroke)
-                    drawLine(color, center - Offset(-radius, radius), center + Offset(-radius, radius), stroke)
-                }
-                AttackLungeStyle.RANGED -> {
-                    drawCircle(color, radius, center, style = Stroke(stroke))
-                    repeat(8) { index ->
-                        val angle = index * Math.PI / 4
-                        val vector = Offset(cos(angle).toFloat(), sin(angle).toFloat())
-                        drawLine(color, center + vector * radius, center + vector * (radius + 14.dp.toPx()), stroke)
+            if (cue.heroFxStyle != null) {
+                DesktopHeroSignatureAttackFx(
+                    token = cue.token,
+                    style = cue.heroFxStyle,
+                    critical = cue.critical,
+                    flashesDisabled = flashesDisabled,
+                    modifier = Modifier.matchParentSize()
+                )
+            } else if (cue.style != null) {
+                val phase = remember(cue.token) { Animatable(0f) }
+                LaunchedEffect(cue.token) { phase.animateTo(1f, tween(460, easing = FastOutSlowInEasing)) }
+                Canvas(Modifier.matchParentSize()) {
+                    val t = phase.value
+                    val color = cue.color.copy(alpha = (1f - t) * if (flashesDisabled) .25f else .82f)
+                    val center = Offset(size.width / 2, size.height / 2)
+                    val radius = size.minDimension * (.12f + .32f * t)
+                    val stroke = if (cue.strong) 4.dp.toPx() else 2.5.dp.toPx()
+                    when (cue.style) {
+                        AttackLungeStyle.MELEE -> {
+                            drawLine(color, center - Offset(radius, radius * 0.72f), center + Offset(radius, radius * 0.72f), stroke, androidx.compose.ui.graphics.StrokeCap.Round)
+                            drawLine(Color.White.copy(alpha = color.alpha * 0.75f), center - Offset(radius * 0.7f, radius * 0.5f), center + Offset(radius * 0.7f, radius * 0.5f), (stroke * 0.45f).coerceAtLeast(1f), androidx.compose.ui.graphics.StrokeCap.Round)
+                        }
+                        AttackLungeStyle.RANGED -> {
+                            drawCircle(color, radius, center, style = Stroke(stroke))
+                            repeat(8) { index ->
+                                val angle = index * Math.PI / 4
+                                val vector = Offset(cos(angle).toFloat(), sin(angle).toFloat())
+                                drawLine(color, center + vector * (radius * 0.75f), center + vector * (radius + 12.dp.toPx()), stroke, androidx.compose.ui.graphics.StrokeCap.Round)
+                            }
+                        }
+                        else -> {
+                            drawCircle(color, radius, center, style = Stroke(stroke))
+                            drawCircle(color.copy(alpha = color.alpha * .5f), radius * .68f, center, style = Stroke(stroke))
+                        }
                     }
                 }
-                else -> {
-                    drawCircle(color, radius, center, style = Stroke(stroke))
-                    drawCircle(color.copy(alpha = color.alpha * .5f), radius * .7f, center, style = Stroke(stroke))
+            }
+        }
+        return
+    }
+    val phase = remember(cue.token) { Animatable(0f) }
+    LaunchedEffect(cue.token) { phase.animateTo(1f, tween(600, easing = FastOutSlowInEasing)) }
+    Box(modifier) {
+        if (cue.kind == DesktopCueKind.STATUS) {
+            DesktopStatusImpactFlash(
+                token = cue.token,
+                statusId = cue.statusId,
+                flashesDisabled = flashesDisabled,
+                modifier = Modifier.matchParentSize()
+            )
+        }
+        Canvas(Modifier.matchParentSize()) {
+            val t = phase.value
+            val color = cue.color.copy(alpha = (1f - t) * if (flashesDisabled) .25f else .8f)
+            val center = Offset(size.width / 2, size.height / 2)
+            val radius = size.minDimension * (.1f + .3f * t)
+            val stroke = if (cue.strong) 4.dp.toPx() else 2.dp.toPx()
+            when (cue.kind) {
+                DesktopCueKind.HEAL -> {
+                    repeat(7) { index ->
+                        val x = size.width * ((index + 1) / 8f)
+                        val y = size.height * (1f - t) + (index % 3) * 5.dp.toPx()
+                        drawLine(color, Offset(x - 4.dp.toPx(), y), Offset(x + 4.dp.toPx(), y), stroke)
+                        drawLine(color, Offset(x, y - 4.dp.toPx()), Offset(x, y + 4.dp.toPx()), stroke)
+                    }
+                }
+                DesktopCueKind.STATUS -> repeat(8) { index ->
+                    val angle = index * Math.PI / 4 + t * Math.PI
+                    drawCircle(color, 3.dp.toPx(), center + Offset(cos(angle).toFloat(), sin(angle).toFloat()) * radius)
+                }
+                DesktopCueKind.SUPPORT -> {
+                    drawOval(color, Offset(size.width * .1f, size.height * .75f), androidx.compose.ui.geometry.Size(size.width * .8f, size.height * .15f), style = Stroke(stroke))
+                    repeat(5) { index -> val x = size.width * (index + 1) / 6
+                        drawLine(color, Offset(x, size.height * .8f), Offset(x, size.height * (.8f - t * .6f)), stroke)
+                    }
+                }
+                DesktopCueKind.BREAK, DesktopCueKind.HIT -> Unit
+                DesktopCueKind.TELEGRAPH -> {
+                    drawCircle(color, size.minDimension * .38f, center, style = Stroke(stroke))
+                    drawLine(color, center - Offset(0f, 12.dp.toPx()), center + Offset(0f, 3.dp.toPx()), stroke * 2)
+                    drawCircle(color, 2.dp.toPx(), center + Offset(0f, 10.dp.toPx()))
+                }
+                DesktopCueKind.KNOCKOUT -> repeat(12) { index ->
+                    val angle = index * Math.PI / 6 + t
+                    drawCircle(color, (1f - t) * 4.dp.toPx(), center + Offset(cos(angle).toFloat(), sin(angle).toFloat()) * radius)
                 }
             }
         }

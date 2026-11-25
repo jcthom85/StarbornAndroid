@@ -290,13 +290,30 @@ Column(Modifier.heightIn(min = if (enemySide) 56.dp else 68.dp).fillMaxWidth().p
                         center + Offset(cos(b).toFloat(), sin(b).toFloat()) * radius, 2.dp.toPx())
                 }
             }
+            val activeTelegraphSkill = if (!enemySide && state.isAlive) {
+                cues.firstOrNull { it.kind == DesktopCueKind.TELEGRAPH }?.label
+                    ?: authoredState?.authored?.preparations?.values
+                        ?.firstOrNull { state.combatant.id in it.targetIds }
+                        ?.skillId?.replace('_', ' ')
+            } else null
+            if (activeTelegraphSkill != null) {
+                DesktopTargetedWarningBadge(
+                    skillName = activeTelegraphSkill,
+                    flashesDisabled = settings.disableFlashes,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .width(visibleWidth.coerceAtLeast(72.dp))
+                        .height(visibleHeight.coerceAtLeast(72.dp))
+                        .zIndex(12f)
+                )
+            }
             cues.forEach { cue -> key(cue.token) { DesktopCombatHit(cue, settings.disableFlashes, Modifier.fillMaxSize()) } }
             cues.forEach { cue ->
                 key(cue.token) {
                     if (cue.kind == DesktopCueKind.HIT || cue.kind == DesktopCueKind.HEAL) {
                         DesktopDamageBubble(cue, Modifier.align(Alignment.Center))
-                    } else if (cue.kind == DesktopCueKind.BREAK) {
-                        // The shared mobile burst includes its floating badge.
+                    } else if (cue.kind == DesktopCueKind.BREAK || (!enemySide && cue.kind == DesktopCueKind.TELEGRAPH)) {
+                        // Break uses its shared badge; party telegraphs use DesktopTargetedWarningBadge.
                     } else {
                         Surface(
                             modifier = Modifier.align(Alignment.TopCenter).padding(top = 8.dp),

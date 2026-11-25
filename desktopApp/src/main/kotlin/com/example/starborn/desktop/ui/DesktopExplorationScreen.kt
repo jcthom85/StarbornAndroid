@@ -453,7 +453,8 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
                     com.example.starborn.domain.inventory.ItemUseController(services.inventoryService, services.craftingService,
                         services.sessionStore, skillNodesProvider = { services.worldDataSource.loadSkillNodes() },
                         charactersProvider = { services.characterDefinitions }).cookAndEat(recipe, chef, batch, replace)
-                }, characterName = { services.characterDefinitions[it]?.name ?: it })
+                }, characterName = { services.characterDefinitions[it]?.name ?: it },
+                services = services)
         }
         DesktopRuntimeOverlays(services, runtime, ui, restNotice != null || actionsOpen || quickLoadOpen || environmentPreview || menuOpen || shopId != null || controlsOpen || cookingSource != null)
         DesktopQuestPresentation(services, questPresentations, sceneBlocked) { questId ->

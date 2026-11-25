@@ -22,8 +22,11 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.lazy.grid.items as gridItems
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollbarStyle
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -439,23 +442,49 @@ private fun DesktopInventoryTabContent(
     }
     useItemId?.let { id ->
         val meal = services.exploration.isPreparedMeal(id)
-        AlertDialog(onDismissRequest = { useItemId = null }, title = { Text(allItems[id]?.name ?: id) },
-            text = { Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                DesktopMenuItemArt(services, allItems[id], Modifier.size(72.dp))
-                if (meal) {
-                    Text(if (sessionState.activeMealBuff != null) "Eating this meal replaces the current party meal." else "Eat this meal to prepare the party for combat.")
-                    Button(onClick = { services.exploration.useInventoryItem(id, replaceMeal = true); useItemId = null }) { Text("Eat meal") }
-                } else sessionState.partyMembers.forEach { target ->
-                    Surface(onClick = { services.exploration.useInventoryItem(id, target); useItemId = null }, modifier = Modifier.fillMaxWidth(),
-                        color = FieldMenuDesign.elevatedPanel, shape = RoundedCornerShape(12.dp), border = BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = .3f))) {
+        DesktopConsoleModal(
+            eyebrow = if (meal) "Party Provision" else "Field Supply",
+            title = allItems[id]?.name ?: id,
+            onDismiss = { useItemId = null },
+            accent = FieldMenuDesign.gold,
+            maxWidth = 480.dp,
+            footer = {
+                TextButton(onClick = { useItemId = null }, modifier = Modifier.desktopPointerHover()) { Text("Cancel") }
+            }
+        ) {
+            DesktopMenuItemArt(services, allItems[id], Modifier.size(72.dp))
+            if (meal) {
+                Text(
+                    if (sessionState.activeMealBuff != null) "Eating this meal replaces the current party meal."
+                    else "Eat this meal to prepare the party for combat.",
+                    color = FieldMenuDesign.text
+                )
+                Button(
+                    onClick = { services.exploration.useInventoryItem(id, replaceMeal = true); useItemId = null },
+                    modifier = Modifier.desktopPointerHover(),
+                    colors = ButtonDefaults.buttonColors(containerColor = FieldMenuDesign.gold, contentColor = Color(0xFF1A1408))
+                ) { Text("Eat meal", fontWeight = FontWeight.Bold) }
+            } else {
+                sessionState.partyMembers.forEach { target ->
+                    Surface(
+                        onClick = { services.exploration.useInventoryItem(id, target); useItemId = null },
+                        modifier = Modifier.fillMaxWidth().desktopPointerHover(),
+                        color = FieldMenuDesign.elevatedPanel,
+                        shape = RoundedCornerShape(12.dp),
+                        border = BorderStroke(1.dp, FieldMenuDesign.cyan.copy(alpha = .3f))
+                    ) {
                         Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                             val member = services.exploration.uiState.value.partyStatus.members.firstOrNull { it.id == target }
                             Image(rememberDesktopAssetPainter(member?.portraitPath, services.assetProvider), null, Modifier.size(48.dp), contentScale = ContentScale.Fit)
-                            Column { Text("Use on ${services.characterDefinitions[target]?.name ?: target}"); member?.hpLabel?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = FieldMenuDesign.textMuted) } }
+                            Column {
+                                Text("Use on ${services.characterDefinitions[target]?.name ?: target}", fontWeight = FontWeight.SemiBold)
+                                member?.hpLabel?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = FieldMenuDesign.textMuted) }
+                            }
                         }
                     }
                 }
-            } }, confirmButton = { TextButton(onClick = { useItemId = null }) { Text("Cancel") } })
+            }
+        }
     }
 }
 
@@ -485,7 +514,8 @@ private fun DesktopInventorySplitLayout(
                     Text(text = emptyMessage, color = FieldMenuDesign.textMuted, fontSize = 13.sp)
                 }
             } else {
-                LazyVerticalGrid(columns = GridCells.Adaptive(128.dp), state = gridState, modifier = Modifier.weight(1f).fillMaxWidth().onPreviewKeyEvent { event ->
+                Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+                LazyVerticalGrid(columns = GridCells.Adaptive(128.dp), state = gridState, modifier = Modifier.fillMaxSize().padding(end = 10.dp).onPreviewKeyEvent { event ->
                     val current = entries.indexOfFirst { it.key == activeSelection }.coerceAtLeast(0)
                     val firstRow = gridState.layoutInfo.visibleItemsInfo.firstOrNull()?.row
                     val columns = gridState.layoutInfo.visibleItemsInfo.count { it.row == firstRow }.coerceAtLeast(1)
@@ -529,6 +559,12 @@ private fun DesktopInventorySplitLayout(
                             }
                         }
                     }
+                }
+                VerticalScrollbar(
+                    adapter = rememberScrollbarAdapter(gridState),
+                    modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight().width(6.dp),
+                    style = ScrollbarStyle(16.dp, 5.dp, RoundedCornerShape(3.dp), 150, FieldMenuDesign.cyan.copy(alpha = 0.28f), FieldMenuDesign.cyan.copy(alpha = 0.72f))
+                )
                 }
             }
 
