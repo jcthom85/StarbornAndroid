@@ -71,7 +71,7 @@ class DesktopPopupAlignmentTest {
             compose.runOnIdle {assertEquals(1,skips)}
         } finally {services.close();directory.deleteRecursively()}
     }
-    @Test fun illustratedNarrationCentersAndRapidTapsAdvanceOnlyOnce() {
+    @Test fun illustratedCaptionsAnchorAtBottomAndRapidTapsAdvanceOnlyOnce() {
         val directory = Files.createTempDirectory("cinematic-narration-").toFile()
         val services = DesktopAppServices(directory, RecordingAudioDriver())
         val text = "A long enough caption to still be typing after the shot begins. ".repeat(4)
@@ -93,7 +93,12 @@ class DesktopPopupAlignmentTest {
             val caption = compose.onAllNodesWithText(text, useUnmergedTree = true).onLast()
                 .getUnclippedBoundsInRoot()
             assertTrue(abs((viewport.left + viewport.right - caption.left - caption.right).value) < 4f)
-            assertTrue(abs((viewport.top + viewport.bottom - caption.top - caption.bottom).value) < 4f)
+            val viewportMidY = (viewport.top + viewport.bottom) / 2f
+            val captionMidY = (caption.top + caption.bottom) / 2f
+            assertTrue(
+                "Illustrated narration should anchor in the lower viewport rather than vertically centered (captionMidY=$captionMidY, viewportMidY=$viewportMidY)",
+                captionMidY > viewportMidY
+            )
 
             // Fixed-duration illustrated shots ignore stray clicks and advance once when duration elapses.
             compose.onRoot().performClick()
@@ -105,6 +110,69 @@ class DesktopPopupAlignmentTest {
             compose.runOnIdle { assertEquals(1, advances) }
             compose.onRoot().performClick()
             compose.runOnIdle { assertEquals(1, advances) }
+        } finally {
+            services.close()
+            directory.deleteRecursively()
+        }
+    }
+
+    @Test fun allIllustratedAndStandardCinematicStylesAnchorInBottomZone() {
+        val directory = Files.createTempDirectory("cinematic-bottom-zone-").toFile()
+        val services = DesktopAppServices(directory, RecordingAudioDriver())
+        var currentState by mutableStateOf(
+            CinematicUiState(
+                "intro_prologue", null, CinematicBackdrop.BLACK,
+                presentation = CinematicPresentation.ILLUSTRATED, stepIndex = 0, stepCount = 4,
+                step = CinematicStepUi(
+                    CinematicStepType.NARRATION,
+                    null,
+                    "SECTOR 9 // CONTAINMENT LAB",
+                    durationSeconds = 2.0,
+                    captionStyle = CinematicCaptionStyle.LOCATION
+                )
+            )
+        )
+        try {
+            compose.mainClock.autoAdvance = false
+            compose.setContent {
+                DesktopStarbornTheme(services) {
+                    DesktopCinematicOverlay(currentState, services, {}, {})
+                }
+            }
+            compose.mainClock.advanceTimeByFrame()
+            val viewport = compose.onRoot().getUnclippedBoundsInRoot()
+            val viewportMidY = (viewport.top + viewport.bottom) / 2f
+
+            val locationBounds = compose.onNodeWithText("SECTOR 9", useUnmergedTree = true).getUnclippedBoundsInRoot()
+            assertTrue("Location plate should anchor below vertical midpoint", (locationBounds.top + locationBounds.bottom) / 2f > viewportMidY)
+
+            currentState = currentState.copy(
+                stepIndex = 1,
+                step = CinematicStepUi(
+                    CinematicStepType.DIALOGUE,
+                    "Lab PA",
+                    "SOURCE BEAST CONTAINMENT BREACH.",
+                    durationSeconds = 2.5,
+                    captionStyle = CinematicCaptionStyle.SYSTEM
+                )
+            )
+            compose.mainClock.advanceTimeByFrame()
+            val systemBounds = compose.onNodeWithText("SOURCE BEAST CONTAINMENT BREACH.", useUnmergedTree = true).getUnclippedBoundsInRoot()
+            assertTrue("System alert card should anchor below vertical midpoint", (systemBounds.top + systemBounds.bottom) / 2f > viewportMidY)
+
+            currentState = CinematicUiState(
+                "ollie_intro_scene", null, CinematicBackdrop.ROOM,
+                stepIndex = 0, stepCount = 1,
+                step = CinematicStepUi(
+                    CinematicStepType.DIALOGUE,
+                    "Ollie",
+                    "Nova! There you are!",
+                    captionStyle = CinematicCaptionStyle.DIALOGUE
+                )
+            )
+            compose.mainClock.advanceTimeBy(1_500)
+            val speakerBounds = compose.onAllNodesWithText("Nova! There you are!", useUnmergedTree = true).onLast().getUnclippedBoundsInRoot()
+            assertTrue("Standard speaker cinematic dialogue should anchor below vertical midpoint", (speakerBounds.top + speakerBounds.bottom) / 2f > viewportMidY)
         } finally {
             services.close()
             directory.deleteRecursively()
