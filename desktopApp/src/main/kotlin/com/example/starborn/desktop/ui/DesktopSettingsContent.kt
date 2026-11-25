@@ -360,6 +360,8 @@ internal fun DesktopSettingsContent(
     }
 
     val controlsDeck: @Composable () -> Unit = {
+        val controllerName by services.gamepadService.connectedControllerName.collectAsState()
+        val activeDevice by services.gamepadService.activeInputDevice.collectAsState()
         DesktopMenuCard(Modifier.fillMaxWidth()) {
             Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Row(
@@ -367,10 +369,49 @@ internal fun DesktopSettingsContent(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    DesktopMenuSection("Tactical Keyboard Reference")
+                    DesktopMenuSection("Tactical Input & Controller Deck")
                     onOpenControls?.let {
                         OutlinedButton(onClick = it, modifier = Modifier.desktopPointerHover()) {
                             Text("Full controls guide")
+                        }
+                    }
+                }
+
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color(0xFF091420),
+                    border = BorderStroke(1.dp, if (controllerName != null) FieldMenuDesign.gold.copy(alpha = 0.45f) else FieldMenuDesign.cyan.copy(alpha = 0.2f)),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(Modifier.weight(1f)) {
+                                Text(
+                                    text = controllerName ?: "No Gamepad Detected (SDL3 Ready)",
+                                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                                    color = if (controllerName != null) FieldMenuDesign.gold else Color.White
+                                )
+                                Text(
+                                    text = "Active prompts: ${activeDevice.displayLabel} · Connect Xbox, DualSense, Switch, or Steam Deck at any time",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = FieldMenuDesign.textMuted
+                                )
+                            }
+                            if (controllerName != null) {
+                                OutlinedButton(
+                                    onClick = { services.gamepadService.rumble(0.7f, 0.5f, 180) },
+                                    modifier = Modifier.desktopPointerHover()
+                                ) {
+                                    Text("Test rumble")
+                                }
+                            }
+                        }
+                        DesktopSettingToggle("Controller vibration (combat rumble)", !userSettings.disableHaptics) { enabled ->
+                            scope.launch { services.userSettingsStore.setHapticsDisabled(!enabled) }
                         }
                     }
                 }

@@ -48,7 +48,14 @@ fun main(args: Array<String>) {
 }
 
 private fun launchDesktop() = application {
-    val services = remember { DesktopAppServices() }
+    val services = remember {
+        DesktopAppServices(
+            gamepadServiceOverride = DesktopGamepadService(
+                backend = Sdl3GamepadBackend(),
+                startPollingLoop = true
+            )
+        )
+    }
     val initialBounds = remember { services.userSettingsStore.initialWindowBounds() }
     val displayMode by services.userSettingsStore.displayMode.collectAsState(initial = initialBounds.displayMode)
     val coroutineScope = rememberCoroutineScope()
@@ -165,7 +172,15 @@ private fun launchDesktop() = application {
         }
     ) {
         val currentSettings by services.userSettingsStore.settings.collectAsState(initial = UserSettings())
+        val currentBindings by services.userSettingsStore.keyBindings.collectAsState(initial = DesktopKeyBindings())
         val isForeground = LocalWindowInfo.current.isWindowFocused && !windowState.isMinimized
+        LaunchedEffect(screenState, isForeground, currentBindings) {
+            services.gamepadService.context = services.gamepadService.context.copy(
+                screenState = screenState,
+                isWindowForeground = isForeground,
+                bindings = currentBindings
+            )
+        }
         LaunchedEffect(isForeground, currentSettings.muteWhenUnfocused) {
             (services.audioDriver as? DesktopAudioDriver)?.let { driver ->
                 val background = !isForeground && currentSettings.muteWhenUnfocused
@@ -184,6 +199,7 @@ private fun launchDesktop() = application {
             androidx.compose.ui.platform.LocalDensity provides effectiveDensity
         ) {
         DisposableEffect(window, displayMode) {
+            services.gamepadService.attachWindow(window)
             window.minimumSize = java.awt.Dimension(1024, 700)
             try {
                 val iconStream = Thread.currentThread().contextClassLoader.getResourceAsStream("icon.png")
@@ -210,6 +226,7 @@ private fun launchDesktop() = application {
                 window.bounds = monitorBounds
             }
             onDispose {
+                services.gamepadService.attachWindow(null)
                 coroutineScope.launch { saveCurrentBounds() }
             }
         }

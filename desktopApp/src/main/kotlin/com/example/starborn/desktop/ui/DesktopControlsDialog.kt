@@ -36,6 +36,15 @@ fun DesktopControlsDialog(onDismiss: () -> Unit, accentColor: Color = Color(0xFF
                     items(fieldMenuControlHints) { ControlHintRow(it) }
                     item { ControlSectionHeading("Combat", accentColor) }
                     items(combatControlHints(bindings)) { ControlHintRow(it) }
+                    item { ControlSectionHeading("Gamepad & Steam Deck", accentColor) }
+                    items(listOf(
+                        DesktopControlHint("Left Stick / D-Pad", "Travel rooms, navigate menus, aim in Arcade"),
+                        DesktopControlHint("A (✕) / B (○)", "Confirm, Interact, Attack, Reel / Cancel, Back"),
+                        DesktopControlHint("X (□) / Y (△)", "Room Actions or Combat Abilities / Inventory or Combat Items"),
+                        DesktopControlHint("LB (L1) / RB (R1)", "Combat Guard & Next Ready Crew · Menu/Shop Tab Cycling · Exploration Quick Save & Map"),
+                        DesktopControlHint("LT (L2) / RT (R2)", "Combat Snack & Retreat · Sub-category Switch · Harmonic Pulse Lanes 2 & 3"),
+                        DesktopControlHint("Menu (+) / View (-)", "Field Menu or Combat Pause / Controls Guide or Battle Log")
+                    )) { ControlHintRow(it) }
                     item { ControlSectionHeading("Dialogue, stations, and display", accentColor) }
                     items(listOf(
                         DesktopControlHint("Enter", "Reveal dialogue, then advance a line without choices"),

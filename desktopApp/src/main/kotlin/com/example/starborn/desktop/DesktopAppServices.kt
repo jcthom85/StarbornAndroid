@@ -60,8 +60,10 @@ import java.io.File
  */
 class DesktopAppServices(
     val saveDirectory: File = defaultSaveDirectory(),
-    audioDriverOverride: AudioDriver? = null
+    audioDriverOverride: AudioDriver? = null,
+    gamepadServiceOverride: DesktopGamepadService? = null
 ) {
+    val gamepadService: DesktopGamepadService = gamepadServiceOverride ?: DesktopGamepadService()
     init {
         saveDirectory.mkdirs()
     }
@@ -474,6 +476,7 @@ class DesktopAppServices(
         }
         inventoryBridge.close()
         userSettingsStore.close()
+        gamepadService.close()
         audioDriver.release()
     }
 

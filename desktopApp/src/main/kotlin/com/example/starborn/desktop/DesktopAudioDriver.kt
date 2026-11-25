@@ -5,6 +5,7 @@ import com.example.starborn.core.platform.AudioDriver
 import com.example.starborn.domain.audio.*
 import java.io.BufferedInputStream
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -12,26 +13,351 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicLong
 import javax.sound.sampled.*
 import kotlin.math.log10
+import kotlin.math.min
 
 /**
  * High-performance desktop audio driver.
- * - Dedicated music/ambience worker prevents music changes from blocking UI and battle SFX.
- * - Dedicated SFX worker handles immediate feedback cues and voice.
- * - Decoupled background audio loader ensures music/cue decoding never stalls gain fading or the event loop.
- * - Seamless crossfading for music tracks: outgoing music gracefully fades to 0 over fadeMs while incoming track fades in from 0 to target gain.
- * - In-memory pre-decoded PCM cache for small sound cues eliminates repeated disk & decode latency.
- * - Automatic pre-warming of frequent UI/combat SFX at startup.
- * - Supports master volume scaling and instantaneous muting when the application window is unfocused.
+ * - Streams long MUSIC and AMBIENT MP3/WAV/OGG tracks via 4 KB SourceDataLine chunks (~20 KB RAM vs ~42 MB full-PCM Clip buffers).
+ * - Dedicated music/ambience worker prevents track changes from blocking UI and battle SFX.
+ * - Dedicated SFX worker + in-memory PCM cache + 4-voice polyphony for zero-latency UI, combat, and resampled voice cues.
+ * - Seamless equal-power crossfading for music and ambience with track-position memory and gapless loop points.
  */
-class DesktopAudioDriver(
+class DesktopAudioDriver private constructor(
     private val assetProvider: AssetProvider,
-    prewarmDefaults: Boolean = true,
-    private val clipFactory: (AudioFormat) -> Clip = { format ->
+    prewarmDefaults: Boolean,
+    private val customClipFactory: ((AudioFormat) -> Clip)?,
+    private val customStreamLineFactory: ((AudioFormat) -> SourceDataLine)?
+) : AudioDriver {
+
+    constructor(
+        assetProvider: AssetProvider,
+        prewarmDefaults: Boolean = true,
+        clipFactory: ((AudioFormat) -> Clip)? = null
+    ) : this(
+        assetProvider = assetProvider,
+        prewarmDefaults = prewarmDefaults,
+        customClipFactory = clipFactory,
+        customStreamLineFactory = null
+    )
+
+    private interface AudioPlaybackHandle {
+        val isOpen: Boolean
+        val isRunning: Boolean
+        val isStreaming: Boolean
+        val framePosition: Long
+        val frameLength: Long
+        var microsecondPosition: Long
+        val microsecondLength: Long
+        fun start()
+        fun loopContinuously(loopStartMs: Long? = null, loopEndMs: Long? = null)
+        fun stop()
+        fun close()
+        fun applyLinearVolume(volume: Float)
+    }
+
+    private class ClipPlaybackHandle(val clip: Clip) : AudioPlaybackHandle {
+        override val isOpen: Boolean get() = clip.isOpen
+        override val isRunning: Boolean get() = clip.isRunning
+        override val isStreaming: Boolean get() = false
+        override val framePosition: Long get() = clip.framePosition.toLong()
+        override val frameLength: Long get() = clip.frameLength.toLong()
+        override var microsecondPosition: Long
+            get() = clip.microsecondPosition
+            set(value) { clip.microsecondPosition = value }
+        override val microsecondLength: Long get() = clip.microsecondLength
+
+        override fun start() {
+            clip.start()
+        }
+
+        override fun loopContinuously(loopStartMs: Long?, loopEndMs: Long?) {
+            applyClipLoopPoints(clip, loopStartMs, loopEndMs)
+            clip.loop(Clip.LOOP_CONTINUOUSLY)
+        }
+
+        override fun stop() {
+            clip.stop()
+        }
+
+        override fun close() {
+            clip.close()
+        }
+
+        override fun applyLinearVolume(volume: Float) {
+            if (!clip.isOpen || !clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) return
+            val control = clip.getControl(FloatControl.Type.MASTER_GAIN) as FloatControl
+            val clamped = volume.coerceIn(0f, 1f)
+            control.value = if (clamped <= 0.0001f) control.minimum else (20f * log10(clamped)).coerceIn(control.minimum, control.maximum)
+        }
+
+        companion object {
+            private fun applyClipLoopPoints(clip: Clip, loopStartMs: Long?, loopEndMs: Long?) {
+                if (loopStartMs == null && loopEndMs == null) return
+                val frameLength = clip.frameLength
+                if (frameLength <= 2) return
+                val frameRate = clip.format.frameRate.takeIf { it > 0f } ?: 44100f
+                val startFrame = (((loopStartMs ?: 0L).coerceAtLeast(0L) * frameRate) / 1000f)
+                    .toInt()
+                    .coerceIn(0, frameLength - 2)
+                val endFrame = loopEndMs?.let {
+                    ((it * frameRate) / 1000f).toInt().coerceIn(startFrame + 1, frameLength - 1)
+                } ?: -1
+                try {
+                    clip.setLoopPoints(startFrame, endFrame)
+                } catch (_: Exception) {}
+            }
+        }
+    }
+
+    private class StreamingPlaybackHandle(
+        private val cue: String,
+        private val pcmFormat: AudioFormat,
+        private val line: SourceDataLine,
+        private val openDecodedStream: () -> AudioInputStream?
+    ) : AudioPlaybackHandle {
+        private val sampleRate = pcmFormat.sampleRate.takeIf { it > 0f } ?: 44100f
+        private val frameSize = pcmFormat.frameSize.takeIf { it > 0 } ?: (pcmFormat.channels.coerceAtLeast(1) * 2)
+        private val stateLock = Object()
+        private val currentFrame = AtomicLong(0L)
+        private val knownTotalFrames = AtomicLong(-1L)
+        private val pendingSeekFrame = AtomicLong(-1L)
+
+        @Volatile private var closed = false
+        @Volatile private var running = false
+        @Volatile private var looping = false
+        @Volatile private var loopStartFrame = 0L
+        @Volatile private var loopEndFrame = Long.MAX_VALUE
+        @Volatile private var softwareLinearGain = 1f
+        @Volatile private var pumpThread: Thread? = null
+
+        private val hasHardwareGain: Boolean = runCatching {
+            line.isOpen && line.isControlSupported(FloatControl.Type.MASTER_GAIN)
+        }.getOrDefault(false)
+
+        override val isOpen: Boolean get() = !closed && line.isOpen
+        override val isRunning: Boolean get() = !closed && running
+        override val isStreaming: Boolean get() = true
+        override val framePosition: Long get() = currentFrame.get()
+        override val frameLength: Long get() = knownTotalFrames.get().coerceAtLeast(1L)
+
+        override var microsecondPosition: Long
+            get() = ((currentFrame.get().toDouble() * 1_000_000.0) / sampleRate.toDouble()).toLong().coerceAtLeast(0L)
+            set(value) {
+                val targetFrame = ((value.coerceAtLeast(0L).toDouble() * sampleRate.toDouble()) / 1_000_000.0).toLong().coerceAtLeast(0L)
+                currentFrame.set(targetFrame)
+                pendingSeekFrame.set(targetFrame)
+                try {
+                    line.flush()
+                } catch (_: Exception) {}
+                synchronized(stateLock) { stateLock.notifyAll() }
+            }
+
+        override val microsecondLength: Long
+            get() {
+                val total = knownTotalFrames.get()
+                return if (total > 0L) ((total.toDouble() * 1_000_000.0) / sampleRate.toDouble()).toLong() else -1L
+            }
+
+        override fun start() {
+            if (closed) return
+            looping = false
+            running = true
+            ensurePumpStarted()
+            synchronized(stateLock) { stateLock.notifyAll() }
+        }
+
+        override fun loopContinuously(loopStartMs: Long?, loopEndMs: Long?) {
+            if (closed) return
+            loopStartFrame = loopStartMs?.let { ((it.coerceAtLeast(0L) * sampleRate) / 1000f).toLong() } ?: 0L
+            loopEndFrame = loopEndMs?.let { ((it.coerceAtLeast(1L) * sampleRate) / 1000f).toLong().coerceAtLeast(loopStartFrame + 1L) } ?: Long.MAX_VALUE
+            looping = true
+            running = true
+            ensurePumpStarted()
+            synchronized(stateLock) { stateLock.notifyAll() }
+        }
+
+        override fun stop() {
+            running = false
+            try {
+                line.stop()
+            } catch (_: Exception) {}
+            synchronized(stateLock) { stateLock.notifyAll() }
+        }
+
+        override fun close() {
+            if (closed) return
+            closed = true
+            running = false
+            synchronized(stateLock) { stateLock.notifyAll() }
+            pumpThread?.interrupt()
+            try {
+                line.stop()
+                line.flush()
+                line.close()
+            } catch (_: Exception) {}
+        }
+
+        override fun applyLinearVolume(volume: Float) {
+            val clamped = volume.coerceIn(0f, 1f)
+            softwareLinearGain = clamped
+            if (hasHardwareGain && line.isOpen) {
+                try {
+                    val control = line.getControl(FloatControl.Type.MASTER_GAIN) as FloatControl
+                    control.value = if (clamped <= 0.0001f) control.minimum else (20f * log10(clamped)).coerceIn(control.minimum, control.maximum)
+                } catch (_: Exception) {}
+            }
+        }
+
+        private fun ensurePumpStarted() {
+            synchronized(stateLock) {
+                if (pumpThread != null || closed) return
+                val thread = Thread(::pumpLoop, "starborn-audio-stream-$cue").apply { isDaemon = true }
+                pumpThread = thread
+                thread.start()
+            }
+        }
+
+        private fun skipFrames(stream: AudioInputStream, targetFrames: Long) {
+            if (targetFrames <= 0L) return
+            var remainingBytes = targetFrames * frameSize.toLong()
+            val skipBuf = ByteArray(STREAM_CHUNK_BYTES)
+            while (remainingBytes > 0L && !closed) {
+                val skipped = stream.skip(remainingBytes)
+                if (skipped > 0L) {
+                    remainingBytes -= skipped
+                } else {
+                    val toRead = min(skipBuf.size.toLong(), remainingBytes).toInt()
+                    val read = stream.read(skipBuf, 0, toRead)
+                    if (read <= 0) break
+                    remainingBytes -= read.toLong()
+                }
+            }
+        }
+
+        private fun pumpLoop() {
+            val readBuffer = ByteArray(STREAM_CHUNK_BYTES)
+            val scaledBuffer = ByteArray(STREAM_CHUNK_BYTES)
+            var stream: AudioInputStream? = null
+            try {
+                while (!closed) {
+                    if (!running) {
+                        synchronized(stateLock) {
+                            if (!running && !closed) {
+                                try {
+                                    stateLock.wait(100L)
+                                } catch (_: InterruptedException) {}
+                            }
+                        }
+                        continue
+                    }
+
+                    val seekFrame = pendingSeekFrame.getAndSet(-1L)
+                    if (seekFrame >= 0L || stream == null) {
+                        try { stream?.close() } catch (_: Exception) {}
+                        stream = openDecodedStream()
+                        if (stream == null) {
+                            running = false
+                            continue
+                        }
+                        val target = if (seekFrame >= 0L) seekFrame else currentFrame.get().coerceAtLeast(0L)
+                        skipFrames(stream, target)
+                        currentFrame.set(target)
+                    }
+
+                    val activeStream = stream ?: continue
+                    val framesBeforeEnd = if (looping && loopEndFrame < Long.MAX_VALUE) {
+                        (loopEndFrame - currentFrame.get()).coerceAtLeast(0L)
+                    } else Long.MAX_VALUE
+
+                    if (framesBeforeEnd == 0L) {
+                        knownTotalFrames.compareAndSet(-1L, currentFrame.get())
+                        try { activeStream.close() } catch (_: Exception) {}
+                        stream = null
+                        pendingSeekFrame.set(loopStartFrame)
+                        continue
+                    }
+
+                    val maxBytesToRead = min(
+                        readBuffer.size.toLong(),
+                        if (framesBeforeEnd == Long.MAX_VALUE) readBuffer.size.toLong() else framesBeforeEnd * frameSize.toLong()
+                    ).toInt().coerceAtLeast(frameSize)
+
+                    val bytesRead = activeStream.read(readBuffer, 0, maxBytesToRead)
+                    if (bytesRead <= 0) {
+                        knownTotalFrames.compareAndSet(-1L, currentFrame.get().coerceAtLeast(1L))
+                        try { activeStream.close() } catch (_: Exception) {}
+                        stream = null
+                        if (looping && !closed) {
+                            pendingSeekFrame.set(loopStartFrame)
+                        } else {
+                            try {
+                                line.drain()
+                                line.stop()
+                            } catch (_: Exception) {}
+                            running = false
+                        }
+                        continue
+                    }
+
+                    val alignedBytes = bytesRead - (bytesRead % frameSize)
+                    if (alignedBytes <= 0) continue
+
+                    val outBytes = if (!hasHardwareGain) {
+                        val gain = softwareLinearGain
+                        var i = 0
+                        while (i + 1 < alignedBytes) {
+                            val lo = readBuffer[i].toInt() and 0xFF
+                            val hi = readBuffer[i + 1].toInt()
+                            val sample = ((hi shl 8) or lo).toShort().toInt()
+                            val scaled = (sample * gain).toInt().coerceIn(-32768, 32767)
+                            scaledBuffer[i] = (scaled and 0xFF).toByte()
+                            scaledBuffer[i + 1] = ((scaled ushr 8) and 0xFF).toByte()
+                            i += 2
+                        }
+                        scaledBuffer
+                    } else {
+                        readBuffer
+                    }
+
+                    if (!closed && running) {
+                        if (!line.isRunning) {
+                            line.start()
+                        }
+                        val written = line.write(outBytes, 0, alignedBytes)
+                        if (written > 0) {
+                            currentFrame.addAndGet((written / frameSize).toLong())
+                        }
+                    }
+                }
+            } catch (_: InterruptedException) {
+                // Normal shutdown
+            } catch (_: Exception) {
+                running = false
+            } finally {
+                try { stream?.close() } catch (_: Exception) {}
+            }
+        }
+    }
+
+    private data class Playing(
+        val handle: AudioPlaybackHandle,
+        val cueGain: Float,
+        val loop: Boolean,
+        val loopStartMs: Long? = null,
+        val loopEndMs: Long? = null,
+        var envelope: Float = 1f,
+        var fadeVersion: Long = 0
+    )
+
+    private data class CachedPcm(val format: AudioFormat, val bytes: ByteArray)
+
+    private val useStreamingTracks: Boolean = customStreamLineFactory != null || customClipFactory == null
+    private val effectiveClipFactory: (AudioFormat) -> Clip = customClipFactory ?: { format ->
         AudioSystem.getLine(DataLine.Info(Clip::class.java, format)) as Clip
     }
-) : AudioDriver {
-    private data class Playing(val clip: Clip, val cueGain: Float, val loop: Boolean, var envelope: Float = 1f, var fadeVersion: Long = 0)
-    private data class CachedPcm(val format: AudioFormat, val bytes: ByteArray)
+    private val effectiveStreamLineFactory: (AudioFormat) -> SourceDataLine = customStreamLineFactory ?: { format ->
+        AudioSystem.getLine(DataLine.Info(SourceDataLine::class.java, format)) as SourceDataLine
+    }
 
     private val musicWorker: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor { task ->
         Thread(task, "starborn-music-worker").apply { isDaemon = true }
@@ -44,8 +370,8 @@ class DesktopAudioDriver(
     }
 
     private val active = ConcurrentHashMap<Pair<AudioCueType, String>, Playing>()
-    private val polyphonicSfx = ConcurrentHashMap<Pair<AudioCueType, String>, java.util.concurrent.CopyOnWriteArrayList<Playing>>()
-    private val fadingOutClips = ConcurrentHashMap.newKeySet<Clip>()
+    private val polyphonicSfx = ConcurrentHashMap<Pair<AudioCueType, String>, CopyOnWriteArrayList<Playing>>()
+    private val fadingOutHandles = ConcurrentHashMap.newKeySet<AudioPlaybackHandle>()
     private val sfxPcmCache = ConcurrentHashMap<String, CachedPcm>()
     private val userGains = ConcurrentHashMap<AudioCueType, Float>()
     private val layerGains = ConcurrentHashMap<AudioCueType, Float>()
@@ -53,11 +379,11 @@ class DesktopAudioDriver(
     private val reported = ConcurrentHashMap.newKeySet<String>()
     private val musicGeneration = AtomicLong(0)
     private val ambientGeneration = AtomicLong(0)
-    private var pendingMusicCue: String? = null // Owned by musicWorker.
-    private var pendingAmbientCue: String? = null // Owned by musicWorker.
-    private val musicPositions = mutableMapOf<String, Long>() // Owned by musicWorker.
+    private var pendingMusicCue: String? = null
+    private var pendingAmbientCue: String? = null
+    private val musicPositions = mutableMapOf<String, Long>()
     private val overlayPausedMusicCues = ConcurrentHashMap.newKeySet<String>()
-    private var backgroundPaused = false // Owned by musicWorker.
+    private var backgroundPaused = false
 
     @Volatile private var masterGain: Float = 1f
     @Volatile private var isMuted: Boolean = false
@@ -66,20 +392,20 @@ class DesktopAudioDriver(
     init {
         val cleanupTask = Runnable {
             active.entries.toList().forEach { (key, playing) ->
-                if (!playing.loop && !playing.clip.isRunning && playing.clip.framePosition >= playing.clip.frameLength) {
+                if (!playing.loop && !playing.handle.isRunning && playing.handle.framePosition >= playing.handle.frameLength) {
                     if (active.remove(key, playing)) {
                         try {
-                            playing.clip.close()
+                            playing.handle.close()
                         } catch (_: Exception) {}
                     }
                 }
             }
             polyphonicSfx.entries.toList().forEach { (key, voices) ->
                 voices.toList().forEach { playing ->
-                    if (!playing.loop && !playing.clip.isRunning && playing.clip.framePosition >= playing.clip.frameLength) {
+                    if (!playing.loop && !playing.handle.isRunning && playing.handle.framePosition >= playing.handle.frameLength) {
                         if (voices.remove(playing)) {
                             try {
-                                playing.clip.close()
+                                playing.handle.close()
                             } catch (_: Exception) {}
                         }
                     }
@@ -146,40 +472,40 @@ class DesktopAudioDriver(
         }
         polyphonicSfx.remove(key)?.forEach { voice ->
             if (command.fadeMs > 0) {
-                fadingOutClips.add(voice.clip)
+                fadingOutHandles.add(voice.handle)
                 fade(command.type, voice, 0f, command.fadeMs) {
-                    fadingOutClips.remove(voice.clip)
+                    fadingOutHandles.remove(voice.handle)
                     try {
-                        voice.clip.stop()
-                        voice.clip.close()
+                        voice.handle.stop()
+                        voice.handle.close()
                     } catch (_: Exception) {}
                 }
             } else {
                 try {
-                    voice.clip.stop()
-                    voice.clip.close()
+                    voice.handle.stop()
+                    voice.handle.close()
                 } catch (_: Exception) {}
             }
         }
         val playing = active.remove(key) ?: return
         if (command.type == AudioCueType.MUSIC) {
             overlayPausedMusicCues.remove(key.second)
-            musicPositions[key.second] = playing.clip.microsecondPosition
+            musicPositions[key.second] = playing.handle.microsecondPosition
             refreshAmbientCoexistenceGains()
         }
         if (command.fadeMs > 0) {
-            fadingOutClips.add(playing.clip)
+            fadingOutHandles.add(playing.handle)
             fade(command.type, playing, 0f, command.fadeMs) {
-                fadingOutClips.remove(playing.clip)
+                fadingOutHandles.remove(playing.handle)
                 try {
-                    playing.clip.stop()
-                    playing.clip.close()
+                    playing.handle.stop()
+                    playing.handle.close()
                 } catch (_: Exception) {}
             }
         } else {
             try {
-                playing.clip.stop()
-                playing.clip.close()
+                playing.handle.stop()
+                playing.handle.close()
             } catch (_: Exception) {}
         }
     }
@@ -191,8 +517,8 @@ class DesktopAudioDriver(
             overlayPausedMusicCues.clear()
             active.entries.filter { it.key.first == AudioCueType.MUSIC }.forEach { (key, playing) ->
                 if (active.remove(key, playing)) {
-                    playing.clip.stop()
-                    playing.clip.close()
+                    playing.handle.stop()
+                    playing.handle.close()
                 }
             }
             musicPositions.clear()
@@ -214,11 +540,11 @@ class DesktopAudioDriver(
             active.entries.firstOrNull { it.key.first == AudioCueType.MUSIC }?.value
         } ?: return null
         return try {
-            if (!playing.clip.isOpen) {
+            if (!playing.handle.isOpen) {
                 null
             } else {
-                val lenUs = playing.clip.microsecondLength
-                val posUs = playing.clip.microsecondPosition
+                val lenUs = playing.handle.microsecondLength
+                val posUs = playing.handle.microsecondPosition
                 val wrappedUs = if (lenUs > 0L) Math.floorMod(posUs, lenUs) else posUs.coerceAtLeast(0L)
                 wrappedUs / 1_000L
             }
@@ -240,10 +566,10 @@ class DesktopAudioDriver(
             val playing = targetEntry.value
             musicPositions.remove(cueKey)
             try {
-                if (playing.clip.isOpen) {
-                    playing.clip.microsecondPosition = 0L
-                    if (!backgroundPaused && !overlayPausedMusicCues.contains(cueKey) && !playing.clip.isRunning) {
-                        if (playing.loop) playing.clip.loop(Clip.LOOP_CONTINUOUSLY) else playing.clip.start()
+                if (playing.handle.isOpen) {
+                    playing.handle.microsecondPosition = 0L
+                    if (!backgroundPaused && !overlayPausedMusicCues.contains(cueKey) && !playing.handle.isRunning) {
+                        if (playing.loop) playing.handle.loopContinuously(playing.loopStartMs, playing.loopEndMs) else playing.handle.start()
                     }
                 }
             } catch (_: Exception) {}
@@ -264,9 +590,9 @@ class DesktopAudioDriver(
             val playing = targetEntry?.value ?: return@enqueue
             try {
                 if (paused) {
-                    playing.clip.stop()
-                } else if (!backgroundPaused && playing.clip.isOpen && !playing.clip.isRunning) {
-                    if (playing.loop) playing.clip.loop(Clip.LOOP_CONTINUOUSLY) else playing.clip.start()
+                    playing.handle.stop()
+                } else if (!backgroundPaused && playing.handle.isOpen && !playing.handle.isRunning) {
+                    if (playing.loop) playing.handle.loopContinuously(playing.loopStartMs, playing.loopEndMs) else playing.handle.start()
                 }
             } catch (_: Exception) {}
         }
@@ -278,9 +604,9 @@ class DesktopAudioDriver(
             backgroundPaused = paused
             active.entries.filter { it.key.first == AudioCueType.MUSIC }.forEach { (key, playing) ->
                 if (paused) {
-                    playing.clip.stop()
+                    playing.handle.stop()
                 } else if (!overlayPausedMusicCues.contains(key.second)) {
-                    if (playing.loop) playing.clip.loop(Clip.LOOP_CONTINUOUSLY) else playing.clip.start()
+                    if (playing.loop) playing.handle.loopContinuously(playing.loopStartMs, playing.loopEndMs) else playing.handle.start()
                 }
             }
         }
@@ -298,7 +624,7 @@ class DesktopAudioDriver(
         if (released) return
         try {
             worker.execute { if (!released) action() }
-        } catch (_: java.util.concurrent.RejectedExecutionException) { }
+        } catch (_: java.util.concurrent.RejectedExecutionException) {}
     }
 
     private fun normalize(cue: String) = cue.trim().lowercase().replace('-', '_')
@@ -357,12 +683,68 @@ class DesktopAudioDriver(
         }
     }
 
+    private fun openTrackHandle(cue: String, path: String): AudioPlaybackHandle? {
+        if (useStreamingTracks) {
+            val probeFormat = assetProvider.open(path)?.use { raw ->
+                AudioSystem.getAudioInputStream(BufferedInputStream(raw)).use { encoded ->
+                    createPcmFormat(encoded.format)
+                }
+            } ?: return null
+
+            val line = effectiveStreamLineFactory(probeFormat)
+            line.open(probeFormat, STREAM_LINE_BUFFER_BYTES)
+            val streamOpener: () -> AudioInputStream? = {
+                val raw = assetProvider.open(path)
+                if (raw == null) null else {
+                    try {
+                        val encoded = AudioSystem.getAudioInputStream(BufferedInputStream(raw))
+                        if (encoded.format.encoding == AudioFormat.Encoding.PCM_SIGNED &&
+                            encoded.format.sampleSizeInBits == 16 &&
+                            !encoded.format.isBigEndian
+                        ) {
+                            encoded
+                        } else {
+                            AudioSystem.getAudioInputStream(probeFormat, encoded)
+                        }
+                    } catch (e: Exception) {
+                        try { raw.close() } catch (_: Exception) {}
+                        null
+                    }
+                }
+            }
+            return StreamingPlaybackHandle(cue, probeFormat, line, streamOpener)
+        } else {
+            var loadedClip: Clip? = null
+            try {
+                assetProvider.open(path)?.use { raw ->
+                    AudioSystem.getAudioInputStream(BufferedInputStream(raw)).use { encoded ->
+                        val format = encoded.format
+                        val pcmFormat = createPcmFormat(format)
+                        val clip = effectiveClipFactory(if (format.encoding == AudioFormat.Encoding.PCM_SIGNED) format else pcmFormat)
+                        loadedClip = clip
+                        if (format.encoding == AudioFormat.Encoding.PCM_SIGNED) {
+                            clip.open(encoded)
+                        } else {
+                            AudioSystem.getAudioInputStream(pcmFormat, encoded).use { decoded ->
+                                clip.open(decoded)
+                            }
+                        }
+                    }
+                }
+                return loadedClip?.let(::ClipPlaybackHandle)
+            } catch (e: Exception) {
+                try { loadedClip?.close() } catch (_: Exception) {}
+                throw e
+            }
+        }
+    }
+
     private fun play(command: AudioCommand.Play) {
         val cue = normalize(command.cueId)
         if (cue.isEmpty()) return
         val key = command.type to cue
         val existing = active[key]
-        if (!command.restartFromBeginning && command.loop && existing?.loop == true && existing.clip.isRunning) return
+        if (!command.restartFromBeginning && command.loop && existing?.loop == true && existing.handle.isRunning) return
 
         when (command.type) {
             AudioCueType.MUSIC -> playMusicCrossfaded(command, key, cue)
@@ -380,12 +762,12 @@ class DesktopAudioDriver(
         outgoing.forEach { (oldKey, oldPlaying) ->
             if (active.remove(oldKey, oldPlaying)) {
                 val fadeOutMs = if (command.fadeMs > 0) command.fadeMs else 280L
-                fadingOutClips.add(oldPlaying.clip)
+                fadingOutHandles.add(oldPlaying.handle)
                 fade(AudioCueType.AMBIENT, oldPlaying, 0f, fadeOutMs) {
-                    fadingOutClips.remove(oldPlaying.clip)
+                    fadingOutHandles.remove(oldPlaying.handle)
                     try {
-                        oldPlaying.clip.stop()
-                        oldPlaying.clip.close()
+                        oldPlaying.handle.stop()
+                        oldPlaying.handle.close()
                     } catch (_: Exception) {}
                 }
             }
@@ -393,8 +775,8 @@ class DesktopAudioDriver(
 
         active.remove(key)?.let { oldSame ->
             try {
-                oldSame.clip.stop()
-                oldSame.clip.close()
+                oldSame.handle.stop()
+                oldSame.handle.close()
             } catch (_: Exception) {}
         }
 
@@ -402,35 +784,19 @@ class DesktopAudioDriver(
         try {
             audioLoader.execute {
                 if (released || ambientGeneration.get() != currentGen) return@execute
-                var loadedClip: Clip? = null
+                var handle: AudioPlaybackHandle? = null
                 try {
                     val path = resolvePath(cue) ?: return@execute
-                    assetProvider.open(path)?.use { raw ->
-                        AudioSystem.getAudioInputStream(BufferedInputStream(raw)).use { encoded ->
-                            val format = encoded.format
-                            val pcmFormat = createPcmFormat(format)
-                            val clip = clipFactory(if (format.encoding == AudioFormat.Encoding.PCM_SIGNED) format else pcmFormat)
-                            loadedClip = clip
-                            if (format.encoding == AudioFormat.Encoding.PCM_SIGNED) {
-                                clip.open(encoded)
-                            } else {
-                                AudioSystem.getAudioInputStream(pcmFormat, encoded).use { decoded ->
-                                    clip.open(decoded)
-                                }
-                            }
-                        }
-                    }
-
+                    handle = openTrackHandle(cue, path)
                     if (released || ambientGeneration.get() != currentGen) {
-                        try { loadedClip?.close() } catch (_: Exception) {}
+                        try { handle?.close() } catch (_: Exception) {}
                         return@execute
                     }
-
-                    val readyClip = loadedClip ?: return@execute
+                    val readyHandle = handle ?: return@execute
                     try {
                         musicWorker.execute {
                             if (released || ambientGeneration.get() != currentGen) {
-                                try { readyClip.close() } catch (_: Exception) {}
+                                try { readyHandle.close() } catch (_: Exception) {}
                                 return@execute
                             }
                             pendingAmbientCue = null
@@ -438,36 +804,42 @@ class DesktopAudioDriver(
                             active.entries.filter { it.key.first == AudioCueType.AMBIENT && it.key != key }.forEach { (oldKey, oldPlaying) ->
                                 if (active.remove(oldKey, oldPlaying)) {
                                     val fadeOutMs = if (command.fadeMs > 0) command.fadeMs else 280L
-                                    fadingOutClips.add(oldPlaying.clip)
+                                    fadingOutHandles.add(oldPlaying.handle)
                                     fade(AudioCueType.AMBIENT, oldPlaying, 0f, fadeOutMs) {
-                                        fadingOutClips.remove(oldPlaying.clip)
+                                        fadingOutHandles.remove(oldPlaying.handle)
                                         try {
-                                            oldPlaying.clip.stop()
-                                            oldPlaying.clip.close()
+                                            oldPlaying.handle.stop()
+                                            oldPlaying.handle.close()
                                         } catch (_: Exception) {}
                                     }
                                 }
                             }
 
                             val startEnvelope = if (command.fadeMs > 0) 0f else 1f
-                            val playing = Playing(readyClip, command.gain, command.loop, envelope = startEnvelope)
+                            val playing = Playing(
+                                handle = readyHandle,
+                                cueGain = command.gain,
+                                loop = command.loop,
+                                loopStartMs = command.loopStartMs,
+                                loopEndMs = command.loopEndMs,
+                                envelope = startEnvelope
+                            )
                             active[key] = playing
                             applyGain(AudioCueType.AMBIENT, playing)
                             if (command.loop) {
-                                applyLoopPoints(readyClip, command.loopStartMs, command.loopEndMs)
-                                readyClip.loop(Clip.LOOP_CONTINUOUSLY)
+                                readyHandle.loopContinuously(command.loopStartMs, command.loopEndMs)
                             } else {
-                                readyClip.start()
+                                readyHandle.start()
                             }
                             if (command.fadeMs > 0) {
                                 fade(AudioCueType.AMBIENT, playing, 1f, command.fadeMs)
                             }
                         }
                     } catch (_: java.util.concurrent.RejectedExecutionException) {
-                        try { readyClip.close() } catch (_: Exception) {}
+                        try { readyHandle.close() } catch (_: Exception) {}
                     }
                 } catch (error: Exception) {
-                    try { loadedClip?.close() } catch (_: Exception) {}
+                    try { handle?.close() } catch (_: Exception) {}
                     if (reported.add(cue)) System.err.println("Starborn audio '$cue': ${error.message}")
                 } finally {
                     enqueue(musicWorker) {
@@ -483,98 +855,84 @@ class DesktopAudioDriver(
         val currentGen = musicGeneration.incrementAndGet()
         pendingMusicCue = cue
 
-        // 1. Immediately extract and crossfade-out any other active music
         val outgoing = active.entries.filter { it.key.first == AudioCueType.MUSIC && it.key != key }
         outgoing.forEach { (oldKey, oldPlaying) ->
             if (active.remove(oldKey, oldPlaying)) {
-                musicPositions[oldKey.second] = oldPlaying.clip.microsecondPosition
+                musicPositions[oldKey.second] = oldPlaying.handle.microsecondPosition
                 val fadeOutMs = if (command.fadeMs > 0) command.fadeMs else 400L
-                fadingOutClips.add(oldPlaying.clip)
+                fadingOutHandles.add(oldPlaying.handle)
                 fade(AudioCueType.MUSIC, oldPlaying, 0f, fadeOutMs) {
-                    fadingOutClips.remove(oldPlaying.clip)
+                    fadingOutHandles.remove(oldPlaying.handle)
                     try {
-                        oldPlaying.clip.stop()
-                        oldPlaying.clip.close()
+                        oldPlaying.handle.stop()
+                        oldPlaying.handle.close()
                     } catch (_: Exception) {}
                 }
             }
         }
 
-        // If same track was active but non-looping or restarting:
         active.remove(key)?.let { oldSame ->
-            musicPositions[cue] = oldSame.clip.microsecondPosition
+            musicPositions[cue] = oldSame.handle.microsecondPosition
             try {
-                oldSame.clip.stop()
-                oldSame.clip.close()
+                oldSame.handle.stop()
+                oldSame.handle.close()
             } catch (_: Exception) {}
         }
 
-        // 2. Offload music stream decoding to audioLoader so musicWorker's fade ticks remain uninterrupted
         if (released) return
         try {
             audioLoader.execute {
                 if (released || musicGeneration.get() != currentGen) return@execute
-                var loadedClip: Clip? = null
+                var handle: AudioPlaybackHandle? = null
                 try {
                     val path = resolvePath(cue) ?: return@execute
-                    assetProvider.open(path)?.use { raw ->
-                        AudioSystem.getAudioInputStream(BufferedInputStream(raw)).use { encoded ->
-                            val format = encoded.format
-                            val pcmFormat = createPcmFormat(format)
-                            val clip = clipFactory(if (format.encoding == AudioFormat.Encoding.PCM_SIGNED) format else pcmFormat)
-                            loadedClip = clip
-                            if (format.encoding == AudioFormat.Encoding.PCM_SIGNED) {
-                                clip.open(encoded)
-                            } else {
-                                AudioSystem.getAudioInputStream(pcmFormat, encoded).use { decoded ->
-                                    clip.open(decoded)
-                                }
-                            }
-                        }
-                    }
-
+                    handle = openTrackHandle(cue, path)
                     if (released || musicGeneration.get() != currentGen) {
-                        try { loadedClip?.close() } catch (_: Exception) {}
+                        try { handle?.close() } catch (_: Exception) {}
                         return@execute
                     }
-
-                    val readyClip = loadedClip ?: return@execute
+                    val readyHandle = handle ?: return@execute
                     try {
                         musicWorker.execute {
                             if (released || musicGeneration.get() != currentGen) {
-                                try { readyClip.close() } catch (_: Exception) {}
+                                try { readyHandle.close() } catch (_: Exception) {}
                                 return@execute
                             }
                             pendingMusicCue = null
 
-                            // Extra safety check for any remaining outgoing music
                             active.entries.filter { it.key.first == AudioCueType.MUSIC && it.key != key }.forEach { (oldKey, oldPlaying) ->
                                 if (active.remove(oldKey, oldPlaying)) {
                                     val fadeOutMs = if (command.fadeMs > 0) command.fadeMs else 400L
-                                    fadingOutClips.add(oldPlaying.clip)
+                                    fadingOutHandles.add(oldPlaying.handle)
                                     fade(AudioCueType.MUSIC, oldPlaying, 0f, fadeOutMs) {
-                                        fadingOutClips.remove(oldPlaying.clip)
+                                        fadingOutHandles.remove(oldPlaying.handle)
                                         try {
-                                            oldPlaying.clip.stop()
-                                            oldPlaying.clip.close()
+                                            oldPlaying.handle.stop()
+                                            oldPlaying.handle.close()
                                         } catch (_: Exception) {}
                                     }
                                 }
                             }
 
                             val startEnvelope = if (command.fadeMs > 0) 0f else 1f
-                            val playing = Playing(readyClip, command.gain, command.loop, envelope = startEnvelope)
+                            val playing = Playing(
+                                handle = readyHandle,
+                                cueGain = command.gain,
+                                loop = command.loop,
+                                loopStartMs = command.loopStartMs,
+                                loopEndMs = command.loopEndMs,
+                                envelope = startEnvelope
+                            )
                             active[key] = playing
                             applyGain(AudioCueType.MUSIC, playing)
                             if (command.restartFromBeginning) musicPositions.remove(cue)
-                            readyClip.microsecondPosition = if (command.loop && !command.restartFromBeginning)
+                            readyHandle.microsecondPosition = if (command.loop && !command.restartFromBeginning)
                                 musicPositions[cue] ?: 0L else 0L
                             if (!backgroundPaused) {
                                 if (command.loop) {
-                                    applyLoopPoints(readyClip, command.loopStartMs, command.loopEndMs)
-                                    readyClip.loop(Clip.LOOP_CONTINUOUSLY)
+                                    readyHandle.loopContinuously(command.loopStartMs, command.loopEndMs)
                                 } else {
-                                    readyClip.start()
+                                    readyHandle.start()
                                 }
                             }
                             if (command.fadeMs > 0) {
@@ -583,10 +941,10 @@ class DesktopAudioDriver(
                             refreshAmbientCoexistenceGains()
                         }
                     } catch (_: java.util.concurrent.RejectedExecutionException) {
-                        try { readyClip.close() } catch (_: Exception) {}
+                        try { readyHandle.close() } catch (_: Exception) {}
                     }
                 } catch (error: Exception) {
-                    try { loadedClip?.close() } catch (_: Exception) {}
+                    try { handle?.close() } catch (_: Exception) {}
                     if (reported.add(cue)) System.err.println("Starborn audio '$cue': ${error.message}")
                 } finally {
                     enqueue(musicWorker) {
@@ -606,23 +964,23 @@ class DesktopAudioDriver(
                 active.entries.filter { it.key.first == AudioCueType.VOICE }.forEach { (oldKey, old) ->
                     active.remove(oldKey, old)
                     try {
-                        old.clip.stop()
-                        old.clip.close()
+                        old.handle.stop()
+                        old.handle.close()
                     } catch (_: Exception) {}
                 }
             }
             if (!allowPolyphony) {
                 active.remove(key)?.let {
                     try {
-                        it.clip.stop()
-                        it.clip.close()
+                        it.handle.stop()
+                        it.handle.close()
                     } catch (_: Exception) {}
                 }
             }
 
             val cached = if (isSfx) sfxPcmCache[cue] else null
             if (cached != null) {
-                clip = clipFactory(cached.format)
+                clip = effectiveClipFactory(cached.format)
                 val pcmBytes = if (command.pitch != 1.0f) resamplePcm(cached, command.pitch) else cached.bytes
                 clip.open(cached.format, pcmBytes, 0, pcmBytes.size)
             } else {
@@ -631,7 +989,7 @@ class DesktopAudioDriver(
                     AudioSystem.getAudioInputStream(BufferedInputStream(raw)).use { encoded ->
                         val format = encoded.format
                         val pcmFormat = createPcmFormat(format)
-                        clip = clipFactory(if (format.encoding == AudioFormat.Encoding.PCM_SIGNED) format else pcmFormat)
+                        clip = effectiveClipFactory(if (format.encoding == AudioFormat.Encoding.PCM_SIGNED) format else pcmFormat)
                         if (format.encoding == AudioFormat.Encoding.PCM_SIGNED) {
                             if (isSfx) {
                                 val bytes = encoded.readAllBytes()
@@ -663,21 +1021,29 @@ class DesktopAudioDriver(
             }
 
             val readyClip = clip ?: return
-            val playing = Playing(readyClip, command.gain, command.loop, if (command.fadeMs > 0) 0f else 1f)
+            val handle = ClipPlaybackHandle(readyClip)
+            val playing = Playing(
+                handle = handle,
+                cueGain = command.gain,
+                loop = command.loop,
+                loopStartMs = command.loopStartMs,
+                loopEndMs = command.loopEndMs,
+                envelope = if (command.fadeMs > 0) 0f else 1f
+            )
             if (allowPolyphony) {
-                val voices = polyphonicSfx.computeIfAbsent(key) { java.util.concurrent.CopyOnWriteArrayList() }
+                val voices = polyphonicSfx.computeIfAbsent(key) { CopyOnWriteArrayList() }
                 voices.toList().forEach { prev ->
-                    if (!prev.clip.isRunning && prev.clip.framePosition >= prev.clip.frameLength) {
+                    if (!prev.handle.isRunning && prev.handle.framePosition >= prev.handle.frameLength) {
                         if (voices.remove(prev)) {
-                            try { prev.clip.close() } catch (_: Exception) {}
+                            try { prev.handle.close() } catch (_: Exception) {}
                         }
                     }
                 }
                 while (voices.size >= MAX_SFX_VOICES_PER_CUE) {
                     val oldest = voices.removeAt(0)
                     try {
-                        oldest.clip.stop()
-                        oldest.clip.close()
+                        oldest.handle.stop()
+                        oldest.handle.close()
                     } catch (_: Exception) {}
                 }
                 voices.add(playing)
@@ -685,7 +1051,7 @@ class DesktopAudioDriver(
                 active[key] = playing
             }
             applyGain(command.type, playing)
-            if (command.loop) readyClip.loop(Clip.LOOP_CONTINUOUSLY) else readyClip.start()
+            if (command.loop) handle.loopContinuously(command.loopStartMs, command.loopEndMs) else handle.start()
             if (command.fadeMs > 0) {
                 fade(command.type, playing, 1f, command.fadeMs)
             }
@@ -693,22 +1059,6 @@ class DesktopAudioDriver(
             try { clip?.close() } catch (_: Exception) {}
             if (reported.add(cue)) System.err.println("Starborn audio '$cue': ${error.message}")
         }
-    }
-
-    private fun applyLoopPoints(clip: Clip, loopStartMs: Long?, loopEndMs: Long?) {
-        if (loopStartMs == null && loopEndMs == null) return
-        val frameLength = clip.frameLength
-        if (frameLength <= 2) return
-        val frameRate = clip.format.frameRate.takeIf { it > 0f } ?: 44100f
-        val startFrame = (((loopStartMs ?: 0L).coerceAtLeast(0L) * frameRate) / 1000f)
-            .toInt()
-            .coerceIn(0, frameLength - 2)
-        val endFrame = loopEndMs?.let {
-            ((it * frameRate) / 1000f).toInt().coerceIn(startFrame + 1, frameLength - 1)
-        } ?: -1
-        try {
-            clip.setLoopPoints(startFrame, endFrame)
-        } catch (_: Exception) { }
     }
 
     private fun fade(type: AudioCueType, playing: Playing, target: Float, duration: Long, done: () -> Unit = {}) {
@@ -720,7 +1070,7 @@ class DesktopAudioDriver(
         for (step in 1..steps) {
             try {
                 worker.schedule({
-                    if (!released && playing.fadeVersion == version && playing.clip.isOpen) {
+                    if (!released && playing.fadeVersion == version && playing.handle.isOpen) {
                         val progress = step.toDouble() / steps.toDouble()
                         val factor = if (equalPower) {
                             if (target >= start) kotlin.math.sin(progress * Math.PI / 2.0).toFloat()
@@ -765,38 +1115,42 @@ class DesktopAudioDriver(
     }
 
     private fun applyGain(type: AudioCueType, playing: Playing) {
-        val clip = playing.clip
-        if (!clip.isOpen || !clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) return
-        val control = clip.getControl(FloatControl.Type.MASTER_GAIN) as FloatControl
+        if (!playing.handle.isOpen) return
         val master = if (isMuted) 0f else masterGain
         val coexistenceTrim = if (type == AudioCueType.AMBIENT && active.keys.any { it.first == AudioCueType.MUSIC }) 0.50f else 1f
         val volume = (master * (userGains[type] ?: 1f) * (layerGains[type] ?: 1f) * playing.cueGain * playing.envelope * coexistenceTrim).coerceIn(0f, 1f)
-        control.value = if (volume <= .0001f) control.minimum else (20 * log10(volume)).coerceIn(control.minimum, control.maximum)
+        playing.handle.applyLinearVolume(volume)
     }
 
     fun isPlaying(type: AudioCueType, cueId: String): Boolean {
         val key = type to normalize(cueId)
         val single = active[key]
-        if (single != null && single.clip.isOpen && single.clip.isRunning) return true
-        return polyphonicSfx[key]?.any { it.clip.isOpen && it.clip.isRunning } == true
+        if (single != null && single.handle.isOpen && single.handle.isRunning) return true
+        return polyphonicSfx[key]?.any { it.handle.isOpen && it.handle.isRunning } == true
+    }
+
+    fun isStreamingActive(type: AudioCueType, cueId: String): Boolean {
+        val key = type to normalize(cueId)
+        val single = active[key] ?: return false
+        return single.handle.isStreaming && single.handle.isOpen && single.handle.isRunning
     }
 
     fun activeVoiceCount(type: AudioCueType, cueId: String): Int {
         val key = type to normalize(cueId)
-        val polyCount = polyphonicSfx[key]?.count { it.clip.isOpen && it.clip.isRunning } ?: 0
-        val singleCount = if (active[key]?.let { it.clip.isOpen && it.clip.isRunning } == true) 1 else 0
+        val polyCount = polyphonicSfx[key]?.count { it.handle.isOpen && it.handle.isRunning } ?: 0
+        val singleCount = if (active[key]?.let { it.handle.isOpen && it.handle.isRunning } == true) 1 else 0
         return polyCount + singleCount
     }
 
     fun activeCues(type: AudioCueType): List<String> =
         (active.keys.filter { it.first == type }.map { it.second } +
-            polyphonicSfx.entries.filter { it.key.first == type && it.value.any { v -> v.clip.isOpen && v.clip.isRunning } }.map { it.key.second })
+            polyphonicSfx.entries.filter { it.key.first == type && it.value.any { v -> v.handle.isOpen && v.handle.isRunning } }.map { it.key.second })
             .distinct()
 
     fun isPcmCached(cueId: String): Boolean =
         sfxPcmCache.containsKey(normalize(cueId))
 
-    fun fadingOutCount(): Int = fadingOutClips.size
+    fun fadingOutCount(): Int = fadingOutHandles.size
 
     override fun release() {
         released = true
@@ -805,27 +1159,27 @@ class DesktopAudioDriver(
         audioLoader.shutdownNow()
         active.values.forEach {
             try {
-                it.clip.stop()
-                it.clip.close()
+                it.handle.stop()
+                it.handle.close()
             } catch (_: Exception) {}
         }
         active.clear()
         polyphonicSfx.values.forEach { voices ->
             voices.forEach {
                 try {
-                    it.clip.stop()
-                    it.clip.close()
+                    it.handle.stop()
+                    it.handle.close()
                 } catch (_: Exception) {}
             }
         }
         polyphonicSfx.clear()
-        fadingOutClips.forEach { clip ->
+        fadingOutHandles.forEach { handle ->
             try {
-                clip.stop()
-                clip.close()
+                handle.stop()
+                handle.close()
             } catch (_: Exception) {}
         }
-        fadingOutClips.clear()
+        fadingOutHandles.clear()
         sfxPcmCache.clear()
     }
 
@@ -836,7 +1190,7 @@ class DesktopAudioDriver(
         }
         val format = cached.format
         val channels = format.channels
-        val bytesPerSample = 2 // 16-bit signed PCM
+        val bytesPerSample = 2
         val frameSize = channels * bytesPerSample
         val totalFrames = cached.bytes.size / frameSize
         if (totalFrames <= 1) return cached.bytes
@@ -875,6 +1229,20 @@ class DesktopAudioDriver(
 
     companion object {
         const val MAX_SFX_VOICES_PER_CUE = 4
+        const val STREAM_CHUNK_BYTES = 4_096
+        private const val STREAM_LINE_BUFFER_BYTES = 16_384
+
+        internal fun createStreamingForTest(
+            assetProvider: AssetProvider,
+            streamLineFactory: (AudioFormat) -> SourceDataLine,
+            clipFactory: ((AudioFormat) -> Clip)? = null
+        ): DesktopAudioDriver = DesktopAudioDriver(
+            assetProvider = assetProvider,
+            prewarmDefaults = false,
+            customClipFactory = clipFactory,
+            customStreamLineFactory = streamLineFactory
+        )
+
         val DEFAULT_PREWARM_CUES = listOf(
             "ui_click", "ui_back", "ui_confirm", "ui_error", "ui_room_move", "ui_title_start",
             "sfx_ui_button_click", "sfx_ui_cancel", "sfx_ui_confirm", "sfx_ui_tab_switch",

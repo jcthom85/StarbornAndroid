@@ -16,6 +16,18 @@ tasks.withType<Test>().configureEach {
     maxParallelForks = 1
 }
 
+val lwjglVersion = "3.4.1"
+val hostOsName = System.getProperty("os.name").orEmpty().lowercase()
+val hostOsArch = System.getProperty("os.arch").orEmpty().lowercase()
+val lwjglNatives = when {
+    hostOsName.contains("mac") && (hostOsArch.contains("aarch64") || hostOsArch.contains("arm")) -> "natives-macos-arm64"
+    hostOsName.contains("mac") -> "natives-macos"
+    hostOsName.contains("win") && hostOsArch.contains("aarch64") -> "natives-windows-arm64"
+    hostOsName.contains("win") -> "natives-windows"
+    hostOsArch.contains("aarch64") || hostOsArch.contains("arm64") -> "natives-linux-arm64"
+    else -> "natives-linux"
+}
+
 dependencies {
     implementation(project(":gameRuntime"))
     implementation(project(":shared"))
@@ -35,6 +47,11 @@ dependencies {
     implementation("com.googlecode.soundlibs:mp3spi:1.9.5.4")
     implementation("com.googlecode.soundlibs:jlayer:1.0.1.4")
     implementation("com.googlecode.soundlibs:tritonus-share:0.3.7.4")
+    implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
+    implementation("org.lwjgl:lwjgl")
+    implementation("org.lwjgl:lwjgl-sdl")
+    runtimeOnly("org.lwjgl:lwjgl::$lwjglNatives")
+    runtimeOnly("org.lwjgl:lwjgl-sdl::$lwjglNatives")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
     testImplementation(libs.junit)
     testImplementation(compose.desktop.uiTestJUnit4)

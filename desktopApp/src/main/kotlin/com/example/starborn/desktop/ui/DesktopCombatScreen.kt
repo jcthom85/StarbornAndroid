@@ -99,12 +99,13 @@ private fun DesktopCombatContent(
     val loadedSettings = initialSettings ?: return
     val settings by services.userSettingsStore.settings.collectAsState(initial = loadedSettings)
     val bindings by services.userSettingsStore.keyBindings.collectAsState(initial = LocalDesktopKeyBindings.current)
-    val attackGlyph = "[${bindings.label(DesktopAction.COMBAT_ATTACK)}]"
-    val skillsGlyph = "[${bindings.label(DesktopAction.COMBAT_SKILLS)}]"
-    val itemsGlyph = "[${bindings.label(DesktopAction.COMBAT_ITEMS)}]"
-    val snackGlyph = "[${bindings.label(DesktopAction.COMBAT_SNACK)}]"
-    val guardGlyph = "[${bindings.label(DesktopAction.COMBAT_GUARD)}]"
-    val retreatGlyph = "[${bindings.label(DesktopAction.COMBAT_RETREAT)}]"
+    val inputDevice by services.gamepadService.activeInputDevice.collectAsState()
+    val attackGlyph = inputDevice.glyphForCombat(DesktopAction.COMBAT_ATTACK, bindings)
+    val skillsGlyph = inputDevice.glyphForCombat(DesktopAction.COMBAT_SKILLS, bindings)
+    val itemsGlyph = inputDevice.glyphForCombat(DesktopAction.COMBAT_ITEMS, bindings)
+    val snackGlyph = inputDevice.glyphForCombat(DesktopAction.COMBAT_SNACK, bindings)
+    val guardGlyph = inputDevice.glyphForCombat(DesktopAction.COMBAT_GUARD, bindings)
+    val retreatGlyph = inputDevice.glyphForCombat(DesktopAction.COMBAT_RETREAT, bindings)
     val scope = rememberCoroutineScope()
     val runtime = remember(services, enemyIds) {
         CombatController(services.worldDataSource, services.combatEngine, services.statusRegistry,
@@ -150,7 +151,20 @@ private fun DesktopCombatContent(
     val playerIdSet = remember(runtime.playerParty) { runtime.playerParty.map { it.id.lowercase() }.toSet() }
     val stageShakeX = remember { Animatable(0f) }
     val stageShakeY = remember { Animatable(0f) }
+    LaunchedEffect(menu, targetAction, timedPrompt) {
+        services.gamepadService.context = services.gamepadService.context.copy(
+            combatSubmenuOpen = menu != null,
+            combatTargetOrTimedPromptActive = targetAction != null || timedPrompt != null
+        )
+    }
     fun triggerStageShake(heavy: Boolean) {
+        if (!settings.disableHaptics) {
+            services.gamepadService.rumble(
+                lowFrequency = if (heavy) 0.82f else 0.42f,
+                highFrequency = if (heavy) 0.65f else 0.32f,
+                durationMs = if (heavy) 220 else 120
+            )
+        }
         if (settings.disableScreenshake) return
         val amp = if (heavy) 8.5f else 4.8f
         scope.launch {

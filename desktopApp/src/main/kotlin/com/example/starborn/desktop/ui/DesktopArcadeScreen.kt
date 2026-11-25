@@ -196,6 +196,9 @@ fun DesktopArcadeScreen(services: DesktopAppServices, onClose: () -> Unit) {
         mutableStateOf(services.activeArcadeCabinet?.takeIf { services.arcadeService.progress(it).repaired })
     }
     var selectedIndex by remember { mutableStateOf(0) }
+    LaunchedEffect(playing) {
+        services.gamepadService.context = services.gamepadService.context.copy(arcadeInGame = playing != null)
+    }
 
     val back = { playing = null }
     val cue: (String) -> Unit = { cueName ->

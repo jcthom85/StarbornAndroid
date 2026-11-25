@@ -42,6 +42,7 @@ fun DesktopKeyBadge(
     keyGlyph: String,
     label: String,
     modifier: Modifier = Modifier,
+    stableTagKey: String = keyGlyph,
     icon: ImageVector? = null,
     highlighted: Boolean = false,
     enabled: Boolean = true,
@@ -64,7 +65,7 @@ fun DesktopKeyBadge(
                     } else Modifier
                 )
                 .clearAndSetSemantics {
-                    testTag = "key-legend-$keyGlyph"
+                    testTag = "key-legend-$stableTagKey"
                     set(androidx.compose.ui.semantics.SemanticsProperties.Text, listOf(androidx.compose.ui.text.AnnotatedString(label), androidx.compose.ui.text.AnnotatedString("$label [$keyGlyph]")))
                     contentDescription = "$label [$keyGlyph]"
                     if (onClick != null) {
@@ -156,6 +157,7 @@ fun DesktopExplorationKeyLegendHud(
     onOpenMenu: () -> Unit = {}
 ) {
     val bindings = LocalDesktopKeyBindings.current
+    val inputDevice = LocalDesktopInputDevice.current
     val coroutineScope = rememberCoroutineScope()
     var saveNotice by remember { mutableStateOf<String?>(null) }
     var saving by remember { mutableStateOf(false) }
@@ -180,11 +182,12 @@ fun DesktopExplorationKeyLegendHud(
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                     DesktopKeyBadge(
-                        keyGlyph = bindings.label(DesktopAction.QUICK_SAVE),
+                        keyGlyph = inputDevice.glyphForExploration(DesktopAction.QUICK_SAVE, bindings),
+                        stableTagKey = bindings.label(DesktopAction.QUICK_SAVE),
                         label = if (saving) "Saving..." else saveNotice ?: "Save",
                         highlighted = saveNotice == "Saved!",
                         enabled = !blocked && !saving,
-                        tooltip = "Quick save game state [${bindings.label(DesktopAction.QUICK_SAVE)}]",
+                        tooltip = "Quick save game state [${inputDevice.glyphForExploration(DesktopAction.QUICK_SAVE, bindings)}]",
                         onClick = {
                             if (!blocked && !saving) {
                                 coroutineScope.launch {
@@ -202,19 +205,21 @@ fun DesktopExplorationKeyLegendHud(
                     )
 
                     DesktopKeyBadge(
-                        keyGlyph = bindings.label(DesktopAction.HELP),
+                        keyGlyph = inputDevice.glyphForExploration(DesktopAction.HELP, bindings),
+                        stableTagKey = bindings.label(DesktopAction.HELP),
                         label = "Controls",
                         enabled = true,
-                        tooltip = "View keyboard and mouse controls [${bindings.label(DesktopAction.HELP)}]",
+                        tooltip = "View keyboard, mouse, and controller controls [${inputDevice.glyphForExploration(DesktopAction.HELP, bindings)}]",
                         onClick = onOpenControls
                     )
                 // Menu
                 DesktopKeyBadge(
-                    keyGlyph = bindings.label(DesktopAction.MENU),
+                    keyGlyph = inputDevice.glyphForExploration(DesktopAction.MENU, bindings),
+                    stableTagKey = bindings.label(DesktopAction.MENU),
                     label = "Menu",
                     highlighted = true,
                     enabled = !blocked,
-                    tooltip = "Open field menu [${bindings.label(DesktopAction.MENU)}]",
+                    tooltip = "Open field menu [${inputDevice.glyphForExploration(DesktopAction.MENU, bindings)}]",
                     onClick = onOpenMenu
                 )
             }
@@ -226,34 +231,41 @@ fun DesktopExplorationKeyLegendHud(
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 DesktopKeyBadge(
-                    keyGlyph = listOf(DesktopAction.NORTH, DesktopAction.WEST, DesktopAction.SOUTH, DesktopAction.EAST).joinToString("/") { bindings.label(it) },
+                    keyGlyph = inputDevice.moveGlyph(bindings),
+                    stableTagKey = listOf(DesktopAction.NORTH, DesktopAction.WEST, DesktopAction.SOUTH, DesktopAction.EAST).joinToString("/") { bindings.label(it) },
                     label = "Move",
                     enabled = !blocked,
-                    tooltip = "Move with the displayed keys or arrow keys"
+                    tooltip = "Move with the displayed keys, arrow keys, or left stick / D-Pad"
                 )
 
                 DesktopKeyBadge(
-                    keyGlyph = bindings.label(DesktopAction.ACTIONS), label = "Actions",
-                    enabled = !blocked, tooltip = "Choose a room interaction", onClick = onChooseActions
+                    keyGlyph = inputDevice.glyphForExploration(DesktopAction.ACTIONS, bindings),
+                    stableTagKey = bindings.label(DesktopAction.ACTIONS),
+                    label = "Actions",
+                    enabled = !blocked,
+                    tooltip = "Choose a room interaction",
+                    onClick = onChooseActions
                 )
                 if (hasInteractiveActions) {
                     DesktopKeyBadge(
-                        keyGlyph = bindings.label(DesktopAction.INTERACT),
+                        keyGlyph = inputDevice.glyphForExploration(DesktopAction.INTERACT, bindings),
+                        stableTagKey = bindings.label(DesktopAction.INTERACT),
                         label = "Interact",
                         highlighted = true,
                         enabled = !blocked,
-                        tooltip = "Use the first available room action [${bindings.label(DesktopAction.INTERACT)}]",
+                        tooltip = "Use the first available room action [${inputDevice.glyphForExploration(DesktopAction.INTERACT, bindings)}]",
                         onClick = onInteractFirst
                     )
                 }
 
                 if (canMap) {
                     DesktopKeyBadge(
-                        keyGlyph = bindings.label(DesktopAction.MAP),
+                        keyGlyph = inputDevice.glyphForExploration(DesktopAction.MAP, bindings),
+                        stableTagKey = bindings.label(DesktopAction.MAP),
                         label = "Map",
                         highlighted = ui.canReturnToHub,
                         enabled = !blocked,
-                        tooltip = "Open field map [${bindings.label(DesktopAction.MAP)}]",
+                        tooltip = "Open field map [${inputDevice.glyphForExploration(DesktopAction.MAP, bindings)}]",
                         onClick = onOpenMap
                     )
                 }

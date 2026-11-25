@@ -203,6 +203,12 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
         queuedNotice == ExplorationNotice.PROMPT -> { { runtime.dismissPrompt(ui.prompt?.id) } }
         else -> null
     }
+    LaunchedEffect(menuOpen, shopId, cookingSource, ui.activeDialogue, acknowledgeForeground != null) {
+        services.gamepadService.context = services.gamepadService.context.copy(
+            explorationDialogueOrPromptOpen = ui.activeDialogue != null || acknowledgeForeground != null,
+            explorationMenuOrStationOpen = menuOpen || shopId != null || cookingSource != null
+        )
+    }
 
     CompositionLocalProvider(LocalExplorationDrawer provides drawer) {
     BoxWithConstraints(Modifier.fillMaxSize().focusRequester(keyboardFocus).pointerInput(controlsOpen, environmentPreview, drawer.panel, ui.prompt, ui.narrationPrompt, ui.eventAnnouncement, ui.activeDialogue, ui.cinematic, ui.tuningPuzzle) {

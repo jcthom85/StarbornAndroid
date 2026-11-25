@@ -8,9 +8,13 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.starborn.desktop.DesktopAppServices
+import com.example.starborn.desktop.DesktopInputDevice
+
+internal val LocalDesktopInputDevice = staticCompositionLocalOf { DesktopInputDevice.KEYBOARD_MOUSE }
 
 val StarbornShapes = Shapes(
     extraSmall = RoundedCornerShape(4.dp),
@@ -27,6 +31,8 @@ fun DesktopStarbornTheme(
 ) {
     val bindings = services?.userSettingsStore?.keyBindings?.collectAsState(initial = com.example.starborn.desktop.DesktopKeyBindings())?.value
         ?: LocalDesktopKeyBindings.current
+    val inputDevice = services?.gamepadService?.activeInputDevice?.collectAsState()?.value
+        ?: LocalDesktopInputDevice.current
     val fontBundle = services?.assetProvider?.let { rememberStarbornFonts(it) } ?: LocalStarbornFonts.current
     val typography = services?.let { desktopStarbornTypography(it) } ?: MaterialTheme.typography
 
@@ -49,6 +55,7 @@ fun DesktopStarbornTheme(
             LocalContentColor provides MaterialTheme.colorScheme.onSurface,
             LocalStarbornFonts provides fontBundle,
             LocalDesktopKeyBindings provides bindings,
+            LocalDesktopInputDevice provides inputDevice,
             content = content
         )
     }
