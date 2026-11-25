@@ -67,18 +67,29 @@ internal fun DesktopBattleFormation(
         val parts = members.associate { it.combatant.id to composite(it.combatant.id) }
         val isComposite = enemySide && parts.isNotEmpty() && parts.values.all { it != null } &&
             parts.values.map { it?.group }.distinct().size == 1
-        val hud = if (isComposite) 112f else 0f
-        if (isComposite) Box(Modifier.fillMaxWidth().align(Alignment.TopCenter).zIndex(2f)) {
+        val targetRows = (members.size + 2) / 3
+        val hud = if (!isComposite) 0f else if (targetRows <= 1) 64f else 112f
+        val orderedCompositeIds = remember(members, parts) {
+            members.sortedWith(
+                compareBy<CombatantState>(
+                    { parts[it.combatant.id]?.offsetX ?: 0f },
+                    { parts[it.combatant.id]?.offsetY ?: 0f }
+                )
+            ).map { it.combatant.id }
+        }
+        if (isComposite) Box(Modifier.fillMaxWidth().align(Alignment.TopCenter).zIndex(10f)) {
             com.example.starborn.ui.combat.LinkedEnemyTargets(
                 authoredState ?: com.example.starborn.domain.combat.CombatState(emptyList(), 0, members.associateBy { it.combatant.id }),
-                members.map { it.combatant.id }, setOfNotNull(selectedId), onSelect)
+                orderedCompositeIds, setOfNotNull(selectedId), onSelect)
         }
         val placements = if (isComposite) {
             val layouts = parts.values.filterNotNull()
+            val silence = layouts.any { it.group == "vale_silence" }
+            val titan = layouts.any { it.group == "titan_walker" }
             val extentX = layouts.maxOf { kotlin.math.abs(it.offsetX) + it.widthScale / 2f }.coerceAtLeast(.5f) * 2
             val extentY = layouts.maxOf { kotlin.math.abs(it.offsetY) + it.heightScale / 2f }.coerceAtLeast(.5f) * 2
-            val unit = minOf(maxWidth.value / extentX, (maxHeight.value - hud).coerceAtLeast(1f) / extentY) * .90f
-            val titan = layouts.any { it.group == "titan_walker" }
+            val fitScale = if (silence) .98f else .90f
+            val unit = minOf(maxWidth.value / extentX, (maxHeight.value - hud).coerceAtLeast(1f) / extentY) * fitScale
             members.map { member ->
                 val part = requireNotNull(parts[member.combatant.id])
                 FormationPlacement(member.combatant.id,
@@ -94,8 +105,9 @@ internal fun DesktopBattleFormation(
         placements.forEach { placement ->
             val member = members.firstOrNull { it.combatant.id == placement.id } ?: return@forEach
             val id = member.combatant.id
+            val partZ = if (isComposite) (parts[id]?.z ?: 0).toFloat() else 0f
             key(id) {
-                Box(Modifier.offset(x = placement.x.dp, y = placement.y.dp).width(placement.width.dp)) {
+                Box(Modifier.offset(x = placement.x.dp, y = placement.y.dp).width(placement.width.dp).zIndex(partZ)) {
                     DesktopBattleFigure(member, sprite(id), services, enemySide,
                         selectedId == id, id in validTargets, targeting, meters[id], intents[id], feedback[id],
                         placement.spriteHeight.dp, placement.width.dp,

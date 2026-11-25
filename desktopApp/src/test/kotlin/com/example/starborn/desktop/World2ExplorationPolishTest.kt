@@ -44,7 +44,10 @@ class World2ExplorationPolishTest {
         s.exploration.dismissRoomObject()
         forward(); s.exploration.confirmRoomObject()
         compose.waitUntil(5000) { s.exploration.uiState.value.currentRoom?.id == "sector9_landing_drop" }
-        assertEquals("Pod Fragment", s.exploration.uiState.value.areaEntry?.title)
+        assertEquals(
+            "Pod Fragment",
+            s.exploration.uiState.value.roomTransition?.destinationTitle ?: s.exploration.uiState.value.areaEntry?.title
+        )
         assertTrue(s.saveManager.saveGame(9, s.sessionStore.state.value))
         assertTrue(s.loadSlot(9))
         compose.waitUntil(10000) { !s.exploration.uiState.value.isLoading }
@@ -70,7 +73,9 @@ class World2ExplorationPolishTest {
     }
     @Test fun questStarterRemainsVisibleWhileDormantQuestTasksStayPlain() = services { s ->
         s.sessionStore.restore(s.sessionStore.state.value.copy(roomId = "sector9_canopy", activeQuests = emptySet(),
-            completedQuests = emptySet(), completedMilestones = emptySet(), completedEvents = emptySet(), questTasksCompleted = emptyMap()))
+            completedQuests = emptySet(), completedMilestones = emptySet(), completedEvents = emptySet(),
+            roomStates = mapOf("sector9_canopy" to mapOf("encounter_cleared:spore_spitter|stalker_vine" to true)),
+            questTasksCompleted = emptyMap()))
         compose.waitUntil(10000) { s.exploration.uiState.value.currentRoom?.id == "sector9_canopy" }
         val starter = s.exploration.uiState.value.actions.single { it.name == "Scavenge remains" }
         s.exploration.onActionSelected(starter)

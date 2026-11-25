@@ -1,6 +1,6 @@
 # World 5 — The Void / The Cradle: complete step-by-step walkthrough
 
-Rebuilt November 12, 2026 against the current authored rooms, actions, quest prerequisites and puzzle settings. Full spoilers. This ordered route includes all five main quests, all five side quests, all 81 Ring rooms, optional caches, arcade discovery, fishing, relic tuning, recovery instructions and a complete Journal checklist. Source-checked; this newly ordered itinerary still needs a full phone playthrough. The November 12 readiness pass renames the service rooms and restores quest aftermath text; install a build containing that pass to see the updated names.
+Rebuilt November 12, 2026 against the current authored rooms, actions, quest prerequisites and puzzle settings. Full spoilers. This ordered route includes all five main quests, all five side quests, all 61 Ring rooms, optional caches, arcade discovery, fishing, relic tuning, recovery instructions and a complete Journal checklist. Source-checked; this newly ordered itinerary still needs a full phone playthrough. The November 12 readiness pass renames the service rooms and restores quest aftermath text; install a build containing that pass to see the updated names.
 
 ## 1. How to use this guide
 
@@ -62,7 +62,6 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 17. From **Executive Dock**, go **west** to **Customs Crawlway** (`orbital_executive_dock_scale_01`).
 
-18. At **Customs Crawlway**, inspect **luggage recess**, **knee plates**. These are optional local details.
 
 19. From **Customs Crawlway**, go **north** to **Collar Pressure Gallery** (`orbital_executive_dock_scale_02`).
 
@@ -70,7 +69,6 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 21. From **Collar Pressure Gallery**, go **north** to **Gantry Inspection Slit** (`orbital_executive_dock_scale_03`).
 
-22. At **Gantry Inspection Slit**, inspect **inspection slit**, **docking collar**. These are optional local details.
 
 23. From **Gantry Inspection Slit**, go **north** to **Arrival Light Relay** (`orbital_executive_dock_scale_04`).
 
@@ -82,7 +80,6 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 27. From **Sealant Store**, go **north** to **Freight Intercom Walk** (`orbital_executive_dock_scale_06`).
 
-28. At **Freight Intercom Walk**, inspect **collar intercom**, **freight request**. These are optional local details.
 
 29. From **Freight Intercom Walk**, go **north** to **Ring Dock Memorial** (`orbital_executive_dock_scale_final`).
 
@@ -126,9 +123,9 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 47. At **Condensation Channel**, inspect **outer glass**, **mirror mounts**. These are optional local details.
 
-48. From **Condensation Channel**, go **north** to **Mirror Edge Walk** (`orbital_solarium_scale_03`).
+48. From **Condensation Channel**, go **north** to **Heliostat Catwalk** (`orbital_solarium_scale_03`).
 
-49. At **Mirror Edge Walk**, inspect **mirror array**, **tracked lamp**. These are optional local details.
+49. At **Heliostat Catwalk**, inspect **heliostat hinges**. Then use **taped cassette rig** and open **irrigation supply pouch**.
 
 50. From **Mirror Edge Walk**, go **north** to **Fountain Cabinet** (`orbital_solarium_scale_04`).
 
@@ -136,11 +133,9 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 52. From **Fountain Cabinet**, go **north** to **Seed Ledger Store** (`orbital_solarium_scale_05`).
 
-53. At **Seed Ledger Store**, inspect **seed packets**, **planting ledger**. These are optional local details.
 
 54. From **Seed Ledger Store**, go **north** to **Cooling Irrigation Walk** (`orbital_solarium_scale_06`).
 
-55. At **Cooling Irrigation Walk**, inspect **irrigation pipe**, **recorded birdsong**. These are optional local details.
 
 56. From **Cooling Irrigation Walk**, go **north** to **Ring False Tide** (`orbital_solarium_scale_final`).
 
@@ -148,7 +143,7 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 58. At **Ring False Tide**, open **hydroponic canister** for Composite Plate, Tideglass Delight. Confirm the one-time contents in inventory.
 
-59. From **Ring False Tide**, go **south** to **Cooling Irrigation Walk** (`orbital_solarium_scale_06`) → **south** to **Seed Ledger Store** (`orbital_solarium_scale_05`) → **south** to **Fountain Cabinet** (`orbital_solarium_scale_04`) → **south** to **Mirror Edge Walk** (`orbital_solarium_scale_03`) → **south** to **Condensation Channel** (`orbital_solarium_scale_02`) → **south** to **Root Irrigation Recess** (`orbital_solarium_scale_01`) → **east** to **Solarium** (`orbital_solarium`).
+59. From **Ring False Tide**, go **south** to **Cooling Irrigation Walk** (`orbital_solarium_scale_06`) → **south** to **Seed Ledger Store** (`orbital_solarium_scale_05`) → **south** to **Fountain Cabinet** (`orbital_solarium_scale_04`) → **south** to **Heliostat Catwalk** (`orbital_solarium_scale_03`) → **south** to **Condensation Channel** (`orbital_solarium_scale_02`) → **south** to **Root Irrigation Recess** (`orbital_solarium_scale_01`) → **east** to **Solarium** (`orbital_solarium`).
 
 ## 5. Concourse sweep, Security Hub and Employee of the Month
 
@@ -158,7 +153,6 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 62. From **Grand Concourse**, go **south** to **Cleaners’ Passage** (`orbital_grand_concourse_scale_01`).
 
-63. At **Cleaners’ Passage**, inspect **directory of luxury suites**, **waste pipes**. These are optional local details.
 
 64. From **Cleaners’ Passage**, go **east** to **Inward Gauge Gallery** (`orbital_grand_concourse_scale_02`).
 
@@ -166,11 +160,10 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 66. From **Inward Gauge Gallery**, go **north** to **Chandelier Frame** (`orbital_grand_concourse_scale_03`).
 
-67. At **Chandelier Frame**, inspect **ceiling panel**, **welded frame**. These are optional local details.
+67. At **Quarantined Berth Concourse**, inspect **erased berth board**. Then use **porters' claim desk**.
 
 68. From **Chandelier Frame**, go **north** to **Directory Relay** (`orbital_grand_concourse_scale_04`).
 
-69. At **Directory Relay**, inspect **directory lighting**, **erased guest names**. These are optional local details.
 
 70. From **Directory Relay**, go **north** to **Shift Rota Cupboard** (`orbital_grand_concourse_scale_05`).
 
@@ -178,7 +171,6 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 72. From **Shift Rota Cupboard**, go **north** to **Hospitality Speaker Walk** (`orbital_grand_concourse_scale_06`).
 
-73. At **Hospitality Speaker Walk**, inspect **hospitality announcement**, **public speakers**. These are optional local details.
 
 74. From **Hospitality Speaker Walk**, go **north** to **Ring Courtesy Theater** (`orbital_grand_concourse_scale_final`).
 
@@ -220,11 +212,9 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 93. From **Evidence Test Relay**, go **south** to **Badge Evidence Store** (`orbital_security_hub_scale_05`).
 
-94. At **Badge Evidence Store**, inspect **evidence carton**, **blank badges**. These are optional local details.
 
 95. From **Badge Evidence Store**, go **south** to **Incident Speaker Walk** (`orbital_security_hub_scale_06`).
 
-96. At **Incident Speaker Walk**, inspect **diagnostic speaker**, **incident number**. These are optional local details.
 
 97. From **Incident Speaker Walk**, go **south** to **Ring Threat Cathedral** (`orbital_security_hub_scale_final`).
 
@@ -256,7 +246,6 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 110. From **Service Shaft**, go **north** to **Cable Spool Recess** (`orbital_service_shaft_scale_01`).
 
-111. At **Cable Spool Recess**, inspect **cable spools**, **route marker**. These are optional local details.
 
 112. From **Cable Spool Recess**, go **north** to **Tether Conduit** (`orbital_service_shaft_scale_02`).
 
@@ -264,7 +253,6 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 114. From **Tether Conduit**, go **north** to **Partition Overlook** (`orbital_service_shaft_scale_03`).
 
-115. At **Partition Overlook**, inspect **cable trays**, **thin partitions**. These are optional local details.
 
 116. From **Partition Overlook**, go **north** to **Worklight Lockout** (`orbital_service_shaft_scale_04`).
 
@@ -272,7 +260,6 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 118. From **Worklight Lockout**, go **north** to **Cut Tether Store** (`orbital_service_shaft_scale_05`).
 
-119. At **Cut Tether Store**, inspect **tether bag**, **ration wrappers**. These are optional local details.
 
 120. From **Cut Tether Store**, go **north** to **Freight Motor Walk** (`orbital_service_shaft_scale_06`).
 
@@ -334,7 +321,6 @@ Service-branch rooms have distinct location names in this readiness pass. Follow
 
 148. From **Cooling Plenum**, go **south** to **Rack Sightline** (`deep_server_farm_scale_03`).
 
-149. At **Rack Sightline**, inspect **sightline**, **status lights**. These are optional local details.
 
 150. From **Rack Sightline**, go **south** to **Root Access Pocket** (`deep_server_farm_scale_04`).
 
@@ -390,15 +376,12 @@ The Firewall Construct drops **Quake Knuckles** for Zeke. Their basic attack hit
 
 173. From **Anchor Chamber**, go **north** to **Cable Narthex** (`deep_anchor_chamber_scale_01`).
 
-174. At **Cable Narthex**, inspect **pulse rosary**, **maintenance hymn**. These are local details; do not expect a quest reward from every inspection.
 
 175. From **Cable Narthex**, go **north** to **Chorus Tank** (`deep_anchor_chamber_scale_02`).
 
-176. At **Chorus Tank**, inspect **chorus tank**, **breath meters**. These are local details; do not expect a quest reward from every inspection.
 
 177. From **Chorus Tank**, go **north** to **Anchor Loom** (`deep_anchor_chamber_scale_03`).
 
-178. At **Anchor Loom**, inspect **Anchor loom**, **gold spindle**. These are local details; do not expect a quest reward from every inspection.
 
 179. From **Anchor Loom**, go **north** to **Thaw Gallery** (`deep_anchor_chamber_scale_04`).
 
@@ -414,7 +397,6 @@ The Firewall Construct drops **Quake Knuckles** for Zeke. Their basic attack hit
 
 185. From **Living Cable Threshold**, go **north** to **Empty Cradle Afterimage** (`deep_anchor_chamber_scale_06`).
 
-186. At **Empty Cradle Afterimage**, inspect **empty cradle**, **Elara's shadow**. These are local details; do not expect a quest reward from every inspection.
 
 187. From **Empty Cradle Afterimage**, go **north** to **Mercy Lie Wall** (`deep_anchor_chamber_scale_07`).
 
@@ -456,7 +438,6 @@ The Firewall Construct drops **Quake Knuckles** for Zeke. Their basic attack hit
 
 204. From **Boardroom Grave**, go **north** to **Coup Balcony** (`deep_throne_room_scale_05`).
 
-205. At **Coup Balcony**, inspect **coup balcony**, **security crown**. These are local details; do not expect a quest reward from every inspection.
 
 206. From **Coup Balcony**, go **north** to **Avatar Gate** (`deep_throne_room_scale_06`).
 
@@ -494,15 +475,12 @@ The Firewall Construct drops **Quake Knuckles** for Zeke. Their basic attack hit
 
 222. From **Gravity Suture**, go **north** to **Choir Gap** (`deep_tear_scale_02`).
 
-223. At **Choir Gap**, inspect **choir gap**, **soundless note**. These are local details; do not expect a quest reward from every inspection.
 
 224. From **Choir Gap**, go **north** to **Ring Shear** (`deep_tear_scale_03`).
 
-225. At **Ring Shear**, inspect **Ring shear**, **folded deck**. These are local details; do not expect a quest reward from every inspection.
 
 226. From **Ring Shear**, go **north** to **Event Lip** (`deep_tear_scale_04`).
 
-227. At **Event Lip**, inspect **event lip**, **blue horizon**. These are local details; do not expect a quest reward from every inspection.
 
 228. From **Event Lip**, go **north** to **Last Bulkhead** (`deep_tear_scale_05`).
 

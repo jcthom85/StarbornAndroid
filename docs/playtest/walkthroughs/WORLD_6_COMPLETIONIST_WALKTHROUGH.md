@@ -98,7 +98,7 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 
 38. From **Empty Observatory**, go **north** to **Chorus Door** (`source_orion_nightmare_node_scale_03`).
 
-39. At **Chorus Door**, inspect **Chorus door**, **wet harmonics**. These are local details; do not expect a quest reward from every inspection.
+39. At **Chorus Door**, inspect **Chorus door**, **tidal current**. These are local details; do not expect a quest reward from every inspection.
 
 40. At **Chorus Door**, open **tide glass shell** for Astral Thread, Phase Rounds. Confirm the one-time contents in inventory.
 
@@ -110,7 +110,7 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 
 44. From **Blue Ash Circle**, go **north** to **Three Dark Paths** (`source_campfire_node_scale_02`).
 
-45. At **Three Dark Paths**, inspect **dark paths**, **fear tones**. These are local details; do not expect a quest reward from every inspection.
+45. At **Three Dark Paths**, inspect **dark paths**, **personal fears**. These are local details; do not expect a quest reward from every inspection.
 
 46. From **Three Dark Paths**, go **north** to **Unshared Blanket** (`source_campfire_node_scale_03`).
 
@@ -220,17 +220,17 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 
 94. At **Tideglass Span**, inspect **tideglass span**, **beach photo**, **tideglass footprints**. These are local details; do not expect a quest reward from every inspection.
 
-95. From **Tideglass Span**, go **north** to **Foundry Heat Rib** (`source_memory_bridge_node_scale_02`).
+95. From **Tideglass Span**, go **north** to **Half-Remembered Counter** (`source_memory_bridge_node_scale_02`).
 
-96. At **Foundry Heat Rib**, inspect **heat rib**, **burn mark**. These are local details; do not expect a quest reward from every inspection.
+96. At **Half-Remembered Counter**, inspect **cracked coffee carafe**. Then use **four scratched mugs**.
 
 97. From **Foundry Heat Rib**, go **north** to **Spire Rain Line** (`source_memory_bridge_node_scale_03`).
 
 98. At **Spire Rain Line**, inspect **rain line**, **stolen route**. These are local details; do not expect a quest reward from every inspection.
 
-99. From **Spire Rain Line**, go **north** to **Astra Engine Note** (`source_memory_bridge_node_scale_04`).
+99. From **Spire Rain Line**, go **north** to **Astra Engine Thrust** (`source_memory_bridge_node_scale_04`).
 
-100. At **Astra Engine Note**, inspect **engine note**, **gold rail**. These are local details; do not expect a quest reward from every inspection.
+100. At **Astra Engine Thrust**, inspect **engine pulse**, **gold rail**. These are local details; do not expect a quest reward from every inspection.
 
 101. From **Astra Engine Note**, go **north** to **Source Crew Span** (`source_memory_bridge_node_scale_final`).
 
@@ -238,7 +238,7 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 
 103. At **Source Crew Span**, open **covenant beacon** for Astral Thread, Focus Matrix. Confirm the one-time contents in inventory.
 
-104. From **Source Crew Span**, go **south** to **Astra Engine Note** (`source_memory_bridge_node_scale_04`) → **south** to **Spire Rain Line** (`source_memory_bridge_node_scale_03`) → **south** to **Foundry Heat Rib** (`source_memory_bridge_node_scale_02`) → **south** to **Tideglass Span** (`source_memory_bridge_node_scale_01`) → **south** to **Memory Bridge** (`source_memory_bridge`).
+104. From **Source Crew Span**, go **south** to **Astra Engine Thrust** (`source_memory_bridge_node_scale_04`) → **south** to **Spire Rain Line** (`source_memory_bridge_node_scale_03`) → **south** to **Half-Remembered Counter** (`source_memory_bridge_node_scale_02`) → **south** to **Tideglass Span** (`source_memory_bridge_node_scale_01`) → **south** to **Memory Bridge** (`source_memory_bridge`).
 
 105. At **Memory Bridge**, use **Zeke's anchor**. Read the anchor feedback. Each crew member’s anchor is separate; all four must be set before building the bridge.
 
@@ -288,7 +288,7 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 
 127. From **Neon Glass Step**, go **north** to **Ring Silence Step** (`source_memory_stair_node_scale_04`).
 
-128. At **Ring Silence Step**, inspect **silence step**, **clean note**. These are local details; do not expect a quest reward from every inspection.
+128. At **Ring Silence Step**, inspect **silence step**, **Elara’s signal**. These are local details; do not expect a quest reward from every inspection.
 
 129. From **Ring Silence Step**, go **north** to **Source Scar Step** (`source_memory_stair_node_scale_final`).
 
@@ -316,9 +316,9 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 
 140. At **Revision Gallery**, inspect **revision gallery**, **fingerprints**, **liberation blueprint**. These are local details; do not expect a quest reward from every inspection.
 
-141. From **Revision Gallery**, go **north** to **Choir Fracture** (`source_spire_thought_node_scale_02`).
+141. From **Revision Gallery**, go **north** to **Amphitheater of Unruly Pitch** (`source_spire_thought_node_scale_02`).
 
-142. At **Choir Fracture**, inspect **choir fracture**, **out-of-tune laughter**. These are local details; do not expect a quest reward from every inspection.
+142. At **Amphitheater of Unruly Pitch**, inspect **shattered conductor podium**. Then use **off-pitch tuning forks**.
 
 143. From **Choir Fracture**, go **north** to **Memory Defense Line** (`source_spire_thought_node_scale_03`).
 
@@ -330,7 +330,7 @@ Read optional inspections as you pass. Descriptive memories and passive details 
 
 147. At **No Throne**, open **unthroned ledger** for Astral Thread, ICE Breaker Cyber Visor. Confirm the one-time contents in inventory.
 
-148. From **No Throne**, go **south** to **Memory Defense Line** (`source_spire_thought_node_scale_03`) → **south** to **Choir Fracture** (`source_spire_thought_node_scale_02`) → **south** to **Revision Gallery** (`source_spire_thought_node_scale_01`) → **south** to **Spire of Thought** (`source_spire_thought`).
+148. From **No Throne**, go **south** to **Memory Defense Line** (`source_spire_thought_node_scale_03`) → **south** to **Amphitheater of Unruly Pitch** (`source_spire_thought_node_scale_02`) → **south** to **Revision Gallery** (`source_spire_thought_node_scale_01`) → **south** to **Spire of Thought** (`source_spire_thought`).
 
 149. From **Spire of Thought**, go **east** to **Impossible Archive** (`source_spire_archive`).
 
@@ -370,13 +370,13 @@ The Nightmare Guard drops **Sunder Seeds** in Memory Defense Arena. Equip them f
 
 165. At **Silence Pulpit**, continue exploring. If you loaded an older save here with the second form still pending, use **return to the fracture** to resume at The Center.
 
-166. From **Silence Pulpit**, go **north** to **Source Voice Orbit** (`source_center_node_scale_final`).
+166. From **Silence Pulpit**, go **north** to **Center Orbit** (`source_center_node_scale_final`).
 
-167. At **Source Voice Orbit**, inspect **voice orbit**, **separate tones**. These are local details; do not expect a quest reward from every inspection.
+167. At **Center Orbit**, inspect **voice orbit**, **separate tones**. These are local details; do not expect a quest reward from every inspection.
 
-168. At **Source Voice Orbit**, open **chorus harmony seed** for Astral Thread, Crucible Heat Shield. Confirm the one-time contents in inventory.
+168. At **Center Orbit**, open **chorus harmony seed** for Astral Thread, Crucible Heat Shield. Confirm the one-time contents in inventory.
 
-169. From **Source Voice Orbit**, go **south** to **Silence Pulpit** (`source_center_node_scale_03`).
+169. From **Center Orbit**, go **south** to **Silence Pulpit** (`source_center_node_scale_03`).
 
 170. From **Silence Pulpit**, go **south** to **Key Orbit** (`source_center_node_scale_02`) → **south** to **White Shore** (`source_center_node_scale_01`) → **south** to **The Center** (`source_center`).
 
@@ -534,7 +534,7 @@ The Nightmare Guard drops **Sunder Seeds** in Memory Defense Arena. Equip them f
 
 - [ ] **Source Scar Step** (`source_memory_stair_node_scale_final`): **survivor reliquary** — Astral Thread, Bulwark Layer.
 
-- [ ] **Source Voice Orbit** (`source_center_node_scale_final`): **chorus harmony seed** — Astral Thread, Crucible Heat Shield.
+- [ ] **Center Orbit** (`source_center_node_scale_final`): **chorus harmony seed** — Astral Thread, Crucible Heat Shield.
 
 - [ ] **Source Morning Street** (`source_new_world_node_scale_final`): **morning provision basket** — Astral Thread, Black Coffee.
 

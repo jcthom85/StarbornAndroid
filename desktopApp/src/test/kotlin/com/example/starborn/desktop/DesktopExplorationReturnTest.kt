@@ -57,20 +57,22 @@ class DesktopExplorationReturnTest {
         compose.waitUntil(5000) { s.sessionStore.state.value.roomId == "workshop_floor" }
     }
 
-    @Test fun defeatingOneStaticFormationPreservesOtherEnemiesAndRetreatClearsNone() = withRoom("foundry_conveyor_belt") { s ->
+    @Test fun defeatingOneStaticFormationPreservesOtherEnemiesAndRetreatClearsNone() = withRoom("debug_presence_stress") { s ->
         val original = s.exploration.uiState.value.enemies
-        assertTrue(original.containsAll(listOf("welder_bot", "magma_drone", "phantom_prototype")))
-        s.exploration.onCombatRetreat(listOf("welder_bot", "magma_drone"))
+        val clearedPair = listOf("dominion_dampener", "resonance_buoy")
+        val remaining = listOf("acoustic_bulwark", "echo_borer", "siren_skimmer")
+        assertTrue(original.containsAll(clearedPair + remaining))
+        s.exploration.onCombatRetreat(clearedPair)
         assertEquals(original, s.exploration.uiState.value.enemies)
-        victory(s, "foundry_conveyor_belt", listOf("welder_bot", "magma_drone"))
-        compose.waitUntil(5000) { "welder_bot" !in s.exploration.uiState.value.enemies }
-        assertEquals(listOf("phantom_prototype"), s.exploration.uiState.value.enemies)
-        victory(s, "foundry_conveyor_belt", listOf("welder_bot", "magma_drone"))
-        assertEquals(listOf("phantom_prototype"), s.exploration.uiState.value.enemies)
+        victory(s, "debug_presence_stress", clearedPair)
+        compose.waitUntil(5000) { "dominion_dampener" !in s.exploration.uiState.value.enemies }
+        assertEquals(remaining, s.exploration.uiState.value.enemies)
+        victory(s, "debug_presence_stress", clearedPair)
+        assertEquals(remaining, s.exploration.uiState.value.enemies)
         assertTrue(s.saveManager.saveGame(1, s.sessionStore.state.value))
         assertTrue(s.loadSlot(1))
         compose.waitUntil(10000) { !s.exploration.uiState.value.isLoading && s.exploration.uiState.value.currentRoom != null }
-        assertEquals(listOf("phantom_prototype"), s.exploration.uiState.value.enemies)
+        assertEquals(remaining, s.exploration.uiState.value.enemies)
     }
 
     @Test fun previouslyStuckLoaderSaveRecoversWithoutAnotherFightOrReward() = withRoom("workshop_yard") { s ->

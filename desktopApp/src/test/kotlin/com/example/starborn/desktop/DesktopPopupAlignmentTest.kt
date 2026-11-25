@@ -78,7 +78,7 @@ class DesktopPopupAlignmentTest {
         val state = CinematicUiState(
             "illustrated-test", null, CinematicBackdrop.BLACK,
             presentation = CinematicPresentation.ILLUSTRATED, stepIndex = 0, stepCount = 2,
-            step = CinematicStepUi(CinematicStepType.NARRATION, null, text, durationSeconds = 60.0)
+            step = CinematicStepUi(CinematicStepType.NARRATION, null, text, durationSeconds = 0.6)
         )
         var advances = 0
         try {
@@ -95,16 +95,15 @@ class DesktopPopupAlignmentTest {
             assertTrue(abs((viewport.left + viewport.right - caption.left - caption.right).value) < 4f)
             assertTrue(abs((viewport.top + viewport.bottom - caption.top - caption.bottom).value) < 4f)
 
-            val advance = compose.onNodeWithContentDescription(text)
-            advance.performClick()
+            // Fixed-duration illustrated shots ignore stray clicks and advance once when duration elapses.
+            compose.onRoot().performClick()
             compose.mainClock.advanceTimeBy(100)
             compose.runOnIdle { assertEquals(0, advances) }
-            advance.performClick()
-            advance.performClick()
+            compose.onRoot().performClick()
             compose.runOnIdle { assertEquals(0, advances) }
             compose.mainClock.advanceTimeBy(600)
             compose.runOnIdle { assertEquals(1, advances) }
-            advance.performClick()
+            compose.onRoot().performClick()
             compose.runOnIdle { assertEquals(1, advances) }
         } finally {
             services.close()

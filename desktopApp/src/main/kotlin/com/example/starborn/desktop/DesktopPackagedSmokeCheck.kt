@@ -25,7 +25,8 @@ internal object DesktopPackagedSmokeCheck {
             check(rooms.any { it.id == "pit_nova_bunk" })
             check(characters.any { it.id == "nova" })
             // Verify the MP3 decoder is present in the distributed JVM/classpath, without needing an output device.
-            requireNotNull(assets.open("raw/music_title_theme.mp3")).use { raw ->
+            val titleStream = assets.open("audio/music_title_theme.mp3") ?: assets.open("raw/music_title_theme.mp3")
+            requireNotNull(titleStream) { "Missing music_title_theme.mp3 in packaged assets" }.use { raw ->
                 AudioSystem.getAudioInputStream(BufferedInputStream(raw)).use { encoded ->
                     val rate = encoded.format.sampleRate.takeIf { it > 0 } ?: 44100f
                     val channels = encoded.format.channels.takeIf { it > 0 } ?: 2

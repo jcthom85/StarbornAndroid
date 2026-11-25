@@ -28,7 +28,10 @@ class DesktopContentConsistencyTest {
             assertNotNull("Unknown tape: $item", services.itemRepository.findItem(item))
             assertTrue(cue.startsWith("gf_"))
             assertNotNull("Missing film audio track: $cue", services.audioCatalog.track(cue))
-            assertTrue("Missing film audio file: $cue", services.assetProvider.exists("raw/$cue.mp3"))
+            assertTrue(
+                "Missing film audio file: $cue",
+                services.assetProvider.exists("raw/$cue.mp3") || services.assetProvider.exists("audio/$cue.mp3")
+            )
             assertTrue(metadata.first.startsWith("Film "))
             assertTrue(metadata.second.isNotBlank())
         }

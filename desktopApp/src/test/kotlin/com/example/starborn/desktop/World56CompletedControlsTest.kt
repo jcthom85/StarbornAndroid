@@ -55,7 +55,7 @@ class World56CompletedControlsTest {
             val action = s.exploration.uiState.value.actions.filterIsInstance<GenericAction>()
                 .single { it.name == case.label }
             assertTrue("${case.label} must be gray", action.completedInspection)
-            assertNull(action.actionEvent)
+            assertEquals("inspect", action.type)
             val before = s.sessionStore.state.value
             compose.runOnIdle { s.exploration.onActionSelected(action) }
             compose.waitUntil(5000) { s.exploration.uiState.value.narrationPrompt != null }

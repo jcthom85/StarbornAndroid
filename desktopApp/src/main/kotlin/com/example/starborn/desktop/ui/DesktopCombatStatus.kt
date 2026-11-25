@@ -82,7 +82,7 @@ internal fun describeStatus(id: String, services: DesktopAppServices): StatusEff
         )
         key in setOf("target_lock", "locked_on") -> StatusEffectInfo(
             title = "TARGET LOCK",
-            summary = "Tactical sensors locked onto vulnerabilities. Direct attacks against this target have guaranteed critical hit rate.",
+            summary = "Tactical sensors locked onto vulnerabilities. Direct attacks and offensive skills against this target are guaranteed critical hits.",
             isDebuff = true,
             accent = Color(0xFFFF5252),
             icon = Icons.Rounded.GpsFixed

@@ -199,6 +199,26 @@ fun DesktopArcadeScreen(services: DesktopAppServices, onClose: () -> Unit) {
         services.audioDriver.executeAll(services.audioRouter.commandsForUi(cueName))
     }
 
+    DisposableEffect(playing) {
+        val activeCabinet = playing
+        if (activeCabinet != null) {
+            val preferredCue = ArcadeIds.musicCueFor(activeCabinet)
+            val resolvedCue = if (services.audioDriver.hasCue(preferredCue)) {
+                preferredCue
+            } else {
+                ArcadeIds.DEFAULT_MUSIC_CUE
+            }
+            val music = services.audioRouter.temporaryMusic(resolvedCue)
+            services.audioDriver.executeAll(music.enter)
+            onDispose {
+                services.audioDriver.setMusicPausedForOverlay(false, resolvedCue)
+                services.audioDriver.executeAll(music.restore())
+            }
+        } else {
+            onDispose {}
+        }
+    }
+
     // Keyboard navigation when in Arcade selector
     if (playing == null) {
         DesktopArcadeKeys { keyCode, pressed ->
@@ -233,7 +253,28 @@ fun DesktopArcadeScreen(services: DesktopAppServices, onClose: () -> Unit) {
         ArcadeIds.SPIRE_INFILTRATOR -> SpireInfiltratorArcadeScreen(services.arcadeService, back, settings.largeTouchTargets, settings.disableFlashes, cue)
         ArcadeIds.SLAG_CATCHER -> SlagCatcherArcadeScreen(services.arcadeService, back, settings.largeTouchTargets, settings.disableFlashes, cue)
         ArcadeIds.ORBITAL_DEFENSE -> OrbitalDefenseArcadeScreen(services.arcadeService, back, settings.largeTouchTargets, settings.disableFlashes, cue)
-        ArcadeIds.HARMONIC_PULSE -> HarmonicPulseArcadeScreen(services.arcadeService, back, settings.largeTouchTargets, settings.disableFlashes, cue)
+        ArcadeIds.HARMONIC_PULSE -> {
+            val harmonicCueId = remember(services) {
+                val preferred = ArcadeIds.musicCueFor(ArcadeIds.HARMONIC_PULSE)
+                if (services.audioDriver.hasCue(preferred)) preferred else ArcadeIds.DEFAULT_MUSIC_CUE
+            }
+            HarmonicPulseArcadeScreen(
+                arcadeService = services.arcadeService,
+                onBack = back,
+                largeTouchTargets = settings.largeTouchTargets,
+                reducedFlashes = settings.disableFlashes,
+                onPlayCue = cue,
+                musicPositionSecondsProvider = {
+                    services.audioDriver.currentMusicPositionMs(harmonicCueId)?.let { it / 1000f }
+                },
+                onRestartMusic = {
+                    services.audioDriver.restartCurrentMusicFromStart(harmonicCueId)
+                },
+                onMusicPausedChanged = { isPaused ->
+                    services.audioDriver.setMusicPausedForOverlay(isPaused, harmonicCueId)
+                }
+            )
+        }
         else -> {
             val selectedCabinet = AllCabinets.getOrElse(selectedIndex) { AllCabinets.first() }
             val selectedProgress = session.arcadeProgress[selectedCabinet.id]

@@ -84,7 +84,7 @@ class World3NavigationPublicTest {
         restore(s, base)
         repeat(2) {
             val clue = s.exploration.uiState.value.actions.filterIsInstance<GenericAction>().single { it.name == "prism shutters" }
-            assertNull(clue.actionEvent)
+            assertEquals("inspect", clue.type)
             assertTrue(clue.completedInspection)
             compose.runOnIdle { s.exploration.onActionSelected(clue) }
             compose.waitUntil(5000) { s.exploration.uiState.value.narrationPrompt != null }

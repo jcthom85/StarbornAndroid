@@ -48,7 +48,11 @@ class World6NavigationPublicTest {
             seen += line.id
             val choices = s.exploration.uiState.value.dialogueChoices
             if (choices.isEmpty()) compose.runOnIdle { s.exploration.advanceDialogue() }
-            else compose.runOnIdle { s.exploration.onDialogueChoiceSelected(choices.single { it.id == "correct" }.id) }
+            else compose.runOnIdle {
+                s.exploration.onDialogueChoiceSelected(
+                    choices.single { it.id == "correct" || it.id.endsWith("_confirm") }.id
+                )
+            }
             compose.waitForIdle()
         }
         error("World 6 dialogue did not finish")
@@ -116,7 +120,7 @@ class World6NavigationPublicTest {
             }
         }
         walk("source_campfire")
-        assertEquals(65,seen.size); assertEquals(ids,seen); assertEquals(128,edges.size)
+        assertEquals(65,seen.size); assertEquals(ids,seen); assertEquals(148,edges.size)
     }
 
     @Test fun formerDiagonalSavesUseNewSwipeRoutesWithoutLosingNightmareReturns() = runWith { s ->
@@ -149,13 +153,13 @@ class World6NavigationPublicTest {
         act(s,"w6_mq28_build_bridge"); dismissNarration(s)
         go(s,"east","source_memory_bridge_span"); go(s,"east","source_memory_threshold")
         blocked(s,"east","promise")
-        go(s,"west","source_memory_bridge_span"); act(s,"w6_mq28_final_banter"); dismissNarration(s)
+        go(s,"west","source_memory_bridge_span"); act(s,"w6_mq28_final_banter_scene"); finish(s); dismissNarration(s)
         go(s,"east","source_memory_threshold"); blocked(s,"east","threshold")
         act(s,"w6_mq28_reach_singularity")
         compose.waitUntil(5000) { s.sessionStore.state.value.roomId=="source_memory_stair" }; dismissNarration(s)
         go(s,"west","source_memory_threshold"); go(s,"east","source_memory_stair")
         blocked(s,"east","Refuse")
-        for (revision in listOf("jed","astra","foundry")) { act(s,"w6_mq29_refuse_${revision}_revision"); dismissNarration(s) }
+        for (revision in listOf("jed","astra","foundry")) { act(s,"w6_mq29_refuse_${revision}_revision_scene"); finish(s); dismissNarration(s) }
         blocked(s,"east","memory stair")
         act(s,"w6_mq29_climb_stair"); dismissNarration(s)
         go(s,"east","source_memory_fragments")

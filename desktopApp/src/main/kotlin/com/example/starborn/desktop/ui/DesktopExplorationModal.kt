@@ -15,17 +15,27 @@ import androidx.compose.ui.window.Dialog
 /** Inspection-card visuals with real modal focus and the original runtime choices. */
 @Composable
 internal fun DesktopExplorationModal(message: String, onDismiss: () -> Unit, title: String? = null, tapToDismiss: Boolean = false,
-    actions: @Composable ColumnScope.() -> Unit) {
+    eyebrow: String? = null, actions: @Composable ColumnScope.() -> Unit) {
     val settings = LocalExplorationSettings.current
     val accent = if (settings.highContrastMode) Color.White else Color(0xFF8DE2FF)
-    val availableHeight = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() } - 100.dp
+    val windowHeightPx = LocalWindowInfo.current.containerSize.height
+    val availableHeight = if (windowHeightPx > 0) {
+        with(LocalDensity.current) { windowHeightPx.toDp() } - 100.dp
+    } else {
+        640.dp
+    }
     val scroll = rememberScrollState()
     Dialog(onDismissRequest = onDismiss) {
-        Surface((if (tapToDismiss) Modifier.informationAcknowledgement(onDismiss) else Modifier).padding(20.dp).widthIn(max = 620.dp).fillMaxWidth().heightIn(max = availableHeight.coerceAtLeast(200.dp)),
+        Surface((if (tapToDismiss) Modifier.informationAcknowledgement(onDismiss) else Modifier).padding(20.dp).widthIn(max = 620.dp).fillMaxWidth().heightIn(max = availableHeight.coerceAtLeast(240.dp)),
             color = if (settings.highContrastMode) Color.Black else Color(0xFF050B12), shape = RoundedCornerShape(18.dp),
             border = BorderStroke(1.dp, accent.copy(alpha = .72f)), shadowElevation = 18.dp) {
             Column(Modifier.background(Brush.verticalGradient(listOf(accent.copy(alpha = .12f), Color.Transparent))).padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                title?.takeIf { it.isNotBlank() }?.let { Text(it, style = MaterialTheme.typography.headlineSmall, color = accent) }
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    eyebrow?.takeIf { it.isNotBlank() }?.let {
+                        Text(it, style = MaterialTheme.typography.labelLarge, color = accent.copy(alpha = 0.85f))
+                    }
+                    title?.takeIf { it.isNotBlank() }?.let { Text(it, style = MaterialTheme.typography.headlineSmall, color = accent) }
+                }
                 if (message.isNotBlank()) DesktopExplorationScrollPane(scroll, Modifier.weight(1f, fill = false).fillMaxWidth()) {
                     Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                         Box(Modifier.width(4.dp).height(52.dp).background(accent, RoundedCornerShape(8.dp)))

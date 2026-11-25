@@ -100,7 +100,7 @@ class World5PlaytestDirectFixesTest {
     }
 
     @Test fun repairedInspectionsHaveRealDetailsAndBecomeGrayWithoutGrantingProgress() = runWith { s ->
-        for ((room, name) in listOf("orbital_executive_dock_scale_01" to "luggage recess", "source_orion_nightmare" to "black ocean")) {
+        for ((room, name) in listOf("orbital_executive_dock_scale_02" to "pressure gallery", "source_orion_nightmare" to "black ocean")) {
             restore(s, room)
             val before = s.sessionStore.state.value
             val action = s.exploration.uiState.value.actions.filterIsInstance<GenericAction>().single { it.name == name }

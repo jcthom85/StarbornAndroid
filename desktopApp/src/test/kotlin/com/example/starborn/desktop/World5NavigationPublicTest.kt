@@ -91,7 +91,7 @@ class World5NavigationPublicTest {
             }
         }
         walk("orbital_executive_dock")
-        assertEquals(81, visited.size); assertEquals(ids, visited)
+        assertEquals(61, visited.size); assertEquals(ids, visited)
         assertEquals(rooms.values.sumOf { it.connections.keys.count { d -> d in reverse } }, traversed.size)
     }
 

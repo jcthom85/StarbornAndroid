@@ -18,16 +18,65 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.clickable
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.starborn.core.platform.AssetProvider
+import com.example.starborn.data.local.UserSettings
 import com.example.starborn.desktop.DesktopAppServices
 import com.example.starborn.domain.combat.CombatOutcome
+import com.example.starborn.domain.combat.CombatState
 import com.example.starborn.domain.combat.CombatantState
 import com.example.starborn.feature.combat.presentation.CombatTutorialCopy
 import com.example.starborn.feature.combat.viewmodel.CombatTutorialState
+
+private val ImmobilizedCombatStatuses = setOf("stun", "stagger", "freeze", "frozen", "paralyze", "paralyzed", "sleep")
+private val ShieldCombatStatuses = setOf("invulnerable", "shield", "shielded", "guard", "defend", "barrier", "foundry_titan_barrier")
+
+/**
+ * Resolves the 8-state reactive combat emote path for a party member (matching Android RosterViews),
+ * falling back cleanly to [defaultPath] if an optional emote asset does not exist for a guest ally.
+ */
+internal fun resolveDesktopPartyCombatEmote(
+    id: String,
+    state: CombatantState?,
+    defaultPath: String?,
+    victoryEmotes: Boolean = false,
+    isMissLunge: Boolean = false,
+    isLunging: Boolean = false,
+    hasDamageCue: Boolean = false,
+    hasSupportCue: Boolean = false,
+    hasTelegraphCue: Boolean = false,
+    isActing: Boolean = false,
+    assetProvider: AssetProvider
+): String? {
+    val isAlive = state?.isAlive != false
+    val maxHp = state?.combatant?.stats?.maxHp ?: 0
+    val currentHp = state?.hp ?: maxHp
+    val isImmobilized = state?.statusEffects.orEmpty().any { it.id.lowercase() in ImmobilizedCombatStatuses }
+    val isShieldedOrCharged = (state?.momentum ?: 0) >= 2 ||
+        state?.statusEffects.orEmpty().any { it.id.lowercase() in ShieldCombatStatuses }
+    val isCriticalHp = maxHp > 0 && currentHp * 100 <= maxHp * 30
+
+    val suffix = when {
+        !isAlive -> "down"
+        victoryEmotes -> "cool"
+        isMissLunge -> "confident"
+        isLunging -> "angry"
+        hasDamageCue || isImmobilized -> "gasping"
+        hasSupportCue -> "happy"
+        hasTelegraphCue -> "surprised"
+        isCriticalHp -> "worried"
+        isActing || isShieldedOrCharged -> "confident"
+        else -> null
+    } ?: return defaultPath
+
+    val candidate = "images/characters/emotes/${id}_${suffix}.png"
+    return if (hasDesktopAsset(candidate, assetProvider)) candidate else defaultPath
+}
 
 /** Android's tutorial framing, sized for a desktop battlefield. Shared copy and gating remain canonical. */
 @Composable
@@ -279,6 +328,13 @@ internal fun DesktopCombatPartyRoster(
     actorId: String?,
     executingId: String? = null,
     playerPartyDefs: List<com.example.starborn.domain.model.Player>,
+    cues: List<DesktopCombatCue> = emptyList(),
+    victoryEmotes: Boolean = false,
+    lungeActor: String? = null,
+    lungeToken: Long = 0L,
+    missActor: String? = null,
+    missToken: Long = 0L,
+    authoredState: CombatState? = null,
     onSelectActor: (String) -> Unit
 ) {
     DesktopMenuCard(Modifier.fillMaxWidth()) {
@@ -316,7 +372,22 @@ internal fun DesktopCombatPartyRoster(
                 val meter = (meters[id] ?: 0f).coerceIn(0f, 1f)
                 val isReady = member.isAlive && meter >= 0.999f
                 val playerDef = playerPartyDefs.firstOrNull { it.id == id }
-                val iconPath = playerDef?.miniIconPath ?: playerDef?.combatIconPath
+                val baseIconPath = playerDef?.miniIconPath ?: playerDef?.combatIconPath
+                val memberCues = cues.filter { it.targetId == id }
+                val hasThreatPreparation = authoredState?.authored?.preparations?.values?.any { id in it.targetIds } == true
+                val iconPath = resolveDesktopPartyCombatEmote(
+                    id = id,
+                    state = member,
+                    defaultPath = baseIconPath,
+                    victoryEmotes = victoryEmotes,
+                    isMissLunge = missActor == id && missToken > 0L && id == lungeActor,
+                    isLunging = lungeActor == id && lungeToken > 0L,
+                    hasDamageCue = memberCues.any { it.kind == DesktopCueKind.HIT || it.kind == DesktopCueKind.BREAK },
+                    hasSupportCue = memberCues.any { it.kind == DesktopCueKind.HEAL || it.kind == DesktopCueKind.SUPPORT },
+                    hasTelegraphCue = hasThreatPreparation || memberCues.any { it.kind == DesktopCueKind.TELEGRAPH },
+                    isActing = isActing,
+                    assetProvider = services.assetProvider
+                )
 
                 val cardBorder = when {
                     isActing -> BorderStroke(1.2.dp, Color(0xFFFFBB55))
@@ -445,7 +516,8 @@ internal fun DesktopCombatBottomKeyLegend(
     timedPrompt: Boolean,
     actorAvailable: Boolean,
     onToggleLog: () -> Unit,
-    onCancelTarget: () -> Unit
+    onCancelTarget: () -> Unit,
+    onTogglePause: (() -> Unit)? = null
 ) {
     Surface(
         shape = RoundedCornerShape(8.dp),
@@ -506,6 +578,96 @@ internal fun DesktopCombatBottomKeyLegend(
                     label = "Battle Log",
                     onClick = onToggleLog
                 )
+                if (onTogglePause != null && !targeting && menu == null && !timedPrompt) {
+                    Box(Modifier.testTag("combat-pause-button")) {
+                        DesktopKeyBadge(
+                            keyGlyph = "Esc",
+                            label = "Pause / Settings",
+                            onClick = onTogglePause
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+internal fun DesktopCombatPauseDialog(
+    services: DesktopAppServices,
+    userSettings: UserSettings,
+    currentRoomTitle: String?,
+    accentColor: Color,
+    onResume: () -> Unit
+) {
+    Dialog(
+        onDismissRequest = onResume,
+        properties = DialogProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true,
+            usePlatformDefaultWidth = false
+        )
+    ) {
+        Surface(
+            modifier = Modifier
+                .widthIn(max = 980.dp)
+                .fillMaxWidth(0.92f)
+                .fillMaxHeight(0.86f)
+                .testTag("combat-pause-dialog"),
+            shape = RoundedCornerShape(18.dp),
+            color = Color(0xF4060E17),
+            border = BorderStroke(1.2.dp, accentColor.copy(alpha = 0.65f)),
+            shadowElevation = 18.dp
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(22.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text(
+                            text = "COMBAT PAUSED",
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontFamily = LocalStarbornFonts.current.orbitron,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 1.4.sp
+                            ),
+                            color = Color.White
+                        )
+                        Text(
+                            text = (currentRoomTitle?.let { "$it  ·  " } ?: "") + "ATB readiness frozen while configuring settings",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color(0xFF91A8B3)
+                        )
+                    }
+                    Button(
+                        onClick = onResume,
+                        modifier = Modifier
+                            .desktopPointerHover()
+                            .testTag("combat-pause-resume"),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = accentColor,
+                            contentColor = Color(0xFF041018)
+                        )
+                    ) {
+                        Text("Resume [Esc]", fontWeight = FontWeight.Bold)
+                    }
+                }
+                HorizontalDivider(color = accentColor.copy(alpha = 0.25f))
+                Box(Modifier.weight(1f).fillMaxWidth()) {
+                    DesktopSettingsContent(
+                        services = services,
+                        userSettings = userSettings,
+                        currentRoomTitle = currentRoomTitle
+                    )
+                }
             }
         }
     }

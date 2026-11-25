@@ -60,14 +60,14 @@ class DesktopCrewBuildTest {
         val bought = combat(s)
         try {
             val states = bought.combatState!!.combatants
-            assertEquals(baseStats.getValue("nova").speed + 1, states.getValue("nova").combatant.stats.speed)
-            assertEquals(baseStats.getValue("zeke").strength + 1, states.getValue("zeke").combatant.stats.strength)
-            assertEquals(baseStats.getValue("zeke").vitality + 1, states.getValue("zeke").combatant.stats.vitality)
-            assertEquals(baseStats.getValue("zeke").maxHp + 10, states.getValue("zeke").combatant.stats.maxHp)
-            assertEquals(baseStats.getValue("orion").vitality + 1, states.getValue("orion").combatant.stats.vitality)
-            assertEquals(baseStats.getValue("orion").maxHp + 10, states.getValue("orion").combatant.stats.maxHp)
-            assertEquals(baseStats.getValue("orion").focus + 1, states.getValue("orion").combatant.stats.focus)
-            assertEquals(baseStats.getValue("gh0st").agility + 1, states.getValue("gh0st").combatant.stats.agility)
+            assertEquals(baseStats.getValue("nova").speed + 3, states.getValue("nova").combatant.stats.speed)
+            assertEquals(baseStats.getValue("zeke").strength + 3, states.getValue("zeke").combatant.stats.strength)
+            assertEquals(baseStats.getValue("zeke").vitality + 5, states.getValue("zeke").combatant.stats.vitality)
+            assertEquals(baseStats.getValue("zeke").maxHp + 50, states.getValue("zeke").combatant.stats.maxHp)
+            assertEquals(baseStats.getValue("orion").vitality + 3, states.getValue("orion").combatant.stats.vitality)
+            assertEquals(baseStats.getValue("orion").maxHp + 30, states.getValue("orion").combatant.stats.maxHp)
+            assertEquals(baseStats.getValue("orion").focus + 3, states.getValue("orion").combatant.stats.focus)
+            assertEquals(baseStats.getValue("gh0st").agility + 3, states.getValue("gh0st").combatant.stats.agility)
             for (owner in store.state.value.partyMembers) {
                 assertEquals(8, states.getValue(owner).combatant.talents.size)
                 val expected = Crew.activeSkills(store.state.value.purchasedSkillNodes).filter { id -> Crew.skills.any { it.id == id && it.character == owner } }

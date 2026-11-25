@@ -43,8 +43,9 @@ class DesktopPcInteractionTest {
             val rest = services.exploration.uiState.value.actions.filterIsInstance<com.example.starborn.domain.model.RestStopAction>().single()
             compose.runOnIdle { services.exploration.onActionSelected(rest) }
             compose.waitUntil(5000) { services.sessionStore.state.value.partyMemberHp.getValue("nova") > 20 }
+            val restoredAmount = services.sessionStore.state.value.partyMemberHp.getValue("nova") - 20
             compose.onNodeWithText("A Quiet Rest").assertIsDisplayed()
-            compose.onNodeWithText("Restored 100 HP.", substring = true).assertIsDisplayed()
+            compose.onNodeWithText("Restored $restoredAmount HP.", substring = true).assertIsDisplayed()
             compose.onNodeWithText("Continue").performClick()
             compose.waitForIdle()
             compose.runOnIdle { services.exploration.onActionSelected(rest) }

@@ -224,6 +224,14 @@ class World3PublicInteractionTest {
         assertFalse(s.inventoryService.hasItem("the_lens"))
         val seen = mutableListOf<String>()
         finish(s, seen)
+        compose.waitUntil(5000) {
+            s.exploration.uiState.value.cinematic != null || s.exploration.uiState.value.activeDialogue != null
+        }
+        if (s.exploration.uiState.value.cinematic != null) {
+            compose.runOnIdle { s.exploration.skipCinematic() }
+            compose.waitUntil(5000) { s.exploration.uiState.value.activeDialogue != null }
+        }
+        finish(s, seen)
         assertTrue("thorne_w3_mq14_trap_intro" in seen)
         assertTrue("vale_w3_mq15_override" in seen)
         assertEquals(xp + 550, s.sessionStore.state.value.playerXp)

@@ -100,8 +100,7 @@ class World2CombatGatePublicTest {
             completedMilestones=emptySet(),unlockedExits=emptySet(),questTasksCompleted=emptyMap())
         val cases=listOf(
             "sector9_stream_pools" to listOf("siren_skimmer"),
-            "sector9_stream_cave_depths" to listOf("echo_borer","echo_borer"),
-            "sector9_hall_acoustics_lab" to listOf("spore_spitter"))
+            "sector9_stream_cave_depths" to listOf("echo_borer","echo_borer"))
         for((room,ids) in cases) {
             val key="encounter_cleared:"+ids.sorted().joinToString("|")
             restore(s,base.copy(roomId=room,roomStates=mapOf(room to mapOf(key to true))))

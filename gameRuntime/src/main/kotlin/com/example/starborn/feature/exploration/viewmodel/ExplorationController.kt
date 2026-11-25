@@ -727,11 +727,11 @@ class ExplorationController(
 
     private val oneTimeGiftMilestoneByItemId: Map<String, String> = emptyMap()
     private val acknowledgedMilestones: MutableSet<String> = mutableSetOf()
-    private val unlockedDirections: MutableMap<String, MutableSet<String>> = mutableMapOf()
-    private val unlockedAreaIds: MutableSet<String> = mutableSetOf()
-    private val pendingUnlockedAreas: MutableSet<String> = mutableSetOf()
-    private val unlockedExitKeys: MutableSet<String> = mutableSetOf()
-    private val pendingUnlockedExitKeys: MutableSet<String> = mutableSetOf()
+    private val unlockedDirections: MutableMap<String, MutableSet<String>> = java.util.concurrent.ConcurrentHashMap()
+    private val unlockedAreaIds: MutableSet<String> = java.util.concurrent.ConcurrentHashMap.newKeySet()
+    private val pendingUnlockedAreas: MutableSet<String> = java.util.concurrent.ConcurrentHashMap.newKeySet()
+    private val unlockedExitKeys: MutableSet<String> = java.util.concurrent.ConcurrentHashMap.newKeySet()
+    private val pendingUnlockedExitKeys: MutableSet<String> = java.util.concurrent.ConcurrentHashMap.newKeySet()
     private var activeDialogueSession: DialogueSession? = null
     private var activeDialogueNpcName: String? = null
     private var darkCapableRoomIds: Set<String> = emptySet()

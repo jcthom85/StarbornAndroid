@@ -63,7 +63,7 @@ fun DesktopCookingScreen(
             }
         }
         feedback?.let { message ->
-            DesktopExplorationModal(message, { feedback = null }, title = source ?: "Cooking") {
+            DesktopExplorationModal(message, { feedback = null }, title = source ?: "Cooking", eyebrow = "At the cookfire") {
                 TextButton(onClick = { feedback = null },
                     modifier = Modifier.heightIn(min = if (largeTouchTargets) 56.dp else 48.dp)) { Text("Done") }
             }

@@ -84,7 +84,7 @@ class DesktopNovaPrototypeTest {
             assertEquals(expected, actor.combatant.stats.maxHp)
             assertEquals(84, actor.hp)
             assertEquals(65, controller.skillsForPlayer("nova").single { it.id == "nova_cryo_vent" }.basePower)
-            assertEquals(12, actor.combatant.stats.speed)
+            assertEquals(14, actor.combatant.stats.speed)
         } finally { controller.close() }
         store.restore(store.state.value.copy(activeMealBuff = null))
         runBlocking { withTimeout(10000) { services.exploration.uiState.first { it.partyMemberDetails?.hpLabel == "84 / ${expected - 17} HP" } } }

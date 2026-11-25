@@ -29,8 +29,11 @@ class DesktopMenuSnapshotTest {
             services.inventoryService.addItem("medkit", 3)
             services.inventoryService.addItem("scrap_metal", 4)
             services.inventoryService.addItem("mining_pistol", 1)
-            services.sessionStore.restore(services.sessionStore.state.value.copy(partyMemberHp = mapOf("nova" to 1),
-                roomStates = services.sessionStore.state.value.roomStates + ("pit_L2_corridor" to mapOf("visited" to true, "discovered" to true))))
+            services.sessionStore.restore(services.sessionStore.state.value.copy(
+                partyMemberHp = mapOf("nova" to 1),
+                equippedWeapons = services.sessionStore.state.value.equippedWeapons + ("zeke" to "mining_pistol"),
+                roomStates = services.sessionStore.state.value.roomStates + ("pit_L2_corridor" to mapOf("visited" to true, "discovered" to true))
+            ))
             compose.setContent { DesktopStarbornTheme {
                 Box(Modifier.size(if (narrow.value) 800.dp else 1024.dp, if (narrow.value) 600.dp else 768.dp)) {
                     DesktopFieldMenuContent(services, currentRoomTitle = "Nova's bunk", onOpenFieldKit = {}, onReturnToTitle = {}, onDismiss = {})
@@ -52,7 +55,7 @@ class DesktopMenuSnapshotTest {
             compose.onNodeWithText("Gear").performClick()
             compose.onNodeWithText("Search equipment").assertExists()
             compose.onNodeWithText("Equip").assertIsNotEnabled()
-            compose.runOnIdle { services.sessionStore.restore(services.sessionStore.state.value.copy(unlockedWeapons = services.sessionStore.state.value.unlockedWeapons + "mining_pistol")) }
+            compose.runOnIdle { services.inventoryService.addItem("mining_pistol", 1) }
             compose.onNodeWithText("Equip").assertIsEnabled()
             compose.onNodeWithText("Equip").performClick()
             compose.waitUntil(5_000) { services.sessionStore.state.value.equippedWeapons["nova"] == "mining_pistol" }

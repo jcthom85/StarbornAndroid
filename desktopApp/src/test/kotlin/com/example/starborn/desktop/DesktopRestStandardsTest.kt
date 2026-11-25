@@ -91,7 +91,8 @@ class DesktopRestStandardsTest {
                     if (action.cookSource != null) {
                         cooks++
                         assertEquals("Cook", restStopServiceLabel(action))
-                        compose.waitUntil(5000) { cookingSource == action.cookSource }
+                        val expectedCookingTitle = (raw["activity_title"] as? String) ?: action.name
+                        compose.waitUntil(5000) { cookingSource == expectedCookingTitle }
                         assertEquals("${room.id}: cooking must not rest", 20, s.sessionStore.state.value.partyMemberHp["nova"])
                         assertEquals(true, s.sessionStore.state.value.roomStates[room.id]?.get("cooking_discovered"))
                     } else {

@@ -27,7 +27,7 @@ class World2Part2PersistenceTest {
             questTasksCompleted = emptyMap()))
         compose.waitUntil(10000) { s.exploration.uiState.value.currentRoom?.id == "sector9_archive_tuning_bay" }
         s.exploration.onActionSelected(s.exploration.uiState.value.actions.single { it.name == "resonator columns" })
-        compose.waitUntil(5000) { s.exploration.uiState.value.narrationPrompt?.message?.contains("Seat the west") == true }
+        compose.waitUntil(5000) { s.exploration.uiState.value.narrationPrompt?.message?.contains("west, east, and north") == true }
         assertFalse("ms_w2_sq04_complete" in s.sessionStore.state.value.completedMilestones)
     }
 
@@ -121,6 +121,7 @@ class World2Part2PersistenceTest {
             completedMilestones = emptySet()))
         compose.waitUntil(10000) { s.exploration.uiState.value.currentRoom?.id == "sector9_beach_pools" }
         compose.waitUntil(5000) { "visit_beach" in s.sessionStore.state.value.questTasksCompleted["w2_sq03"].orEmpty() }
+        compose.waitUntil(5000) { s.exploration.uiState.value.actions.any { it.name == "tideglass growth" } }
         val growth = s.exploration.uiState.value.actions.single { it.name == "tideglass growth" }
         val herbs = s.inventoryService.snapshot()["herb"] ?: 0
         s.exploration.onActionSelected(growth)

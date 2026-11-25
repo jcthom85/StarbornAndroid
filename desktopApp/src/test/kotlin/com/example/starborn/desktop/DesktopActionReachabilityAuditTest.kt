@@ -26,7 +26,7 @@ class DesktopActionReachabilityAuditTest {
             val type = raw["type"] as? String ?: "generic"
             val name = raw["name"] as? String ?: continue
             val eventId = raw["action_event"] as? String
-            if (type in setOf("shop", "rest_stop", "tinkering") || raw["hide_inline"] == true) continue
+            if (type in setOf("shop", "rest_stop", "fishing", "tinkering") || raw["hide_inline"] == true) continue
             if (type in setOf("generic", "inspect") && eventId.isNullOrBlank()) continue
             val matching = events.filter { it.trigger.type == "player_action" && it.trigger.action == eventId }
             val probes = if (matching.isEmpty()) listOf<GameEvent?>(null) else matching

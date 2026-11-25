@@ -368,7 +368,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
             DesktopExplorationModal(
                 listOfNotNull(notice.message?.takeIf { it.isNotBlank() },
                     if (notice.alreadyFull) "Already at full HP." else "Restored ${notice.restoredHp} HP.").joinToString("\n\n"),
-                { restNotice = null }, title = notice.title, tapToDismiss = true) {
+                { restNotice = null }, title = notice.title, tapToDismiss = true, eyebrow = "A Quiet Rest") {
                 TextButton(onClick = { restNotice = null }) { Text("Continue") }
             }
         }

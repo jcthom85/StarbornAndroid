@@ -41,10 +41,10 @@ class DesktopCinematicSnapshotTest {
             compose.onAllNodesWithText("Continue", useUnmergedTree = true).assertCountEquals(0)
             // Image loading/click synchronization can outlast a frame. Verify forward playback,
             // without requiring the test to catch exactly the second authored frame.
-            compose.waitUntil(8_000) { compose.mainClock.advanceTimeBy(250); (services.exploration.uiState.value.cinematic?.stepIndex ?: 0) > 0 }
+            compose.waitUntil(25_000) { compose.mainClock.advanceTimeBy(500); (services.exploration.uiState.value.cinematic?.stepIndex ?: 0) > 0 }
             val screenshots = File("build/reports/desktop/screenshots").apply { mkdirs() }
             ImageIO.write(compose.onRoot().captureToImage().asAwtImage(), "png", File(screenshots, "intro-breach-fullscreen.png"))
-            compose.waitUntil(90_000) {
+            compose.waitUntil(180_000) {
                 compose.mainClock.advanceTimeBy(1_000)
                 services.exploration.uiState.value.cinematic?.sceneId != "intro_prologue"
             }

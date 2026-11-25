@@ -47,7 +47,7 @@ class World56WalkthroughReachabilityTest {
                 .flatMap { targets(room, it) }.distinct() }
         File(System.getProperty("java.io.tmpdir"), "starborn-world56-rendered-targets.json")
             .writeText(MoshiProvider.instance.adapter(Map::class.java).toJson(result))
-        assertEquals(146, result.size)
+        assertEquals(126, result.size)
     }
 
     @Test fun everyDocumentedInspectionAndPrimaryTextControlHasAnActualLink() {

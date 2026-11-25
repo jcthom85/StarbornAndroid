@@ -51,6 +51,18 @@ class World56ReadinessPublicTest {
         dismiss(s)
     }
     private fun dismiss(s: DesktopAppServices) {
+        repeat(30) {
+            if (s.exploration.uiState.value.activeDialogue != null) {
+                val choices = s.exploration.uiState.value.dialogueChoices
+                if (choices.isEmpty()) compose.runOnIdle { s.exploration.advanceDialogue() }
+                else compose.runOnIdle {
+                    s.exploration.onDialogueChoiceSelected(
+                        choices.single { it.id == "correct" || it.id.endsWith("_confirm") }.id
+                    )
+                }
+                compose.waitForIdle()
+            }
+        }
         while (s.exploration.uiState.value.narrationPrompt != null) {
             compose.runOnIdle { s.exploration.dismissNarration() }; compose.waitForIdle()
         }
@@ -59,8 +71,18 @@ class World56ReadinessPublicTest {
         assertNull("$event blocked by dialogue", s.exploration.uiState.value.activeDialogue)
         val action = s.exploration.uiState.value.actions.filterIsInstance<GenericAction>().single { it.actionEvent == event }
         compose.runOnIdle { s.exploration.onActionSelected(action) }; compose.waitForIdle()
-        compose.waitUntil(5000) { event in s.exploration.uiState.value.completedEvents && s.exploration.uiState.value.completedMilestones == s.sessionStore.state.value.completedMilestones }
-        assertTrue("$event: quests=${s.sessionStore.state.value.activeQuests}; milestones=${s.sessionStore.state.value.completedMilestones}; narration=${s.exploration.uiState.value.narrationPrompt}; hints=${s.exploration.uiState.value.actionHints}", event in s.sessionStore.state.value.completedEvents)
+        if (s.exploration.uiState.value.activeDialogue != null) {
+            dismiss(s)
+        }
+        val expectedReceipt = event.removeSuffix("_scene")
+        compose.waitUntil(5000) {
+            expectedReceipt in s.exploration.uiState.value.completedEvents &&
+                s.exploration.uiState.value.completedMilestones == s.sessionStore.state.value.completedMilestones
+        }
+        assertTrue(
+            "$event: quests=${s.sessionStore.state.value.activeQuests}; milestones=${s.sessionStore.state.value.completedMilestones}; narration=${s.exploration.uiState.value.narrationPrompt}; hints=${s.exploration.uiState.value.actionHints}",
+            expectedReceipt in s.sessionStore.state.value.completedEvents
+        )
     }
     private fun prose(s: DesktopAppServices): String {
         val ui = s.exploration.uiState.value
@@ -133,11 +155,11 @@ class World56ReadinessPublicTest {
         }
         for (order in listOf(listOf("jed", "astra", "foundry"), listOf("foundry", "astra", "jed"))) {
             restore(s, seed(s, "source_memory_stair").copy(activeQuests = setOf("w6_mq29")))
-            for (revision in order) { act(s, "w6_mq29_refuse_${revision}_revision"); dismiss(s) }
-            assertTrue("$order: ${prose(s)} / ${s.sessionStore.state.value.roomStates}", prose(s).contains("steadied enough to climb"))
+            for (revision in order) { act(s, "w6_mq29_refuse_${revision}_revision_scene"); dismiss(s) }
+            assertTrue("$order: ${prose(s)} / ${s.sessionStore.state.value.roomStates}", prose(s).contains("steady enough to climb"))
             assertNotEquals(true, s.sessionStore.state.value.roomStates["source_memory_stair"]?.get("ascent_open"))
             act(s, "w6_mq29_climb_stair"); dismiss(s)
-            assertTrue(prose(s).contains("eastern ascent open"))
+            assertTrue(prose(s).contains("memory stair opens east"))
             assertEquals(true, s.sessionStore.state.value.roomStates["source_memory_stair"]?.get("ascent_open"))
         }
     }
@@ -148,7 +170,7 @@ class World56ReadinessPublicTest {
             val receipts = setOf("w6_mq30_defeat_vale") + if (second) setOf("w6_mq30_defeat_god") else emptySet()
             restore(s, seed(s, "source_center").copy(activeQuests = setOf("w6_mq30"),
                 questTasksCompleted = mapOf("w6_mq30" to tasks), completedEvents = receipts))
-            assertTrue(prose(s).contains(if (second) "Key answers" else "remaining form waits"))
+            assertTrue(prose(s).contains(if (second) "Key answers" else "remaining form rises"))
             val focus = s.exploration.uiState.value.actions.filterIsInstance<TuningPuzzleAction>().single()
             compose.runOnIdle { s.exploration.onActionSelected(focus) }; compose.waitForIdle()
             assertEquals(second, s.exploration.uiState.value.tuningPuzzle != null)

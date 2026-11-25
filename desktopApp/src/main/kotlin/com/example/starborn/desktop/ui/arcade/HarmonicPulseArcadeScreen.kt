@@ -50,7 +50,10 @@ fun HarmonicPulseArcadeScreen(
     onBack: () -> Unit,
     largeTouchTargets: Boolean,
     reducedFlashes: Boolean,
-    onPlayCue: (String) -> Unit
+    onPlayCue: (String) -> Unit,
+    musicPositionSecondsProvider: (() -> Float?)? = null,
+    onRestartMusic: (() -> Unit)? = null,
+    onMusicPausedChanged: ((Boolean) -> Unit)? = null
 ) {
     val engine = remember { HarmonicPulseEngine() }
     var snapshot by remember { mutableStateOf(engine.snapshot()) }
@@ -59,10 +62,22 @@ fun HarmonicPulseArcadeScreen(
     var submitted by remember { mutableStateOf<ArcadeRunSubmission?>(null) }
     var tutorial by remember { mutableStateOf(true) }
     val highScore = maxOf(arcadeService.progress(ArcadeIds.HARMONIC_PULSE).highScore, submitted?.highScore ?: 0)
+    val latestMusicPositionProvider by rememberUpdatedState(musicPositionSecondsProvider)
+    val latestOnRestartMusic by rememberUpdatedState(onRestartMusic)
+    val latestOnMusicPausedChanged by rememberUpdatedState(onMusicPausedChanged)
+
+    LaunchedEffect(paused, tutorial, snapshot.gameOver) {
+        if (!tutorial && !snapshot.gameOver) {
+            latestOnMusicPausedChanged?.invoke(paused)
+        }
+    }
 
     DesktopArcadeKeys { code, pressed ->
         if (pressed && (code == java.awt.event.KeyEvent.VK_ENTER || (code == java.awt.event.KeyEvent.VK_SPACE && tutorial))) {
-            if (tutorial) onPlayCue("confirm")
+            if (tutorial) {
+                latestOnRestartMusic?.invoke()
+                onPlayCue("ui_confirm")
+            }
             tutorial = false
             paused = false
         }
@@ -80,11 +95,40 @@ fun HarmonicPulseArcadeScreen(
 
     LaunchedEffect(engine, paused, tutorial) {
         var previous = 0L
+        var lastRawMusicSec = -1f
+        var lastRawMusicNano = 0L
         while (isActive) {
             withFrameNanos { now ->
                 if (previous != 0L && !paused && !tutorial) {
-                    engine.advance((now - previous) / 1_000_000_000f, input)
-                    snapshot = engine.snapshot()
+                    val frameDeltaSec = (now - previous) / 1_000_000_000f
+                    val rawMusicSec = latestMusicPositionProvider?.invoke()
+                    val interpolatedMusicSec = if (rawMusicSec != null && rawMusicSec >= 0f) {
+                        if (rawMusicSec != lastRawMusicSec) {
+                            lastRawMusicSec = rawMusicSec
+                            lastRawMusicNano = now
+                        }
+                        val subTick = ((now - lastRawMusicNano) / 1_000_000_000f).coerceIn(0f, 0.05f)
+                        rawMusicSec + subTick
+                    } else {
+                        lastRawMusicSec = -1f
+                        null
+                    }
+                    engine.advance(frameDeltaSec, input, interpolatedMusicSec)
+                    val next = engine.snapshot()
+                    snapshot = next
+                    when (next.audioEvent) {
+                        PulseAudioEvent.HIT_NOTE -> onPlayCue("ui_confirm")
+                        PulseAudioEvent.HIT_PERFECT -> onPlayCue("sfx_chime_splice")
+                        PulseAudioEvent.OVERDRIVE_TRIGGER -> onPlayCue("sfx_skill_source_harmonic")
+                        PulseAudioEvent.MISS_NOTE -> onPlayCue("ui_error")
+                        PulseAudioEvent.TRACK_CLEAR -> {
+                            lastRawMusicSec = -1f
+                            latestOnRestartMusic?.invoke()
+                            onPlayCue("sfx_rest_chime")
+                        }
+                        PulseAudioEvent.GAME_OVER -> onPlayCue("sfx_arcade_game_over")
+                        PulseAudioEvent.NONE -> Unit
+                    }
                 }
                 previous = now
             }
@@ -94,19 +138,9 @@ fun HarmonicPulseArcadeScreen(
     LaunchedEffect(snapshot.gameOver) {
         if (snapshot.gameOver && submitted == null) {
             submitted = arcadeService.submitHarmonicPulseScore(snapshot.score)
-            onPlayCue("sfx_arcade_game_over")
-        }
-    }
-
-    LaunchedEffect(snapshot.audioEvent) {
-        when (snapshot.audioEvent) {
-            PulseAudioEvent.HIT_NOTE -> onPlayCue("sfx_arcade_laser")
-            PulseAudioEvent.HIT_PERFECT -> onPlayCue("sfx_arcade_jump")
-            PulseAudioEvent.OVERDRIVE_TRIGGER -> onPlayCue("confirm")
-            PulseAudioEvent.MISS_NOTE -> onPlayCue("action_inspect")
-            PulseAudioEvent.TRACK_CLEAR -> onPlayCue("confirm")
-            PulseAudioEvent.GAME_OVER -> onPlayCue("sfx_arcade_game_over")
-            PulseAudioEvent.NONE -> Unit
+            if (snapshot.audioEvent != PulseAudioEvent.GAME_OVER) {
+                onPlayCue("sfx_arcade_game_over")
+            }
         }
     }
 
@@ -155,7 +189,11 @@ fun HarmonicPulseArcadeScreen(
                         "Clear all 3 cadence tracks to achieve resonance mastery."
                     ),
                     action = "START RESONANCE",
-                    onAction = { tutorial = false; onPlayCue("confirm") }
+                    onAction = {
+                        latestOnRestartMusic?.invoke()
+                        tutorial = false
+                        onPlayCue("ui_confirm")
+                    }
                 )
             } else if (paused) {
                 HarmonicOverlay("CADENCE PAUSED", listOf("Prismatic tuning fork held in stasis."), "RESUME") { paused = false }
@@ -176,7 +214,8 @@ fun HarmonicPulseArcadeScreen(
                         snapshot = engine.snapshot()
                         submitted = null
                         input = HarmonicPulseInput()
-                        onPlayCue("confirm")
+                        latestOnRestartMusic?.invoke()
+                        onPlayCue("ui_confirm")
                     }
                 )
             }

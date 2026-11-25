@@ -45,6 +45,17 @@ import kotlinx.coroutines.flow.first
 import com.example.starborn.data.local.UserSettings
 import com.example.starborn.feature.combat.presentation.*
 
+internal fun resistanceValueForElement(profile: ResistanceProfile, element: String): Int =
+    when (element.trim().lowercase()) {
+        "burn", "fire" -> profile.burn
+        "freeze", "ice" -> profile.freeze
+        "shock", "electric", "lightning" -> profile.shock
+        "acid", "erosion", "corrosion" -> profile.acid
+        "source", "harmonic" -> profile.source
+        "physical", "kinetic" -> profile.physical
+        else -> 0
+    }
+
 /** Presentation only: all commands and rewards are resolved by the shared combat controller. */
 @Composable
 fun DesktopCombatScreen(
@@ -97,8 +108,11 @@ private fun DesktopCombatContent(
     val lungeActor by runtime.lungeActorId.collectAsState()
     val missActor by runtime.missLungeActorId.collectAsState()
     var showLog by remember { mutableStateOf(false) }
+    var showPauseSettings by remember { mutableStateOf(false) }
     var menu by remember { mutableStateOf<String?>(null) }
-    LaunchedEffect(runtime, foreground, showLog) { runtime.setBackgroundPaused(!foreground || showLog) }
+    LaunchedEffect(runtime, foreground, showLog, showPauseSettings) {
+        runtime.setBackgroundPaused(!foreground || showLog || showPauseSettings)
+    }
     var targetRequirement by remember { mutableStateOf(TargetRequirement.NONE) }
     var targetAction by remember { mutableStateOf<((String) -> Unit)?>(null) }
     var instruction by remember { mutableStateOf<String?>(null) }
@@ -160,10 +174,18 @@ private fun DesktopCombatContent(
                     record("${name(effect.actorId)} prepares $label")
                 }
                 is CombatFxEvent.Impact -> {
+                    val targetProfile = runtime.state.value?.combatants?.get(effect.targetId)?.combatant?.resistances
+                    val hitElement = effect.element
+                    val isVantageHit = !effect.isWeakness && hitElement != null && targetProfile != null &&
+                        ElementalAffinityRules.tierForValue(resistanceValueForElement(targetProfile, hitElement)) == AffinityTier.VANTAGE
                     val tags = listOfNotNull(
-                        "CRITICAL".takeIf { effect.critical }, "WEAKNESS".takeIf { effect.isWeakness },
-                        "BROKEN BONUS".takeIf { effect.isBrokenBonus }, "GUARD BREAK".takeIf { effect.isGuardBreak },
-                        effect.element?.replace('_', ' ')?.uppercase())
+                        "CRITICAL".takeIf { effect.critical },
+                        "WEAKNESS".takeIf { effect.isWeakness },
+                        "VANTAGE".takeIf { isVantageHit },
+                        "BROKEN BONUS".takeIf { effect.isBrokenBonus },
+                        "GUARD BREAK".takeIf { effect.isGuardBreak },
+                        effect.element?.replace('_', ' ')?.uppercase()
+                    )
                     val label = "-${effect.amount}" + tags.joinToString(" / ", prefix = if (tags.isEmpty()) "" else " ")
                     val weapon = runtime.state.value?.combatants?.get(effect.sourceId)?.combatant?.weapon
                     val style = when (weapon?.weaponType) {
@@ -255,7 +277,15 @@ private fun DesktopCombatContent(
         }
     }
     val battle = state ?: return
-    LaunchedEffect(menu) { if (menu == null) { withFrameNanos { }; keyboardFocus.requestFocus() } }
+    LaunchedEffect(battle.outcome, timedPrompt) {
+        if (battle.outcome != null || timedPrompt != null) showPauseSettings = false
+    }
+    LaunchedEffect(menu, showPauseSettings, showLog) {
+        if (menu == null && !showPauseSettings && !showLog) {
+            withFrameNanos { }
+            keyboardFocus.requestFocus()
+        }
+    }
     val party = battle.combatants.values.filter { it.combatant.side != CombatSide.ENEMY }
     val enemies = battle.combatants.values.filter { it.combatant.side == CombatSide.ENEMY }
     val actor = battle.combatants[actorId]
@@ -320,13 +350,23 @@ private fun DesktopCombatContent(
         }
     }.onPreviewKeyEvent { event ->
         if (battle.outcome != null) false else if (event.type == KeyEventType.KeyDown && (event.key == Key.Escape || (showLog && event.key == Key.L))) {
-            if (showLog) {
-                showLog = false
-                true
-            } else {
-                cancelActiveSelectionOrMenu()
+            when {
+                showPauseSettings -> {
+                    showPauseSettings = false
+                    true
+                }
+                showLog -> {
+                    showLog = false
+                    true
+                }
+                cancelActiveSelectionOrMenu() -> true
+                event.key == Key.Escape && timedPrompt == null && tutorial?.showsModal != true -> {
+                    showPauseSettings = true
+                    true
+                }
+                else -> false
             }
-        } else if (event.type != KeyEventType.KeyDown || !foreground || showLog || battle.outcome != null) false else {
+        } else if (event.type != KeyEventType.KeyDown || !foreground || showLog || showPauseSettings || battle.outcome != null) false else {
             if (menu == "skills") {
                 val numKeyIndex = when (event.key) {
                     Key.One -> 0; Key.Two -> 1; Key.Three -> 2; Key.Four -> 3
@@ -453,15 +493,45 @@ private fun DesktopCombatContent(
                             Text("Stability ${target.stability}/${target.combatant.stats.stability}", color = Color(0xFF9F79D2), fontSize = 12.sp)
                         }
                         intents[target.combatant.id]?.let { Text(it, color = Color(0xFFFFBB55), fontSize = 12.sp) }
-                        val weaknesses = weaknessKnowledge.knownEnemyWeaknesses[runtime.enemyTypeId(target.combatant.id)].orEmpty()
-                        Column(verticalArrangement = Arrangement.spacedBy(4.dp), modifier = Modifier.testTag("combat-affinity-radar")) {
-                            Text("Weaknesses", color = Color(0xFF63E6FF), fontSize = 10.sp)
-                            if (weaknesses.isEmpty()) Text("Not discovered", color = Color(0xFF91A8B3), fontSize = 12.sp)
-                            else FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                weaknesses.sorted().forEach { element ->
-                                    Surface(shape = RoundedCornerShape(4.dp), color = combatElementColor(element).copy(alpha = .16f)) {
-                                        Text(com.example.starborn.feature.combat.presentation.weaknessLabel(element),
-                                            Modifier.padding(horizontal = 6.dp, vertical = 3.dp), color = combatElementColor(element), fontSize = 12.sp)
+                        val discovered = weaknessKnowledge.knownEnemyWeaknesses[runtime.enemyTypeId(target.combatant.id)].orEmpty().sorted()
+                        val (vantageElements, weakElements) = discovered.partition { element ->
+                            ElementalAffinityRules.tierForValue(
+                                resistanceValueForElement(target.combatant.resistances, element)
+                            ) == AffinityTier.VANTAGE
+                        }
+                        Column(verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.testTag("combat-affinity-radar")) {
+                            if (discovered.isEmpty()) {
+                                Text("Weaknesses", color = Color(0xFF63E6FF), fontSize = 10.sp)
+                                Text("Not discovered", color = Color(0xFF91A8B3), fontSize = 12.sp)
+                            } else {
+                                if (weakElements.isNotEmpty()) {
+                                    Text("Weaknesses (2× Stability · -1 CD)", color = Color(0xFF63E6FF), fontSize = 10.sp)
+                                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                        weakElements.forEach { element ->
+                                            Surface(shape = RoundedCornerShape(4.dp), color = combatElementColor(element).copy(alpha = .16f)) {
+                                                Text(com.example.starborn.feature.combat.presentation.weaknessLabel(element),
+                                                    Modifier.padding(horizontal = 6.dp, vertical = 3.dp), color = combatElementColor(element), fontSize = 12.sp)
+                                            }
+                                        }
+                                    }
+                                }
+                                if (vantageElements.isNotEmpty()) {
+                                    Text("Vantage (1.5× Stability · -1 CD)", color = Color(0xFFFFC857), fontSize = 10.sp)
+                                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                        vantageElements.forEach { element ->
+                                            Surface(
+                                                shape = RoundedCornerShape(4.dp),
+                                                color = combatElementColor(element).copy(alpha = .16f),
+                                                border = BorderStroke(1.dp, Color(0xFFFFC857).copy(alpha = 0.55f))
+                                            ) {
+                                                Text(
+                                                    com.example.starborn.feature.combat.presentation.weaknessLabel(element),
+                                                    Modifier.padding(horizontal = 6.dp, vertical = 3.dp),
+                                                    color = combatElementColor(element),
+                                                    fontSize = 12.sp
+                                                )
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -474,6 +544,7 @@ private fun DesktopCombatContent(
                         }
                     }
                 } }
+                val victoryEmotesActive = battle.outcome is CombatOutcome.Victory && runtime.encounterEnemyIds != listOf("ascended_vale")
                 DesktopCombatPartyRoster(
                     party = party,
                     services = services,
@@ -481,6 +552,13 @@ private fun DesktopCombatContent(
                     actorId = actorId,
                     executingId = lungeActor.takeIf { lungeToken > 0 },
                     playerPartyDefs = runtime.playerParty,
+                    cues = cues,
+                    victoryEmotes = victoryEmotesActive,
+                    lungeActor = lungeActor,
+                    lungeToken = lungeToken,
+                    missActor = missActor,
+                    missToken = missToken,
+                    authoredState = battle,
                     onSelectActor = { id ->
                         if (targetAction == null && timedPrompt == null && tutorial?.showsModal != true) {
                             runtime.selectReadyPlayer(id)
@@ -835,7 +913,10 @@ private fun DesktopCombatContent(
             val density = androidx.compose.ui.platform.LocalDensity.current
             val originalWide = hasThreePanelSpace(backdropLayout, density.density)
             val formationCount = battle.authored.formationCapacity.takeIf { it > 0 } ?: enemies.size
-            val needsLargerStage = formationCount > 3 || formationCount > 1 && runtime.enemies.any { it.combatSize == "massive" }
+            val isCompositeBoss = enemies.isNotEmpty() && enemies.all { member ->
+                runtime.enemies.firstOrNull { it.id == runtime.enemyTypeId(member.combatant.id) }?.composite != null
+            }
+            val needsLargerStage = isCompositeBoss || formationCount > 3 || formationCount > 1 && runtime.enemies.any { it.combatSize == "massive" }
             val layout = if (originalWide && needsLargerStage) {
                 val stageWidth = maxOf(backdropLayout.center.width, with(density) { (maxWidth - 480.dp).toPx() })
                 val side = (with(density) { maxWidth.toPx() } - stageWidth) / 2f
@@ -865,7 +946,7 @@ private fun DesktopCombatContent(
                 EnvironmentalGeometry(with(density) { maxWidth.toPx() },with(density) { maxHeight.toPx() },
                     layout.center.left,layout.center.top,layout.center.width,layout.center.height),
                 environmentState,environmentSession.completedMilestones,settings,combat=true,
-                paused=!foreground || showLog || battle.outcome!=null,suppressAccents=timedPrompt!=null || tutorial?.showsModal==true)
+                paused=!foreground || showLog || showPauseSettings || battle.outcome!=null,suppressAccents=timedPrompt!=null || tutorial?.showsModal==true)
             Column(Modifier.offset(x = centerX).width(centerWidth).fillMaxHeight()
                 .background(Color(if (settings.highContrastMode) 0x9505070D else 0x2505070D)).padding(start = 12.dp, end = 12.dp, bottom = 44.dp, top = if (wide) 12.dp else 64.dp)) {
 DesktopBattleFormation(enemies, services, Modifier.fillMaxWidth().weight(if (wide) .58f else .64f), true,
@@ -892,18 +973,28 @@ DesktopBattleFormation(enemies, services, Modifier.fillMaxWidth().weight(if (wid
                     else com.example.starborn.ui.combat.AuthoredEncounterStatus(battle)
                 }
                 if (!wide && targetAction != null) Text(instruction ?: "Choose a target", color = Color(0xFF63E6FF), style = MaterialTheme.typography.labelMedium)
+                val victoryEmotesActive = battle.outcome is CombatOutcome.Victory && runtime.encounterEnemyIds != listOf("ascended_vale")
 DesktopBattleFormation(party, services, Modifier.fillMaxWidth().weight(if (wide) .42f else .36f), false,
                     choosingId = actorId, executingId = lungeActor.takeIf { lungeToken > 0 }, authoredState = battle,
                     sprite = { id ->
-                        val normal = runtime.playerParty.firstOrNull { it.id == id }?.combatIconPath
-                        when {
-                            battle.combatants[id]?.isAlive == false -> "images/characters/emotes/${id}_down.png"
-                            battle.outcome is CombatOutcome.Victory && runtime.encounterEnemyIds != listOf("ascended_vale") ->
-                                "images/characters/emotes/${id}_cool.png"
-                            missActor == id && missToken > 0 && id == lungeActor -> "images/characters/emotes/${id}_confident.png"
-                            id == lungeActor -> "images/characters/emotes/${id}_angry.png"
-                            else -> normal
+                        val normal = runtime.playerParty.firstOrNull { it.id == id }?.let { def ->
+                            def.combatIconPath.takeIf { it.isNotBlank() } ?: def.miniIconPath
                         }
+                        val memberCues = cues.filter { it.targetId == id }
+                        val hasThreatPreparation = battle.authored.preparations.values.any { id in it.targetIds }
+                        resolveDesktopPartyCombatEmote(
+                            id = id,
+                            state = battle.combatants[id],
+                            defaultPath = normal,
+                            victoryEmotes = victoryEmotesActive,
+                            isMissLunge = missActor == id && missToken > 0L && id == lungeActor,
+                            isLunging = lungeActor == id && lungeToken > 0L,
+                            hasDamageCue = memberCues.any { it.kind == DesktopCueKind.HIT || it.kind == DesktopCueKind.BREAK },
+                            hasSupportCue = memberCues.any { it.kind == DesktopCueKind.HEAL || it.kind == DesktopCueKind.SUPPORT },
+                            hasTelegraphCue = hasThreatPreparation || memberCues.any { it.kind == DesktopCueKind.TELEGRAPH },
+                            isActing = id == actorId,
+                            assetProvider = services.assetProvider
+                        )
                     },
                     selectedId = if (targetAction != null) selectedTarget else actorId, validTargets = validIds, targeting = targetAction != null,
                     meters = meters, intents = emptyMap(), feedback = feedback, cues = cues, lungeStyle = lungeStyle,
@@ -953,14 +1044,24 @@ DesktopBattleFormation(party, services, Modifier.fillMaxWidth().weight(if (wide)
                 menu = menu,
                 timedPrompt = timedPrompt != null,
                 actorAvailable = actor != null && targetAction == null && timedPrompt == null,
-                onToggleLog = { if (timedPrompt == null) showLog = !showLog },
-                onCancelTarget = { cancelActiveSelectionOrMenu() }
+                onToggleLog = { if (timedPrompt == null && !showPauseSettings) showLog = !showLog },
+                onCancelTarget = { cancelActiveSelectionOrMenu() },
+                onTogglePause = if (timedPrompt == null && tutorial?.showsModal != true && battle.outcome == null) {
+                    { showPauseSettings = !showPauseSettings }
+                } else null
             )
         }
         if (showLog) DesktopCombatLogDialog(
             history = history.toList(),
             onDismiss = { showLog = false },
             accentColor = commandAccent
+        )
+        if (showPauseSettings) DesktopCombatPauseDialog(
+            services = services,
+            userSettings = settings,
+            currentRoomTitle = runtime.locationTitle,
+            accentColor = commandAccent,
+            onResume = { showPauseSettings = false }
         )
         tutorial?.takeIf { it.showsModal }?.let { training ->
             DesktopCombatTutorialOverlay(training, commandAccent, settings.highContrastMode,

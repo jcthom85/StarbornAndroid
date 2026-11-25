@@ -933,14 +933,14 @@ class AudioCuePlayer(
         return "audio/$fileName"
     }
 
-    fun hasCue(cueId: String): Boolean {
+    override fun hasCue(cueId: String): Boolean {
         val normalized = cueId.trim().lowercase().replace('-', '_')
         if (normalized.isBlank()) return false
         return resolveAssetAudioPath(normalized) != null ||
             resolveRawResourceId(normalized, logMissing = false) != 0
     }
 
-    fun currentMusicPositionMs(expectedCueId: String? = null): Long? {
+    override fun currentMusicPositionMs(expectedCueId: String?): Long? {
         val activeCue = currentMusicCue ?: return null
         if (expectedCueId != null) {
             val expected = expectedCueId.trim().lowercase().replace('-', '_')
@@ -950,7 +950,7 @@ class AudioCuePlayer(
         return absoluteMusicPosition(musicPlayer).coerceAtLeast(0L)
     }
 
-    fun restartCurrentMusicFromStart(expectedCueId: String? = null) {
+    override fun restartCurrentMusicFromStart(expectedCueId: String?) {
         val activeCue = currentMusicCue ?: return
         if (expectedCueId != null) {
             val expected = expectedCueId.trim().lowercase().replace('-', '_')
@@ -969,7 +969,7 @@ class AudioCuePlayer(
         }
     }
 
-    fun setMusicPausedForOverlay(paused: Boolean, expectedCueId: String? = null) {
+    override fun setMusicPausedForOverlay(paused: Boolean, expectedCueId: String?) {
         val activeCue = currentMusicCue ?: return
         if (expectedCueId != null) {
             val expected = expectedCueId.trim().lowercase().replace('-', '_')

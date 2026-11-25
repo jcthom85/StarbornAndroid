@@ -8,6 +8,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
@@ -20,6 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
@@ -91,13 +94,22 @@ fun DesktopMainMenuScreen(
         services.audioDriver.executeAll(services.audioRouter.commandsForUi("ui_title_start"))
         onStartGame()
     }
+    val titleFocusRequester = remember { FocusRequester() }
+    val anyModalOpen = showLoadGame || showSettingsDialog || showDebugScenarios || showNewGameConfirm || debugScenarioError != null
+    LaunchedEffect(anyModalOpen) {
+        if (!anyModalOpen) {
+            withFrameNanos { }
+            titleFocusRequester.requestFocus()
+        }
+    }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF05070D))
-            .onKeyEvent { keyEvent ->
-                if (keyEvent.type == KeyEventType.KeyDown) {
+            .focusRequester(titleFocusRequester)
+            .onPreviewKeyEvent { keyEvent ->
+                if (!anyModalOpen && keyEvent.type == KeyEventType.KeyDown) {
                     when (keyEvent.key) {
                         Key.C, Key.Enter, Key.Spacebar -> {
                             if (latestSlot != null) {
@@ -149,6 +161,7 @@ fun DesktopMainMenuScreen(
                     }
                 } else false
             }
+            .focusable()
     ) {
         // 1. Authentic Starborn Title Background Image with slow cinematic drift
         val bgTransition = rememberInfiniteTransition(label = "title_bg_motion")

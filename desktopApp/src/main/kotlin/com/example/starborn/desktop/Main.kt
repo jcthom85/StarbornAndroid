@@ -333,8 +333,8 @@ fun DesktopGameApp(
             suppressFlashes = currentSettings.disableFlashes,
             highContrastMode = currentSettings.highContrastMode,
             mode = TransitionMode.ENTER,
-            mainText = "HOSTILES",
-            subText = "INCOMING!",
+            mainText = "HOSTILE CONTACT",
+            subText = "",
             onFinished = {
                 activeCombatEnemies = enemies
                 pendingCombatEnemies = null
@@ -363,7 +363,7 @@ fun DesktopGameApp(
             theme = roomTheme,
             suppressFlashes = currentSettings.disableFlashes,
             highContrastMode = currentSettings.highContrastMode,
-            mode = TransitionMode.ENTER,
+            mode = TransitionMode.QUICK_CLOSE,
             mainText = text,
             subText = "",
             onFinished = {
@@ -381,7 +381,7 @@ fun DesktopGameApp(
             theme = roomTheme,
             suppressFlashes = currentSettings.disableFlashes,
             highContrastMode = currentSettings.highContrastMode,
-            mode = TransitionMode.EXIT,
+            mode = TransitionMode.QUICK_OPEN,
             onFinished = { exitingCombatTransition = false },
             modifier = Modifier.fillMaxSize().zIndex(150f)
         )

@@ -53,6 +53,7 @@ class DesktopAudioDriver(
     private val musicGeneration = AtomicLong(0)
     private var pendingMusicCue: String? = null // Owned by musicWorker.
     private val musicPositions = mutableMapOf<String, Long>() // Owned by musicWorker.
+    private val overlayPausedMusicCues = ConcurrentHashMap.newKeySet<String>()
     private var backgroundPaused = false // Owned by musicWorker.
 
     @Volatile private var masterGain: Float = 1f
@@ -123,6 +124,7 @@ class DesktopAudioDriver(
         }
         val playing = active.remove(key) ?: return
         if (command.type == AudioCueType.MUSIC) {
+            overlayPausedMusicCues.remove(key.second)
             musicPositions[key.second] = playing.clip.microsecondPosition
             refreshAmbientCoexistenceGains()
         }
@@ -147,6 +149,7 @@ class DesktopAudioDriver(
         enqueue(musicWorker) {
             musicGeneration.incrementAndGet()
             pendingMusicCue = null
+            overlayPausedMusicCues.clear()
             active.entries.filter { it.key.first == AudioCueType.MUSIC }.forEach { (key, playing) ->
                 if (active.remove(key, playing)) {
                     playing.clip.stop()
@@ -158,13 +161,88 @@ class DesktopAudioDriver(
         }
     }
 
+    override fun hasCue(cueId: String): Boolean {
+        val normalized = normalize(cueId)
+        return normalized.isNotEmpty() && resolvePath(normalized) != null
+    }
+
+    override fun currentMusicPositionMs(expectedCueId: String?): Long? {
+        val playing = if (expectedCueId != null) {
+            val normalized = normalize(expectedCueId)
+            if (normalized.isEmpty()) return null
+            active[AudioCueType.MUSIC to normalized]
+        } else {
+            active.entries.firstOrNull { it.key.first == AudioCueType.MUSIC }?.value
+        } ?: return null
+        return try {
+            if (!playing.clip.isOpen) {
+                null
+            } else {
+                val lenUs = playing.clip.microsecondLength
+                val posUs = playing.clip.microsecondPosition
+                val wrappedUs = if (lenUs > 0L) Math.floorMod(posUs, lenUs) else posUs.coerceAtLeast(0L)
+                wrappedUs / 1_000L
+            }
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    override fun restartCurrentMusicFromStart(expectedCueId: String?) {
+        enqueue(musicWorker) {
+            val targetEntry = if (expectedCueId != null) {
+                val normalized = normalize(expectedCueId)
+                if (normalized.isEmpty()) return@enqueue
+                active.entries.firstOrNull { it.key == (AudioCueType.MUSIC to normalized) }
+            } else {
+                active.entries.firstOrNull { it.key.first == AudioCueType.MUSIC }
+            } ?: return@enqueue
+            val cueKey = targetEntry.key.second
+            val playing = targetEntry.value
+            musicPositions.remove(cueKey)
+            try {
+                if (playing.clip.isOpen) {
+                    playing.clip.microsecondPosition = 0L
+                    if (!backgroundPaused && !overlayPausedMusicCues.contains(cueKey) && !playing.clip.isRunning) {
+                        if (playing.loop) playing.clip.loop(Clip.LOOP_CONTINUOUSLY) else playing.clip.start()
+                    }
+                }
+            } catch (_: Exception) {}
+        }
+    }
+
+    override fun setMusicPausedForOverlay(paused: Boolean, expectedCueId: String?) {
+        enqueue(musicWorker) {
+            val targetEntry = if (expectedCueId != null) {
+                val normalized = normalize(expectedCueId)
+                if (normalized.isEmpty()) return@enqueue
+                active.entries.firstOrNull { it.key == (AudioCueType.MUSIC to normalized) }
+            } else {
+                active.entries.firstOrNull { it.key.first == AudioCueType.MUSIC }
+            }
+            val cueKey = targetEntry?.key?.second ?: expectedCueId?.let(::normalize)?.takeIf { it.isNotEmpty() } ?: return@enqueue
+            if (paused) overlayPausedMusicCues.add(cueKey) else overlayPausedMusicCues.remove(cueKey)
+            val playing = targetEntry?.value ?: return@enqueue
+            try {
+                if (paused) {
+                    playing.clip.stop()
+                } else if (!backgroundPaused && playing.clip.isOpen && !playing.clip.isRunning) {
+                    if (playing.loop) playing.clip.loop(Clip.LOOP_CONTINUOUSLY) else playing.clip.start()
+                }
+            } catch (_: Exception) {}
+        }
+    }
+
     fun setBackgroundPaused(paused: Boolean) {
         enqueue(musicWorker) {
             if (backgroundPaused == paused) return@enqueue
             backgroundPaused = paused
-            active.entries.filter { it.key.first == AudioCueType.MUSIC }.forEach { (_, playing) ->
-                if (paused) playing.clip.stop()
-                else if (playing.loop) playing.clip.loop(Clip.LOOP_CONTINUOUSLY) else playing.clip.start()
+            active.entries.filter { it.key.first == AudioCueType.MUSIC }.forEach { (key, playing) ->
+                if (paused) {
+                    playing.clip.stop()
+                } else if (!overlayPausedMusicCues.contains(key.second)) {
+                    if (playing.loop) playing.clip.loop(Clip.LOOP_CONTINUOUSLY) else playing.clip.start()
+                }
             }
         }
     }

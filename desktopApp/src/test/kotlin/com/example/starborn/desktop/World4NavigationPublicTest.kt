@@ -266,6 +266,7 @@ class World4NavigationPublicTest {
             activeQuests = emptySet(), completedQuests = (16..20).map { "w4_mq$it" }.toSet() + (16..20).map { "w4_sq$it" } + "w4_sq_crucible",
             completedEvents = emptySet(), completedMilestones = setOf("ms_w4_mq17_complete"), questTasksCompleted = emptyMap(),
             roomStates = mapOf("foundry_pipe_gallery" to mapOf("assembly_route_open" to true),
+                "foundry_service_airlock" to mapOf("airlock_open" to true),
                 "foundry_slag_stepping_stones" to mapOf("slag_bridge_solidified" to true),
                 "foundry_slag_river" to mapOf("encounter_cleared:magma_drone" to true),
                 "foundry_titan_dock" to mapOf("encounter_cleared:titan_walker_boss" to true))))
@@ -282,7 +283,7 @@ class World4NavigationPublicTest {
             }
         }
         walk("foundry_slag_landing")
-        assertEquals(74, visited.size); assertEquals(ids, visited)
+        assertEquals(62, visited.size); assertEquals(ids, visited)
         assertEquals(rooms.values.sumOf { it.connections.size }, traversed.size)
         assertEquals("foundry_slag_landing", s.sessionStore.state.value.roomId)
     }
