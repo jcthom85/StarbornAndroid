@@ -65,6 +65,11 @@ fun HarmonicPulseArcadeScreen(
     val latestMusicPositionProvider by rememberUpdatedState(musicPositionSecondsProvider)
     val latestOnRestartMusic by rememberUpdatedState(onRestartMusic)
     val latestOnMusicPausedChanged by rememberUpdatedState(onMusicPausedChanged)
+    val bindings = com.example.starborn.desktop.ui.LocalDesktopKeyBindings.current
+    val lane0Code = bindings.awtKeyCode(com.example.starborn.desktop.DesktopAction.ARCADE_LANE_1) ?: java.awt.event.KeyEvent.VK_D
+    val lane1Code = bindings.awtKeyCode(com.example.starborn.desktop.DesktopAction.ARCADE_LANE_2) ?: java.awt.event.KeyEvent.VK_F
+    val lane2Code = bindings.awtKeyCode(com.example.starborn.desktop.DesktopAction.ARCADE_LANE_3) ?: java.awt.event.KeyEvent.VK_J
+    val lane3Code = bindings.awtKeyCode(com.example.starborn.desktop.DesktopAction.ARCADE_LANE_4) ?: java.awt.event.KeyEvent.VK_K
 
     LaunchedEffect(paused, tutorial, snapshot.gameOver) {
         if (!tutorial && !snapshot.gameOver) {
@@ -82,10 +87,10 @@ fun HarmonicPulseArcadeScreen(
             paused = false
         }
         input = when (code) {
-            java.awt.event.KeyEvent.VK_D, java.awt.event.KeyEvent.VK_1, java.awt.event.KeyEvent.VK_NUMPAD1, java.awt.event.KeyEvent.VK_LEFT -> input.copy(tapLane0 = pressed)
-            java.awt.event.KeyEvent.VK_F, java.awt.event.KeyEvent.VK_2, java.awt.event.KeyEvent.VK_NUMPAD2, java.awt.event.KeyEvent.VK_DOWN -> input.copy(tapLane1 = pressed)
-            java.awt.event.KeyEvent.VK_J, java.awt.event.KeyEvent.VK_3, java.awt.event.KeyEvent.VK_NUMPAD3, java.awt.event.KeyEvent.VK_UP -> input.copy(tapLane2 = pressed)
-            java.awt.event.KeyEvent.VK_K, java.awt.event.KeyEvent.VK_4, java.awt.event.KeyEvent.VK_NUMPAD4, java.awt.event.KeyEvent.VK_RIGHT -> input.copy(tapLane3 = pressed)
+            lane0Code, java.awt.event.KeyEvent.VK_1, java.awt.event.KeyEvent.VK_NUMPAD1, java.awt.event.KeyEvent.VK_LEFT -> input.copy(tapLane0 = pressed)
+            lane1Code, java.awt.event.KeyEvent.VK_2, java.awt.event.KeyEvent.VK_NUMPAD2, java.awt.event.KeyEvent.VK_DOWN -> input.copy(tapLane1 = pressed)
+            lane2Code, java.awt.event.KeyEvent.VK_3, java.awt.event.KeyEvent.VK_NUMPAD3, java.awt.event.KeyEvent.VK_UP -> input.copy(tapLane2 = pressed)
+            lane3Code, java.awt.event.KeyEvent.VK_4, java.awt.event.KeyEvent.VK_NUMPAD4, java.awt.event.KeyEvent.VK_RIGHT -> input.copy(tapLane3 = pressed)
             else -> input
         }
     }

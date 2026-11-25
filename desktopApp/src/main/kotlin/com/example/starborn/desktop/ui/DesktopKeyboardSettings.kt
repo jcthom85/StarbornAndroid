@@ -19,7 +19,7 @@ internal val LocalDesktopKeyBindings = staticCompositionLocalOf { DesktopKeyBind
 internal data class DesktopControlHint(val keys: String, val description: String)
 
 internal fun explorationControlHints(bindings: DesktopKeyBindings): List<DesktopControlHint> =
-    DesktopAction.entries.map { action ->
+    DesktopAction.entries.filter { it.scope == DesktopBindingScope.EXPLORATION }.map { action ->
         val alias = when (action) {
             DesktopAction.NORTH -> " / Up arrow"
             DesktopAction.SOUTH -> " / Down arrow"
@@ -31,12 +31,37 @@ internal fun explorationControlHints(bindings: DesktopKeyBindings): List<Desktop
         DesktopControlHint(bindings.label(action) + alias, action.label)
     }
 
+internal fun combatControlHints(bindings: DesktopKeyBindings): List<DesktopControlHint> = listOf(
+    DesktopControlHint(
+        "${bindings.label(DesktopAction.COMBAT_ATTACK)} / ${bindings.label(DesktopAction.COMBAT_SKILLS)} / ${bindings.label(DesktopAction.COMBAT_ITEMS)} / ${bindings.label(DesktopAction.COMBAT_SNACK)}",
+        "Attack / Abilities / Items / Equipped snack"
+    ),
+    DesktopControlHint(
+        "${bindings.label(DesktopAction.COMBAT_GUARD)} / ${bindings.label(DesktopAction.COMBAT_RETREAT)} / ${bindings.label(DesktopAction.COMBAT_LOG)}",
+        "Guard / Retreat / Battle log"
+    ),
+    DesktopControlHint("Arrows / Enter", "Select / confirm target"),
+    DesktopControlHint("Tab", "Select next ready party member"),
+    DesktopControlHint("Space", "Respond to timing prompts"),
+    DesktopControlHint("Esc / Right click", "Pause settings or cancel menu/targeting")
+)
+
+internal fun arcadeControlHints(bindings: DesktopKeyBindings): String =
+    listOf(
+        DesktopAction.ARCADE_LANE_1,
+        DesktopAction.ARCADE_LANE_2,
+        DesktopAction.ARCADE_LANE_3,
+        DesktopAction.ARCADE_LANE_4
+    ).joinToString("/") { bindings.label(it) }
+
 internal val fieldMenuControlHints = listOf(
+    DesktopControlHint("Q / E", "Previous / next menu page"),
+    DesktopControlHint("[ / ]", "Switch sub-category in Inventory, Cooking, or Tinkering"),
     DesktopControlHint("0 / 1 / 2", "Stats / Inventory / Tinker"),
     DesktopControlHint("3 / 4 / 5", "Journal / Map / Settings"),
     DesktopControlHint("Alt+1–6", "Stats / Inventory / Tinker / Journal / Map / Settings"),
     DesktopControlHint("Ctrl+Tab", "Next page; Shift reverses"),
-    DesktopControlHint("Tab / Shift+Tab", "Move keyboard focus"),
+    DesktopControlHint("Arrows / Enter", "Navigate items & execute primary action"),
     DesktopControlHint("F5 / F9", "Quick save / load quicksave"),
     DesktopControlHint("Esc / Right click", "Back / close menu")
 )
@@ -47,30 +72,50 @@ internal fun DesktopKeyboardSettings(services: DesktopAppServices) {
     val scope = rememberCoroutineScope()
     var editing by remember { mutableStateOf<DesktopAction?>(null) }
     var message by remember { mutableStateOf<String?>(null) }
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text("Exploration key bindings", style = MaterialTheme.typography.titleSmall)
-        Text("Choose a key to change it. These bindings apply to exploration. Combat, fishing, and menu shortcuts use the fixed keys in the controls guide. Arrow keys, Esc, Tab, and Enter remain available for navigation.",
-            style = MaterialTheme.typography.bodySmall)
-        DesktopAction.entries.forEach { action ->
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text(action.label, Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
-                OutlinedButton(onClick = { editing = action; message = null },
-                    modifier = Modifier.desktopPointerHover().testTag("bind-${action.name}")) {
-                    Text(bindings.label(action))
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Text(
+            "Choose a key to change it. Directional Arcade cabinets automatically use your Exploration movement keys; Arrow keys, Esc, Tab, and Enter remain available for navigation.",
+            style = MaterialTheme.typography.bodySmall
+        )
+        DesktopBindingScope.entries.forEach { bindingScope ->
+            Text("${bindingScope.title} key bindings", style = MaterialTheme.typography.titleSmall)
+            DesktopAction.entries.filter { it.scope == bindingScope }.forEach { action ->
+                Row(
+                    Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(action.label, Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
+                    OutlinedButton(
+                        onClick = { editing = action; message = null },
+                        modifier = Modifier.desktopPointerHover().testTag("bind-${action.name}")
+                    ) {
+                        Text(bindings.label(action))
+                    }
                 }
             }
+            HorizontalDivider()
         }
-        TextButton(onClick = { scope.launch { services.userSettingsStore.resetKeyBindings() } }) { Text("Restore default keys") }
+        TextButton(
+            onClick = { scope.launch { services.userSettingsStore.resetKeyBindings() } },
+            modifier = Modifier.desktopPointerHover()
+        ) { Text("Restore default keys") }
     }
     editing?.let { action ->
         val focus = remember { FocusRequester() }
         LaunchedEffect(action) { withFrameNanos { }; focus.requestFocus() }
-        AlertDialog(
-            onDismissRequest = { editing = null },
-            title = { Text(action.label) },
-            text = {
-                Column(Modifier.focusRequester(focus).onPreviewKeyEvent { event ->
+        DesktopConsoleModal(
+            eyebrow = "${action.scope.title} Key Binding",
+            title = action.label,
+            onDismiss = { editing = null },
+            maxWidth = 440.dp,
+            autoFocus = false,
+            footer = {
+                TextButton(onClick = { editing = null }, modifier = Modifier.desktopPointerHover()) { Text("Cancel") }
+            }
+        ) {
+            Column(
+                Modifier.focusRequester(focus).onPreviewKeyEvent { event ->
                     if (event.type != KeyEventType.KeyDown) false
                     else if (event.key == Key.Escape) { editing = null; true }
                     else {
@@ -88,13 +133,12 @@ internal fun DesktopKeyboardSettings(services: DesktopAppServices) {
                         }
                         true
                     }
-                }.focusable().testTag("key-binding-capture"), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("Press the new key. Esc cancels.")
-                    message?.let { Text(it, color = MaterialTheme.colorScheme.error) }
-                }
-            },
-            confirmButton = {},
-            dismissButton = { TextButton(onClick = { editing = null }) { Text("Cancel") } }
-        )
+                }.focusable().testTag("key-binding-capture"),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text("Press the new key. Esc cancels.")
+                message?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+            }
+        }
     }
 }

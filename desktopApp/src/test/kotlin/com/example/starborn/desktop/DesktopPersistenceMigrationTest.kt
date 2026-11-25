@@ -68,6 +68,32 @@ class DesktopPersistenceMigrationTest {
 
         val blankAppDataResolved = DesktopAppServices.resolveSaveDirectory(appDataEnv = "   ", userHome = fakeHome)
         assertEquals(File(fakeHome, ".starborn").path, blankAppDataResolved.path)
+
+        val macHome = "/Users/MockPlayer"
+        val macResolved = DesktopAppServices.resolveSaveDirectory(
+            appDataEnv = null,
+            userHome = macHome,
+            osName = "Mac OS X",
+            xdgDataHome = null
+        )
+        assertEquals(File(macHome, "Library/Application Support/Starborn").path, macResolved.path)
+
+        val linuxHome = "/home/deck"
+        val linuxDefaultResolved = DesktopAppServices.resolveSaveDirectory(
+            appDataEnv = null,
+            userHome = linuxHome,
+            osName = "Linux",
+            xdgDataHome = null
+        )
+        assertEquals(File(linuxHome, ".local/share/Starborn").path, linuxDefaultResolved.path)
+
+        val linuxXdgResolved = DesktopAppServices.resolveSaveDirectory(
+            appDataEnv = null,
+            userHome = linuxHome,
+            osName = "Linux",
+            xdgDataHome = "/home/deck/.xdg_data"
+        )
+        assertEquals(File("/home/deck/.xdg_data", "Starborn").path, linuxXdgResolved.path)
     }
 
     @Test fun legacySaveDirectoryMigratesToTargetWithoutDataLoss() {

@@ -251,7 +251,7 @@ private fun DesktopExplorationContent(services: DesktopAppServices, onEnterComba
             DesktopAction.QUICK_SAVE -> { runtime.quickSave(); true }
             DesktopAction.QUICK_LOAD -> { quickLoadOpen = true; true }
             DesktopAction.HELP -> { controlsOpen = true; true }
-            null -> false
+            else -> false
         }
     }.focusable()) {
         if (actionsOpen) DesktopRoomInteractionDialog(services, ui, onDismiss = { runtime.dismissRoomActions() }) { target ->

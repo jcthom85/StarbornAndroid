@@ -188,7 +188,10 @@ private fun DesktopFieldMenuBody(
             }
         }
     }.onKeyEvent { event ->
-        // Let text fields consume digits before interpreting unmodified page shortcuts.
+        // Let text fields consume digits/letters before interpreting unmodified page shortcuts.
+        if (event.type != KeyEventType.KeyDown || event.isAltPressed || event.isCtrlPressed || event.isMetaPressed) {
+            false
+        } else {
             val directTab = when (event.key) {
                 Key.One -> DesktopMenuTab.INVENTORY
                 Key.Two -> DesktopMenuTab.FIELD_KIT
@@ -196,11 +199,15 @@ private fun DesktopFieldMenuBody(
                 Key.Four -> DesktopMenuTab.MAP
                 Key.Five -> DesktopMenuTab.SETTINGS
                 Key.Zero -> DesktopMenuTab.STATS
+                Key.Q -> DesktopMenuTab.entries[(activeTab.ordinal - 1 + DesktopMenuTab.entries.size) % DesktopMenuTab.entries.size]
+                Key.E -> DesktopMenuTab.entries[(activeTab.ordinal + 1) % DesktopMenuTab.entries.size]
                 else -> null
             }
-        if (event.type == KeyEventType.KeyDown && directTab != null && !event.isAltPressed && !event.isCtrlPressed) {
-            select(directTab); true
-        } else false
+            if (directTab != null) {
+                select(directTab)
+                true
+            } else false
+        }
     }.focusable().widthIn(max = 1440.dp).fillMaxWidth(.94f).fillMaxHeight(.92f),
         shape = RoundedCornerShape(8.dp), color = FieldMenuDesign.shell,
         border = BorderStroke(1.dp, if (settings.highContrastMode) Color.White else FieldMenuDesign.cyan.copy(alpha = .28f))) {
@@ -345,7 +352,28 @@ private fun DesktopInventoryTabContent(
         else -> compareBy { allItems[it.key]?.name ?: it.key }
     })
 
-    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(
+        modifier = Modifier.fillMaxSize().onKeyEvent { event ->
+            if (event.type != KeyEventType.KeyDown || event.isAltPressed || event.isCtrlPressed || event.isMetaPressed) {
+                false
+            } else when (event.key) {
+                Key.LeftBracket -> {
+                    val cats = InventoryCategory.entries
+                    category = cats[(category.ordinal - 1 + cats.size) % cats.size]
+                    selectedItemId = null
+                    true
+                }
+                Key.RightBracket -> {
+                    val cats = InventoryCategory.entries
+                    category = cats[(category.ordinal + 1) % cats.size]
+                    selectedItemId = null
+                    true
+                }
+                else -> false
+            }
+        },
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
         // Authentic Android Carousel Toggle Bar (50.dp radius pill)
         Row(
             modifier = Modifier
@@ -516,11 +544,18 @@ private fun DesktopInventorySplitLayout(
             } else {
                 Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
                 LazyVerticalGrid(columns = GridCells.Adaptive(128.dp), state = gridState, modifier = Modifier.fillMaxSize().padding(end = 10.dp).onPreviewKeyEvent { event ->
+                    if (event.type != KeyEventType.KeyDown || entries.isEmpty()) return@onPreviewKeyEvent false
+                    if (event.key == Key.Enter && allowUse && selectedItem != null && selectedItem.effect != null &&
+                        !com.example.starborn.domain.inventory.FieldItemRules.isCombatOnly(selectedItem, services.craftingService.isPreparedMeal(selectedItem.id))
+                    ) {
+                        onUseItem(selectedItem.id)
+                        return@onPreviewKeyEvent true
+                    }
                     val current = entries.indexOfFirst { it.key == activeSelection }.coerceAtLeast(0)
                     val firstRow = gridState.layoutInfo.visibleItemsInfo.firstOrNull()?.row
                     val columns = gridState.layoutInfo.visibleItemsInfo.count { it.row == firstRow }.coerceAtLeast(1)
                     val step = when (event.key) { Key.DirectionLeft -> -1; Key.DirectionRight -> 1; Key.DirectionUp -> -columns; Key.DirectionDown -> columns; else -> 0 }
-                    if (event.type != KeyEventType.KeyDown || step == 0 || entries.isEmpty()) false else {
+                    if (step == 0) false else {
                         val index = (current + step).coerceIn(0, entries.lastIndex)
                         onSelectItem(entries[index].key)
                         if (gridState.layoutInfo.visibleItemsInfo.none { it.index == index }) scope.launch { gridState.animateScrollToItem(index) }

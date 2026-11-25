@@ -49,7 +49,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.starborn.desktop.DesktopAction
 import com.example.starborn.desktop.DesktopAppServices
+import com.example.starborn.desktop.DesktopBindingScope
 import com.example.starborn.domain.combat.*
 import com.example.starborn.feature.combat.viewmodel.*
 import kotlinx.coroutines.delay
@@ -96,6 +98,13 @@ private fun DesktopCombatContent(
     val initialSettings by produceState<UserSettings?>(null, services) { value = services.userSettingsStore.settings.first() }
     val loadedSettings = initialSettings ?: return
     val settings by services.userSettingsStore.settings.collectAsState(initial = loadedSettings)
+    val bindings by services.userSettingsStore.keyBindings.collectAsState(initial = LocalDesktopKeyBindings.current)
+    val attackGlyph = "[${bindings.label(DesktopAction.COMBAT_ATTACK)}]"
+    val skillsGlyph = "[${bindings.label(DesktopAction.COMBAT_SKILLS)}]"
+    val itemsGlyph = "[${bindings.label(DesktopAction.COMBAT_ITEMS)}]"
+    val snackGlyph = "[${bindings.label(DesktopAction.COMBAT_SNACK)}]"
+    val guardGlyph = "[${bindings.label(DesktopAction.COMBAT_GUARD)}]"
+    val retreatGlyph = "[${bindings.label(DesktopAction.COMBAT_RETREAT)}]"
     val scope = rememberCoroutineScope()
     val runtime = remember(services, enemyIds) {
         CombatController(services.worldDataSource, services.combatEngine, services.statusRegistry,
@@ -463,58 +472,68 @@ private fun DesktopCombatContent(
                 } else false
             } else if (menu != null) {
                 if (event.key == Key.Backspace) { cancelActiveSelectionOrMenu(); true } else false
-            } else when (event.key) {
-                Key.Spacebar -> {
-                    if (timedPrompt != null) {
-                        runtime.registerTimedPromptTap()
+            } else {
+                val combatAction = bindings.actionFor(event, DesktopBindingScope.COMBAT)
+                when {
+                    combatAction == DesktopAction.COMBAT_GUARD -> {
+                        if (actorId != null && targetAction == null && timedPrompt == null && tutorial == null) runtime.guard()
                         true
-                    } else if (targetAction != null && targetCandidates.isNotEmpty()) {
-                        targetAction?.invoke(targetCandidates[keyboardTarget.coerceIn(0, targetCandidates.lastIndex)].combatant.id)
+                    }
+                    combatAction == DesktopAction.COMBAT_SNACK -> {
+                        if (actorId != null && timedPrompt == null && targetAction == null && runtime.canUseSnack(requireNotNull(actorId)) && runtime.isCombatTutorialCommandEnabled("snack")) {
+                            chooseTarget(runtime.snackTargetRequirement(requireNotNull(actorId)), "Choose a snack target") { runtime.useSnack(it) }
+                        }
                         true
-                    } else false
-                }
-                Key.Escape -> cancelActiveSelectionOrMenu()
-                Key.G -> {
-                    if (actorId != null && targetAction == null && timedPrompt == null && tutorial == null) runtime.guard()
-                    true
-                }
-                Key.Four -> {
-                    if (actorId != null && timedPrompt == null && targetAction == null && runtime.canUseSnack(requireNotNull(actorId)) && runtime.isCombatTutorialCommandEnabled("snack")) {
-                        chooseTarget(runtime.snackTargetRequirement(requireNotNull(actorId)), "Choose a snack target") { runtime.useSnack(it) }
-                    }; true
-                }
-                Key.L -> { if (timedPrompt == null) showLog = true; true }
-                Key.R -> { if (actor != null && timedPrompt == null && targetAction == null && runtime.isCombatTutorialCommandEnabled("retreat")) runtime.attemptRetreat(); true }
-                Key.One -> { attack(); true }
-                Key.Two -> { openSkills(); true }
-                Key.Three -> { openItems(); true }
-                Key.DirectionLeft, Key.DirectionUp, Key.DirectionRight, Key.DirectionDown -> {
-                    if (targetAction != null && targetCandidates.isNotEmpty()) {
-                        val delta = if (event.key == Key.DirectionLeft || event.key == Key.DirectionUp) -1 else 1
-                        keyboardTarget = Math.floorMod(keyboardTarget + delta, targetCandidates.size)
+                    }
+                    combatAction == DesktopAction.COMBAT_LOG -> {
+                        if (timedPrompt == null) showLog = true
                         true
-                    } else false
-                }
-                Key.Enter -> {
-                    if (targetAction != null && targetCandidates.isNotEmpty()) {
-                        targetAction?.invoke(targetCandidates[keyboardTarget.coerceIn(0, targetCandidates.lastIndex)].combatant.id)
+                    }
+                    combatAction == DesktopAction.COMBAT_RETREAT -> {
+                        if (actor != null && timedPrompt == null && targetAction == null && runtime.isCombatTutorialCommandEnabled("retreat")) runtime.attemptRetreat()
                         true
-                    } else false
-                }
-                Key.Tab -> {
-                    if (targetAction != null && targetCandidates.isNotEmpty()) {
-                        val delta = if (event.isShiftPressed) -1 else 1
-                        keyboardTarget = Math.floorMod(keyboardTarget + delta, targetCandidates.size)
-                        true
-                    } else {
-                        val ready = party.filter { (meters[it.combatant.id] ?: 0f) >= 1f && it.isAlive }
-                        if (timedPrompt == null && targetAction == null && ready.isNotEmpty()) {
-                            val next = (ready.indexOfFirst { it.combatant.id == actorId } + 1) % ready.size
-                            runtime.selectReadyPlayer(ready[next].combatant.id); true
+                    }
+                    combatAction == DesktopAction.COMBAT_ATTACK -> { attack(); true }
+                    combatAction == DesktopAction.COMBAT_SKILLS -> { openSkills(); true }
+                    combatAction == DesktopAction.COMBAT_ITEMS -> { openItems(); true }
+                    event.key == Key.Spacebar -> {
+                        if (timedPrompt != null) {
+                            runtime.registerTimedPromptTap()
+                            true
+                        } else if (targetAction != null && targetCandidates.isNotEmpty()) {
+                            targetAction?.invoke(targetCandidates[keyboardTarget.coerceIn(0, targetCandidates.lastIndex)].combatant.id)
+                            true
                         } else false
                     }
+                    event.key == Key.Escape -> cancelActiveSelectionOrMenu()
+                    event.key in listOf(Key.DirectionLeft, Key.DirectionUp, Key.DirectionRight, Key.DirectionDown) -> {
+                        if (targetAction != null && targetCandidates.isNotEmpty()) {
+                            val delta = if (event.key == Key.DirectionLeft || event.key == Key.DirectionUp) -1 else 1
+                            keyboardTarget = Math.floorMod(keyboardTarget + delta, targetCandidates.size)
+                            true
+                        } else false
+                    }
+                    event.key == Key.Enter -> {
+                        if (targetAction != null && targetCandidates.isNotEmpty()) {
+                            targetAction?.invoke(targetCandidates[keyboardTarget.coerceIn(0, targetCandidates.lastIndex)].combatant.id)
+                            true
+                        } else false
+                    }
+                    event.key == Key.Tab -> {
+                        if (targetAction != null && targetCandidates.isNotEmpty()) {
+                            val delta = if (event.isShiftPressed) -1 else 1
+                            keyboardTarget = Math.floorMod(keyboardTarget + delta, targetCandidates.size)
+                            true
+                        } else {
+                            val ready = party.filter { (meters[it.combatant.id] ?: 0f) >= 1f && it.isAlive }
+                            if (timedPrompt == null && targetAction == null && ready.isNotEmpty()) {
+                                val next = (ready.indexOfFirst { it.combatant.id == actorId } + 1) % ready.size
+                                runtime.selectReadyPlayer(ready[next].combatant.id); true
+                            } else false
+                        }
+                    }
+                    else -> false
                 }
-                else -> false
             }
         }
     }.focusable()) {
@@ -952,7 +971,7 @@ private fun DesktopCombatContent(
                         tooltip = {
                             DesktopCombatActionTooltipContent(
                                 title = "Attack",
-                                shortcut = "[1]",
+                                shortcut = attackGlyph,
                                 description = "Attack with the equipped weapon. Builds Momentum for Overcharge; spends one action.",
                                 details = "Consumes turn  |  Requires targeted enemy"
                             )
@@ -961,7 +980,7 @@ private fun DesktopCombatContent(
                         DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().testTag("combat-action-attack").heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::attack, icon = Icons.Rounded.FlashOn, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("attack")) {
                             Row(
                                 Modifier.fillMaxWidth().clearAndSetSemantics {
-                                    set(SemanticsProperties.Text, listOf(AnnotatedString("Attack"), AnnotatedString("Attack [1]")))
+                                    set(SemanticsProperties.Text, listOf(AnnotatedString("Attack"), AnnotatedString("Attack $attackGlyph")))
                                 },
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
@@ -972,7 +991,7 @@ private fun DesktopCombatContent(
                                     color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
                                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
                                 ) {
-                                    Text("[1]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                    Text(attackGlyph, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                                 }
                             }
                         }
@@ -981,7 +1000,7 @@ private fun DesktopCombatContent(
                         tooltip = {
                             DesktopCombatActionTooltipContent(
                                 title = "Abilities",
-                                shortcut = "[2]",
+                                shortcut = skillsGlyph,
                                 description = "Deploy specialized character abilities, elemental attacks, and support protocols.",
                                 details = "Select from available class skills"
                             )
@@ -991,7 +1010,7 @@ private fun DesktopCombatContent(
                             enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("skills")) {
                             Row(
                                 Modifier.fillMaxWidth().clearAndSetSemantics {
-                                    set(SemanticsProperties.Text, listOf(AnnotatedString("Abilities"), AnnotatedString("Abilities [2]")))
+                                    set(SemanticsProperties.Text, listOf(AnnotatedString("Abilities"), AnnotatedString("Abilities $skillsGlyph")))
                                 },
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
@@ -1002,7 +1021,7 @@ private fun DesktopCombatContent(
                                     color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
                                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
                                 ) {
-                                    Text("[2]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                    Text(skillsGlyph, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                                 }
                             }
                         }
@@ -1011,7 +1030,7 @@ private fun DesktopCombatContent(
                         tooltip = {
                             DesktopCombatActionTooltipContent(
                                 title = "Guard",
-                                shortcut = "[G]",
+                                shortcut = guardGlyph,
                                 description = "Brace against incoming strikes to reduce damage taken and fortify stability until your next turn.",
                                 details = "Consumes turn  |  Self defense"
                             )
@@ -1025,7 +1044,7 @@ private fun DesktopCombatContent(
                         ) {
                             Row(
                                 Modifier.fillMaxWidth().clearAndSetSemantics {
-                                    set(SemanticsProperties.Text, listOf(AnnotatedString("Guard"), AnnotatedString("Guard [G]")))
+                                    set(SemanticsProperties.Text, listOf(AnnotatedString("Guard"), AnnotatedString("Guard $guardGlyph")))
                                 },
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
@@ -1036,7 +1055,7 @@ private fun DesktopCombatContent(
                                     color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
                                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
                                 ) {
-                                    Text("[G]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                    Text(guardGlyph, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                                 }
                             }
                         }
@@ -1045,7 +1064,7 @@ private fun DesktopCombatContent(
                         tooltip = {
                             DesktopCombatActionTooltipContent(
                                 title = "Items",
-                                shortcut = "[3]",
+                                shortcut = itemsGlyph,
                                 description = "Use field consumables, medical injectors, or combat ordnance from inventory.",
                                 details = "Consumes 1 cargo unit per use"
                             )
@@ -1054,7 +1073,7 @@ private fun DesktopCombatContent(
                         DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().testTag("combat-action-items").heightIn(min = if (settings.largeTouchTargets) 56.dp else 48.dp), onClick = ::openItems, icon = Icons.Rounded.Inventory2, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("items")) {
                             Row(
                                 Modifier.fillMaxWidth().clearAndSetSemantics {
-                                    set(SemanticsProperties.Text, listOf(AnnotatedString("Items"), AnnotatedString("Items [3]")))
+                                    set(SemanticsProperties.Text, listOf(AnnotatedString("Items"), AnnotatedString("Items $itemsGlyph")))
                                 },
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
@@ -1065,7 +1084,7 @@ private fun DesktopCombatContent(
                                     color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
                                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
                                 ) {
-                                    Text("[3]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                    Text(itemsGlyph, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                                 }
                             }
                         }
@@ -1075,7 +1094,7 @@ private fun DesktopCombatContent(
                             val snackName = actorId?.let(runtime::snackLabel) ?: "Snack"
                             DesktopCombatActionTooltipContent(
                                 title = snackName,
-                                shortcut = "[4]",
+                                shortcut = snackGlyph,
                                 description = actorId?.let(runtime::snackPreview) ?: "Select a ready character to view their snack ability.",
                                 details = "Equipped in Field Menu  |  Character specific"
                             )
@@ -1087,7 +1106,7 @@ private fun DesktopCombatContent(
                             val label = (actorId?.let(runtime::snackLabel) ?: "Snack") + "" + actorId?.let { id -> runtime.snackCooldownRemaining(id).takeIf { it > 0 }?.let { " (ready in $it turns)" } }.orEmpty()
                             Row(
                                 Modifier.fillMaxWidth().clearAndSetSemantics {
-                                    set(SemanticsProperties.Text, listOf(AnnotatedString(label), AnnotatedString("$label [4]")))
+                                    set(SemanticsProperties.Text, listOf(AnnotatedString(label), AnnotatedString("$label $snackGlyph")))
                                 },
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
@@ -1098,7 +1117,7 @@ private fun DesktopCombatContent(
                                     color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
                                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
                                 ) {
-                                    Text("[4]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                    Text(snackGlyph, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                                 }
                             }
                         }
@@ -1111,7 +1130,7 @@ private fun DesktopCombatContent(
                         tooltip = {
                             DesktopCombatActionTooltipContent(
                                 title = "Retreat",
-                                shortcut = "[R]",
+                                shortcut = retreatGlyph,
                                 description = "Attempt to disengage from active hostiles and escape back to the previous safe area.",
                                 details = "May fail against certain high-threat encounters",
                                 accent = Color(0xFFFF887F)
@@ -1122,7 +1141,7 @@ private fun DesktopCombatContent(
                         DesktopCombatActionButton(modifier = Modifier.fillMaxWidth().testTag("combat-action-retreat"), onClick = { runtime.attemptRetreat() }, icon = Icons.Rounded.ExitToApp, enabled = actor != null && targetAction == null && timedPrompt == null && runtime.isCombatTutorialCommandEnabled("retreat")) {
                             Row(
                                 Modifier.fillMaxWidth().clearAndSetSemantics {
-                                    set(SemanticsProperties.Text, listOf(AnnotatedString("Retreat"), AnnotatedString("Retreat [R]")))
+                                    set(SemanticsProperties.Text, listOf(AnnotatedString("Retreat"), AnnotatedString("Retreat $retreatGlyph")))
                                 },
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
@@ -1133,7 +1152,7 @@ private fun DesktopCombatContent(
                                     color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
                                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
                                 ) {
-                                    Text("[R]", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                                    Text(retreatGlyph, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                                 }
                             }
                         }

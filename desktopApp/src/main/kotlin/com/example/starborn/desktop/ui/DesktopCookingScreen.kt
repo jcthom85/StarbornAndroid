@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
@@ -472,7 +473,34 @@ fun DesktopCookingScreen(
         }
     }
 
-    Scaffold(modifier = modifier.fillMaxSize(), containerColor = FieldMenuDesign.shell, snackbarHost = {}) { padding ->
+    Scaffold(
+        modifier = modifier.fillMaxSize().onKeyEvent { event ->
+            if (event.type != KeyEventType.KeyDown || event.isAltPressed || event.isCtrlPressed || event.isMetaPressed) {
+                false
+            } else when (event.key) {
+                Key.LeftBracket, Key.RightBracket -> {
+                    category = if (category == "meal") "snack" else "meal"
+                    selectedRecipeId = null
+                    true
+                }
+                Key.DirectionUp, Key.DirectionDown -> {
+                    if (recipes.isNotEmpty()) {
+                        val step = if (event.key == Key.DirectionUp) -1 else 1
+                        val cur = recipes.indexOfFirst { it.id == selectedRecipe?.id }.coerceAtLeast(0)
+                        selectedRecipeId = recipes[(cur + step + recipes.size) % recipes.size].id
+                        true
+                    } else false
+                }
+                Key.Escape -> {
+                    onBack()
+                    true
+                }
+                else -> false
+            }
+        },
+        containerColor = FieldMenuDesign.shell,
+        snackbarHost = {}
+    ) { padding ->
         BoxWithConstraints(Modifier.fillMaxSize().padding(padding)) {
             if (maxWidth >= 900.dp) {
                 val detailState = rememberLazyListState()

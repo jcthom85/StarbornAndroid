@@ -12,9 +12,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
+import com.example.starborn.desktop.DesktopAction
+
 @Composable
 fun DesktopControlsDialog(onDismiss: () -> Unit, accentColor: Color = Color(0xFF63E6FF)) {
     val bindings = LocalDesktopKeyBindings.current
+    val moveLabel = listOf(DesktopAction.NORTH, DesktopAction.WEST, DesktopAction.SOUTH, DesktopAction.EAST).joinToString("") { bindings.label(it) }
     Dialog(onDismissRequest = onDismiss) {
         Surface(Modifier.widthIn(max = 760.dp).fillMaxWidth().heightIn(max = 640.dp),
             shape = MaterialTheme.shapes.large, color = Color(0xFF060E16),
@@ -24,7 +27,7 @@ fun DesktopControlsDialog(onDismiss: () -> Unit, accentColor: Color = Color(0xFF
                     Text("Controls", Modifier.weight(1f), style = MaterialTheme.typography.titleLarge)
                     TextButton(onClick = onDismiss, modifier = Modifier.desktopPointerHover()) { Text("Close") }
                 }
-                Text("Keyboard and mouse - Change exploration keys in Settings > Controls",
+                Text("Keyboard and mouse - Customize Exploration, Combat, and Arcade keys in Settings > Controls",
                     style = MaterialTheme.typography.bodySmall)
                 LazyColumn(Modifier.weight(1f, fill = false), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     item { ControlSectionHeading("Exploration", accentColor) }
@@ -32,22 +35,16 @@ fun DesktopControlsDialog(onDismiss: () -> Unit, accentColor: Color = Color(0xFF
                     item { ControlSectionHeading("Field menu", accentColor) }
                     items(fieldMenuControlHints) { ControlHintRow(it) }
                     item { ControlSectionHeading("Combat", accentColor) }
-                    items(listOf(
-                        DesktopControlHint("1 / 2 / 3 / 4", "Attack / Abilities / Items / Equipped snack"),
-                        DesktopControlHint("R / L", "Retreat / Battle log"),
-                        DesktopControlHint("Arrows / Enter", "Select / confirm target"),
-                        DesktopControlHint("Tab", "Select next ready party member"),
-                        DesktopControlHint("Space", "Respond to timing prompts"),
-                        DesktopControlHint("Esc / Right click", "Cancel targeting or action menu")
-                    )) { ControlHintRow(it) }
+                    items(combatControlHints(bindings)) { ControlHintRow(it) }
                     item { ControlSectionHeading("Dialogue, stations, and display", accentColor) }
                     items(listOf(
                         DesktopControlHint("Enter", "Reveal dialogue, then advance a line without choices"),
                         DesktopControlHint("1-9", "Choose a revealed dialogue response"),
+                        DesktopControlHint("Shop: 1 / 2 / 3 · Q / E · Arrows / Enter", "Switch Buy/Sell/Chat · Filter category · Select & transact"),
                         DesktopControlHint("Fishing: Space", "Cast / hook / hold to reel"),
                         DesktopControlHint("Arcade: Enter / Esc", "Start or resume / pause"),
-                        DesktopControlHint("Arcade: WASD / Arrows", "Move; Space / E are primary / secondary actions"),
-                        DesktopControlHint("Harmonic Pulse: D/F/J/K", "Strike the four lanes"),
+                        DesktopControlHint("Arcade: $moveLabel / Arrows", "Move; Space / ${bindings.label(DesktopAction.INTERACT)} are primary / secondary actions"),
+                        DesktopControlHint("Harmonic Pulse: ${arcadeControlHints(bindings)}", "Strike the four lanes"),
                         DesktopControlHint("Map: Mouse wheel", "Zoom; drag to pan"),
                         DesktopControlHint("F11 / Alt+Enter", "Toggle fullscreen / borderless window")
                     )) { ControlHintRow(it) }

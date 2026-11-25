@@ -19,8 +19,8 @@ import org.jetbrains.skia.Surface
 import kotlin.math.roundToInt
 
 private val blurMutex = Mutex()
-private val blurredImages = object : LinkedHashMap<Pair<ImageBitmap, Float>, ImageBitmap>(16, .75f, true) {
-    override fun removeEldestEntry(eldest: MutableMap.MutableEntry<Pair<ImageBitmap, Float>, ImageBitmap>?) = size > 12
+private val blurredImages = object : LinkedHashMap<Pair<ImageBitmap, Float>, ImageBitmap>(32, .75f, true) {
+    override fun removeEldestEntry(eldest: MutableMap.MutableEntry<Pair<ImageBitmap, Float>, ImageBitmap>?) = size > 24
 }
 
 internal val LocalBackdropBlurLoader = staticCompositionLocalOf<suspend (ImageBitmap, Float) -> ImageBitmap> {

@@ -43,15 +43,18 @@ internal fun DesktopConsoleModal(
     maxWidth: Dp = 760.dp,
     maxHeightFraction: Float = 0.88f,
     testTag: String? = null,
+    autoFocus: Boolean = true,
     headerTrailing: (@Composable RowScope.() -> Unit)? = null,
     footer: (@Composable RowScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val highContrast = LocalExplorationSettings.current.highContrastMode
     val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(Unit) {
-        withFrameNanos { }
-        focusRequester.requestFocus()
+    if (autoFocus) {
+        LaunchedEffect(Unit) {
+            withFrameNanos { }
+            focusRequester.requestFocus()
+        }
     }
     Dialog(
         onDismissRequest = onDismiss,
@@ -91,11 +94,7 @@ internal fun DesktopConsoleModal(
                     .widthIn(max = maxWidth)
                     .fillMaxWidth()
                     .heightIn(max = effectiveMaxHeight)
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                        onClick = {}
-                    ),
+                    .pointerInput(Unit) { detectTapGestures(onTap = {}) },
                 shape = RoundedCornerShape(16.dp),
                 color = if (highContrast) Color.Black else FieldMenuDesign.shell,
                 contentColor = FieldMenuDesign.text,

@@ -492,12 +492,24 @@ class DesktopAppServices(
     companion object {
         fun resolveSaveDirectory(
             appDataEnv: String? = System.getenv("APPDATA"),
-            userHome: String = System.getProperty("user.home", ".")
+            userHome: String = System.getProperty("user.home", "."),
+            osName: String = System.getProperty("os.name", ""),
+            xdgDataHome: String? = System.getenv("XDG_DATA_HOME")
         ): File {
-            return if (!appDataEnv.isNullOrBlank()) {
-                File(appDataEnv, "Starborn")
-            } else {
-                File(userHome, ".starborn")
+            if (!appDataEnv.isNullOrBlank()) {
+                return File(appDataEnv.trim(), "Starborn")
+            }
+            val normalizedOs = osName.lowercase()
+            val looksLikeWindowsHome = userHome.contains(":\\") || normalizedOs.contains("win")
+            return when {
+                looksLikeWindowsHome -> File(userHome, ".starborn")
+                normalizedOs.contains("mac") || normalizedOs.contains("darwin") ->
+                    File(File(userHome, "Library/Application Support"), "Starborn")
+                normalizedOs.contains("linux") || normalizedOs.contains("nix") || normalizedOs.contains("nux") -> {
+                    val xdg = xdgDataHome?.trim()?.takeIf { it.isNotEmpty() }
+                    if (xdg != null) File(xdg, "Starborn") else File(File(userHome, ".local/share"), "Starborn")
+                }
+                else -> File(userHome, ".starborn")
             }
         }
 

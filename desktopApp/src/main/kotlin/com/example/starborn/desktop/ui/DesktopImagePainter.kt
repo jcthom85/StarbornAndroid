@@ -15,7 +15,55 @@ import kotlinx.coroutines.sync.withLock
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.DrawScope
 
-private val imageCache = java.util.concurrent.ConcurrentHashMap<String, ImageBitmap>()
+internal class DesktopBitmapLruCache(
+    private val maxEntries: Int = 192,
+    private val maxPixelBytes: Long = 384L * 1024L * 1024L,
+    private val byteEstimator: (ImageBitmap) -> Long = { bmp ->
+        (bmp.width.toLong().coerceAtLeast(1L) * bmp.height.toLong().coerceAtLeast(1L) * 4L).coerceAtLeast(4_096L)
+    }
+) {
+    private val lock = Any()
+    private var currentBytes: Long = 0L
+    private val entries = LinkedHashMap<String, Pair<ImageBitmap, Long>>(64, 0.75f, true)
+
+    fun get(key: String): ImageBitmap? = synchronized(lock) {
+        entries[key]?.first
+    }
+
+    fun containsKey(key: String): Boolean = synchronized(lock) {
+        entries.containsKey(key)
+    }
+
+    fun put(key: String, bitmap: ImageBitmap) = synchronized(lock) {
+        val bytes = byteEstimator(bitmap).coerceAtLeast(1L)
+        entries.remove(key)?.let { (_, oldBytes) ->
+            currentBytes = (currentBytes - oldBytes).coerceAtLeast(0L)
+        }
+        entries[key] = bitmap to bytes
+        currentBytes += bytes
+        trimToBudgetLocked()
+    }
+
+    fun size(): Int = synchronized(lock) { entries.size }
+
+    fun totalBytes(): Long = synchronized(lock) { currentBytes }
+
+    fun clear() = synchronized(lock) {
+        entries.clear()
+        currentBytes = 0L
+    }
+
+    private fun trimToBudgetLocked() {
+        val iterator = entries.entries.iterator()
+        while (iterator.hasNext() && (entries.size > maxEntries || (currentBytes > maxPixelBytes && entries.size > 1))) {
+            val eldest = iterator.next()
+            currentBytes = (currentBytes - eldest.value.second).coerceAtLeast(0L)
+            iterator.remove()
+        }
+    }
+}
+
+private val imageCache = DesktopBitmapLruCache()
 private val missingAssetPaths = java.util.concurrent.ConcurrentHashMap.newKeySet<String>()
 private val imageDecodeMutex = kotlinx.coroutines.sync.Mutex()
 
@@ -42,14 +90,14 @@ fun rememberDesktopAssetPainter(
 ): Painter {
     if (path.isNullOrBlank()) return ColorPainter(fallbackColor)
 
-    var imageBitmap by remember(path) { mutableStateOf(imageCache[path]) }
+    var imageBitmap by remember(path) { mutableStateOf(imageCache.get(path)) }
 
     LaunchedEffect(path, assetProvider) {
         if (imageBitmap == null) {
             val decoded = withContext(Dispatchers.IO) {
                 imageDecodeMutex.withLock {
                     // Cinematic preloads and reflected layers share the same decoded bitmap.
-                    imageCache[path] ?: runCatching {
+                    imageCache.get(path) ?: runCatching {
                         val stream: InputStream? = assetProvider.open(path)
                             ?: assetProvider.open("images/$path")
                             ?: assetProvider.open("images/rooms/$path.webp")
@@ -61,7 +109,7 @@ fun rememberDesktopAssetPainter(
                             ?: assetProvider.open("drawable-nodpi/$path.webp")
                             ?: assetProvider.open("$path.webp")
                             ?: assetProvider.open("$path.png")
-                        stream?.use { loadImageBitmap(it) }?.also { imageCache[path] = it }
+                        stream?.use { loadImageBitmap(it) }?.also { imageCache.put(path, it) }
                     }.getOrNull()
                 }
             }

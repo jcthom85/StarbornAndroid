@@ -74,6 +74,12 @@ fun DeepMineArcadeScreen(
     var submitted by remember { mutableStateOf<ArcadeRunSubmission?>(null) }
     var tutorial by remember { mutableStateOf(true) }
     val highScore = maxOf(arcadeService.progress(ArcadeIds.DEEP_MINE).highScore, submitted?.highScore ?: 0)
+    val bindings = com.example.starborn.desktop.ui.LocalDesktopKeyBindings.current
+    val upCode = bindings.awtKeyCode(com.example.starborn.desktop.DesktopAction.NORTH) ?: java.awt.event.KeyEvent.VK_W
+    val downCode = bindings.awtKeyCode(com.example.starborn.desktop.DesktopAction.SOUTH) ?: java.awt.event.KeyEvent.VK_S
+    val leftCode = bindings.awtKeyCode(com.example.starborn.desktop.DesktopAction.WEST) ?: java.awt.event.KeyEvent.VK_A
+    val rightCode = bindings.awtKeyCode(com.example.starborn.desktop.DesktopAction.EAST) ?: java.awt.event.KeyEvent.VK_D
+    val interactCode = bindings.awtKeyCode(com.example.starborn.desktop.DesktopAction.INTERACT) ?: java.awt.event.KeyEvent.VK_E
 
     DesktopArcadeKeys { code, pressed ->
         if (pressed && (code == java.awt.event.KeyEvent.VK_ENTER || (code == java.awt.event.KeyEvent.VK_SPACE && tutorial))) {
@@ -82,10 +88,10 @@ fun DeepMineArcadeScreen(
             paused = false
         }
         input = when (code) {
-            java.awt.event.KeyEvent.VK_LEFT, java.awt.event.KeyEvent.VK_A -> input.copy(left = pressed)
-            java.awt.event.KeyEvent.VK_RIGHT, java.awt.event.KeyEvent.VK_D -> input.copy(right = pressed)
-            java.awt.event.KeyEvent.VK_SPACE, java.awt.event.KeyEvent.VK_UP, java.awt.event.KeyEvent.VK_W -> input.copy(boost = pressed)
-            java.awt.event.KeyEvent.VK_E, java.awt.event.KeyEvent.VK_DOWN, java.awt.event.KeyEvent.VK_S -> input.copy(drill = pressed)
+            java.awt.event.KeyEvent.VK_LEFT, leftCode -> input.copy(left = pressed)
+            java.awt.event.KeyEvent.VK_RIGHT, rightCode -> input.copy(right = pressed)
+            java.awt.event.KeyEvent.VK_SPACE, java.awt.event.KeyEvent.VK_UP, upCode -> input.copy(boost = pressed)
+            interactCode, java.awt.event.KeyEvent.VK_DOWN, downCode -> input.copy(drill = pressed)
             else -> input
         }
     }

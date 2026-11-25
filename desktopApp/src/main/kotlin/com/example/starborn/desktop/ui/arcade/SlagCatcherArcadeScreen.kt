@@ -60,6 +60,11 @@ fun SlagCatcherArcadeScreen(
     var submitted by remember { mutableStateOf<ArcadeRunSubmission?>(null) }
     var tutorial by remember { mutableStateOf(true) }
     val highScore = maxOf(arcadeService.progress(ArcadeIds.SLAG_CATCHER).highScore, submitted?.highScore ?: 0)
+    val bindings = com.example.starborn.desktop.ui.LocalDesktopKeyBindings.current
+    val upCode = bindings.awtKeyCode(com.example.starborn.desktop.DesktopAction.NORTH) ?: java.awt.event.KeyEvent.VK_W
+    val leftCode = bindings.awtKeyCode(com.example.starborn.desktop.DesktopAction.WEST) ?: java.awt.event.KeyEvent.VK_A
+    val rightCode = bindings.awtKeyCode(com.example.starborn.desktop.DesktopAction.EAST) ?: java.awt.event.KeyEvent.VK_D
+    val interactCode = bindings.awtKeyCode(com.example.starborn.desktop.DesktopAction.INTERACT) ?: java.awt.event.KeyEvent.VK_E
 
     DesktopArcadeKeys { code, pressed ->
         if (pressed && (code == java.awt.event.KeyEvent.VK_ENTER || (code == java.awt.event.KeyEvent.VK_SPACE && tutorial))) {
@@ -68,9 +73,9 @@ fun SlagCatcherArcadeScreen(
             paused = false
         }
         input = when (code) {
-            java.awt.event.KeyEvent.VK_LEFT, java.awt.event.KeyEvent.VK_A -> input.copy(moveLeft = pressed)
-            java.awt.event.KeyEvent.VK_RIGHT, java.awt.event.KeyEvent.VK_D -> input.copy(moveRight = pressed)
-            java.awt.event.KeyEvent.VK_SPACE, java.awt.event.KeyEvent.VK_UP, java.awt.event.KeyEvent.VK_W, java.awt.event.KeyEvent.VK_E -> input.copy(ventSteam = pressed)
+            java.awt.event.KeyEvent.VK_LEFT, leftCode -> input.copy(moveLeft = pressed)
+            java.awt.event.KeyEvent.VK_RIGHT, rightCode -> input.copy(moveRight = pressed)
+            java.awt.event.KeyEvent.VK_SPACE, java.awt.event.KeyEvent.VK_UP, upCode, interactCode -> input.copy(ventSteam = pressed)
             else -> input
         }
     }

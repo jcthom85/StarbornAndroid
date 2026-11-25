@@ -188,6 +188,9 @@ fun DesktopArcadeScreen(services: DesktopAppServices, onClose: () -> Unit) {
     val session by services.sessionStore.state.collectAsState()
     val settings by services.userSettingsStore.settings.collectAsState(initial = com.example.starborn.data.local.UserSettings())
     val inventory by services.inventoryService.state.collectAsState()
+    val bindings = LocalDesktopKeyBindings.current
+    val upKeyCode = bindings.awtKeyCode(com.example.starborn.desktop.DesktopAction.NORTH) ?: KeyEvent.VK_W
+    val downKeyCode = bindings.awtKeyCode(com.example.starborn.desktop.DesktopAction.SOUTH) ?: KeyEvent.VK_S
 
     var playing by remember {
         mutableStateOf(services.activeArcadeCabinet?.takeIf { services.arcadeService.progress(it).repaired })
@@ -224,11 +227,11 @@ fun DesktopArcadeScreen(services: DesktopAppServices, onClose: () -> Unit) {
         DesktopArcadeKeys { keyCode, pressed ->
             if (pressed) {
                 when (keyCode) {
-                    KeyEvent.VK_UP, KeyEvent.VK_W -> {
+                    KeyEvent.VK_UP, upKeyCode -> {
                         selectedIndex = (selectedIndex - 1 + AllCabinets.size) % AllCabinets.size
                         cue("action_inspect")
                     }
-                    KeyEvent.VK_DOWN, KeyEvent.VK_S -> {
+                    KeyEvent.VK_DOWN, downKeyCode -> {
                         selectedIndex = (selectedIndex + 1) % AllCabinets.size
                         cue("action_inspect")
                     }

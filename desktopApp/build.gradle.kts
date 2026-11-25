@@ -82,11 +82,22 @@ compose.desktop {
         mainClass = "com.example.starborn.desktop.MainKt"
 
         nativeDistributions {
-            includeAllModules = true
+            modules(
+                "java.desktop",
+                "java.logging",
+                "java.management",
+                "java.naming",
+                "java.prefs",
+                "java.xml",
+                "jdk.accessibility",
+                "jdk.crypto.ec",
+                "jdk.unsupported"
+            )
             targetFormats(
                 org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg,
                 org.jetbrains.compose.desktop.application.dsl.TargetFormat.Msi,
-                org.jetbrains.compose.desktop.application.dsl.TargetFormat.Exe
+                org.jetbrains.compose.desktop.application.dsl.TargetFormat.Exe,
+                org.jetbrains.compose.desktop.application.dsl.TargetFormat.Deb
             )
             packageName = "Starborn"
             packageVersion = providers.gradleProperty("starborn.versionName").get()
@@ -101,6 +112,9 @@ compose.desktop {
                 menuGroup = "Starborn"
                 upgradeUuid = "a4c28bb0-7988-466d-8b01-f1190db981b2"
                 iconFile.set(project.file("src/main/resources/icon.ico"))
+            }
+            linux {
+                iconFile.set(project.file("src/main/resources/icon.png"))
             }
         }
     }

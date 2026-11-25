@@ -10,6 +10,9 @@ import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+import kotlinx.coroutines.launch
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -91,6 +94,43 @@ fun DesktopShopDialog(
         }
     }
 
+    val catalogMap = remember(services) {
+        services.itemRepository.allItems().associateBy { it.id }
+    }
+
+    val activeCharacter = session.partyMembers.firstOrNull() ?: "nova"
+
+    fun matchesCategory(filter: ShopCategoryFilter, item: Item?): Boolean {
+        if (filter == ShopCategoryFilter.ALL || item == null) return true
+        val type = item.type.lowercase(Locale.ROOT)
+        val cat = item.categoryOverride?.lowercase(Locale.ROOT) ?: type
+        return when (filter) {
+            ShopCategoryFilter.WEAPONS -> type == "weapon" || cat == "weapon"
+            ShopCategoryFilter.ARMOR -> type in listOf("armor", "mod", "accessory") || cat in listOf("armor", "mod", "accessory")
+            ShopCategoryFilter.CONSUMABLES -> type in listOf("consumable", "ingredient", "food", "potion") || cat in listOf("consumable", "ingredient")
+            ShopCategoryFilter.MATERIALS -> type in listOf("component", "material", "scrap", "ore", "junk") || cat in listOf("component", "material")
+            else -> true
+        }
+    }
+
+    val filteredBuyItems = remember(ui.itemsForSale, selectedCategory, searchQuery, catalogMap) {
+        ui.itemsForSale.filter { itemUi ->
+            val realItem = catalogMap[itemUi.id]
+            matchesCategory(selectedCategory, realItem) &&
+                (searchQuery.isBlank() || itemUi.name.contains(searchQuery, ignoreCase = true))
+        }
+    }
+    val filteredSellItems = remember(ui.sellInventory, selectedCategory, searchQuery, catalogMap) {
+        ui.sellInventory.filter { sellUi ->
+            val realItem = catalogMap[sellUi.id]
+            matchesCategory(selectedCategory, realItem) &&
+                (searchQuery.isBlank() || sellUi.name.contains(searchQuery, ignoreCase = true))
+        }
+    }
+    var selectedItemIndex by remember(ui.activeTab, selectedCategory, searchQuery, showChatTab) { mutableIntStateOf(0) }
+    val buyListState = rememberLazyListState()
+    val sellListState = rememberLazyListState()
+
     // Keyboard navigation
     DesktopArcadeKeys { keyCode, pressed ->
         if (pressed) {
@@ -114,29 +154,51 @@ fun DesktopShopDialog(
                         if (changed) cue("tab_switch")
                     }
                 }
+                KeyEvent.VK_Q, KeyEvent.VK_OPEN_BRACKET -> if (!showChatTab) {
+                    val filters = ShopCategoryFilter.entries
+                    selectedCategory = filters[(selectedCategory.ordinal - 1 + filters.size) % filters.size]
+                    cue("action_inspect")
+                }
+                KeyEvent.VK_E, KeyEvent.VK_CLOSE_BRACKET -> if (!showChatTab) {
+                    val filters = ShopCategoryFilter.entries
+                    selectedCategory = filters[(selectedCategory.ordinal + 1) % filters.size]
+                    cue("action_inspect")
+                }
+                KeyEvent.VK_UP -> if (!showChatTab) {
+                    val size = if (ui.activeTab == ShopTab.BUY) filteredBuyItems.size else filteredSellItems.size
+                    if (size > 0) {
+                        selectedItemIndex = (selectedItemIndex - 1 + size) % size
+                        val listState = if (ui.activeTab == ShopTab.BUY) buyListState else sellListState
+                        scope.launch { listState.animateScrollToItem(selectedItemIndex) }
+                        cue("action_inspect")
+                    }
+                }
+                KeyEvent.VK_DOWN -> if (!showChatTab) {
+                    val size = if (ui.activeTab == ShopTab.BUY) filteredBuyItems.size else filteredSellItems.size
+                    if (size > 0) {
+                        selectedItemIndex = (selectedItemIndex + 1) % size
+                        val listState = if (ui.activeTab == ShopTab.BUY) buyListState else sellListState
+                        scope.launch { listState.animateScrollToItem(selectedItemIndex) }
+                        cue("action_inspect")
+                    }
+                }
+                KeyEvent.VK_ENTER -> if (!showChatTab) {
+                    if (ui.activeTab == ShopTab.BUY) {
+                        val item = filteredBuyItems.getOrNull(selectedItemIndex.coerceIn(0, (filteredBuyItems.size - 1).coerceAtLeast(0)))
+                        if (item != null && !item.locked && item.canAfford && item.maxQuantity > 0) {
+                            runtime.buyItem(item.id, 1)
+                        }
+                    } else {
+                        val sell = filteredSellItems.getOrNull(selectedItemIndex.coerceIn(0, (filteredSellItems.size - 1).coerceAtLeast(0)))
+                        if (sell != null && sell.canSell && sell.quantity > 0) {
+                            runtime.sellItem(sell.id, 1)
+                        }
+                    }
+                }
                 KeyEvent.VK_ESCAPE -> {
                     onDismiss()
                 }
             }
-        }
-    }
-
-    val catalogMap = remember(services) {
-        services.itemRepository.allItems().associateBy { it.id }
-    }
-
-    val activeCharacter = session.partyMembers.firstOrNull() ?: "nova"
-
-    fun matchesCategory(filter: ShopCategoryFilter, item: Item?): Boolean {
-        if (filter == ShopCategoryFilter.ALL || item == null) return true
-        val type = item.type.lowercase(Locale.ROOT)
-        val cat = item.categoryOverride?.lowercase(Locale.ROOT) ?: type
-        return when (filter) {
-            ShopCategoryFilter.WEAPONS -> type == "weapon" || cat == "weapon"
-            ShopCategoryFilter.ARMOR -> type in listOf("armor", "mod", "accessory") || cat in listOf("armor", "mod", "accessory")
-            ShopCategoryFilter.CONSUMABLES -> type in listOf("consumable", "ingredient", "food", "potion") || cat in listOf("consumable", "ingredient")
-            ShopCategoryFilter.MATERIALS -> type in listOf("component", "material", "scrap", "ore", "junk") || cat in listOf("component", "material")
-            else -> true
         }
     }
 
@@ -376,70 +438,86 @@ fun DesktopShopDialog(
                             )
                         }
                         ui.activeTab == ShopTab.BUY -> {
-                            val filteredBuyItems = ui.itemsForSale.filter { itemUi ->
-                                val realItem = catalogMap[itemUi.id]
-                                matchesCategory(selectedCategory, realItem) &&
-                                    (searchQuery.isBlank() || itemUi.name.contains(searchQuery, ignoreCase = true))
-                            }
-
                             if (filteredBuyItems.isEmpty()) {
                                 EmptyCatalogNotice("No wares available in this category.")
                             } else {
-                                LazyColumn(
-                                    modifier = Modifier.fillMaxSize(),
-                                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                                ) {
-                                    items(filteredBuyItems, key = { it.id }) { itemUi ->
-                                        val realItem = catalogMap[itemUi.id]
-                                        val equipped = realItem?.let(::resolveEquippedItem)
+                                Box(Modifier.fillMaxSize()) {
+                                    LazyColumn(
+                                        state = buyListState,
+                                        modifier = Modifier.fillMaxSize().padding(end = 10.dp),
+                                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        itemsIndexed(filteredBuyItems, key = { _, it -> it.id }) { index, itemUi ->
+                                            val realItem = catalogMap[itemUi.id]
+                                            val equipped = realItem?.let(::resolveEquippedItem)
 
-                                        ShopBuyItemCard(
-                                            itemUi = itemUi,
-                                            realItem = realItem,
-                                            equippedItem = equipped,
-                                            services = services,
-                                            onBuyOne = {
-                                                runtime.buyItem(itemUi.id, 1)
-                                            },
-                                            onBuyMax = {
-                                                if (itemUi.maxQuantity > 1) {
-                                                    runtime.buyItem(itemUi.id, itemUi.maxQuantity)
+                                            ShopBuyItemCard(
+                                                itemUi = itemUi,
+                                                realItem = realItem,
+                                                equippedItem = equipped,
+                                                services = services,
+                                                isSelected = index == selectedItemIndex.coerceIn(0, filteredBuyItems.lastIndex),
+                                                onSelect = { selectedItemIndex = index },
+                                                onBuyOne = {
+                                                    selectedItemIndex = index
+                                                    runtime.buyItem(itemUi.id, 1)
+                                                },
+                                                onBuyMax = {
+                                                    selectedItemIndex = index
+                                                    if (itemUi.maxQuantity > 1) {
+                                                        runtime.buyItem(itemUi.id, itemUi.maxQuantity)
+                                                    }
                                                 }
-                                            }
+                                            )
+                                        }
+                                    }
+                                    Box(Modifier.matchParentSize()) {
+                                        VerticalScrollbar(
+                                            adapter = rememberScrollbarAdapter(buyListState),
+                                            modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight().width(6.dp),
+                                            style = ScrollbarStyle(16.dp, 5.dp, RoundedCornerShape(3.dp), 150, Color(0xFF63E6FF).copy(alpha = 0.28f), Color(0xFF63E6FF).copy(alpha = 0.72f))
                                         )
                                     }
                                 }
                             }
                         }
                         else -> {
-                            val filteredSellItems = ui.sellInventory.filter { sellUi ->
-                                val realItem = catalogMap[sellUi.id]
-                                matchesCategory(selectedCategory, realItem) &&
-                                    (searchQuery.isBlank() || sellUi.name.contains(searchQuery, ignoreCase = true))
-                            }
-
                             if (filteredSellItems.isEmpty()) {
                                 EmptyCatalogNotice("No inventory items found to sell.")
                             } else {
-                                LazyColumn(
-                                    modifier = Modifier.fillMaxSize(),
-                                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                                ) {
-                                    items(filteredSellItems, key = { it.id }) { sellUi ->
-                                        val realItem = catalogMap[sellUi.id]
+                                Box(Modifier.fillMaxSize()) {
+                                    LazyColumn(
+                                        state = sellListState,
+                                        modifier = Modifier.fillMaxSize().padding(end = 10.dp),
+                                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        itemsIndexed(filteredSellItems, key = { _, it -> it.id }) { index, sellUi ->
+                                            val realItem = catalogMap[sellUi.id]
 
-                                        ShopSellItemCard(
-                                            sellUi = sellUi,
-                                            realItem = realItem,
-                                            services = services,
-                                            onSellOne = {
-                                                runtime.sellItem(sellUi.id, 1)
-                                            },
-                                            onSellAll = {
-                                                if (sellUi.quantity > 1) {
-                                                    runtime.sellItem(sellUi.id, sellUi.quantity)
+                                            ShopSellItemCard(
+                                                sellUi = sellUi,
+                                                realItem = realItem,
+                                                services = services,
+                                                isSelected = index == selectedItemIndex.coerceIn(0, filteredSellItems.lastIndex),
+                                                onSelect = { selectedItemIndex = index },
+                                                onSellOne = {
+                                                    selectedItemIndex = index
+                                                    runtime.sellItem(sellUi.id, 1)
+                                                },
+                                                onSellAll = {
+                                                    selectedItemIndex = index
+                                                    if (sellUi.quantity > 1) {
+                                                        runtime.sellItem(sellUi.id, sellUi.quantity)
+                                                    }
                                                 }
-                                            }
+                                            )
+                                        }
+                                    }
+                                    Box(Modifier.matchParentSize()) {
+                                        VerticalScrollbar(
+                                            adapter = rememberScrollbarAdapter(sellListState),
+                                            modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight().width(6.dp),
+                                            style = ScrollbarStyle(16.dp, 5.dp, RoundedCornerShape(3.dp), 150, Color(0xFF63E6FF).copy(alpha = 0.28f), Color(0xFF63E6FF).copy(alpha = 0.72f))
                                         )
                                     }
                                 }
@@ -547,6 +625,8 @@ private fun ShopBuyItemCard(
     realItem: Item?,
     equippedItem: Item?,
     services: DesktopAppServices,
+    isSelected: Boolean = false,
+    onSelect: () -> Unit = {},
     onBuyOne: () -> Unit,
     onBuyMax: () -> Unit
 ) {
@@ -556,10 +636,14 @@ private fun ShopBuyItemCard(
     val cardContent = @Composable {
         Surface(
             shape = RoundedCornerShape(8.dp),
-            color = if (itemUi.locked) Color(0xFF0A121A) else Color(0xFF0D1E2D),
-            border = BorderStroke(1.dp, if (itemUi.locked) Color(0xFF1A2B3A) else Color(0xFF1E3C56)),
+            color = if (itemUi.locked) Color(0xFF0A121A) else if (isSelected) Color(0xFF132A3E) else Color(0xFF0D1E2D),
+            border = BorderStroke(
+                if (isSelected) 1.5.dp else 1.dp,
+                if (isSelected) Color(0xFF63E6FF) else if (itemUi.locked) Color(0xFF1A2B3A) else Color(0xFF1E3C56)
+            ),
             modifier = Modifier
                 .fillMaxWidth()
+                .clickable(onClick = onSelect)
                 .desktopPointerHover(!itemUi.locked)
                 .testTag("shop-item-${itemUi.id}")
         ) {
@@ -739,6 +823,8 @@ private fun ShopSellItemCard(
     sellUi: SellItemUi,
     realItem: Item?,
     services: DesktopAppServices,
+    isSelected: Boolean = false,
+    onSelect: () -> Unit = {},
     onSellOne: () -> Unit,
     onSellAll: () -> Unit
 ) {
@@ -757,10 +843,14 @@ private fun ShopSellItemCard(
     ) {
         Surface(
             shape = RoundedCornerShape(8.dp),
-            color = if (sellUi.canSell) Color(0xFF0D1E2D) else Color(0xFF0A121A),
-            border = BorderStroke(1.dp, if (sellUi.canSell) Color(0xFF1E3C56) else Color(0xFF1A2B3A)),
+            color = if (!sellUi.canSell) Color(0xFF0A121A) else if (isSelected) Color(0xFF132A3E) else Color(0xFF0D1E2D),
+            border = BorderStroke(
+                if (isSelected) 1.5.dp else 1.dp,
+                if (isSelected) Color(0xFF63E6FF) else if (sellUi.canSell) Color(0xFF1E3C56) else Color(0xFF1A2B3A)
+            ),
             modifier = Modifier
                 .fillMaxWidth()
+                .clickable(onClick = onSelect)
                 .desktopPointerHover(sellUi.canSell)
                 .testTag("sell-item-${sellUi.id}")
         ) {

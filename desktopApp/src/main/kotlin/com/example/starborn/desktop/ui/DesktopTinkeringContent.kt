@@ -4,6 +4,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
@@ -89,7 +90,45 @@ fun DesktopTinkeringContent(services: DesktopAppServices) {
         }
     }
     DisposableEffect(runtime) { onDispose { runtime.close(); services.exploration.onTinkeringClosed() } }
-    Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    val pages = listOf("Workbench", "Schematics", "Scrap")
+    Column(
+        Modifier.fillMaxSize().onKeyEvent { event ->
+            if (event.type != KeyEventType.KeyDown || event.isAltPressed || event.isCtrlPressed || event.isMetaPressed) {
+                false
+            } else when (event.key) {
+                Key.LeftBracket -> {
+                    val idx = pages.indexOf(page).coerceAtLeast(0)
+                    page = pages[(idx - 1 + pages.size) % pages.size]
+                    query = ""
+                    true
+                }
+                Key.RightBracket -> {
+                    val idx = pages.indexOf(page).coerceAtLeast(0)
+                    page = pages[(idx + 1) % pages.size]
+                    query = ""
+                    true
+                }
+                Key.DirectionUp, Key.DirectionDown -> {
+                    val step = if (event.key == Key.DirectionUp) -1 else 1
+                    if (page == "Scrap" && state.scrapChoices.isNotEmpty()) {
+                        val cur = state.scrapChoices.indexOfFirst { it.id == scrapId }.coerceAtLeast(0)
+                        scrapId = state.scrapChoices[(cur + step + state.scrapChoices.size) % state.scrapChoices.size].id
+                        true
+                    } else if (page == "Schematics") {
+                        val allVisible = state.learnedRecipes.filter { it.name.contains(query, true) } +
+                            state.lockedRecipes.filter { it.name.contains(query, true) }
+                        if (allVisible.isNotEmpty()) {
+                            val cur = allVisible.indexOfFirst { it.id == recipeId }.coerceAtLeast(0)
+                            recipeId = allVisible[(cur + step + allVisible.size) % allVisible.size].id
+                            true
+                        } else false
+                    } else false
+                }
+                else -> false
+            }
+        },
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             listOf("Workbench", "Schematics", "Scrap").forEach { tab -> FilterChip(page == tab, onClick = { page = tab; query = "" }, modifier = Modifier.desktopPointerHover(), label = { Text(tab) }) }
         }
