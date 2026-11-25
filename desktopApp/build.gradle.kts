@@ -89,7 +89,7 @@ tasks.named("compileKotlin") { dependsOn(generateDesktopBuildInfo) }
 compose.desktop {
     application {
         javaHome = providers.gradleProperty("starborn.packagingJavaHome").orNull ?: System.getenv("JAVA_HOME")
-        jvmArgs += listOf("-Dstarborn.packagedAssets=true")
+        jvmArgs += listOf("-Dstarborn.packagedAssets=true", "--enable-native-access=ALL-UNNAMED")
         if (System.getProperty("os.name").orEmpty().lowercase().contains("mac")) {
             jvmArgs += listOf("-Xdock:name=Starborn")
         }

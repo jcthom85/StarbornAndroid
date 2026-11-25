@@ -526,12 +526,12 @@ class DesktopAudioDriver private constructor(
         }
     }
 
-    override fun hasCue(cueId: String): Boolean {
+    fun hasCue(cueId: String): Boolean {
         val normalized = normalize(cueId)
         return normalized.isNotEmpty() && resolvePath(normalized) != null
     }
 
-    override fun currentMusicPositionMs(expectedCueId: String?): Long? {
+    fun currentMusicPositionMs(expectedCueId: String? = null): Long? {
         val playing = if (expectedCueId != null) {
             val normalized = normalize(expectedCueId)
             if (normalized.isEmpty()) return null
@@ -553,7 +553,7 @@ class DesktopAudioDriver private constructor(
         }
     }
 
-    override fun restartCurrentMusicFromStart(expectedCueId: String?) {
+    fun restartCurrentMusicFromStart(expectedCueId: String? = null) {
         enqueue(musicWorker) {
             val targetEntry = if (expectedCueId != null) {
                 val normalized = normalize(expectedCueId)
@@ -576,7 +576,7 @@ class DesktopAudioDriver private constructor(
         }
     }
 
-    override fun setMusicPausedForOverlay(paused: Boolean, expectedCueId: String?) {
+    fun setMusicPausedForOverlay(paused: Boolean, expectedCueId: String? = null) {
         enqueue(musicWorker) {
             val targetEntry = if (expectedCueId != null) {
                 val normalized = normalize(expectedCueId)
@@ -1260,4 +1260,18 @@ class DesktopAudioDriver private constructor(
             "voice_murmur_machine_01", "voice_murmur_machine_02", "voice_murmur_machine_03", "voice_murmur_machine_04"
         )
     }
+}
+
+internal fun AudioDriver.hasCue(cueId: String): Boolean =
+    (this as? DesktopAudioDriver)?.hasCue(cueId) ?: false
+
+internal fun AudioDriver.currentMusicPositionMs(expectedCueId: String? = null): Long? =
+    (this as? DesktopAudioDriver)?.currentMusicPositionMs(expectedCueId)
+
+internal fun AudioDriver.restartCurrentMusicFromStart(expectedCueId: String? = null) {
+    (this as? DesktopAudioDriver)?.restartCurrentMusicFromStart(expectedCueId)
+}
+
+internal fun AudioDriver.setMusicPausedForOverlay(paused: Boolean, expectedCueId: String? = null) {
+    (this as? DesktopAudioDriver)?.setMusicPausedForOverlay(paused, expectedCueId)
 }
